@@ -1,0 +1,26 @@
+{
+  "heading": "About the University",
+  "paragraphs": [
+    "Since the establishment, Port City International University has been focusing on assisting the students in facing the challenges of the ever advancing world. PCIU is a platform where students can rise to the highest level of their achievements. It provides an outstanding and supportive environment for both undergraduate and postgraduate students.",
+    "A talented and dedicated group of academics provide guidance and advise the students to pursue their research and academic endeavor. The dynamic teaching and learning environment of PCIU have helped this University to be more competitive in maintaining a global standard in quality education and research. To accomplish its academic and social commitments, the University has been regularly organizing different events by engaging distinguished personalities and entrepreneurs from a variety of renowned institutions and corporate houses.",
+    "In PCIU, we maintain a standard quality education and provide the students with proper resources and logistics to reach their goals. Recruitment of qualified teachers and executives, their training and exposure to internationally reputed institutions/organizations are our prime concerns in maintaining quality of education. We have already been able to organize two international conferences on \"Quality for Sustainable Development\" and \"Sustainable Development in Technology for 4th Industrial Revolution\".",
+    "Our teachers have had the honor in attending an international conference in Malaysia and the Vice Chancellor along with a team of young teachers and officers attended a conference on Leadership management in India. The young faculties of the university got the opportunity to participate in a training workshop at the University of Nottingham in Malaysia. All these initiatives have been aimed at achieving a global standard education and improving our academic curricula, teaching and learning methodologies and in the long run research capability. We have already started implementing OBE system as per UGC directives.",
+    "PCIU takes utmost care for its students and is ready to do whatever possible for the benefit of the students. Considering the socio-economic condition of the students of low and middle income groups, the university has kept its tuition fees at a minimum level. We have been providing merit scholarship and financial assistance to our students in different categories specially Freedom Fighter quota.",
+    "We have already created a congenial study friendly campus with all modern facilities including e-library and state of the art classrooms and laboratories. Alongside academic engagements, PCIU gives due importance to extracurricular activities of the students including indoor & outdoor sports. We have different indoor and outdoor sporting facilities like sports forum, debating club, cultural forum and robotics club and some other departmental clubs. PCIU campus is a non-political and non-smoking campus. This is an equal opportunity university and no one is discriminated or maltreated because of his/her color, race, religion or nationality.",
+    "PCIU has been maintaining a steady growth over the last few years. A good number of foreign students have been studying at PCIU and the University has created ample opportunities for them including a language center to develop communication skills."
+  ],
+  "pullquote": "Our aim is to achieve excellence in education and research in order to build up a Smart Bangladesh — a social and technological hub for the future.",
+  "quickFacts": [
+    { "icon": "graduation-cap", "value": "5,000+", "label": "Students Enrolled" },
+    { "icon": "users", "value": "150+", "label": "Faculty Members" },
+    { "icon": "book-open", "value": "9", "label": "Departments" },
+    { "icon": "globe", "value": "3", "label": "Faculties" },
+    { "icon": "award", "value": "UGC", "label": "Approved University" }
+  ],
+  "campusImage": "https://portcity.edu.bd/img/Main%20Campus.JPG",
+  "campusCaption": "📍 Main Campus, Chittagong",
+  "ctaTitle": "Ready to Join PCIU?",
+  "ctaDescription": "Start your journey towards excellence",
+  "ctaButtonText": "Apply Now",
+  "ctaHref": "/admission"
+}

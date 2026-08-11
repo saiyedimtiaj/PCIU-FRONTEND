@@ -1,0 +1,50 @@
+[
+  {
+    "src": "/images/gallery/campus-aerial.jpg",
+    "title": "Our Beautiful Campus",
+    "category": "Campus",
+    "story": "Spread across a vibrant green landscape, the PCIU campus is designed to inspire learning and innovation. With modern academic buildings, open courtyards, and shaded walkways, our campus offers a serene yet dynamic environment where students thrive academically and socially."
+  },
+  {
+    "src": "/images/gallery/graduation.jpg",
+    "title": "Convocation Ceremony",
+    "category": "Events",
+    "story": "Every year, PCIU celebrates its graduating students with a grand convocation ceremony. It is a moment of immense pride — for the students, their families, and the entire university community. Caps fly high as dreams take flight into the real world."
+  },
+  {
+    "src": "/images/gallery/lab-research.jpg",
+    "title": "Cutting-Edge Research Labs",
+    "category": "Research",
+    "story": "Our state-of-the-art laboratories are equipped with the latest instruments and technology. Students and faculty collaborate on groundbreaking research across disciplines — from biotechnology to materials science — pushing the boundaries of knowledge."
+  },
+  {
+    "src": "/images/gallery/library.jpg",
+    "title": "Central Library",
+    "category": "Facilities",
+    "story": "The PCIU Central Library houses thousands of books, journals, and digital resources. With quiet reading zones, group study areas, and high-speed internet access, it serves as the intellectual heart of the university where curiosity meets knowledge."
+  },
+  {
+    "src": "/images/gallery/cultural-fest.jpg",
+    "title": "Cultural Festival",
+    "category": "Culture",
+    "story": "PCIU's annual cultural festival is a spectacular celebration of art, music, dance, and drama. Students from all departments come together to showcase their talents, fostering creativity and cultural appreciation across the campus community."
+  },
+  {
+    "src": "/images/gallery/sports.jpg",
+    "title": "Sports & Athletics",
+    "category": "Sports",
+    "story": "From inter-university cricket and football tournaments to athletics meets, PCIU encourages a healthy sporting culture. Our sports facilities and dedicated coaching staff help students balance academics with physical fitness and teamwork."
+  },
+  {
+    "src": "/images/gallery/seminar.jpg",
+    "title": "Guest Lectures & Seminars",
+    "category": "Academic",
+    "story": "PCIU regularly hosts distinguished scholars, industry leaders, and thought leaders for seminars and guest lectures. These sessions expose students to real-world insights, inspire innovative thinking, and bridge the gap between academia and industry."
+  },
+  {
+    "src": "/images/gallery/computer-lab.jpg",
+    "title": "Modern Computer Labs",
+    "category": "Technology",
+    "story": "Equipped with high-performance workstations and the latest software tools, our computer labs provide students with hands-on experience in programming, data analysis, and digital design — preparing them for the tech-driven future."
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "eyebrow": "Our Foundation",
+  "heading": "Vision, Mission &",
+  "headingAccent": "Values",
+  "cards": [
+    {
+      "key": "vision",
+      "icon": "eye",
+      "title": "Our Vision",
+      "description": "To make the Port City International University a leading global university where the students, faculty and the staffs will be able to contribute in the development process and will be benefited from the advancement in higher learning and research. We have set forth the following objectives to be met in order to make this university a leading private university not only in the country but in the global village as well."
+    },
+    {
+      "key": "mission",
+      "icon": "target",
+      "title": "Our Mission",
+      "description": "Transformative education that will inspire and nurture creative individuals those are ready to grab opportunities to make a difference. Advanced research that will enhance the boundary of knowledge and change the quality of life. Dedicated service as a leading university that will contribute to social, economic and national development."
+    },
+    {
+      "key": "strategy",
+      "icon": "compass",
+      "title": "Strategy",
+      "description": "Nurture, recruit and retain best quality people — the single most prerequisite for quality education and research. Attract the students who are academically sound and have passion, commitment, leadership potential and come from diverse backgrounds. Provide a high quality globally-oriented educational experience that develops skills and values to enable them to reach their full potential."
+    },
+    {
+      "key": "values",
+      "icon": "heart",
+      "title": "Guiding Values",
+      "description": "PCIU has not only focused on the academic strength of its students but also on the cultural and sporting activities. Our campus is a non-political and non-smoking — an equal opportunity university.",
+      "values": [
+        "Aim at excellence in higher education and research",
+        "Strive to upgrade educational standard",
+        "Be accountable for our actions and exercise responsible stewardship",
+        "Be inclusive, treat each other with dignity and respect"
+      ]
+    }
+  ]
+}

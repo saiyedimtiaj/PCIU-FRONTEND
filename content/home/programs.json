@@ -1,0 +1,56 @@
+[
+  {
+    "title": "Computer Science & Engineering",
+    "degree": "B.Sc.",
+    "level": "Undergraduate",
+    "duration": "4 years",
+    "faculty": "Engineering & Technology",
+    "description": "Develop expertise in software development, AI, and cutting-edge computing technologies.",
+    "href": "/department/cse"
+  },
+  {
+    "title": "Civil Engineering",
+    "degree": "B.Sc.",
+    "level": "Undergraduate",
+    "duration": "4 years",
+    "faculty": "Engineering & Technology",
+    "description": "Design sustainable infrastructure for modern cities and coastal development.",
+    "href": "/department/civil"
+  },
+  {
+    "title": "Business Administration",
+    "degree": "BBA",
+    "level": "Undergraduate",
+    "duration": "4 years",
+    "faculty": "Business Studies",
+    "description": "Master strategic management, entrepreneurship, and global business practices.",
+    "href": "/department/bba"
+  },
+  {
+    "title": "English",
+    "degree": "BA",
+    "level": "Undergraduate",
+    "duration": "4 years",
+    "faculty": "Arts & Social Sciences",
+    "description": "Explore literature, linguistics, and professional communication skills.",
+    "href": "/department/english"
+  },
+  {
+    "title": "Computer Science & Engineering",
+    "degree": "M.Sc.",
+    "level": "Graduate",
+    "duration": "1 year",
+    "faculty": "Engineering & Technology",
+    "description": "Advanced research in machine learning, cybersecurity, and data science.",
+    "href": "/department/cse"
+  },
+  {
+    "title": "Business Administration",
+    "degree": "MBA",
+    "level": "Graduate",
+    "duration": "1-2 years",
+    "faculty": "Business Studies",
+    "description": "Executive leadership program for experienced professionals.",
+    "href": "/department/bba"
+  }
+]

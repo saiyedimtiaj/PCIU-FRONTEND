@@ -1,0 +1,53 @@
+import {
+  Users,
+  BookOpen,
+  GraduationCap,
+  Award,
+  Microscope,
+  TrendingUp,
+  Building2,
+  Trophy,
+  Home,
+  Heart,
+  AlertCircle,
+  Calendar,
+  CheckCircle,
+  Download,
+  Eye,
+  Target,
+  Compass,
+  Lightbulb,
+  Globe,
+  ChevronRight,
+  type LucideIcon,
+} from "lucide-react";
+
+/**
+ * String-keyed registry mapping JSON `icon` fields to lucide components.
+ * JSON content can't hold component references, so section data stores
+ * a key from this map and the component resolves it at render time.
+ */
+export const iconMap = {
+  users: Users,
+  "book-open": BookOpen,
+  "graduation-cap": GraduationCap,
+  award: Award,
+  microscope: Microscope,
+  "trending-up": TrendingUp,
+  building: Building2,
+  trophy: Trophy,
+  home: Home,
+  heart: Heart,
+  "alert-circle": AlertCircle,
+  calendar: Calendar,
+  "check-circle": CheckCircle,
+  download: Download,
+  eye: Eye,
+  target: Target,
+  compass: Compass,
+  lightbulb: Lightbulb,
+  globe: Globe,
+  "chevron-right": ChevronRight,
+} as const satisfies Record<string, LucideIcon>;
+
+export type IconName = keyof typeof iconMap;

@@ -1,0 +1,20 @@
+[
+  {
+    "type": "Deadline",
+    "icon": "alert-circle",
+    "text": "Tuition fee payment due: 30 Oct 2025",
+    "color": "destructive"
+  },
+  {
+    "type": "Exam",
+    "icon": "graduation-cap",
+    "text": "Midterm schedule published for Fall 2025",
+    "color": "accent"
+  },
+  {
+    "type": "Holiday",
+    "icon": "calendar",
+    "text": "Campus closed on Victory Day",
+    "color": "secondary"
+  }
+]

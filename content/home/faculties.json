@@ -1,0 +1,32 @@
+[
+  {
+    "id": "engineering",
+    "icon": "graduation-cap",
+    "name": "Faculty of Science & Engineering",
+    "description": "Cutting-edge engineering programs preparing innovators for tomorrow's challenges.",
+    "departments": [
+      "Computer Science",
+      "Civil Engineering",
+      "Electrical & Electronic",
+      "Textile Engineering",
+      "Fashion Design"
+    ],
+    "bg": "/images/faculty-engineering-bg.jpg"
+  },
+  {
+    "id": "business",
+    "icon": "building",
+    "name": "Faculty of Business Studies",
+    "description": "Developing ethical leaders for the global marketplace.",
+    "departments": ["Business Administration"],
+    "bg": "/images/faculty-business-bg.jpg"
+  },
+  {
+    "id": "humanities",
+    "icon": "book-open",
+    "name": "Faculty of Humanities, Social Science & Law",
+    "description": "Fostering critical thinking and cultural understanding.",
+    "departments": ["English", "Journalism & Media Studies", "Law"],
+    "bg": "/images/faculty-humanities-bg.jpg"
+  }
+]

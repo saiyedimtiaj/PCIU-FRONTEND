@@ -1,0 +1,16 @@
+{
+  "image": "/images/research-lab.jpg",
+  "stats": [
+    { "icon": "award", "value": "500+", "label": "Research Projects" },
+    { "icon": "trending-up", "value": "1K+", "label": "Citations" },
+    { "icon": "users", "value": "50+", "label": "Research Centers" },
+    { "icon": "microscope", "value": "100+", "label": "Active Grants" }
+  ],
+  "highlights": [
+    {
+      "title": "Research Cell",
+      "description": "Central hub for coordinating and promoting multidisciplinary research activities across all departments",
+      "tags": ["Multidisciplinary", "Innovation"]
+    }
+  ]
+}

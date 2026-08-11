@@ -1,0 +1,10 @@
+{
+  "libraryImage": "/images/campus-life-library.jpg",
+  "sportsImage": "/images/campus-life-sports.jpg",
+  "activities": [
+    { "icon": "users", "title": "Clubs & Societies", "description": "60+ student organizations" },
+    { "icon": "trophy", "title": "Sports", "description": "Modern facilities & teams" },
+    { "icon": "home", "title": "Notice", "description": "Safe, comfortable residences" },
+    { "icon": "heart", "title": "Student Welfare", "description": "Support & wellness services" }
+  ]
+}

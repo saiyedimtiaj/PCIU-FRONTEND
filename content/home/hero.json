@@ -1,0 +1,30 @@
+{
+  "slides": [
+    {
+      "image": "/images/hero-campus.jpg",
+      "title": "Port City International University",
+      "subtitle": "Where the Bay Meets Brilliance — A global university in the heart of Chattogram's port city"
+    },
+    {
+      "image": "/images/hero-slide-2.jpg",
+      "title": "Spring Orientation 2026",
+      "subtitle": "Welcoming new students to the PCIU family — your journey to excellence begins here"
+    },
+    {
+      "image": "/images/hero-slide-3.jpg",
+      "title": "Vibrant Campus Culture",
+      "subtitle": "Experience the energy of student clubs, festivals, and creative expression at PCIU"
+    },
+    {
+      "image": "/images/hero-slide-4.jpg",
+      "title": "Research That Matters",
+      "subtitle": "Advancing knowledge through innovation at PCIU's cutting-edge laboratories"
+    }
+  ],
+  "stats": [
+    { "icon": "users", "value": "5,000+", "label": "Students Enrolled" },
+    { "icon": "book-open", "value": "25+", "label": "Programs Offered" },
+    { "icon": "graduation-cap", "value": "10,000+", "label": "Alumni Worldwide" },
+    { "icon": "award", "value": "50+", "label": "Expert Faculty" }
+  ]
+}

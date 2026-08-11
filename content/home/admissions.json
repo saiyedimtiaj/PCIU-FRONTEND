@@ -1,0 +1,30 @@
+{
+  "badge": "Admissions Open — Fall 2025",
+  "heading": "Start Your Application",
+  "subheading": "Join thousands of students pursuing excellence at PCIU",
+  "cards": [
+    {
+      "icon": "check-circle",
+      "title": "Apply Now",
+      "description": "Start your application for Fall 2025 admission",
+      "buttonText": "Start Application",
+      "buttonVariant": "highlight"
+    },
+    {
+      "icon": "award",
+      "title": "Scholarships",
+      "description": "Explore merit and need-based financial aid options",
+      "buttonText": "View Scholarships",
+      "buttonVariant": "accent"
+    },
+    {
+      "icon": "download",
+      "title": "Prospectus",
+      "description": "Download our comprehensive admission guide",
+      "buttonText": "Download PDF",
+      "buttonVariant": "accent"
+    }
+  ],
+  "tuitionNote": "Need help with tuition? We offer flexible payment plans and financial assistance.",
+  "tuitionButtonText": "View Tuition & Fees"
+}
