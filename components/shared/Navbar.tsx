@@ -114,13 +114,13 @@ export default function Navbar() {
               <a href="#alumni" className="hover:text-accent transition-colors">
                 Alumni
               </a>
-              <Link href="/faculty-auth" className="hover:text-accent transition-colors font-medium">
+              <Link href="/signin" className="hover:text-accent transition-colors font-medium">
                 Faculty Portal
               </Link>
             </div>
             <div className="flex items-center gap-4">
               <Link
-                href="/admin-auth"
+                href="/signin"
                 className="flex items-center gap-1 hover:text-accent transition-colors font-medium"
               >
                 <Shield className="w-4 h-4" />

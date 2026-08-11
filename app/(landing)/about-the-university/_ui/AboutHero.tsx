@@ -12,7 +12,7 @@ export default function AboutHero() {
         src={hero.image}
         alt="Port City International University Main Campus"
         fill
-        priority
+        preload
         sizes="100vw"
         className="object-cover scale-105"
       />

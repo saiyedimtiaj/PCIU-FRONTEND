@@ -1,7 +1,5 @@
-import React from "react";
+import type { ReactNode } from "react";
 
-const layout = () => {
-  return <div></div>;
-};
-
-export default layout;
+export default function AuthLayout({ children }: { children: ReactNode }) {
+  return <main className="flex-1">{children}</main>;
+}
