@@ -19,20 +19,20 @@ export interface AlertProps {
 
 const variantMap = {
   info: {
-    bg: "bg-blue-50/70 border-blue-500 text-blue-900 dark:bg-blue-950/20 dark:text-blue-200",
-    icon: <Info className="h-5 w-5 text-blue-500 shrink-0" />,
+    bg: "bg-info-light border-info text-foreground",
+    icon: <Info className="h-5 w-5 text-info shrink-0" />,
   },
   success: {
-    bg: "bg-emerald-50/70 border-emerald-500 text-emerald-900 dark:bg-emerald-950/20 dark:text-emerald-200",
-    icon: <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />,
+    bg: "bg-success-light border-success text-foreground",
+    icon: <CheckCircle2 className="h-5 w-5 text-success shrink-0" />,
   },
   warning: {
-    bg: "bg-accent-light border-accent text-foreground",
-    icon: <AlertTriangle className="h-5 w-5 text-accent shrink-0" />,
+    bg: "bg-warning-light border-warning text-foreground",
+    icon: <AlertTriangle className="h-5 w-5 text-warning shrink-0" />,
   },
   error: {
-    bg: "bg-rose-50/70 border-rose-500 text-rose-900 dark:bg-rose-950/20 dark:text-rose-200",
-    icon: <XCircle className="h-5 w-5 text-rose-500 shrink-0" />,
+    bg: "bg-destructive/10 border-destructive text-foreground",
+    icon: <XCircle className="h-5 w-5 text-destructive shrink-0" />,
   },
 };
 

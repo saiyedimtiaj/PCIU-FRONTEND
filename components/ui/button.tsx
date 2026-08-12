@@ -32,6 +32,17 @@ const buttonVariants = cva(
         outlineMuted:
           "border-primary/20 bg-background text-foreground hover:bg-muted",
         ghostAccent: "text-accent hover:text-accent hover:bg-accent/10",
+
+        // Admin-dashboard variants — built on the tokens .admin-theme
+        // redeclares in app/globals.css, so these render correctly there
+        // and are simply unused (never referenced) on the public site.
+        soft: "bg-accent text-accent-foreground hover:bg-accent/70",
+        softPrimary: "bg-primary/10 text-primary hover:bg-primary/15",
+        success: "bg-success text-success-foreground hover:bg-success/90",
+        successSoft: "bg-success-light text-success hover:bg-success-light/70",
+        warning: "bg-warning text-warning-foreground hover:bg-warning/90",
+        warningSoft: "bg-warning-light text-warning-foreground hover:bg-warning-light/70",
+        outlinePrimary: "border-primary/30 bg-transparent text-primary hover:bg-primary/10",
       },
       size: {
         default:
@@ -48,6 +59,12 @@ const buttonVariants = cva(
         // Larger marketing CTA size — source hero/section CTAs use h-11,
         // taller than this scaffold's stock `lg` (h-9).
         cta: "h-11 gap-2 rounded-lg px-8 text-base font-semibold has-data-[icon=inline-end]:pr-6 has-data-[icon=inline-start]:pl-6",
+        // Admin dashboard's default button size (36px). Used explicitly by
+        // admin components rather than changing the shared `default` —
+        // the public site has 30+ unsized <Button> call sites that would
+        // regress if h-8 changed globally.
+        admin: "h-9 gap-2 px-3.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
+        "icon-admin": "size-9",
       },
     },
     defaultVariants: {
