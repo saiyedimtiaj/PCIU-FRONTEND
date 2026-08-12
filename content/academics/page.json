@@ -1,0 +1,132 @@
+{
+  "examSchedule": {
+    "schedules": [
+      { "semester": "Spring 2026", "midterm": "March 15 – March 25, 2026", "final": "May 20 – June 5, 2026", "status": "Ongoing" },
+      { "semester": "Summer 2026", "midterm": "July 10 – July 20, 2026", "final": "September 15 – September 30, 2026", "status": "Upcoming" },
+      { "semester": "Fall 2026", "midterm": "November 5 – November 15, 2026", "final": "January 10 – January 25, 2027", "status": "Upcoming" }
+    ],
+    "routine": [
+      { "date": "March 15, 2026 (Sat)", "time": "10:00 AM – 1:00 PM", "course": "CSE 101 – Introduction to Computer Science", "room": "Room 301" },
+      { "date": "March 16, 2026 (Sun)", "time": "10:00 AM – 1:00 PM", "course": "ENG 102 – English Composition", "room": "Room 204" },
+      { "date": "March 17, 2026 (Mon)", "time": "10:00 AM – 1:00 PM", "course": "MAT 101 – Calculus I", "room": "Room 105" },
+      { "date": "March 18, 2026 (Tue)", "time": "2:00 PM – 5:00 PM", "course": "PHY 101 – Physics I", "room": "Room 302" },
+      { "date": "March 19, 2026 (Wed)", "time": "10:00 AM – 1:00 PM", "course": "BBA 201 – Principles of Management", "room": "Room 401" },
+      { "date": "March 20, 2026 (Thu)", "time": "10:00 AM – 1:00 PM", "course": "LAW 101 – Introduction to Law", "room": "Room 202" },
+      { "date": "March 22, 2026 (Sat)", "time": "2:00 PM – 5:00 PM", "course": "CSE 203 – Data Structures", "room": "Room 303" },
+      { "date": "March 23, 2026 (Sun)", "time": "10:00 AM – 1:00 PM", "course": "EEE 101 – Basic Electrical Engineering", "room": "Room 106" },
+      { "date": "March 24, 2026 (Mon)", "time": "10:00 AM – 1:00 PM", "course": "CE 101 – Engineering Mechanics", "room": "Room 107" },
+      { "date": "March 25, 2026 (Tue)", "time": "2:00 PM – 5:00 PM", "course": "TEX 201 – Textile Fibers", "room": "Room 501" }
+    ],
+    "guidelines": [
+      "Students must carry their university ID card to the examination hall.",
+      "Mobile phones and electronic devices are strictly prohibited during exams.",
+      "Students should arrive at least 15 minutes before the exam starts.",
+      "No student will be allowed entry 30 minutes after the exam begins.",
+      "Use of unfair means will result in immediate expulsion from the exam."
+    ]
+  },
+  "classSchedule": {
+    "timeSlots": [
+      { "time": "8:30 AM – 10:00 AM", "slot": "A" },
+      { "time": "10:00 AM – 11:30 AM", "slot": "B" },
+      { "time": "11:30 AM – 1:00 PM", "slot": "C" },
+      { "time": "2:00 PM – 3:30 PM", "slot": "D" },
+      { "time": "3:30 PM – 5:00 PM", "slot": "E" },
+      { "time": "5:00 PM – 6:30 PM", "slot": "F" }
+    ],
+    "routine": [
+      { "day": "Saturday", "slotA": "CSE 101", "slotB": "ENG 102", "slotC": "MAT 101", "slotD": "PHY 101", "slotE": "—", "slotF": "—" },
+      { "day": "Sunday", "slotA": "BBA 201", "slotB": "LAW 101", "slotC": "CSE 203", "slotD": "—", "slotE": "EEE 101", "slotF": "CE 101" },
+      { "day": "Monday", "slotA": "MAT 101", "slotB": "CSE 101", "slotC": "PHY 101", "slotD": "ENG 102", "slotE": "—", "slotF": "—" },
+      { "day": "Tuesday", "slotA": "CSE 203", "slotB": "BBA 201", "slotC": "—", "slotD": "LAW 101", "slotE": "TEX 201", "slotF": "—" },
+      { "day": "Wednesday", "slotA": "ENG 102", "slotB": "MAT 101", "slotC": "CSE 101", "slotD": "—", "slotE": "PHY 101", "slotF": "EEE 101" },
+      { "day": "Thursday", "slotA": "PHY 101", "slotB": "CSE 203", "slotC": "BBA 201", "slotD": "ENG 102", "slotE": "—", "slotF": "—" }
+    ]
+  },
+  "resultGrading": {
+    "dressCodeViolations": [
+      "Without wearing ID card properly",
+      "Wearing a sleeveless, hanging t-shirt or chemise",
+      "Wearing a wrack, ragged or slashed jeans/trousers",
+      "Wearing dirty clothes or half-pant or skirt",
+      "Putting on slippers of ordinary type",
+      "Wearing provocative and seductive clothing/dress"
+    ],
+    "libraryCode": [
+      "Library members must bear library cards while in the library.",
+      "Handing over of the library card is absolutely prohibited.",
+      "Folders, files, personal books and all kinds of bags are not allowed in the library.",
+      "Members are entitled to issue 02 (two) different books at a time for ten days.",
+      "Library remains open from 8:30 AM to 8:30 PM except holidays.",
+      "On expiry of due date, TK 10/- will be charged per day for each issue.",
+      "Silence must be maintained in the reading room.",
+      "No food is allowed except fresh drinking water.",
+      "In case of losing any book, a member must replace it or pay three times the market price."
+    ],
+    "majorOffenses": [
+      "Any activity that impedes a student's right to attend classes",
+      "Any act that disturbs peace and order in class or campus",
+      "Carrying deadly weapons or explosives",
+      "Possessing or taking any sort of drug",
+      "Physical assault and/or injuries to anyone on campus",
+      "Stealing university property or extortion",
+      "Any sort of forgery or falsification",
+      "Attachment with subversive/unlawful organizations"
+    ],
+    "minorOffenses": [
+      "Entering campus or classroom without wearing ID card",
+      "Smoking inside the classroom or campus",
+      "Manners unbecoming of a university student",
+      "Violation of admission/registration procedures",
+      "Misuse or improper use of university properties",
+      "Tampering, altering or destroying notices/posters",
+      "Acts causing panic or confusion in campus",
+      "Dislocating furniture/equipment without permission"
+    ],
+    "grades": [
+      { "range": "80% and above", "letter": "A+", "point": "4.00", "meaning": "Outstanding" },
+      { "range": "75% to less than 80%", "letter": "A", "point": "3.75", "meaning": "Excellent" },
+      { "range": "70% to less than 75%", "letter": "A-", "point": "3.50", "meaning": "Very Good" },
+      { "range": "65% to less than 70%", "letter": "B+", "point": "3.25", "meaning": "Good" },
+      { "range": "60% to less than 65%", "letter": "B", "point": "3.00", "meaning": "Satisfactory" },
+      { "range": "55% to less than 60%", "letter": "B-", "point": "2.75", "meaning": "Above Average" },
+      { "range": "50% to less than 55%", "letter": "C+", "point": "2.50", "meaning": "Average" },
+      { "range": "45% to less than 50%", "letter": "C", "point": "2.25", "meaning": "Below Average" },
+      { "range": "40% to less than 45%", "letter": "D", "point": "2.00", "meaning": "Pass" },
+      { "range": "Less than 40%", "letter": "F", "point": "0.00", "meaning": "Fail" },
+      { "range": "—", "letter": "I", "point": "—", "meaning": "Incomplete" },
+      { "range": "—", "letter": "W", "point": "—", "meaning": "Withdraw" }
+    ],
+    "attendanceMarks": [
+      { "range": "90–100%", "marks": "10" },
+      { "range": "85–89%", "marks": "9" },
+      { "range": "80–84%", "marks": "8" },
+      { "range": "75–79%", "marks": "7" },
+      { "range": "70–74%", "marks": "6" },
+      { "range": "65–69%", "marks": "5" },
+      { "range": "60–64%", "marks": "4" },
+      { "range": "55–59%", "marks": "3" },
+      { "range": "50–54%", "marks": "2" },
+      { "range": "Below 50%", "marks": "0" }
+    ]
+  },
+  "examinationPolicies": {
+    "policies": [
+      { "title": "Attendance Requirement", "content": "A student must have a minimum of 60% attendance in a course to be eligible for the final examination. Students failing to meet this requirement will be marked as 'Not Eligible' for the final exam." },
+      { "title": "Midterm Examination", "content": "Midterm exams carry 30% of the total marks. These are conducted during the middle of each semester as per the academic calendar. There is no supplementary midterm exam." },
+      { "title": "Final Examination", "content": "Final exams carry 40% of total marks. A student must pass the final examination separately with a minimum of 40% marks to pass the course overall." },
+      { "title": "Continuous Assessment", "content": "The remaining 30% marks are distributed among class attendance (10%), assignments/quizzes (10%), and class participation/presentations (10%)." },
+      { "title": "Retake & Improvement Policy", "content": "Students who fail a course (grade F) must retake the course. Students may improve a grade by retaking the course, and the higher grade will be considered for CGPA calculation." },
+      { "title": "Academic Dishonesty", "content": "Any form of cheating, plagiarism, or unfair means during examination will lead to immediate cancellation of the exam. Repeat offenders face suspension or expulsion from the university." },
+      { "title": "Exam Deferral", "content": "Students may apply for exam deferral with valid documentation (medical certificate, etc.) within 3 working days of the missed exam. Deferred exams are scheduled at the end of the semester." }
+    ]
+  },
+  "academicResults": {
+    "steps": [
+      { "step": "1", "title": "Visit Student Portal", "desc": "Log in to the PCIU Student Portal using your Student ID and password." },
+      { "step": "2", "title": "Navigate to Results", "desc": "Go to 'Academic' → 'Semester Results' from the dashboard menu." },
+      { "step": "3", "title": "Select Semester", "desc": "Choose the semester and year to view your grades and GPA." },
+      { "step": "4", "title": "Download Transcript", "desc": "Click 'Download' to save your unofficial transcript as PDF." }
+    ]
+  }
+}

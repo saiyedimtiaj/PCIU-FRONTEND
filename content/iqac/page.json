@@ -1,0 +1,74 @@
+{
+  "about": [
+    "The Institutional Quality Assurance Cell (IQAC) of Port City International University (PCIU) has been established to develop a mechanism for systematic review of academic programs and entities, ensure quality teaching-learning, research, knowledge generation, and support service standards at an acceptable level.",
+    "Understanding the emerging need for quality in tertiary education, the IQAC was established at PCIU with a commitment to innovation in learning, teaching, and research. IQAC continuously strives to improve the teaching-learning environment and update curricula through academic rigor.",
+    "The IQAC promises to Higher Education stakeholders to ensure its accountability and transparency in the quality decision making and management system of the institution."
+  ],
+  "vision": "To be a leading quality assurance cell that fosters a culture of excellence and continuous improvement in higher education, making PCIU a center of academic distinction in the region.",
+  "mission": "To ensure quality enhancement in teaching, learning, and research through systematic planning, implementation, and monitoring of quality assurance processes.",
+  "objectives": [
+    "Develop a quality culture in the academic environment",
+    "Ensure quality in teaching-learning and research",
+    "Organize training programs for faculty development",
+    "Facilitate curriculum development and revision",
+    "Promote best practices in higher education",
+    "Ensure transparency in academic administration",
+    "Conduct periodic academic audits",
+    "Prepare documentation for accreditation"
+  ],
+  "directorMessage": {
+    "paragraphs": [
+      "Greetings from the Institutional Quality Assurance Cell (IQAC) of Port City International University, Bangladesh.",
+      "The IQAC has been established to develop a mechanism for systematic review of academic programs and entities, ensure quality teaching-learning, research, knowledge generation, and support service standards at an acceptable level.",
+      "Since its inception, IQAC is committed to innovation in learning, teaching, and research. We continuously try to improve the teaching-learning environment and update the curricula through academic rigor.",
+      "We seek your precious support and sincere cooperation in this journey of IQAC. With your support, IQAC at PCIU can become a forerunner in the Higher Education circle of Bangladesh."
+    ],
+    "name": "Prof. Dr. Mohammad Rahman",
+    "designation": "Director, IQAC",
+    "email": "director.iqac@pciu.edu.bd"
+  },
+  "committeeMembers": [
+    { "name": "Prof. Dr. Mohammad Rahman", "designation": "Director, IQAC", "role": "Chairman", "department": "Department of Business Administration", "email": "director.iqac@pciu.edu.bd" },
+    { "name": "Prof. Dr. Sarah Ahmed", "designation": "Additional Director, IQAC", "role": "Member Secretary", "department": "Department of English", "email": "sarah.ahmed@pciu.edu.bd" },
+    { "name": "Dr. Kamal Hossain", "designation": "Associate Professor", "role": "Member", "department": "Department of Law", "email": "kamal.hossain@pciu.edu.bd" },
+    { "name": "Dr. Fatima Begum", "designation": "Assistant Professor", "role": "Member", "department": "Department of Journalism", "email": "fatima.begum@pciu.edu.bd" }
+  ],
+  "activities": [
+    { "title": "Workshop on Outcome-Based Education (OBE)", "date": "December 10, 2024", "type": "Workshop", "description": "A comprehensive workshop on implementing OBE methodology in curriculum design and assessment." },
+    { "title": "Training on Academic Counseling", "date": "November 25, 2024", "type": "Training", "description": "Faculty training program on effective academic counseling techniques for student success." },
+    { "title": "Seminar on Research Ethics", "date": "November 15, 2024", "type": "Seminar", "description": "Discussion on research ethics, plagiarism prevention, and academic integrity." },
+    { "title": "Quality Assurance Review Meeting", "date": "October 30, 2024", "type": "Meeting", "description": "Periodic review meeting to assess quality assurance activities and plan future initiatives." }
+  ],
+  "gallery": [
+    { "category": "Workshop", "title": "OBE Workshop 2024" },
+    { "category": "Training", "title": "Faculty Training Session" },
+    { "category": "Meeting", "title": "IQAC Committee Meeting" },
+    { "category": "Seminar", "title": "Research Ethics Seminar" },
+    { "category": "Workshop", "title": "Curriculum Development" },
+    { "category": "Training", "title": "Assessment Training" }
+  ],
+  "documents": [
+    { "name": "IQAC Annual Report 2023-24", "type": "PDF", "size": "2.5 MB" },
+    { "name": "Quality Assurance Policy", "type": "PDF", "size": "1.2 MB" },
+    { "name": "Academic Audit Guidelines", "type": "PDF", "size": "850 KB" },
+    { "name": "Faculty Development Plan", "type": "PDF", "size": "1.8 MB" },
+    { "name": "Student Feedback Form", "type": "PDF", "size": "450 KB" },
+    { "name": "Curriculum Review Process", "type": "PDF", "size": "920 KB" }
+  ],
+  "quickLinks": [
+    { "name": "UGC Bangladesh", "url": "https://ugc.gov.bd" },
+    { "name": "HEQEP", "url": "#" },
+    { "name": "BAETE", "url": "#" },
+    { "name": "QS Rankings", "url": "#" }
+  ],
+  "notices": [
+    { "title": "IQAC Meeting Notice", "date": "Dec 20, 2024", "color": "accent" },
+    { "title": "Curriculum Review Deadline", "date": "Dec 15, 2024", "color": "secondary" },
+    { "title": "Faculty Feedback Submission", "date": "Dec 10, 2024", "color": "highlight" }
+  ],
+  "contact": {
+    "address": "IQAC Office, Admin Building\nPort City International University\nChattogram, Bangladesh",
+    "phone": "+880 31 XXXXXXX",
+    "email": "iqac@pciu.edu.bd"
+  }
+}
