@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Inter, Poppins, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -15,6 +15,15 @@ const poppins = Poppins({
   display: "swap",
 });
 
+// Admin-dashboard-only font — see app/globals.css .admin-theme, which
+// redeclares --font-sans/--font-heading to var(--font-admin) inside admin
+// scope. The public site keeps Inter + Poppins above untouched.
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-admin",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Port City International University",
   description:
@@ -25,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${poppins.variable} h-full antialiased`}
+      className={`${inter.variable} ${poppins.variable} ${jakarta.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {children}

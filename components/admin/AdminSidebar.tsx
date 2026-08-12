@@ -1,19 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Collapsible } from "@base-ui/react/collapsible";
 import {
   LayoutDashboard,
-  House,
   GraduationCap,
-  Newspaper,
   FileText,
-  Image as ImageIcon,
-  LayoutTemplate,
-  Activity,
-  Users,
   Settings,
+  ChevronDown,
   LogOut,
   X,
   type LucideIcon,
@@ -21,56 +18,79 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { NAV_GROUPS, type NavGroup } from "./nav-groups";
 
-interface NavItem {
+interface TopLevelItem {
   title: string;
   href: string;
   icon: LucideIcon;
 }
 
-const NAV_ITEMS: NavItem[] = [
+const TOP_LEVEL_ITEMS: TopLevelItem[] = [
   { title: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { title: "Homepage", href: "/admin/homepage", icon: House },
-  { title: "Faculty", href: "/admin/faculty", icon: GraduationCap },
-  { title: "News.com", href: "/admin/journal", icon: Newspaper },
+  { title: "Faculty Directory", href: "/admin/faculty", icon: GraduationCap },
   { title: "Pages", href: "/admin/pages", icon: FileText },
-  { title: "Media", href: "/admin/media", icon: ImageIcon },
-  { title: "Templates", href: "/admin/templates", icon: LayoutTemplate },
-  { title: "Activity", href: "/admin/activity", icon: Activity },
-  { title: "Users", href: "/admin/users", icon: Users },
   { title: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 function isActive(pathname: string, href: string) {
-  return href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+  if (href === "/admin") return pathname === "/admin";
+  // Exact match or a real child segment — a bare startsWith would let
+  // "/admin/iqac/iqac" match "/admin/iqac/iqac-committee" as a false
+  // positive prefix.
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
+function groupIsActive(pathname: string, group: NavGroup) {
+  return group.items.some((item) => isActive(pathname, item.href));
 }
 
 function NavLink({
-  item,
+  title,
+  href,
+  icon: Icon,
   active,
   collapsed,
+  nested,
   onNavigate,
 }: {
-  item: NavItem;
+  title: string;
+  href: string;
+  icon?: LucideIcon;
   active: boolean;
   collapsed: boolean;
+  nested?: boolean;
   onNavigate?: () => void;
 }) {
-  const Icon = item.icon;
   const link = (
     <Link
-      href={item.href}
+      href={href}
       onClick={onNavigate}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+        "relative flex items-center gap-3 rounded-lg py-2.5 text-sm transition-colors",
+        nested ? "pl-6 pr-3 text-[0.8125rem]" : "px-3",
         collapsed && "justify-center px-0",
         active
-          ? "bg-sidebar-accent font-semibold text-sidebar-foreground"
-          : "text-sidebar-foreground/65 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+          ? "bg-sidebar-primary/15 font-semibold text-sidebar-foreground"
+          : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
       )}
     >
-      <Icon className="size-4 shrink-0" />
-      {!collapsed && item.title}
+      {nested && !collapsed && (
+        <span
+          aria-hidden
+          className={cn(
+            "absolute left-3 top-1/2 size-1 -translate-y-1/2 rounded-full transition-colors",
+            active ? "bg-sidebar-primary" : "bg-sidebar-foreground/25"
+          )}
+        />
+      )}
+      {active && !collapsed && !nested && (
+        <span aria-hidden className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-sidebar-primary" />
+      )}
+      {Icon && (
+        <Icon className={cn("size-4 shrink-0", active && "text-sidebar-primary")} />
+      )}
+      {!collapsed && <span className="truncate">{title}</span>}
     </Link>
   );
 
@@ -79,8 +99,99 @@ function NavLink({
   return (
     <Tooltip>
       <TooltipTrigger render={link} />
-      <TooltipContent side="right">{item.title}</TooltipContent>
+      <TooltipContent side="right">{title}</TooltipContent>
     </Tooltip>
+  );
+}
+
+function NavGroupItem({
+  group,
+  pathname,
+  collapsed,
+  onNavigate,
+}: {
+  group: NavGroup;
+  pathname: string;
+  collapsed: boolean;
+  onNavigate?: () => void;
+}) {
+  const active = groupIsActive(pathname, group);
+  const [open, setOpen] = useState(active);
+  const Icon = group.icon;
+
+  // Collapsed rail: icon-only, jumps straight to the group's first entity.
+  if (collapsed) {
+    const firstHref = group.items[0]?.href ?? "/admin";
+    return (
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <Link
+              href={firstHref}
+              onClick={onNavigate}
+              className={cn(
+                "flex items-center justify-center rounded-lg px-0 py-2.5 text-sm transition-colors",
+                active
+                  ? "bg-sidebar-primary/15 text-sidebar-primary"
+                  : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+              )}
+            />
+          }
+        >
+          <Icon className="size-4 shrink-0" />
+        </TooltipTrigger>
+        <TooltipContent side="right">{group.title}</TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <Collapsible.Trigger
+        className={cn(
+          "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+          active
+            ? "text-sidebar-foreground"
+            : "text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+        )}
+      >
+        <Icon className={cn("size-4 shrink-0", active && "text-sidebar-primary")} />
+        <span className="flex-1 truncate text-left text-xs font-semibold tracking-wide uppercase">
+          {group.title}
+        </span>
+        <span
+          className={cn(
+            "flex size-4 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-medium tabular-nums transition-colors",
+            active
+              ? "bg-sidebar-primary/20 text-sidebar-primary"
+              : "bg-sidebar-foreground/10 text-sidebar-foreground/50"
+          )}
+        >
+          {group.items.length}
+        </span>
+        <ChevronDown
+          className={cn(
+            "size-3.5 shrink-0 text-sidebar-foreground/40 transition-transform duration-200",
+            open && "rotate-180"
+          )}
+        />
+      </Collapsible.Trigger>
+      <Collapsible.Panel className="overflow-hidden data-ending-style:h-0 data-starting-style:h-0">
+        <div className="relative ml-[1.15rem] space-y-0.5 border-l border-sidebar-border py-1 pl-0">
+          {group.items.map((item) => (
+            <NavLink
+              key={item.href}
+              title={item.title}
+              href={item.href}
+              active={isActive(pathname, item.href)}
+              collapsed={false}
+              nested
+              onNavigate={onNavigate}
+            />
+          ))}
+        </div>
+      </Collapsible.Panel>
+    </Collapsible.Root>
   );
 }
 
@@ -102,31 +213,50 @@ function SidebarBody({
           collapsed && "justify-center px-2"
         )}
       >
-        <Image
-          src="/images/pciu-logo.png"
-          alt="PCIU"
-          width={32}
-          height={32}
-          className="size-8 shrink-0 object-contain"
-        />
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-sidebar-accent ring-1 ring-sidebar-border">
+          <Image
+            src="/images/pciu-logo.png"
+            alt="PCIU"
+            width={22}
+            height={22}
+            className="size-5.5 shrink-0 object-contain"
+          />
+        </div>
         {!collapsed && (
-          <p className="font-heading font-bold leading-tight text-sidebar-foreground">
-            PCIU Admin
-          </p>
+          <div className="min-w-0">
+            <p className="font-heading font-bold leading-tight text-sidebar-foreground">PCIU Admin</p>
+            <p className="text-[0.6875rem] leading-tight text-sidebar-foreground/45">Content Dashboard</p>
+          </div>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-2">
-        {NAV_ITEMS.map((item) => (
+      <nav className="scrollbar-thin flex-1 space-y-1 overflow-y-auto px-2 pb-2">
+        {TOP_LEVEL_ITEMS.map((item) => (
           <NavLink
             key={item.href}
-            item={item}
+            title={item.title}
+            href={item.href}
+            icon={item.icon}
             active={isActive(pathname, item.href)}
             collapsed={collapsed}
             onNavigate={onNavigate}
           />
         ))}
+
+        <div className={cn("my-3 border-t border-sidebar-border", collapsed && "mx-1")} />
+
+        <div className="space-y-0.5">
+          {NAV_GROUPS.map((group) => (
+            <NavGroupItem
+              key={group.key}
+              group={group}
+              pathname={pathname}
+              collapsed={collapsed}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </div>
       </nav>
 
       {/* Footer */}
@@ -134,7 +264,7 @@ function SidebarBody({
         <button
           type="button"
           className={cn(
-            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/65 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
             collapsed && "justify-center px-0"
           )}
         >
@@ -161,7 +291,7 @@ export default function AdminSidebar({ collapsed, mobileOpen, onMobileClose }: A
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={onMobileClose} />
-          <div className="absolute left-0 top-0 h-full w-64 shadow-xl">
+          <div className="absolute left-0 top-0 h-full w-72 shadow-xl">
             <div className="flex justify-end bg-sidebar px-2 pt-2">
               <Button
                 variant="ghost"
@@ -183,8 +313,8 @@ export default function AdminSidebar({ collapsed, mobileOpen, onMobileClose }: A
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "sticky top-0 hidden h-screen shrink-0 transition-all duration-300 lg:block",
-          collapsed ? "w-[68px]" : "w-60"
+          "sticky top-0 hidden h-screen shrink-0 border-r border-sidebar-border transition-all duration-300 lg:block",
+          collapsed ? "w-[68px]" : "w-64"
         )}
       >
         <SidebarBody collapsed={collapsed} pathname={pathname} />
