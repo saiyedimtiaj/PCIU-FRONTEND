@@ -19,6 +19,18 @@ import {
   Lightbulb,
   Globe,
   ChevronRight,
+  ChevronLeft,
+  Mail,
+  Phone,
+  ExternalLink,
+  Clock,
+  Library,
+  Database,
+  Shield,
+  Scale,
+  Search,
+  ListFilter,
+  FileText,
   type LucideIcon,
 } from "lucide-react";
 
@@ -48,6 +60,18 @@ export const iconMap = {
   lightbulb: Lightbulb,
   globe: Globe,
   "chevron-right": ChevronRight,
+  "chevron-left": ChevronLeft,
+  mail: Mail,
+  phone: Phone,
+  "external-link": ExternalLink,
+  clock: Clock,
+  library: Library,
+  database: Database,
+  shield: Shield,
+  scale: Scale,
+  search: Search,
+  "list-filter": ListFilter,
+  "file-text": FileText,
 } as const satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof iconMap;

@@ -1,0 +1,55 @@
+{
+  "infoCards": [
+    {
+      "icon": "clock",
+      "title": "Library Hours",
+      "lines": ["Sunday - Thursday: 8:00 AM - 8:00 PM", "Friday - Saturday: 10:00 AM - 5:00 PM"]
+    },
+    {
+      "icon": "phone",
+      "title": "Contact",
+      "lines": ["+880 31-000000", "Ext: 123, 124"]
+    },
+    {
+      "icon": "mail",
+      "title": "Email",
+      "lines": ["library@pciu.edu.bd", "support@library.pciu.edu.bd"]
+    }
+  ],
+  "services": [
+    { "title": "Book Lending", "description": "Borrow books for up to 14 days with valid student ID" },
+    { "title": "Reference Section", "description": "Access encyclopedias, dictionaries, and reference materials" },
+    { "title": "Digital Resources", "description": "24/7 access to e-books, journals, and databases" },
+    { "title": "Study Rooms", "description": "Private and group study spaces available for booking" },
+    { "title": "Printing & Copying", "description": "Affordable printing and photocopying services" },
+    { "title": "Research Support", "description": "Librarians available to assist with research queries" }
+  ],
+  "committeeMembers": [
+    { "name": "Prof. Dr. Mohammad Rahman", "designation": "Chief Librarian & Committee Chair", "email": "chief.librarian@pciu.edu.bd" },
+    { "name": "Dr. Fatema Akhter", "designation": "Deputy Librarian", "email": "deputy.librarian@pciu.edu.bd" },
+    { "name": "Mr. Kamal Hossain", "designation": "Senior Library Officer", "email": "kamal.hossain@pciu.edu.bd" },
+    { "name": "Ms. Nasreen Sultana", "designation": "Digital Resources Manager", "email": "nasreen.sultana@pciu.edu.bd" },
+    { "name": "Mr. Rafiq Ahmed", "designation": "Circulation Officer", "email": "rafiq.ahmed@pciu.edu.bd" },
+    { "name": "Ms. Taslima Begum", "designation": "Cataloging Officer", "email": "taslima.begum@pciu.edu.bd" }
+  ],
+  "eLibraryLinks": [
+    { "name": "Bangladesh National Digital Library", "url": "https://www.bndl.gov.bd", "description": "National digital resources", "icon": "database" },
+    { "name": "UGC Digital Library", "url": "https://www.ugc.gov.bd", "description": "University Grants Commission resources", "icon": "book-open" },
+    { "name": "BanglaJOL", "url": "https://www.banglajol.info", "description": "Bangladesh Journals Online", "icon": "file-text" },
+    { "name": "DOAJ - Directory of Open Access Journals", "url": "https://doaj.org", "description": "Open access journals", "icon": "globe" },
+    { "name": "Project Gutenberg", "url": "https://www.gutenberg.org", "description": "Free eBooks", "icon": "book-open" },
+    { "name": "OpenLibrary", "url": "https://openlibrary.org", "description": "Internet Archive's library", "icon": "library" },
+    { "name": "MIT OpenCourseWare", "url": "https://ocw.mit.edu", "description": "Free MIT course materials", "icon": "globe" },
+    { "name": "Khan Academy", "url": "https://www.khanacademy.org", "description": "Free educational resources", "icon": "book-open" }
+  ],
+  "journalLinks": [
+    { "name": "IEEE Xplore Digital Library", "url": "https://ieeexplore.ieee.org", "description": "Engineering and technology research" },
+    { "name": "ScienceDirect", "url": "https://www.sciencedirect.com", "description": "Scientific, technical, and medical research" },
+    { "name": "JSTOR", "url": "https://www.jstor.org", "description": "Academic journals and books" },
+    { "name": "Springer Nature", "url": "https://www.springernature.com", "description": "Science, technology, medicine" },
+    { "name": "Wiley Online Library", "url": "https://onlinelibrary.wiley.com", "description": "Multidisciplinary research" },
+    { "name": "Taylor & Francis Online", "url": "https://www.tandfonline.com", "description": "Humanities and social sciences" },
+    { "name": "PubMed", "url": "https://pubmed.ncbi.nlm.nih.gov", "description": "Biomedical literature" },
+    { "name": "Google Scholar", "url": "https://scholar.google.com", "description": "Academic search engine" }
+  ]
+}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import Breadcrumb from "@/components/shared/Breadcrumb";
 import AboutHero from "./_ui/AboutHero";
-import Breadcrumb from "./_ui/Breadcrumb";
 import MainContent from "./_ui/MainContent";
 import VisionMissionValues from "./_ui/VisionMissionValues";
 import CampusBanner from "./_ui/CampusBanner";
@@ -15,7 +15,7 @@ export default function AboutUniversityPage() {
   return (
     <div className="min-h-screen bg-background">
       <AboutHero />
-      <Breadcrumb />
+      <Breadcrumb items={[{ label: "About the University" }]} />
       <MainContent />
       <VisionMissionValues />
       <CampusBanner />

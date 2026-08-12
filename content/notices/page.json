@@ -1,0 +1,17 @@
+{
+  "categories": ["All", "Academic", "Admission", "Examination", "Administrative", "Event", "Scholarship"],
+  "notices": [
+    { "id": 1, "title": "Final Examination Schedule for Fall 2025 - All Programs", "category": "Examination", "date": "2025-01-28", "dateLabel": "Jan 28, 2025", "fileUrl": "#", "isNew": true, "fileSize": "245 KB" },
+    { "id": 2, "title": "Admission Open for Spring 2026 Semester - Undergraduate Programs", "category": "Admission", "date": "2025-01-27", "dateLabel": "Jan 27, 2025", "fileUrl": "#", "isNew": true, "fileSize": "1.2 MB" },
+    { "id": 3, "title": "Course Registration Deadline Extended for Current Students", "category": "Academic", "date": "2025-01-25", "dateLabel": "Jan 25, 2025", "fileUrl": "#", "isNew": true, "fileSize": "180 KB" },
+    { "id": 4, "title": "Merit Scholarship Applications for Academic Year 2025-2026", "category": "Scholarship", "date": "2025-01-24", "dateLabel": "Jan 24, 2025", "fileUrl": "#", "isNew": false, "fileSize": "520 KB" },
+    { "id": 5, "title": "Victory Day Holiday Notice - December 16, 2025", "category": "Administrative", "date": "2025-01-22", "dateLabel": "Jan 22, 2025", "fileUrl": "#", "isNew": false, "fileSize": "95 KB" },
+    { "id": 6, "title": "Annual Sports Week 2025 - Registration Open", "category": "Event", "date": "2025-01-20", "dateLabel": "Jan 20, 2025", "fileUrl": "#", "isNew": false, "fileSize": "340 KB" },
+    { "id": 7, "title": "Midterm Examination Results Published - BBA Program", "category": "Examination", "date": "2025-01-18", "dateLabel": "Jan 18, 2025", "fileUrl": "#", "isNew": false, "fileSize": "890 KB" },
+    { "id": 8, "title": "Library Extended Hours During Exam Period", "category": "Administrative", "date": "2025-01-15", "dateLabel": "Jan 15, 2025", "fileUrl": "#", "isNew": false, "fileSize": "120 KB" },
+    { "id": 9, "title": "Guest Lecture on Artificial Intelligence - Faculty of Engineering", "category": "Event", "date": "2025-01-12", "dateLabel": "Jan 12, 2025", "fileUrl": "#", "isNew": false, "fileSize": "275 KB" },
+    { "id": 10, "title": "PhD Program Admission for Spring 2026 - Application Guidelines", "category": "Admission", "date": "2025-01-10", "dateLabel": "Jan 10, 2025", "fileUrl": "#", "isNew": false, "fileSize": "1.5 MB" },
+    { "id": 11, "title": "Tuition Fee Payment Deadline Reminder - Fall 2025", "category": "Administrative", "date": "2025-01-08", "dateLabel": "Jan 08, 2025", "fileUrl": "#", "isNew": false, "fileSize": "150 KB" },
+    { "id": 12, "title": "Research Grant Applications - Deadline February 2026", "category": "Academic", "date": "2025-01-05", "dateLabel": "Jan 05, 2025", "fileUrl": "#", "isNew": false, "fileSize": "680 KB" }
+  ]
+}

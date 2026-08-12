@@ -1,0 +1,81 @@
+{
+  "sidebarLinks": [
+    { "label": "Aim and Scope", "href": "#aim-scope" },
+    { "label": "Submit Manuscript", "href": "#submit" },
+    { "label": "Sample Paper", "href": "#sample" },
+    { "label": "Journal Contents", "href": "#contents" }
+  ],
+  "archives": [
+    { "id": "v1", "volumeName": "Volume 1, Issue 1", "year": 2022, "pdfUrl": "#" },
+    { "id": "v2", "volumeName": "Volume 1, Issue 2", "year": 2022, "pdfUrl": "#" },
+    { "id": "v3", "volumeName": "Volume 2, Issue 1", "year": 2023, "pdfUrl": "#" },
+    { "id": "v4", "volumeName": "Volume 2, Issue 2", "year": 2023, "pdfUrl": "#" },
+    { "id": "v5", "volumeName": "Volume 3, Issue 1", "year": 2024, "pdfUrl": "#" }
+  ],
+  "tabs": {
+    "about": {
+      "title": "Port City News.com",
+      "subtitle": "Academic Journal of Port City International University",
+      "description": "Port City News.com is the official multidisciplinary research journal of Port City International University, publishing peer-reviewed articles across business, engineering, humanities, and social sciences. The journal aims to provide a platform for researchers, academics, and practitioners to share original findings that contribute to knowledge and practice.",
+      "issn": "ISSN 2789-0000",
+      "issnNote": "Online and print editions available",
+      "chiefEditor": { "name": "Prof. Dr. Mohammad Tayub Chowdhury", "designation": "Vice Chancellor, PCIU" },
+      "associateEditors": [
+        { "name": "Prof. Dr. Mohammed Ali Chowdhury" },
+        { "name": "Prof. Dr. Zahurul Alam" }
+      ]
+    },
+    "advisory": {
+      "members": [
+        { "name": "Prof. Dr. M. Majibur Rahman", "title": "Member, Board of Trustees" },
+        { "name": "Prof. Dr. Nizamul Hoque Bhuiyan", "title": "Member, Board of Trustees" },
+        { "name": "Prof. Dr. Engr. Mafzal Ahmed", "title": "Dean, Faculty of Science & Engineering" },
+        { "name": "Prof. Dr. Md. Fashiul Alam", "title": "Dean, Faculty of Business Studies" }
+      ]
+    },
+    "editorial": {
+      "members": [
+        { "name": "Prof. Dr. Mohammad Shahadat Hossain", "dept": "Department of CSE", "role": "Editor" },
+        { "name": "Prof. Dr. Sudip Kumar Pal", "dept": "Department of Civil Engineering", "role": "Associate Editor" },
+        { "name": "Prof. Dr. Mohammad Sahid Ullah", "dept": "Department of Journalism & Media Studies" },
+        { "name": "Mr. Md. Musa", "dept": "Department of Business Administration" }
+      ]
+    },
+    "author": {
+      "sections": [
+        {
+          "heading": "Manuscript Preparation",
+          "items": [
+            "Manuscripts should be submitted in MS Word format, double-spaced, 12pt Times New Roman",
+            "Abstract should not exceed 250 words with 4-6 keywords",
+            "References must follow APA 7th edition style",
+            "Manuscript length: 4,000-8,000 words including references"
+          ]
+        },
+        {
+          "heading": "Submission Process",
+          "text": "Authors should submit their manuscripts via email to the editorial office along with a cover letter confirming the work is original and not under consideration elsewhere. All submissions undergo double-blind peer review."
+        },
+        {
+          "heading": "Review Process",
+          "items": [
+            "Initial editorial screening within 1 week",
+            "Double-blind peer review by two independent reviewers",
+            "Review process typically takes 6-8 weeks",
+            "Authors are notified of accept/revise/reject decisions via email"
+          ]
+        }
+      ]
+    },
+    "contact": {
+      "officeName": "Editorial Office",
+      "journalName": "Port City News.com",
+      "university": "Port City International University",
+      "address": "Facultybox, Chattogram",
+      "city": "Chattogram, Bangladesh",
+      "email": "journal@pciu.edu.bd",
+      "phone": "+880 31-000000",
+      "website": "https://portcity.edu.bd"
+    }
+  }
+}

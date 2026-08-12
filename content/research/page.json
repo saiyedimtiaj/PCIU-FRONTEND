@@ -1,0 +1,48 @@
+{
+  "centres": [
+    { "name": "Research Cell", "lead": "Office of Research & Innovation", "description": "Central hub coordinating, funding and promoting multidisciplinary research across all faculties at PCIU.", "focus": ["Policy", "Grants", "Mentorship"] },
+    { "name": "Centre for Coastal & Marine Studies", "lead": "Faculty of Science & Engineering", "description": "Research on Bay of Bengal ecology, blue economy, port logistics and coastal climate resilience.", "focus": ["Marine", "Climate", "Blue Economy"] },
+    { "name": "Centre for Business & Economic Research", "lead": "Faculty of Business Studies", "description": "Applied research on SME growth, supply chains, fintech adoption and regional trade.", "focus": ["SME", "Fintech", "Trade"] },
+    { "name": "Centre for Language & Cultural Studies", "lead": "Faculty of Humanities & Social Sciences", "description": "Studies in applied linguistics, media discourse, and cultural heritage of the port city region.", "focus": ["Linguistics", "Media", "Heritage"] },
+    { "name": "Centre for Legal Research", "lead": "Department of Law", "description": "Research on maritime law, human rights, cyber law and constitutional studies.", "focus": ["Maritime Law", "Human Rights", "Cyber"] },
+    { "name": "Centre for Engineering Innovation", "lead": "Faculty of Science & Engineering", "description": "Cross-disciplinary work in AI, IoT, renewable energy, smart textiles and civil infrastructure.", "focus": ["AI/IoT", "Energy", "Textile"] }
+  ],
+  "areas": [
+    { "title": "Artificial Intelligence & Data Science", "icon": "microscope", "color": "from-blue-500 to-indigo-600" },
+    { "title": "Coastal & Marine Sciences", "icon": "globe", "color": "from-cyan-500 to-teal-600" },
+    { "title": "Renewable Energy & Sustainability", "icon": "microscope", "color": "from-emerald-500 to-green-600" },
+    { "title": "Smart Textile & Fashion Technology", "icon": "award", "color": "from-pink-500 to-rose-600" },
+    { "title": "Business, Finance & Economics", "icon": "users", "color": "from-amber-500 to-orange-600" },
+    { "title": "Law, Human Rights & Governance", "icon": "file-signature", "color": "from-purple-500 to-fuchsia-600" },
+    { "title": "Applied Linguistics & Media Studies", "icon": "book-open", "color": "from-red-500 to-pink-600" },
+    { "title": "Civil Infrastructure & Urban Planning", "icon": "microscope", "color": "from-slate-500 to-gray-700" }
+  ],
+  "publications": [
+    { "title": "Climate Resilience of Coastal Communities in the Bay of Bengal", "authors": "Dr. M. Rahman, Dr. S. Akter", "year": 2024, "type": "Journal", "venue": "Journal of Coastal Studies", "department": "Civil Engineering" },
+    { "title": "Deep Learning Approaches for Bengali Sentiment Analysis", "authors": "Dr. T. Hossain, A. Karim", "year": 2024, "type": "Conference", "venue": "IEEE ICCIT", "department": "CSE" },
+    { "title": "SME Financing Patterns in Chattogram Region", "authors": "Dr. N. Chowdhury", "year": 2023, "type": "Journal", "venue": "South Asian Business Review", "department": "BBA" },
+    { "title": "Smart Grid Integration of Solar Power: A Case Study", "authors": "Dr. F. Islam, M. Hasan", "year": 2023, "type": "Journal", "venue": "Renewable Energy Letters", "department": "EEE" },
+    { "title": "Maritime Law and Port Governance in Bangladesh", "authors": "Dr. R. Sultana", "year": 2024, "type": "Book Chapter", "venue": "Routledge Handbook of Maritime Law", "department": "Law" },
+    { "title": "Sustainable Dyeing Techniques for Eco-Textiles", "authors": "Dr. K. Ahmed, S. Begum", "year": 2022, "type": "Journal", "venue": "Textile Research Journal", "department": "Textile" },
+    { "title": "Media Framing of Climate Refugees in South Asia", "authors": "Dr. P. Das", "year": 2023, "type": "Conference", "venue": "Asian Media Congress", "department": "Journalism" },
+    { "title": "Pragmatic Strategies in Bangladeshi EFL Classrooms", "authors": "Dr. L. Ahmed", "year": 2022, "type": "Journal", "venue": "Asian EFL Journal", "department": "English" }
+  ],
+  "partnerships": [
+    { "name": "University of Chittagong", "country": "Bangladesh", "type": "Academic" },
+    { "name": "BUET", "country": "Bangladesh", "type": "Academic" },
+    { "name": "Chittagong Port Authority", "country": "Bangladesh", "type": "Industry" },
+    { "name": "BGMEA", "country": "Bangladesh", "type": "Industry" },
+    { "name": "Asian Institute of Technology", "country": "Thailand", "type": "International" },
+    { "name": "Universiti Sains Malaysia", "country": "Malaysia", "type": "International" },
+    { "name": "British Council", "country": "UK", "type": "Cultural" },
+    { "name": "ICCR", "country": "India", "type": "Cultural" }
+  ],
+  "mous": [
+    { "partner": "Chittagong Port Authority", "date": "2024-03-15", "scope": "Joint research on port logistics & marine pollution" },
+    { "partner": "BGMEA University of Fashion & Technology", "date": "2023-11-02", "scope": "Faculty exchange & textile innovation lab" },
+    { "partner": "Asian Institute of Technology, Thailand", "date": "2023-08-20", "scope": "Student exchange & joint PhD supervision" },
+    { "partner": "Universiti Sains Malaysia", "date": "2023-05-10", "scope": "Collaborative research in coastal sciences" },
+    { "partner": "British Council Bangladesh", "date": "2022-09-18", "scope": "English language teacher training & IELTS programs" },
+    { "partner": "ICT Division, Govt. of Bangladesh", "date": "2024-01-25", "scope": "AI & data science capacity building" }
+  ]
+}

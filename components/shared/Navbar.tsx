@@ -102,18 +102,18 @@ export default function Navbar() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-6">
-              <a href="#prospective" className="hover:text-accent transition-colors">
+              <Link href="#prospective" className="hover:text-accent transition-colors">
                 Prospective Students
-              </a>
-              <a href="#current" className="hover:text-accent transition-colors">
+              </Link>
+              <Link href="#current" className="hover:text-accent transition-colors">
                 Current Students
-              </a>
+              </Link>
               <Link href="/faculty" className="hover:text-accent transition-colors">
                 Faculty &amp; Staff
               </Link>
-              <a href="#alumni" className="hover:text-accent transition-colors">
+              <Link href="#alumni" className="hover:text-accent transition-colors">
                 Alumni
-              </a>
+              </Link>
               <Link href="/signin" className="hover:text-accent transition-colors font-medium">
                 Faculty Portal
               </Link>
@@ -178,13 +178,13 @@ export default function Navbar() {
                 <div className="w-[820px] p-6">
                   <div className="flex flex-wrap gap-x-4 gap-y-1 mb-5 pb-3 border-b border-border">
                     {academicsMenu.quickLinks.map((link) => (
-                      <a
+                      <Link
                         key={link.name}
                         href={link.href}
                         className="text-sm font-semibold text-primary hover:text-accent transition-colors py-1"
                       >
                         {link.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                   <div className="grid grid-cols-3 gap-6">
@@ -196,12 +196,12 @@ export default function Navbar() {
                         <ul className="space-y-1">
                           {faculty.departments.map((dept) => (
                             <li key={dept.name}>
-                              <a
+                              <Link
                                 href={dept.href}
                                 className="text-sm text-muted-foreground hover:text-primary hover:pl-1 transition-all block py-1.5"
                               >
                                 {dept.name}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                         </ul>
@@ -282,14 +282,14 @@ export default function Navbar() {
                 onToggle={() => setOpenSubmenu(openSubmenu === "about" ? null : "about")}
               >
                 {aboutMenu.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className="block text-sm text-muted-foreground hover:text-primary py-2 px-4"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </MobileDropdown>
 
@@ -299,14 +299,14 @@ export default function Navbar() {
                 onToggle={() => setOpenSubmenu(openSubmenu === "academics" ? null : "academics")}
               >
                 {academicsMenu.quickLinks.map((link) => (
-                  <a
+                  <Link
                     key={link.name}
                     href={link.href}
                     className="block text-sm text-primary font-medium py-2 px-4 border-b border-border/50"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 ))}
                 {academicsMenu.faculties.map((faculty) => (
                   <div key={faculty.name} className="py-2">
@@ -314,14 +314,14 @@ export default function Navbar() {
                       {faculty.name}
                     </div>
                     {faculty.departments.map((dept) => (
-                      <a
+                      <Link
                         key={dept.name}
                         href={dept.href}
                         className="block text-sm text-muted-foreground hover:text-primary py-2 px-6"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {dept.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 ))}
@@ -333,14 +333,14 @@ export default function Navbar() {
                 onToggle={() => setOpenSubmenu(openSubmenu === "admission" ? null : "admission")}
               >
                 {admissionMenu.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className="block text-sm text-muted-foreground hover:text-primary py-2 px-4"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </MobileDropdown>
 
@@ -350,14 +350,14 @@ export default function Navbar() {
                 onToggle={() => setOpenSubmenu(openSubmenu === "facilities" ? null : "facilities")}
               >
                 {facilitiesMenu.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className="block text-sm text-muted-foreground hover:text-primary py-2 px-4"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </MobileDropdown>
 
@@ -367,31 +367,31 @@ export default function Navbar() {
                 onToggle={() => setOpenSubmenu(openSubmenu === "research" ? null : "research")}
               >
                 {researchMenu.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className="block text-sm text-muted-foreground hover:text-primary py-2 px-4"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </MobileDropdown>
 
-              <a
+              <Link
                 href="/iqac"
                 className="text-foreground hover:text-primary font-medium py-3 px-2 border-b border-border"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 IQAC
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#contact"
                 className="text-foreground hover:text-primary font-medium py-3 px-2 border-b border-border"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Contact
-              </a>
+              </Link>
 
               <Button variant="accent" className="w-full mt-4">
                 Apply Now
@@ -408,13 +408,13 @@ export default function Navbar() {
 
 function NavItem({ href, label }: { href: string; label: string }) {
   return (
-    <a
+    <Link
       href={href}
       className="relative h-full flex items-center px-4 text-sm font-medium text-foreground hover:text-primary transition-colors group"
     >
       {label}
       <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[3px] bg-accent transition-all duration-300 group-hover:w-full rounded-t" />
-    </a>
+    </Link>
   );
 }
 
@@ -479,13 +479,13 @@ function SimpleDropdown({ items }: { items: { name: string; href: string }[] }) 
   return (
     <div className="w-[240px] py-2">
       {items.map((item) => (
-        <a
+        <Link
           key={item.name}
           href={item.href}
           className="block px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition-colors"
         >
           {item.name}
-        </a>
+        </Link>
       ))}
     </div>
   );
