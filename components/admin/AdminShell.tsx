@@ -11,7 +11,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
 
   return (
     <ToastProvider>
-      <div className="flex min-h-screen w-full">
+      <div className="admin-theme flex min-h-screen w-full bg-background text-foreground">
         <AdminSidebar
           collapsed={collapsed}
           mobileOpen={mobileOpen}

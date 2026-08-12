@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewSeminarWorkshopPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="seminar" cancelHref="/admin" />
+      <EntityFormClient slug="seminar" cancelHref="/admin/research/seminar" />
     </div>
   );
 }

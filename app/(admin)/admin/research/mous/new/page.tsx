@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewMoUPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="mous" cancelHref="/admin" />
+      <EntityFormClient slug="mous" cancelHref="/admin/research/mous" />
     </div>
   );
 }

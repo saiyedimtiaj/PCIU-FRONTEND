@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewSettingPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="setting" cancelHref="/admin" />
+      <EntityFormClient slug="setting" cancelHref="/admin/system/setting" />
     </div>
   );
 }

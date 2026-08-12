@@ -34,11 +34,15 @@ const TOP_LEVEL_ITEMS: TopLevelItem[] = [
 ];
 
 function isActive(pathname: string, href: string) {
-  return href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+  if (href === "/admin") return pathname === "/admin";
+  // Exact match or a real child segment — a bare startsWith would let
+  // "/admin/iqac/iqac" match "/admin/iqac/iqac-committee" as a false
+  // positive prefix.
+  return pathname === href || pathname.startsWith(href + "/");
 }
 
 function groupIsActive(pathname: string, group: NavGroup) {
-  return group.items.some((item) => pathname.startsWith(item.href));
+  return group.items.some((item) => isActive(pathname, item.href));
 }
 
 function NavLink({
@@ -63,15 +67,29 @@ function NavLink({
       href={href}
       onClick={onNavigate}
       className={cn(
-        "flex items-center gap-3 rounded-lg py-2.5 text-sm transition-colors",
-        nested ? "pl-11 pr-3" : "px-3",
+        "relative flex items-center gap-3 rounded-lg py-2.5 text-sm transition-colors",
+        nested ? "pl-6 pr-3 text-[0.8125rem]" : "px-3",
         collapsed && "justify-center px-0",
         active
-          ? "bg-sidebar-accent font-semibold text-sidebar-foreground"
-          : "text-sidebar-foreground/65 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+          ? "bg-sidebar-primary/15 font-semibold text-sidebar-foreground"
+          : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
       )}
     >
-      {Icon && <Icon className="size-4 shrink-0" />}
+      {nested && !collapsed && (
+        <span
+          aria-hidden
+          className={cn(
+            "absolute left-3 top-1/2 size-1 -translate-y-1/2 rounded-full transition-colors",
+            active ? "bg-sidebar-primary" : "bg-sidebar-foreground/25"
+          )}
+        />
+      )}
+      {active && !collapsed && !nested && (
+        <span aria-hidden className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-sidebar-primary" />
+      )}
+      {Icon && (
+        <Icon className={cn("size-4 shrink-0", active && "text-sidebar-primary")} />
+      )}
       {!collapsed && <span className="truncate">{title}</span>}
     </Link>
   );
@@ -114,8 +132,8 @@ function NavGroupItem({
               className={cn(
                 "flex items-center justify-center rounded-lg px-0 py-2.5 text-sm transition-colors",
                 active
-                  ? "bg-sidebar-accent text-sidebar-foreground"
-                  : "text-sidebar-foreground/65 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+                  ? "bg-sidebar-primary/15 text-sidebar-primary"
+                  : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
               )}
             />
           }
@@ -133,18 +151,33 @@ function NavGroupItem({
         className={cn(
           "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
           active
-            ? "text-sidebar-foreground font-semibold"
-            : "text-sidebar-foreground/65 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+            ? "text-sidebar-foreground"
+            : "text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
         )}
       >
-        <Icon className="size-4 shrink-0" />
-        <span className="flex-1 truncate text-left">{group.title}</span>
+        <Icon className={cn("size-4 shrink-0", active && "text-sidebar-primary")} />
+        <span className="flex-1 truncate text-left text-xs font-semibold tracking-wide uppercase">
+          {group.title}
+        </span>
+        <span
+          className={cn(
+            "flex size-4 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-medium tabular-nums transition-colors",
+            active
+              ? "bg-sidebar-primary/20 text-sidebar-primary"
+              : "bg-sidebar-foreground/10 text-sidebar-foreground/50"
+          )}
+        >
+          {group.items.length}
+        </span>
         <ChevronDown
-          className={cn("size-3.5 shrink-0 transition-transform duration-200", open && "rotate-180")}
+          className={cn(
+            "size-3.5 shrink-0 text-sidebar-foreground/40 transition-transform duration-200",
+            open && "rotate-180"
+          )}
         />
       </Collapsible.Trigger>
       <Collapsible.Panel className="overflow-hidden data-ending-style:h-0 data-starting-style:h-0">
-        <div className="space-y-0.5 py-0.5">
+        <div className="relative ml-[1.15rem] space-y-0.5 border-l border-sidebar-border py-1 pl-0">
           {group.items.map((item) => (
             <NavLink
               key={item.href}
@@ -180,22 +213,25 @@ function SidebarBody({
           collapsed && "justify-center px-2"
         )}
       >
-        <Image
-          src="/images/pciu-logo.png"
-          alt="PCIU"
-          width={32}
-          height={32}
-          className="size-8 shrink-0 object-contain"
-        />
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-sidebar-accent ring-1 ring-sidebar-border">
+          <Image
+            src="/images/pciu-logo.png"
+            alt="PCIU"
+            width={22}
+            height={22}
+            className="size-5.5 shrink-0 object-contain"
+          />
+        </div>
         {!collapsed && (
-          <p className="font-heading font-bold leading-tight text-sidebar-foreground">
-            PCIU Admin
-          </p>
+          <div className="min-w-0">
+            <p className="font-heading font-bold leading-tight text-sidebar-foreground">PCIU Admin</p>
+            <p className="text-[0.6875rem] leading-tight text-sidebar-foreground/45">Content Dashboard</p>
+          </div>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-2 pb-2">
+      <nav className="scrollbar-thin flex-1 space-y-1 overflow-y-auto px-2 pb-2">
         {TOP_LEVEL_ITEMS.map((item) => (
           <NavLink
             key={item.href}
@@ -208,17 +244,19 @@ function SidebarBody({
           />
         ))}
 
-        <div className={cn("my-2 border-t border-sidebar-border", collapsed && "mx-1")} />
+        <div className={cn("my-3 border-t border-sidebar-border", collapsed && "mx-1")} />
 
-        {NAV_GROUPS.map((group) => (
-          <NavGroupItem
-            key={group.key}
-            group={group}
-            pathname={pathname}
-            collapsed={collapsed}
-            onNavigate={onNavigate}
-          />
-        ))}
+        <div className="space-y-0.5">
+          {NAV_GROUPS.map((group) => (
+            <NavGroupItem
+              key={group.key}
+              group={group}
+              pathname={pathname}
+              collapsed={collapsed}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </div>
       </nav>
 
       {/* Footer */}
@@ -226,7 +264,7 @@ function SidebarBody({
         <button
           type="button"
           className={cn(
-            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/65 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
             collapsed && "justify-center px-0"
           )}
         >
@@ -275,7 +313,7 @@ export default function AdminSidebar({ collapsed, mobileOpen, onMobileClose }: A
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "sticky top-0 hidden h-screen shrink-0 transition-all duration-300 lg:block",
+          "sticky top-0 hidden h-screen shrink-0 border-r border-sidebar-border transition-all duration-300 lg:block",
           collapsed ? "w-[68px]" : "w-64"
         )}
       >

@@ -55,6 +55,12 @@ export interface EntitySchema<T extends z.ZodTypeAny = z.ZodTypeAny> {
   slug: string;
   /** Human title, e.g. "Teacher". */
   title: string;
+  /**
+   * Plural form for listing headings, e.g. "Teachers". Falls back to
+   * naive `${title}s` when omitted — set this explicitly wherever that
+   * naive form would be wrong (title already plural, irregular plural, ...).
+   */
+  pluralTitle?: string;
   /** One-line description shown under the page heading. */
   description: string;
   icon: LucideIcon;

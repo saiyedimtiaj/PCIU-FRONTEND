@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -88,7 +89,12 @@ export default function FacultyTable({ profiles }: { profiles: FacultyProfile[] 
   return (
     <>
       <div className="flex justify-end mb-4">
-        <Button variant="highlight" size="sm">
+        <Button
+          variant="highlight"
+          size="admin"
+          render={<Link href="/admin/people/teacher/new" />}
+          nativeButton={false}
+        >
           <Plus className="size-4" />
           Add Faculty Member
         </Button>

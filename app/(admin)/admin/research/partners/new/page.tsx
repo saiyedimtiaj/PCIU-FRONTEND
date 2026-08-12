@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewPartnerPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="partners" cancelHref="/admin" />
+      <EntityFormClient slug="partners" cancelHref="/admin/research/partners" />
     </div>
   );
 }

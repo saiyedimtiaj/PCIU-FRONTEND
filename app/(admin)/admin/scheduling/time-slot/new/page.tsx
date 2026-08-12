@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewTimeSlotPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="time-slot" cancelHref="/admin" />
+      <EntityFormClient slug="time-slot" cancelHref="/admin/scheduling/time-slot" />
     </div>
   );
 }

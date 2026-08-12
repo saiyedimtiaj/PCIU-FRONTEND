@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewIQACQuickLinkPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="iqac-quick-links" cancelHref="/admin" />
+      <EntityFormClient slug="iqac-quick-links" cancelHref="/admin/iqac/iqac-quick-links" />
     </div>
   );
 }

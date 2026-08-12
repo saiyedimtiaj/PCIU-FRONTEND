@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewManagementMemberPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="management" cancelHref="/admin" />
+      <EntityFormClient slug="management" cancelHref="/admin/iqac/management" />
     </div>
   );
 }

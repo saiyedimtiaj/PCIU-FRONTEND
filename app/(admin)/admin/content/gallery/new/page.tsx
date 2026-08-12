@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewGalleryItemPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="gallery" cancelHref="/admin" />
+      <EntityFormClient slug="gallery" cancelHref="/admin/content/gallery" />
     </div>
   );
 }

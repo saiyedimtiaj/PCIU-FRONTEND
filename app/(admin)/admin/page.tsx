@@ -1,20 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FileText, CheckCircle2, PencilLine, Users, ArrowRight } from "lucide-react";
+import { Users, PencilLine, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import PageHeader from "@/components/admin/PageHeader";
+import { ENTITY_REGISTRY, ENTITY_GROUP_ORDER } from "@/lib/admin/entities";
+import { groupRouteSegment } from "@/components/admin/nav-groups";
 import RecentPagesTable from "./_ui/RecentPagesTable";
+import DashboardTabs from "./_ui/DashboardTabs";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Port City International University",
 };
-
-const STATS = [
-  { label: "Total Pages", value: "12", icon: FileText, tint: "text-primary bg-primary/10" },
-  { label: "Published", value: "12", icon: CheckCircle2, tint: "text-secondary bg-secondary-light" },
-  { label: "Content Sections", value: "34", icon: PencilLine, tint: "text-accent bg-accent-light" },
-  { label: "Faculty Profiles", value: "20", icon: Users, tint: "text-highlight bg-accent-light" },
-];
 
 const QUICK_LINKS = [
   { label: "Add Teacher", href: "/admin/people/teacher/new", icon: Users },
@@ -23,33 +20,25 @@ const QUICK_LINKS = [
 ];
 
 export default function AdminDashboardPage() {
+  // Server-computed so this page stays a static server component — only
+  // DashboardTabs (the interactive part) is "use client".
+  const groupCounts = ENTITY_GROUP_ORDER.map((group) => ({
+    group,
+    segment: groupRouteSegment(group),
+    count: Object.values(ENTITY_REGISTRY).filter((entity) => entity.group === group).length,
+  }));
+
   return (
-    <div className="w-full p-6 space-y-8">
-      <p className="text-sm text-muted-foreground">
-        Overview of your site&apos;s content and recent activity.
-      </p>
+    <div className="w-full space-y-6 p-6">
+      <PageHeader
+        title="Dashboard"
+        description="Overview of your site's content and recent activity."
+      />
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {STATS.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.label}>
-              <CardContent className="flex items-center gap-4">
-                <div className={`flex size-11 shrink-0 items-center justify-center rounded-lg ${stat.tint}`}>
-                  <Icon className="size-5" />
-                </div>
-                <div>
-                  <p className="font-heading font-bold text-2xl text-foreground">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      <DashboardTabs groupCounts={groupCounts} />
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-3">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="space-y-3 lg:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-semibold text-lg text-foreground">Recent Pages</h2>
             <Button variant="ghostAccent" size="sm" render={<Link href="/admin/pages" />}>

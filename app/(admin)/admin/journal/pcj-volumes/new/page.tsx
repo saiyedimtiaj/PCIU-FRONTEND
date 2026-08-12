@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewPCJVolumePage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="pcj-volumes" cancelHref="/admin" />
+      <EntityFormClient slug="pcj-volumes" cancelHref="/admin/journal/pcj-volumes" />
     </div>
   );
 }

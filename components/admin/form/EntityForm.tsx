@@ -9,6 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToastManager } from "@/components/ui/toast";
+import PageHeader from "@/components/admin/PageHeader";
 import { FormField } from "./FormField";
 import { FieldArrayInput } from "./FieldArray";
 import type { EntitySchema } from "./form-types";
@@ -45,26 +46,20 @@ export default function EntityForm({ schema, cancelHref = "/admin" }: EntityForm
     toast.add({
       type: "success",
       title: `${schema.title} created`,
-      description: `${(values.name ?? values.title ?? "The new record") as string} was saved successfully.`,
+      description: `${(values.name ?? values.title ?? "The new record") as string} would be saved here once persistence exists.`,
     });
-    reset(schema.defaultValues as FieldValues);
+    // Land back on the listing (the expected CMS flow) rather than
+    // resetting in place, when the caller gave us somewhere to go.
+    if (cancelHref) {
+      router.push(cancelHref);
+    } else {
+      reset(schema.defaultValues as FieldValues);
+    }
   }
-
-  const Icon = schema.icon;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="mb-6 flex items-start gap-4">
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <Icon className="size-5" />
-        </div>
-        <div>
-          <h2 className="font-heading text-lg font-semibold text-foreground">
-            Add {schema.title}
-          </h2>
-          <p className="text-sm text-muted-foreground">{schema.description}</p>
-        </div>
-      </div>
+      <PageHeader title={`Add ${schema.title}`} description={schema.description} icon={schema.icon} />
 
       <div className="space-y-6">
         {schema.sections.map((section) => (
@@ -110,16 +105,17 @@ export default function EntityForm({ schema, cancelHref = "/admin" }: EntityForm
         ))}
       </div>
 
-      <div className="sticky bottom-0 mt-6 flex items-center justify-between gap-3 border-t border-border bg-muted/30 py-4 backdrop-blur-sm">
+      <div className="sticky bottom-0 z-30 -mx-6 mt-8 flex items-center justify-between gap-3 border-t border-border bg-card px-6 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-4px_12px_-4px_hsl(0_0%_0%/0.08)]">
         <Button
           type="button"
           variant="ghost"
+          size="admin"
           onClick={() => router.push(cancelHref)}
         >
           <ArrowLeft className="size-4" />
           Cancel
         </Button>
-        <Button type="submit" variant="highlight" loading={submitting}>
+        <Button type="submit" variant="highlight" size="admin" loading={submitting}>
           Save {schema.title}
         </Button>
       </div>

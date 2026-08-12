@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewIQACDocumentPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="iqac-documents" cancelHref="/admin" />
+      <EntityFormClient slug="iqac-documents" cancelHref="/admin/iqac/iqac-documents" />
     </div>
   );
 }

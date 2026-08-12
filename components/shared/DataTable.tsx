@@ -75,12 +75,12 @@ function SortIcon({
 }) {
   if (sortBy !== field)
     return (
-      <ArrowUpDown className="h-3.5 w-3.5 opacity-0 group-hover/th:opacity-50 transition-opacity" />
+      <ArrowUpDown className="size-3.5 opacity-0 group-hover/th:opacity-50 transition-opacity" />
     );
   return sortOrder === "asc" ? (
-    <ArrowUp className="h-3.5 w-3.5 text-primary" />
+    <ArrowUp className="size-3.5 text-primary" />
   ) : (
-    <ArrowDown className="h-3.5 w-3.5 text-primary" />
+    <ArrowDown className="size-3.5 text-primary" />
   );
 }
 
@@ -184,21 +184,19 @@ function TablePagination({
         <div className="flex items-center gap-1">
           <Button
             variant="outline"
-            size="sm"
-            className="h-8 w-8 p-0"
+            size="icon-sm"
             disabled={page <= 1}
             onClick={() => onPageChange?.(1)}
           >
-            <ChevronsLeft className="h-3.5 w-3.5" />
+            <ChevronsLeft className="size-3.5" />
           </Button>
           <Button
             variant="outline"
-            size="sm"
-            className="h-8 w-8 p-0"
+            size="icon-sm"
             disabled={page <= 1}
             onClick={() => onPageChange?.(page - 1)}
           >
-            <ChevronLeft className="h-3.5 w-3.5" />
+            <ChevronLeft className="size-3.5" />
           </Button>
           {(() => {
             const pages: (number | "ellipsis")[] = [];
@@ -217,7 +215,7 @@ function TablePagination({
               p === "ellipsis" ? (
                 <span
                   key={`dots-${idx}`}
-                  className="h-8 w-8 flex items-center justify-center text-xs text-muted-foreground select-none"
+                  className="size-7 flex items-center justify-center text-xs text-muted-foreground select-none"
                 >
                   …
                 </span>
@@ -225,8 +223,8 @@ function TablePagination({
                 <Button
                   key={p}
                   variant={page === p ? "default" : "outline"}
-                  size="sm"
-                  className="h-8 w-8 p-0 text-xs"
+                  size="icon-sm"
+                  className="text-xs"
                   onClick={() => onPageChange?.(p)}
                 >
                   {p}
@@ -236,21 +234,19 @@ function TablePagination({
           })()}
           <Button
             variant="outline"
-            size="sm"
-            className="h-8 w-8 p-0"
+            size="icon-sm"
             disabled={page >= totalPages}
             onClick={() => onPageChange?.(page + 1)}
           >
-            <ChevronRight className="h-3.5 w-3.5" />
+            <ChevronRight className="size-3.5" />
           </Button>
           <Button
             variant="outline"
-            size="sm"
-            className="h-8 w-8 p-0"
+            size="icon-sm"
             disabled={page >= totalPages}
             onClick={() => onPageChange?.(totalPages)}
           >
-            <ChevronsRight className="h-3.5 w-3.5" />
+            <ChevronsRight className="size-3.5" />
           </Button>
         </div>
       )}
@@ -316,12 +312,12 @@ export default function DataTable<T>({
                       className={`px-5 py-3.5 ${align} ${vis} ${col.headerClassName ?? ""}`}
                     >
                       {col.sortField ? (
-                        <button className="group/th flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground font-poppins cursor-default">
+                        <button className="group/th flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground font-heading cursor-default">
                           {col.header}
-                          <ArrowUpDown className="h-3.5 w-3.5 opacity-20" />
+                          <ArrowUpDown className="size-3.5 opacity-20" />
                         </button>
                       ) : typeof col.header === "string" ? (
-                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-poppins">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-heading">
                           {col.header}
                         </span>
                       ) : (
@@ -381,7 +377,7 @@ export default function DataTable<T>({
                     {col.sortField && onSort ? (
                       <button
                         onClick={() => onSort(col.sortField!)}
-                        className="group/th flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors font-poppins"
+                        className="group/th flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors font-heading"
                       >
                         {col.header}
                         <SortIcon
@@ -391,7 +387,7 @@ export default function DataTable<T>({
                         />
                       </button>
                     ) : typeof col.header === "string" ? (
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-poppins">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-heading">
                         {col.header}
                       </span>
                     ) : (

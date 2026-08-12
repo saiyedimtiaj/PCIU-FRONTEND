@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewHeroSlidePage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="hero-slides" cancelHref="/admin" />
+      <EntityFormClient slug="hero-slides" cancelHref="/admin/content/hero-slides" />
     </div>
   );
 }

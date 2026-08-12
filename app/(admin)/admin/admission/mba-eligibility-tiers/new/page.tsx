@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewMBAEligibilityTierPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="mba-eligibility-tiers" cancelHref="/admin" />
+      <EntityFormClient slug="mba-eligibility-tiers" cancelHref="/admin/admission/mba-eligibility-tiers" />
     </div>
   );
 }

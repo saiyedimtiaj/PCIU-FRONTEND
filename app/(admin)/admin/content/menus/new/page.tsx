@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NewMenuItemPage() {
   return (
     <div className="w-full p-6">
-      <EntityFormClient slug="menus" cancelHref="/admin" />
+      <EntityFormClient slug="menus" cancelHref="/admin/content/menus" />
     </div>
   );
 }
