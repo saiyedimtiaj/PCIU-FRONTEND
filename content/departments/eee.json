@@ -1,0 +1,78 @@
+{
+  "slug": "eee",
+  "chairmanHeading": "Message from Coordinator",
+  "facilitiesHeading": "Lab Facilities",
+  "facultyQueryParam": "Electrical and Electronic Engineering",
+  "hero": {
+    "badge": "Faculty of Science and Engineering",
+    "title": "Department of Electrical and Electronic Engineering",
+    "subtitle": "Powering innovation through excellence in electrical and electronic engineering education."
+  },
+  "chairman": {
+    "name": "Dr. Quazi Delwar Hossain",
+    "designation": "Coordinator & Professor",
+    "message": [
+      "Welcome to the Department of Electrical and Electronic Engineering at Port City International University. Our department is dedicated to nurturing skilled engineers who can contribute to the advancement of electrical and electronic technology.",
+      "The EEE department offers a comprehensive curriculum that covers power systems, electronics, telecommunications, and control systems. Our faculty members bring extensive academic and industry experience to provide students with both theoretical knowledge and practical skills.",
+      "We are committed to producing graduates who are not only technically proficient but also ethical and socially responsible engineers ready to tackle the challenges of modern society."
+    ]
+  },
+  "overview": {
+    "hasImage": true,
+    "content": [
+      "The Department of Electrical and Electronic Engineering at Port City International University was established with the vision to produce highly skilled engineers capable of contributing to the nation's technological advancement.",
+      "Our comprehensive curriculum covers core areas including power systems engineering, electronics, telecommunications, control systems, and emerging technologies like renewable energy and smart grid systems.",
+      "With well-equipped laboratories and experienced faculty members, the department provides students with both theoretical knowledge and hands-on practical experience necessary for successful careers in the electrical and electronics industry."
+    ]
+  },
+  "programs": [
+    { "name": "BSc in Electrical & Electronic Engineering", "duration": "4 Years", "credits": "160", "description": "Comprehensive undergraduate program in EEE.", "concentrations": [] },
+    { "name": "MSc in EEE", "duration": "1.5 Years", "credits": "45", "description": "Advanced graduate program in EEE.", "concentrations": [] },
+    { "name": "PhD in Electrical Engineering", "duration": "3-5 Years", "credits": "60", "description": "Doctoral program in EEE research.", "concentrations": [] }
+  ],
+  "facilities": [
+    { "name": "Power Electronics Lab", "icon": "zap" },
+    { "name": "Digital Electronics Lab", "icon": "cpu" },
+    { "name": "Communication Lab", "icon": "radio" },
+    { "name": "Electrical Machines Lab", "icon": "battery" }
+  ],
+  "notices": [
+    { "title": "Admission Open for BSc in EEE Spring 2025", "date": "2025-01-15", "type": "admission" },
+    { "title": "Industrial Visit to Power Grid Bangladesh", "date": "2025-01-08", "type": "event" },
+    { "title": "Seminar on Renewable Energy Technologies", "date": "2025-01-02", "type": "event" },
+    { "title": "Project Exhibition and Competition", "date": "2024-12-25", "type": "event" }
+  ],
+  "contact": {
+    "address": "Department of EEE\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-123456 (Ext. 230)",
+    "email": "eee@pciu.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "University Library", "url": "/library" },
+    { "label": "Student Portal", "url": "#" },
+    { "label": "Research Publications", "url": "#" },
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Scholarship Information", "url": "#" },
+    { "label": "Career Services", "url": "#" }
+  ],
+  "facultyMembers": [
+    { "name": "Dr. Quazi Delwar Hossain", "designation": "Coordinator & Professor", "specialization": "Power Systems" },
+    { "name": "Prof. Rafiqul Islam", "designation": "Professor", "specialization": "Control Systems" },
+    { "name": "Dr. Kamal Ahmed", "designation": "Associate Professor", "specialization": "Renewable Energy" },
+    { "name": "Dr. Nasima Akter", "designation": "Assistant Professor", "specialization": "Smart Grid" },
+    { "name": "Mr. Naeem Pasha", "designation": "Lecturer", "specialization": "Embedded Systems" },
+    { "name": "Dr. Sharif Ahmed", "designation": "Assistant Professor", "specialization": "Telecommunications" }
+  ],
+  "researchAreas": [
+    { "title": "Renewable Energy Systems", "author": "Dr. Quazi Delwar Hossain, Dr. Kamal Ahmed", "description": "Research on solar power optimization, wind energy systems, and hybrid renewable energy solutions for Bangladesh." },
+    { "title": "Smart Grid Technology", "author": "Prof. Rafiqul Islam, Dr. Nasima Akter", "description": "Developing intelligent power distribution systems with advanced monitoring and control capabilities." },
+    { "title": "Embedded Systems & IoT", "author": "Mr. Naeem Pasha, Dr. Faisal Rahman", "description": "Research on microcontroller-based systems and Internet of Things applications in industrial automation." },
+    { "title": "Telecommunications & Signal Processing", "author": "Dr. Sharif Ahmed", "description": "Advanced research in digital signal processing, wireless communications, and antenna design." }
+  ],
+  "achievements": [
+    { "value": "600+", "label": "Graduates" },
+    { "value": "25+", "label": "IEEE Publications" },
+    { "value": "10+", "label": "Industry Partners" }
+  ]
+}

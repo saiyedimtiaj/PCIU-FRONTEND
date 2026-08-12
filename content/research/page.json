@@ -13,7 +13,7 @@
     { "title": "Renewable Energy & Sustainability", "icon": "microscope", "color": "from-emerald-500 to-green-600" },
     { "title": "Smart Textile & Fashion Technology", "icon": "award", "color": "from-pink-500 to-rose-600" },
     { "title": "Business, Finance & Economics", "icon": "users", "color": "from-amber-500 to-orange-600" },
-    { "title": "Law, Human Rights & Governance", "icon": "file-signature", "color": "from-purple-500 to-fuchsia-600" },
+    { "title": "Law, Human Rights & Governance", "icon": "scale", "color": "from-purple-500 to-fuchsia-600" },
     { "title": "Applied Linguistics & Media Studies", "icon": "book-open", "color": "from-red-500 to-pink-600" },
     { "title": "Civil Infrastructure & Urban Planning", "icon": "microscope", "color": "from-slate-500 to-gray-700" }
   ],

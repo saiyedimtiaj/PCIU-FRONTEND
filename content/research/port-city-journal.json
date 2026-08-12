@@ -1,0 +1,301 @@
+{
+  "intro": "Port City International University publishes a peer-reviewed multidisciplinary journal every year, featuring original and high-quality articles, research reports and case studies covering Humanities, Social Sciences, Business, Science and Technology. The half-yearly journal is published in December and June. Its editorial board comprises eminent Professors from across the country, inviting manuscripts with scholarly debates and innovative thoughts on original research, theoretical papers, literature reviews and short communications.",
+  "contactEmail": "pciujournal@portcity.edu.bd",
+  "contactPhone": "+880-2333-369877",
+  "volumes": [
+    {
+      "id": "v1-1",
+      "title": "Journal (Volume 1, Issue 1)",
+      "sections": [
+        {
+          "name": "Business",
+          "articles": [
+            { "title": "Effective Teaching as a Tool for Ensuring Quality in Higher Education: An Explorative Study", "authors": "Dr. Md. Abu Taher & Dr. Harunur Rashid", "page": 1 },
+            { "title": "Creative Accounting: Is it a Form of Legal Manipulation?", "authors": "Dr. Junaid M Shaikh & Asif Mahbub Karim", "page": 16 },
+            { "title": "Identifying the Reasons for Which People Quit Their Jobs: An Empirical Study in the Organizations of Bangladesh", "authors": "Md. Jahangir Alam, Md. Mahofuzur Rahman & Md. Farid Hossain Talukder", "page": 25 },
+            { "title": "Finding the Ideal Organization using Alfred D. Chandler's Theory", "authors": "Sanjida Haider & F.M. Tanim Hossain", "page": 38 },
+            { "title": "Present Propensity and Prospect of Electronic Banking in Bangladesh", "authors": "Farzana Amin", "page": 44 }
+          ]
+        },
+        {
+          "name": "English",
+          "articles": [
+            { "title": "Teaching English for Specific Purposes in Bangladesh: A Case Study of Noakhali Science and Technology University", "authors": "Md. Maruf Ul Alam & Mainul Hasan Chowdhury", "page": 107 },
+            { "title": "An Individual Confronts Society in Bellow's Seize the Day", "authors": "A S M Iftekarul Azam", "page": 114 },
+            { "title": "Integrating Language and Literature in Teaching English: A Critical Study", "authors": "Rayhana Fatema Chowdhury", "page": 118 }
+          ]
+        },
+        {
+          "name": "Journalism",
+          "articles": [
+            { "title": "Media's Watchdog Role, Neutrality and Independence: What did the Legends say?", "authors": "Quazi Abdul Marman & Zahedur Rahman Arman", "page": 125 }
+          ]
+        },
+        {
+          "name": "Law",
+          "articles": [
+            { "title": "Implementation of Restorative Justice in Juvenile Administration: A Way of Diverting Young Offenders Away from Formal Justice", "authors": "Sadia Sharmin & Anup Kumar Bishwas", "page": 132 },
+            { "title": "Constitutional Watchdogs (Short Communication)", "authors": "Nizam Uddin Md. Bayzid", "page": 14 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v1-2",
+      "title": "Journal (Volume 1, Issue 2)",
+      "sections": [
+        {
+          "name": "Business",
+          "articles": [
+            { "title": "Perception of Creative Accounting Techniques and Applications and Review of Sarbanes Oxley Act 2002: A Gap Analysis among Auditors and Accountants in Bangladesh", "authors": "Asif Mahbub Karim, Dr. Junaid M Shaikh & Dr. Oo Yu Hock", "page": 1 },
+            { "title": "Human Resource Accounting Information System (HRAIS) and Its Impact on Human Resource Department: An Overview of Selected Listed Commercial Banks of Bangladesh", "authors": "Md. Mahofuzur Rahman, Md. Jahangir Alam & Asif Mahbub Karim", "page": 14 }
+          ]
+        },
+        {
+          "name": "Science and Engineering",
+          "articles": [
+            { "title": "An Overview of Blow Room - The First Operation of Spinning Department", "authors": "Mafzal Ahmed", "page": 23 },
+            { "title": "Effect of Changing Arm Pressure of Drafting Zone of a Roving Frame on Yarn Quality", "authors": "Nafis Abir, Sanaullah Murad, Nur-Us-Shafa Mojumder", "page": 28 },
+            { "title": "On the Relationship Between Sediment Build-up on Roads and Antecedent Dry Days", "authors": "Sudip Kumar Pal, Tareq Mahmood & Md. Rakibul Islam", "page": 35 },
+            { "title": "An Assessment of the Feasibility of Ecological Sanitation (EcoSan): Bangladesh Perspective", "authors": "M.F.R. Zuthi, M.H. Mazumder, S.A. Eti, M.I. Shovon", "page": 44 },
+            { "title": "Domestic Rainwater Harvesting: A Feasibility Study of Socio-Economic Aspects in Chandgaon Residential Area", "authors": "Md. Abu Yusuf & Farhana Jabin", "page": 52 },
+            { "title": "A Study on Effect of Industrial Effluents on Surrounding Environment (Water Body)", "authors": "Md. Abu Yusuf, Fahmida Parvin, Md. Arifur Rahman & Indrajit Barua", "page": 62 },
+            { "title": "Highway Materials - A Case Study on Joydevpur-Mymensingh Road Improvement Project", "authors": "Ehsanul Kabir, S.M. Rahat Rahman & Md. Abul Kalam Azad", "page": 68 },
+            { "title": "A Scoping Review of Congestion Pricing: Past Work and Its Implementation Benefits", "authors": "S.M.R. Rahman, E. Kabir & M.R. Mannan", "page": 74 },
+            { "title": "Publishing Linked Open Data on Independence History of Bangladesh Based on Semantic Web", "authors": "Sajib Tripura, Nayan Kumar Nath & Sowmitra Das", "page": 88 },
+            { "title": "Several Applications of Natural Numbers in Real World", "authors": "Mithun Chandra Nath & Syed Anayet Karim", "page": 101 },
+            { "title": "Numerical Integration of Higher Order Quadrature Method of Cauchy Principal Value Integrals", "authors": "Mithun Chandra Nath & Syed Anayet Karim", "page": 108 },
+            { "title": "Viscosity Correlation for Some Binary Alkanol Systems", "authors": "M. Mehedi Hasan Rocky, M. Amzad Hossain Bhuyan & Shamim Akhtar", "page": 114 },
+            { "title": "Correlation of Viscosity for Some Binary Organic Liquid Systems", "authors": "M. Mehedi Hasan Rocky, M. Amzad Hossain Bhuyan & Shamim Akhtar", "page": 120 }
+          ]
+        },
+        {
+          "name": "English",
+          "articles": [
+            { "title": "Eye–Heart: A Mortal War or Oneness in Love in Shakespeare's Sonnets 46 and 47", "authors": "Rayhana Fatema Chowdhury", "page": 126 }
+          ]
+        },
+        {
+          "name": "Law",
+          "articles": [
+            { "title": "Disproving Myths and Misconceptions About Judicial Enforceability of Socio-Economic Rights", "authors": "Jakir Hossain", "page": 132 },
+            { "title": "An Overview Over Risk Factors of Juvenile Delinquency & the Features of Effective Intervention of Youth Offenders", "authors": "Sadia Sharmin", "page": 142 }
+          ]
+        },
+        {
+          "name": "Short Communication",
+          "articles": [
+            { "title": "David Garland (2000): The Culture of High Crime Societies — A Review", "authors": "Nizam Uddin & Md. Bayzid", "page": 153 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v3",
+      "title": "Journal (Volume 3, Issue 1+2)",
+      "sections": [
+        {
+          "name": "Business",
+          "articles": [
+            { "title": "Overview of Research Collaboration through Networking among Universities", "authors": "Junaid M. Shaikh", "page": 1 },
+            { "title": "Identifying the Factors of Lifestyle that Influence Undergraduate Private University Students for Using Networking Sites", "authors": "Nafisa Newaz", "page": 9 },
+            { "title": "Financial Factors Affecting the Capital Structure of Banking Industry of Bangladesh: An Empirical Study on Listed Banks in DSE", "authors": "Washeka Anjom", "page": 15 }
+          ]
+        },
+        {
+          "name": "Science and Engineering",
+          "articles": [
+            { "title": "An Overview of Textile Fiber Density", "authors": "Mafzal Ahmed", "page": 23 },
+            { "title": "A Study on Household Solid Waste Management in Chittagong City", "authors": "Afsana Alam Akhie, Md. Abu Yusuf & Farhana Jabin", "page": 29 },
+            { "title": "Isolated Offline Handwritten English Digit Recognition System Using Diagonal Feature Extraction Technique", "authors": "Manoara Begum, Nayan Kumar Nath, Tahmida Akter & Dr. Mohammad Khairul Islam", "page": 37 },
+            { "title": "Kohonen Neural Networks Based Handwritten Bangla Character Recognition", "authors": "Yasmin Ara Akter & Taslima Binte Hossain", "page": 47 },
+            { "title": "An Approach to Improve Airline Reservation System & Data Analysis", "authors": "Anupia Barua & Manisha Biswas", "page": 55 },
+            { "title": "Applications of Conformal Mapping in Science and Engineering", "authors": "Md. Aminul Islam", "page": 63 },
+            { "title": "Estimation of Global, Diffuse and Beam Solar Radiation on Horizontal Surface of Bangladesh Using Meteorological Parameters Based Model", "authors": "Sajib Barua, Shaiful Kabir, Main Uddin", "page": 69 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v4",
+      "title": "Volume 4, Issue 1+2 (December 2017)",
+      "year": "2017",
+      "intro": "A journal may be considered as a mirror of academic researches of faculty members. We hope the articles will be useful to various interested groups and researchers.",
+      "sections": [
+        {
+          "name": "Business",
+          "articles": [
+            { "title": "Adaptation of Creative Accounting Practices: A Case Study on its Solution Among Accountants and Auditors of Non-Listed Companies", "authors": "Asif Mahbub Karim, Junaid M Shaikh, Oo Yu Hock", "page": 1 },
+            { "title": "Scenario of Classified Loan and Recovery Performance: A Study on Janata Bank Limited", "authors": "Mossammat Kamrun Nahar", "page": 16 },
+            { "title": "Grameenphone's (GP's) Prosperity Depends on Customers' Satisfaction", "authors": "Azmat Ullah, K.M. Rafiur Rahman", "page": 24 }
+          ]
+        },
+        {
+          "name": "Science and Engineering",
+          "articles": [
+            { "title": "Effect of Dyeing Parameters - pH and Temperature in Disperse Dyeing", "authors": "Nur-Us-Shafa Mazumder, Md. Mehedi Hasan Tusher, Md. Ashif Hossain Shuvo", "page": 38 },
+            { "title": "A Study on Concrete Strength in Marine and Natural Environment in Chittagong City", "authors": "M.N. Uddin, S. Rahman, N. Tamanna", "page": 45 },
+            { "title": "The Essence of Power Electronics Devices on Renewable Energy Sources", "authors": "Deepak Kumar Chowdhury, Md. Khaliluzzaman", "page": 45 },
+            { "title": "A Geo-visual Analytics Approach for Geospatial and Temporal Data", "authors": "Monisha Biswas, Md. Monjur-Ul-Hasan", "page": 52 },
+            { "title": "Anti-corruption BD: A Platform for Fighting Corruption in Bangladesh", "authors": "Kamrul Hossain Patwary, Ahmed Imteaj, Fujaila Shahnaj, Saika Zaman, Md. Rashedul Islam", "page": 73 },
+            { "title": "On the Performance Evaluation of Social Aware Routing Protocols in Delay-Tolerant Networks", "authors": "Maqsudur Rahman, Sowmitra Das", "page": 80 },
+            { "title": "Newton's Forward Interpolation: A Better Interpolation to Find a Polynomial Curve Through Numerical Data", "authors": "S.M Osman Gani, Syed Anayet Karim, Mamun-Or-Rashid", "page": 89 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v5",
+      "title": "Volume 5, Issue 1+2 (December 2018)",
+      "year": "2018",
+      "intro": "This volume includes articles on contemporary issues of Business, Science, English and Social Studies. The editorial board approved 10 research papers for this issue following a rigorous double-blind peer review process.",
+      "sections": [
+        {
+          "name": "Business",
+          "articles": [
+            { "title": "Modern Banking and the Changes in Consumption Behavior of Middle Class Families in Bangladesh: An Empirical Study", "authors": "Md. Mahofuzur Rahman", "page": 1 },
+            { "title": "Factors Influencing Job Satisfaction of Women Workers of RMG Sector in Bangladesh: A Study on CEPZ", "authors": "Md. Musa, Sharmin Akther & Farzana Amin", "page": 10 },
+            { "title": "Major Determinants of Job Satisfaction of Private University Teachers in Bangladesh", "authors": "Sharmin Akther, Farzana Amin & Azmat Ullah", "page": 18 },
+            { "title": "Mobile Banking in Bangladesh: An Empirical Analysis", "authors": "Md. Nokir Uddin & Liton Chandra Sarker", "page": 23 }
+          ]
+        },
+        {
+          "name": "Science and Engineering",
+          "articles": [
+            { "title": "A Study on Application of Gaussian Elimination Method in Real Life", "authors": "Ms. Jamila & Syed Anayet Karim", "page": 38 },
+            { "title": "Calculation of a Polynomial using Lagrange's Interpolation Formula", "authors": "Salena Akther & Md. Aminul Islam", "page": 43 },
+            { "title": "An OOP Based System to Detect Diabetes Mellitus", "authors": "Jarin Tasnim Tonvi, Sadia Islam, Takia Ibnath, Md. Sabir Hossain, Md. Shafiul Alam Forhad & Mohammad Shibli Kaysar", "page": 48 },
+            { "title": "Study on the Effects of Different Parameters on the Spirality of Single Jersey Knitted Fabrics", "authors": "Rajia Sultana, Tahmina Jahan & Rezaul Karim", "page": 57 }
+          ]
+        },
+        {
+          "name": "Social Studies",
+          "articles": [
+            { "title": "The State of Written Corrective Feedback at Secondary Level in Dhaka", "authors": "S.M. Muktadir Billah Munim", "page": 64 },
+            { "title": "New Media as the Tools of Social Interaction Among Youths: An Analysis of Interactive Communication", "authors": "Jewel Das", "page": 69 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v6",
+      "title": "Volume 6, Issue 1+2 (December 2019)",
+      "year": "2019",
+      "intro": "The Editorial Board approved ten research papers for this volume following a rigorous peer-review process.",
+      "sections": [
+        {
+          "name": "Science and Engineering",
+          "articles": [
+            { "title": "Water Quality Assessment of Karnaphuli River in Off-Tide Condition", "authors": "Tasnuva Farnaz, Sheikh Rifat Iftekhar & Ehsanul Kabir", "page": 1 },
+            { "title": "AJPS: Automatic Journal Publishing System", "authors": "Md. Sabir Hossain, Md. Shafiul Alam Forhad, Muhammad Kamrul Hossain Patwary, Mohammad Shibli Kaysar, Md. Obaidur Rahman, Md. Kamrul Hasan", "page": 8 },
+            { "title": "Comparative Analysis of Conventional Routing Protocols in Infrastructure Networking Environment", "authors": "Taofica Amrine & Muhammad Anwarul Azim", "page": 20 },
+            { "title": "Representation of Numerical Data by a Polynomial Curve using Gauss Jordan Method", "authors": "Sharmin Akter", "page": 29 }
+          ]
+        },
+        {
+          "name": "English",
+          "articles": [
+            { "title": "Reminiscence of Repressive State and Violence in Olu Obafemi's 'The Terror in Dark Hollow-Frames'", "authors": "Abdullahi Kadir Ayinde", "page": 36 },
+            { "title": "Content-Based Instruction (CBI) in Bangladeshi Undergraduate Classroom: Prospects and Problems", "authors": "Mainul Islam", "page": 44 },
+            { "title": "A Study of English Pronunciation Problems of Bengali Speaking Learners", "authors": "Dr. Mohammad Kamrul Hassan", "page": 51 },
+            { "title": "Great Expectations: A Clash of Nobility and Social Classes", "authors": "Fahamida Akter", "page": 61 }
+          ]
+        },
+        {
+          "name": "Journalism",
+          "articles": [
+            { "title": "Coverage of Agriculture News in Print Media of Bangladesh: A Content Analysis", "authors": "Dilruba Akter", "page": 67 }
+          ]
+        },
+        {
+          "name": "Law",
+          "articles": [
+            { "title": "Access to Essential Medicines and Right to Public Health", "authors": "Md. Kamrul Hasan Arif", "page": 76 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v7",
+      "title": "Volume 7, Issue 1+2 (December 2020)",
+      "year": "2020",
+      "intro": "This volume contains as many as ten articles in the field of business, science and technology and other related subject areas.",
+      "sections": [
+        {
+          "name": "Science and Engineering",
+          "articles": [
+            { "title": "Recognition of Bangla Characters from Braille Notation using Convolutional Neural Networks", "authors": "Sowmitra Das, Nisha Mony Das, Md. Saimon Hossain & Emam Hossain", "page": 1 },
+            { "title": "A Machine Learning Based Approach on Tourists' Rating Reviews", "authors": "Emam Hossain & Sowmitra Das", "page": 9 },
+            { "title": "Performance Analysis of Ensemble Methods in Predicting Buying Intention of Online Shoppers", "authors": "Mohammed Armanuzzaman Chowdhury, Abdur Rahman & Gobinda Chakraborty", "page": 17 },
+            { "title": "Automatic Headline Generation (AHG) from Single Bengali Document Using LSTM", "authors": "Abdur Rahman, Satyajit Sen & Mohammed Armanuzzaman Chowdhury", "page": 27 },
+            { "title": "Absorption Rate Analysis of Implantable and On-Body Matched Antennas' Radiation on the Human Body", "authors": "Akib Jayed Islam", "page": 37 },
+            { "title": "Design and Performance Analysis of a Six-Element MIMO Antenna for UWB Portable Applications", "authors": "Swarup Chakraborty & Md. Mehedi Farhad", "page": 45 },
+            { "title": "A New Approximation Method for the Estimation of Viscosities of Liquid Mixtures Using UNIFAC-VISCO Model", "authors": "M. Mehedi Hasan Rocky, Iqbal Hossen, M. Kamrul Hassan, Syeda Rahimon Naher & Shamim Akhtar", "page": 55 },
+            { "title": "Minimizing Lead Time to Increase Production Efficiency in Apparel Industry Through Line Balancing", "authors": "Md. Nazif Hasan Chowdhury, Abdul Kayum & Riazul Alam Shihab", "page": 63 }
+          ]
+        },
+        {
+          "name": "English",
+          "articles": [
+            { "title": "A Close Investigation of the Interaction Between the Individual and the Society in 'The American Scholar' by Ralph Waldo Emerson", "authors": "Md. Rashed Khan Milon", "page": 73 },
+            { "title": "Oral Presentations in English and the Barriers Faced by Bangladeshi Engineering Undergraduates", "authors": "Nahida Sultana, Fatema Sultana & Mohammad Kamrul Hassan", "page": 83 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v8",
+      "title": "Volume 8, Issue 1+2 (December 2021)",
+      "year": "2021",
+      "intro": "Eleven articles have been selected for publication in this volume on contemporary issues of Business, Social Science, Humanities, Science and Technology.",
+      "sections": [
+        {
+          "name": "Science and Engineering",
+          "articles": [
+            { "title": "Computer Assistant with Bilingual Voice Commands", "authors": "Farzina Akther, Mohammed Saidul Islam & Miftahul Jannat Mokarrama", "page": 1 },
+            { "title": "Skin Cancer Classification System using Deep Learning Approach", "authors": "Manoara Begum & Abdalla Suleiman Sufi", "page": 11 },
+            { "title": "Comparative Analysis of Carded and Combed Knitted Finished Fabric", "authors": "Tahmina Jahan & Rajia Sultana", "page": 21 },
+            { "title": "Extraction of Chitosan from Shrimp Shells and Its Impact on Reactive Dyeing", "authors": "Md. Rezaul Karim, Mafzal Ahmed & Shubhajit Dutta", "page": 29 },
+            { "title": "Estimation of a Polynomial Using Newton's Divided Difference Interpolation Formula", "authors": "Md. Aminul Islam & S.M. Osman Gani", "page": 37 },
+            { "title": "Calculation of a Polynomial Using Newton's Backward Divided Difference Interpolation Formula", "authors": "S.M. Osman Gani & Md. Aminul Islam", "page": 41 },
+            { "title": "Neural Network Approach in Finding the Factors Behind Math Phobia", "authors": "Jahanara Akter Keya, Fuhad Ahmed & Syed Anayet Karim", "page": 45 },
+            { "title": "Assessment of the Activity Concentrations of the Terrestrial Radionuclides in Deep-Soil Samples Collected from Chattogram City", "authors": "Abadat Hossain, M.K. Akter & M.M. Rahman", "page": 57 },
+            { "title": "Sound Velocities and Isentropic Compressibilities of Binary Mixtures of Tri-n-Butyl Phosphate with 2-Propanol and 2-Butanol at Different Temperatures", "authors": "Iqbal Hossen, M. Mehedi Hasan Rocky & Shamim Akhtar", "page": 65 },
+            { "title": "Non-Conventional Maritime Security Threats: The Case of Bangladesh", "authors": "Ataus Samad Raju", "page": 77 }
+          ]
+        },
+        {
+          "name": "English",
+          "articles": [
+            { "title": "A Psychological Discourse of Genocide in Veronique Tadjo's 'The Shadow of Imana: Travels in the Heart of Rwanda'", "authors": "Abdullahi Kadir Ayinde", "page": 83 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v9",
+      "title": "Volume 9, Issue 1+2 (December 2022)",
+      "year": "2022",
+      "intro": "Ten papers have been selected for this volume — three on Humanities, three on Business and the rest on Science and Technology.",
+      "sections": [
+        {
+          "name": "Business Studies",
+          "articles": [
+            { "title": "E-Commerce of Bangladesh During COVID-19 Pandemic: An Empirical Study", "authors": "Kaniz Morshed", "page": 1 },
+            { "title": "Factors Affecting Profitability of the Listed Commercial Banks of Bangladesh: An Empirical Study", "authors": "Washeka Anjom", "page": 11 },
+            { "title": "Determinants of Profitability of the Non-Banking Financial Institutions of Bangladesh - An Empirical Study", "authors": "Farzana Rashid & Washeka Anjom", "page": 18 }
+          ]
+        },
+        {
+          "name": "Science and Engineering",
+          "articles": [
+            { "title": "Evaluation of the Physical and Color Property Changes Due to the Application of Potassium Permanganate (PP) Spray on Raw Denim Fabric", "authors": "Niaz Morshed Rifat, Md. Rafiul Islam, Sheikh Sha Alam, Md. Sayem Ali Chowdhury & Md. Farhad Hossan", "page": 25 },
+            { "title": "Assessment of Physical and Chemical Properties of Municipal Solid Waste — A Case Study in Chattogram City Corporation Area", "authors": "M.J. Alam, M.H. Masum, M.S. Islam & I.J. Ruva", "page": 34 },
+            { "title": "Design and Analysis of a Slotted Microstrip Patch Antenna with DGS for ISM Band", "authors": "Md. Fokhrul Islam", "page": 45 },
+            { "title": "Combined Effects of Radiation and Viscous Dissipation on Unsteady MHD Flow with Convective Thermal Boundary Conditions", "authors": "Md. Aminul Islam, Romena Akter & S.M. Osman Gani", "page": 52 }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "requirement": {
+    "intro": "There are also specific entrance requirements for some courses, particularly in the sciences, so please check the requirements for your course. The qualifications below will only be sufficient alternatives to PCIU where they cover the same content as the required program, to the appropriate standard.",
+    "bachelor": [
+      {
+        "title": "Arts, Law, Social Science & Business",
+        "icon": "book-open",
+        "items": [
+          "Minimum GPA 2.50 in both S.S.C and H.S.C or equivalent",
+          "Minimum 5 subjects in O-Level and 2 subjects in A-Level with minimum grade of B in 4 subjects and C in 3 subjects"
+        ]
+      },
+      {
+        "title": "Science & Engineering",
+        "icon": "graduation-cap",
+        "items": [
+          "Minimum GPA 2.50 in both S.S.C and H.S.C with science background or equivalent",
+          "Minimum 5 subjects in O-Level and 2 subjects in A-Level with minimum grade of B in 4 subjects and C in 3 subjects from science group"
+        ]
+      }
+    ],
+    "mastersGeneral": [
+      "Minimum GPA 2.50 or second division in both S.S.C and H.S.C or equivalent from relevant group",
+      "Minimum 5 subjects in O-Level and 2 subjects in A-Level with minimum grade of B in 4 subjects and C in 3 subjects from relevant group",
+      "Minimum second class or equivalent CGPA in Bachelor's degree from relevant subject/group"
+    ],
+    "programSpecific": [
+      { "program": "MBA, M.A. in English, M.S.S. in Journalism, M.S.S. in Economics (Preliminary & Final)", "req": "Graduates (B.A./B.Sc./B.Com./B.S.S. or equivalent)/Master's degree from any discipline" },
+      { "program": "Master of Laws (LL.M., Final)", "req": "4 years Bachelor of Laws from any recognized university" },
+      { "program": "Master of Laws (LL.M., Preliminary & Final)", "req": "3 years Bachelor of Laws from any recognized university" },
+      { "program": "M.A. in English (Final)", "req": "B.A. (Hons.) in English / 4 years Bachelor's degree in English from any recognized university" },
+      { "program": "M.S.S. in Economics (Final)", "req": "4 years Bachelor's degree in Economics from any recognized university" },
+      { "program": "M.S.S. in Broadcast & Print Journalism (Final)", "req": "4 years Bachelor's degree in Journalism from any recognized university" },
+      { "program": "M.Sc. in Computer Science & Engineering (MCSE)", "req": "B.Sc. in CSE or other relevant subjects" }
+    ]
+  },
+  "admissionTest": {
+    "intro": "Port City International University conducts admission tests for undergraduate programs to assess a student's aptitude and readiness for university-level education. The test is designed to evaluate basic knowledge and analytical skills.",
+    "tracks": [
+      { "title": "Arts, Business & Law Programs", "subjects": ["English (Grammar, Comprehension, Vocabulary)", "General Knowledge & Current Affairs", "Analytical Ability & IQ", "Basic Mathematics"], "footer": "Duration: 1 Hour | Total Marks: 50" },
+      { "title": "Science & Engineering Programs", "subjects": ["Mathematics (H.S.C. level)", "Physics (H.S.C. level)", "Chemistry (H.S.C. level)", "English (Grammar & Comprehension)"], "footer": "Duration: 1 Hour | Total Marks: 50" }
+    ],
+    "guidelines": [
+      "Bring your Admit Card and a valid photo ID (National ID / Birth Certificate / Passport).",
+      "Arrive at the test venue at least 30 minutes before the scheduled time.",
+      "Use of mobile phones, calculators, or any electronic devices is strictly prohibited inside the exam hall.",
+      "Carry your own pen, pencil, eraser, and sharpener — no borrowing is allowed during the test.",
+      "The test is MCQ-based; there is no negative marking.",
+      "Results will be published on the PCIU website and notice board within 3-5 working days."
+    ],
+    "admitCardSteps": [
+      { "step": 1, "text": "Submit the filled-out application form with required documents at the Admission Office." },
+      { "step": 2, "text": "Pay the admission test fee of BDT 1,000 (non-refundable)." },
+      { "step": 3, "text": "Collect your Admit Card from the Admission Office or download from the PCIU website." },
+      { "step": 4, "text": "The Admit Card will mention your test date, time, and venue." }
+    ],
+    "note": "Note: Students eligible for Direct Admission (GPA 3.00+ in both SSC & HSC) do not need to appear for the admission test. Contact the Admission Office at +880-1851120791 for more details."
+  },
+  "directAdmission": {
+    "intro": "Port City International University offers direct admission to eligible students who meet specific academic criteria, allowing them to bypass the admission test and secure their seat immediately.",
+    "undergraduateEligibility": [
+      "Students with GPA 3.00 or above in both S.S.C and H.S.C (or equivalent) are eligible for direct admission.",
+      "O-Level & A-Level students with minimum grade B in 4 subjects and C in 3 subjects are eligible.",
+      "Students with Diploma in Engineering (minimum GPA 2.50) are eligible for direct admission into B.Sc. Engineering programs with credit transfer."
+    ],
+    "mastersEligibility": [
+      "All applicants meeting the minimum admission requirement for the respective Master's program are eligible for direct admission.",
+      "No admission test is required for Master's degree programs."
+    ],
+    "process": [
+      { "step": 1, "title": "Visit the Admission Office", "desc": "Come to the PCIU campus with your original academic documents for verification." },
+      { "step": 2, "title": "Submit Application Form", "desc": "Fill out the admission form and attach required documents and photographs." },
+      { "step": 3, "title": "Document Verification", "desc": "Your academic certificates and transcripts will be verified on the spot." },
+      { "step": 4, "title": "Pay Admission Fee", "desc": "Upon eligibility confirmation, pay the admission fee and semester tuition to secure your seat." },
+      { "step": 5, "title": "Receive Admission Letter", "desc": "Collect your official admission letter, student ID, and class schedule." }
+    ],
+    "note": "Note: Direct admission is subject to seat availability. Students are encouraged to apply early to secure their preferred program. For more information, contact the Admission Office at +880-1851120791 or email admission@portcity.edu.bd."
+  },
+  "documentsRequired": {
+    "bachelor": {
+      "atSubmission": [
+        "Filled out application form",
+        "Attested photocopies of S.S.C. or equivalent Marks sheet and Certificate or Testimonial",
+        "Attested photocopies of H.S.C. or equivalent Marks sheet and Certificate or Testimonial",
+        "Attested photocopies of National ID or Birth Certificate or Passport"
+      ],
+      "atAdmission": [
+        "Original Marks sheet & Certificate or Testimonial of both S.S.C and H.S.C or equivalent must be shown at the time of admission",
+        "04 (four) copies of pp size attested & 03 (three) copies of stamp size color photographs",
+        "Attested photocopies of H.S.C. or equivalent Marks sheet and Certificate or Testimonial",
+        "Attested photocopies of National ID or Birth Certificate or Passport"
+      ]
+    },
+    "masters": {
+      "atSubmission": [
+        "Filled out application form",
+        "Attested photocopies of Marks Sheet and Certificate or Testimonial of S.S.C. or equivalent",
+        "Attested photocopies of Marks Sheet and Certificate or Testimonial of H.S.C. or equivalent",
+        "Attested photocopies of Marks Sheet and Certificate or Testimonial of Graduation",
+        "Attested photocopies of Marks Sheet and Certificate or Testimonial of Master's Degree (if applicable)",
+        "Attested photocopies of National ID or Birth Certificate or Passport",
+        "Job Experience certificate (if necessary)"
+      ],
+      "atAdmission": [
+        "Original Marks sheet & Certificate or Testimonial of all degrees must be shown at the time of admission",
+        "Attested photocopies of Marks Sheet and Certificate or Testimonial of S.S.C. or equivalent",
+        "04 (four) copies of pp size attested & 03 (three) copies of stamp size color photographs",
+        "Student must be present physically at the time of admission"
+      ]
+    },
+    "note": "Note: Failure to submit any of the documents or photographs along with the 'Application Form' stated above will be considered / treated as incomplete form which may result in cancellation of the application form / admission."
+  },
+  "paymentPolicy": {
+    "rules": [
+      "Admission fee is due to be paid at the time of admission which is non-refundable.",
+      "50% tuition fee/course fee of a trimester is to be paid before 10 days of mid-term examination and the rest 50% is to be paid before 10 days of final examination.",
+      "Students failing to pay their tuition fee in due time will have the chance to pay with late fee according to the policy set forth by the university.",
+      "Students are required to pay their tuition fee and other dues before collecting their admit cards for midterm and final examination.",
+      "University authority reserves the right to cancel the enrollment/admission of any student failing to meet the financial obligation incurred by registration."
+    ],
+    "banks": [
+      { "name": "Dutch Bangla Bank Ltd.", "account": "129.110.15436", "branch": "O R Nizam Road Branch, Chattogram" },
+      { "name": "Exim Bank Ltd.", "account": "069 111000 16098", "branch": "Khulshi Branch, Chattogram" }
+    ],
+    "bankNote": "Please mention student's ID number in the deposit slip.",
+    "rocket": { "billerId": "2994", "steps": ["Open Rocket App → Select Bill Pay", "In Search Biller option, search with 2994", "Select Port City International University", "In Bill No option, put Student's ID", "In Amount, put total amount in numeric → Click Submit"] },
+    "bkash": { "merchantNo": "01881075020", "steps": ["Open bKash App → Select Make Payment", "Enter merchant number: 01881075020", "Enter the payment amount", "Reference: Student ID", "Enter your bKash PIN number → Submit", "Save the payment information for future reference"] },
+    "ussd": { "steps": ["Dial *247#", "Press 3 to select Payment", "Enter Merchant bKash Account number: 01881075020", "Enter the payment amount", "Enter Student ID", "Enter 1 and press Send", "Enter your bKash PIN number", "You will get a confirmation SMS once payment is successful"] },
+    "contacts": [
+      { "name": "Mr. S. M. Kamruzzaman Shaheen", "role": "bKash Payment Query", "phone": "01881075020" },
+      { "name": "Mr. Abu Hena Mostofa Kamal", "role": "", "phone": "01881075027" },
+      { "name": "Mr. Osman Gani", "role": "", "phone": "01911061132" },
+      { "name": "Mr. Md. Jawadur Rahman", "role": "", "phone": "01701221029" },
+      { "name": "Mr. Azizul Mannan Mozumder", "role": "", "phone": "01839716021" },
+      { "name": "Mr. Hasnat Shakir Alam", "role": "", "phone": "01833052474" },
+      { "name": "Mr. Md. Uzzal Hossain", "role": "", "phone": "01982645301" }
+    ]
+  },
+  "onlineAdmission": {
+    "intro": "Port City International University offers a convenient online admission system. Prospective students can submit their application, upload documents, and track their admission status from anywhere.",
+    "steps": [
+      "Visit the PCIU Online Admission Portal",
+      "Create an account with your email address and phone number",
+      "Fill in personal information, academic background, and program preference",
+      "Upload scanned copies of required documents (certificates, photographs, NID)",
+      "Pay the application fee online (bKash, Nagad, or bank transfer)",
+      "Submit the application and note down your application tracking number",
+      "Track your admission status online using the tracking number"
+    ],
+    "portalUrl": "http://119.18.149.45/pciuonlineadmission/",
+    "note": "Note: After online submission, original documents must be verified at the Admission Office within 15 working days to complete the enrollment process."
+  },
+  "tuitionFees": {
+    "intro": "Tuition fees are payable when a student begins to study at the University. They include registration, tuition, initial examination, graduation and membership of the University Association.",
+    "undergraduate": [
+      { "program": "Bachelor of Business Administration (BBA)", "credits": "130", "perCredit": "2,200", "total": "3,04,000" },
+      { "program": "Bachelor of Laws (LL.B. Hons.)", "credits": "133", "perCredit": "2,500", "total": "3,50,500" },
+      { "program": "B.A. (Hons.) in English", "credits": "132", "perCredit": "1,800", "total": "2,55,600" },
+      { "program": "B.S.S. (Hons.) in Broadcast Print Journalism", "credits": "136", "perCredit": "1,200", "total": "1,81,200" },
+      { "program": "B.Sc. in Computer Science & Engineering (CSE) — HSC", "credits": "156", "perCredit": "2,200", "total": "3,61,200" },
+      { "program": "B.Sc. in Computer Science & Engineering (CSE) — Diploma", "credits": "141", "perCredit": "2,200", "total": "3,28,200" },
+      { "program": "B.Sc. in Civil Engineering — HSC", "credits": "159", "perCredit": "2,000", "total": "3,36,000" },
+      { "program": "B.Sc. in Civil Engineering — Diploma", "credits": "144.75", "perCredit": "2,000", "total": "3,07,500" },
+      { "program": "B.Sc. in Electrical & Electronic Engineering (EEE) — HSC", "credits": "157", "perCredit": "2,100", "total": "3,47,700" },
+      { "program": "B.Sc. in Electrical & Electronic Engineering (EEE) — Diploma", "credits": "142", "perCredit": "2,100", "total": "3,16,200" },
+      { "program": "B.Sc. in Textile Engineering — HSC", "credits": "159", "perCredit": "2,000", "total": "3,36,000" },
+      { "program": "B.Sc. in Textile Engineering — Diploma", "credits": "144", "perCredit": "2,000", "total": "3,06,000" },
+      { "program": "B.Sc. in Fashion Design & Technology", "credits": "145", "perCredit": "1,700", "total": "2,64,500" }
+    ],
+    "masters": [
+      { "program": "Master of Laws (LL.M. Final)", "credits": "36", "perCredit": "1,400", "total": "68,400" },
+      { "program": "Master of Laws (LL.M. Preliminary & Final)", "credits": "72", "perCredit": "1,400", "total": "1,18,800" },
+      { "program": "M.A. in English (Final)", "credits": "42", "perCredit": "1,200", "total": "68,400" },
+      { "program": "M.A. in English (Preliminary & Final)", "credits": "60", "perCredit": "1,200", "total": "90,000" },
+      { "program": "M.S.S. in Broadcast Print Journalism (Final)", "credits": "30", "perCredit": "1,200", "total": "54,000" },
+      { "program": "M.S.S. in Broadcast Print Journalism (Preliminary & Final)", "credits": "60", "perCredit": "1,200", "total": "90,000" }
+    ],
+    "mba": [
+      { "background": "B.A., B.Sc., B.S.S. (Pass)", "freshCredits": "66", "freshTotal": "1,23,600" },
+      { "background": "B.A./B.Sc./B.S.S. (Hons.)/M.A./M.S.S.", "freshCredits": "60", "freshTotal": "1,14,000" },
+      { "background": "B.Sc. Engr./B.Com. (Hons.)/M.Sc.", "freshCredits": "54", "freshTotal": "1,04,400" },
+      { "background": "M.Com.", "freshCredits": "48", "freshTotal": "94,800" },
+      { "background": "M.Com. with Hons.", "freshCredits": "42", "freshTotal": "85,200" },
+      { "background": "BBA", "freshCredits": "42", "freshTotal": "85,200" }
+    ],
+    "other": [
+      { "item": "Admission Fee (One-time, non-refundable)", "amount": "18,000" },
+      { "item": "Admission Form Fee", "amount": "500" },
+      { "item": "Trimester Fee (International students only)", "amount": "5,000" }
+    ],
+    "note": "Note: Fees are subject to change. All fees include admission fee (non-refundable). Students may pay semester fees in installments. Contact the Admission Office for the latest fee schedule."
+  },
+  "scholarship": {
+    "intro": "Port City International University is committed to making quality education accessible. We offer a range of scholarships and financial aid programs to recognize academic excellence, support financially disadvantaged students, and encourage extra-curricular achievements.",
+    "scholarships": [
+      { "name": "Merit-Based Scholarship", "eligibility": "GPA 5.00 in both SSC & HSC", "benefit": "100% tuition waiver", "icon": "🏆" },
+      { "name": "Chancellor's Scholarship", "eligibility": "GPA 4.80+ in both SSC & HSC", "benefit": "50% tuition waiver", "icon": "🎓" },
+      { "name": "Dean's List Scholarship", "eligibility": "CGPA 3.90+ in previous semester", "benefit": "30% tuition waiver for next semester", "icon": "📜" },
+      { "name": "Freedom Fighter's Ward", "eligibility": "Children of freedom fighters", "benefit": "50% tuition waiver", "icon": "🇧🇩" },
+      { "name": "Sibling Discount", "eligibility": "Two or more siblings enrolled simultaneously", "benefit": "15% tuition waiver for each sibling", "icon": "👨‍👩‍👧‍👦" },
+      { "name": "Need-Based Financial Aid", "eligibility": "Demonstrated financial need", "benefit": "Up to 40% tuition waiver", "icon": "💰" },
+      { "name": "Sports Scholarship", "eligibility": "National-level sports achievement", "benefit": "Up to 50% tuition waiver", "icon": "⚽" },
+      { "name": "Cultural Excellence Award", "eligibility": "National-level cultural achievement", "benefit": "Up to 30% tuition waiver", "icon": "🎭" }
+    ],
+    "howToApply": [
+      "Fill out the Scholarship Application Form available at the Admission Office or download from the website.",
+      "Submit certified copies of all academic transcripts and certificates.",
+      "Provide a recommendation letter from the Head of Department (for continuing students).",
+      "Submit proof of financial need (for need-based aid) — income certificate, family information.",
+      "Applications are reviewed by the Scholarship Committee each semester."
+    ]
+  },
+  "admissionContact": {
+    "office": {
+      "address": "Port City International University\n7-14, Nikunja Housing Society,\nSouth Khulshi, Chattogram, Bangladesh",
+      "phone": "+880-1851120791\nCell: +880-1881075020 (Admission)",
+      "email": "admission@portcity.edu.bd",
+      "website": "www.portcity.edu.bd"
+    },
+    "officeHours": [
+      { "day": "Saturday – Thursday", "time": "9:00 AM – 5:00 PM" },
+      { "day": "Friday", "time": "9:00 AM – 5:00 PM" },
+      { "day": "Government Holidays", "time": "Closed" }
+    ],
+    "seasonNote": "During Admission Season — Extended hours: 9:00 AM – 7:00 PM (Saturday – Thursday) / Friday: 10:00 AM – 4:00 PM (during admission period only)"
+  }
+}

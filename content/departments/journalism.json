@@ -1,0 +1,76 @@
+{
+  "slug": "journalism",
+  "chairmanHeading": "Message from Chairman",
+  "facilitiesHeading": "Lab Facilities",
+  "facultyQueryParam": "Journalism and Media Studies",
+  "hero": {
+    "badge": "Faculty of Humanities, Social Sciences & Law",
+    "title": "Department of Journalism and Media Studies",
+    "subtitle": "Producing skilled journalists and media professionals for Bangladesh's dynamic media landscape."
+  },
+  "chairman": {
+    "name": "Prof. Dr. Rezaul Karim",
+    "designation": "Chairman & Professor",
+    "message": [
+      "Welcome to the Department of Journalism and Media Studies at Port City International University. In today's digital age, the role of media professionals has become more important than ever in shaping public opinion and disseminating information.",
+      "Our department is committed to producing skilled journalists and media professionals who uphold the highest standards of ethics, accuracy, and responsibility. Our curriculum combines theoretical knowledge with practical training in print, broadcast, and digital media.",
+      "With state-of-the-art media labs and experienced faculty from both academia and industry, we prepare students to become successful journalists, broadcasters, content creators, and media managers in Bangladesh's dynamic media landscape."
+    ]
+  },
+  "overview": {
+    "hasImage": false,
+    "content": [
+      "The Department of Journalism and Media Studies offers comprehensive programs combining theoretical knowledge with practical training in print, broadcast, and digital media."
+    ]
+  },
+  "programs": [
+    { "name": "BA (Hons) in Journalism & Media Studies", "duration": "4 Years", "credits": "132", "description": "Undergraduate program in journalism.", "concentrations": [] },
+    { "name": "MA in Mass Communication", "duration": "1 Year", "credits": "36", "description": "Graduate program in mass communication.", "concentrations": [] },
+    { "name": "Diploma in Digital Media", "duration": "1 Year", "credits": "30", "description": "Professional diploma in digital media.", "concentrations": [] }
+  ],
+  "facilities": [
+    { "name": "TV Studio", "icon": "video" },
+    { "name": "Radio Lab", "icon": "mic" },
+    { "name": "Photography Lab", "icon": "camera" },
+    { "name": "Newsroom Lab", "icon": "newspaper" }
+  ],
+  "notices": [
+    { "title": "Admission Open for BA in Journalism 2025", "date": "2025-01-15", "type": "admission" },
+    { "title": "Media Workshop by Channel 24 Journalists", "date": "2025-01-10", "type": "event" },
+    { "title": "Documentary Film Making Competition", "date": "2025-01-05", "type": "event" },
+    { "title": "Internship Opportunities at Leading Media Houses", "date": "2024-12-28", "type": "event" }
+  ],
+  "contact": {
+    "address": "Department of Journalism\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-123456 (Ext. 280)",
+    "email": "journalism@pciu.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "University Library", "url": "/library" },
+    { "label": "Campus Radio", "url": "#" },
+    { "label": "Student Publications", "url": "#" },
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Scholarship Information", "url": "#" },
+    { "label": "Career Services", "url": "#" }
+  ],
+  "facultyMembers": [
+    { "name": "Prof. Dr. Rezaul Karim", "designation": "Chairman & Professor", "specialization": "Print Journalism" },
+    { "name": "Prof. Anwar Hossain", "designation": "Professor", "specialization": "Broadcast Media" },
+    { "name": "Dr. Mahmuda Akter", "designation": "Associate Professor", "specialization": "Media Ethics" },
+    { "name": "Dr. Farhana Sultana", "designation": "Assistant Professor", "specialization": "Television Production" },
+    { "name": "Mr. Kamrul Islam", "designation": "Lecturer", "specialization": "Photojournalism" },
+    { "name": "Ms. Tasnim Rahman", "designation": "Lecturer", "specialization": "Digital Media" }
+  ],
+  "researchAreas": [
+    { "title": "Digital Journalism & Social Media", "author": "Prof. Dr. Rezaul Karim, Ms. Tasnim Rahman", "description": "Research on the impact of digital platforms on news consumption and journalism practices in Bangladesh." },
+    { "title": "Media Ethics & Responsibility", "author": "Dr. Mahmuda Akter, Prof. Anwar Hossain", "description": "Studies on ethical standards, media accountability, and responsible journalism." },
+    { "title": "Broadcast Media & Television", "author": "Mr. Kamrul Islam, Dr. Farhana Sultana", "description": "Analysis of television journalism, broadcast techniques, and audience engagement." },
+    { "title": "Media & Development Communication", "author": "Dr. Selina Hoque", "description": "Role of media in social development, public awareness, and behavior change communication." }
+  ],
+  "achievements": [
+    { "value": "250+", "label": "Graduates" },
+    { "value": "20+", "label": "Media Awards" },
+    { "value": "15+", "label": "Media Partners" }
+  ]
+}

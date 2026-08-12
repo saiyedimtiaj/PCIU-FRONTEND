@@ -61,6 +61,12 @@
 
   /* Transitions */
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Admin sidebar — neutral charcoal, independent of public-site --primary */
+  --sidebar: hsl(231 20% 12%);
+  --sidebar-foreground: hsl(0 0% 96%);
+  --sidebar-accent: hsl(231 18% 20%);
+  --sidebar-border: hsl(231 16% 22%);
 }
 
 .dark {
@@ -110,6 +116,11 @@
   --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -1px hsl(0 0% 0% / 0.2);
   --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.3), 0 4px 6px -2px hsl(0 0% 0% / 0.2);
   --shadow-glow: 0 0 30px hsl(230 75% 65% / 0.35);
+
+  --sidebar: hsl(231 22% 8%);
+  --sidebar-foreground: hsl(0 0% 96%);
+  --sidebar-accent: hsl(231 20% 16%);
+  --sidebar-border: hsl(231 18% 18%);
 }
 
 @theme inline {
@@ -152,6 +163,11 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-border: var(--sidebar-border);
+
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
 
@@ -159,6 +175,7 @@
   --animate-fade-in-up: fade-in-up 0.6s ease-out;
   --animate-scale-in: scale-in 0.2s ease-out;
   --animate-slide-in: slide-in 20s linear infinite;
+  --animate-float: float 2.8s ease-in-out infinite;
 }
 
 @keyframes fade-in {
@@ -200,6 +217,16 @@
   }
   to {
     transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-5px);
   }
 }
 

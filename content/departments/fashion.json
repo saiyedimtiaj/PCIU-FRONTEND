@@ -1,0 +1,76 @@
+{
+  "slug": "fashion",
+  "chairmanHeading": "Message from Chairperson",
+  "facilitiesHeading": "Lab Facilities",
+  "facultyQueryParam": "Fashion Design and Technology",
+  "hero": {
+    "badge": "Faculty of Science and Engineering",
+    "title": "Department of Fashion Design and Technology",
+    "subtitle": "Nurturing creativity and technical skills for Bangladesh's fashion and apparel industry."
+  },
+  "chairman": {
+    "name": "Prof. Nasreen Akter",
+    "designation": "Chairperson & Associate Professor",
+    "message": [
+      "Welcome to the Department of Fashion Design and Technology at Port City International University. Our department offers a wide range of career opportunities for students, from having your own establishment to working for top labels, fashion designers, garment export houses, and textile mills.",
+      "Our graduates find successful careers as apparel merchandisers, visual merchandisers, public relations and marketing professionals, stylists, and even lecturers for Fashion Design institutions.",
+      "We focus on nurturing creativity while providing strong technical skills in pattern making, garment construction, textile science, and fashion marketing. Our industry connections ensure students gain practical experience through internships and projects with leading fashion houses."
+    ]
+  },
+  "overview": {
+    "hasImage": false,
+    "content": [
+      "The Department of Fashion Design and Technology offers comprehensive programs combining creativity with technical skills in pattern making, garment construction, textile science, and fashion marketing."
+    ]
+  },
+  "programs": [
+    { "name": "BSc in Fashion Design & Technology", "duration": "4 Years", "credits": "140", "description": "Undergraduate program in fashion design.", "concentrations": [] },
+    { "name": "Diploma in Fashion Design", "duration": "2 Years", "credits": "72", "description": "Diploma program in fashion design.", "concentrations": [] },
+    { "name": "Certificate in Apparel Merchandising", "duration": "1 Year", "credits": "36", "description": "Certificate program in apparel merchandising.", "concentrations": [] }
+  ],
+  "facilities": [
+    { "name": "Pattern Making Lab", "icon": "scissors" },
+    { "name": "Design Studio", "icon": "pen-tool" },
+    { "name": "Sewing Lab", "icon": "sparkles" },
+    { "name": "CAD Lab", "icon": "palette" }
+  ],
+  "notices": [
+    { "title": "Admission Open for BSc in Fashion Design 2025", "date": "2025-01-15", "type": "admission" },
+    { "title": "Annual Fashion Show - Spring Collection 2025", "date": "2025-01-12", "type": "event" },
+    { "title": "Workshop on Sustainable Fashion Design", "date": "2025-01-05", "type": "event" },
+    { "title": "Industry Internship Opportunities at Leading Brands", "date": "2024-12-28", "type": "event" }
+  ],
+  "contact": {
+    "address": "Department of Fashion Design\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-123456 (Ext. 290)",
+    "email": "fashion@pciu.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "University Library", "url": "/library" },
+    { "label": "Student Portfolio Gallery", "url": "#" },
+    { "label": "Research Publications", "url": "#" },
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Scholarship Information", "url": "#" },
+    { "label": "Career Services", "url": "#" }
+  ],
+  "facultyMembers": [
+    { "name": "Prof. Nasreen Akter", "designation": "Chairperson", "specialization": "Fashion Design" },
+    { "name": "Dr. Farzana Islam", "designation": "Associate Professor", "specialization": "Textile Technology" },
+    { "name": "Ms. Tahmina Rahman", "designation": "Assistant Professor", "specialization": "Sustainable Fashion" },
+    { "name": "Mr. Rifat Ahmed", "designation": "Lecturer", "specialization": "CAD/CAM" },
+    { "name": "Ms. Rumana Yasmin", "designation": "Lecturer", "specialization": "Traditional Textiles" },
+    { "name": "Ms. Shireen Sultana", "designation": "Lecturer", "specialization": "Fashion Marketing" }
+  ],
+  "researchAreas": [
+    { "title": "Sustainable Fashion Design", "author": "Prof. Nasreen Akter, Ms. Tahmina Rahman", "description": "Research on eco-friendly fashion, upcycling techniques, and sustainable production methods." },
+    { "title": "Digital Fashion Technology", "author": "Dr. Farzana Islam, Mr. Rifat Ahmed", "description": "Exploring CAD/CAM applications, 3D virtual prototyping, and digital fashion design tools." },
+    { "title": "Traditional Bangladeshi Textiles", "author": "Ms. Rumana Yasmin", "description": "Preservation and modernization of traditional Bangladeshi textile crafts like Jamdani and Nakshi Kantha." },
+    { "title": "Fashion Marketing & Branding", "author": "Ms. Shireen Sultana, Mr. Kawser Ali", "description": "Consumer behavior, brand development, and marketing strategies for fashion industry." }
+  ],
+  "achievements": [
+    { "value": "200+", "label": "Graduates" },
+    { "value": "15+", "label": "Fashion Shows" },
+    { "value": "20+", "label": "Industry Partners" }
+  ]
+}
