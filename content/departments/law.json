@@ -1,0 +1,76 @@
+{
+  "slug": "law",
+  "chairmanHeading": "Message from Chairman",
+  "facilitiesHeading": "Facilities",
+  "facultyQueryParam": "Law",
+  "hero": {
+    "badge": "Faculty of Humanities, Social Sciences & Law",
+    "title": "Department of Law",
+    "subtitle": "Producing competent legal professionals who uphold justice, integrity, and the rule of law."
+  },
+  "chairman": {
+    "name": "Prof. Dr. Shafiqur Rahman",
+    "designation": "Chairman & Professor",
+    "message": [
+      "Welcome to the Department of Law at Port City International University. Our department is committed to producing competent legal professionals who uphold justice, integrity, and the rule of law.",
+      "The legal profession plays a vital role in maintaining social order and protecting individual rights. Our comprehensive curriculum covers constitutional law, criminal law, civil law, corporate law, and international law, preparing students for diverse careers in the legal field.",
+      "With experienced faculty members who combine academic excellence with practical legal experience, we provide students with both theoretical knowledge and practical skills necessary for success in the legal profession."
+    ]
+  },
+  "overview": {
+    "hasImage": false,
+    "content": [
+      "The Department of Law at PCIU is dedicated to producing skilled legal professionals. Our curriculum covers constitutional law, criminal law, civil law, corporate law, and international law."
+    ]
+  },
+  "programs": [
+    { "name": "LL.B (Hons)", "duration": "4 Years", "credits": "133", "description": "Undergraduate program in law.", "concentrations": [] },
+    { "name": "LL.M", "duration": "1 Year", "credits": "36", "description": "Graduate program in law.", "concentrations": [] },
+    { "name": "PhD in Law", "duration": "3-5 Years", "credits": "60", "description": "Doctoral program in legal research.", "concentrations": [] }
+  ],
+  "facilities": [
+    { "name": "Moot Court Room", "icon": "gavel" },
+    { "name": "Law Library", "icon": "book-marked" },
+    { "name": "Legal Aid Clinic", "icon": "scale" },
+    { "name": "Research Center", "icon": "shield" }
+  ],
+  "notices": [
+    { "title": "Admission Open for LL.B (Hons) Program 2025", "date": "2025-01-15", "type": "admission" },
+    { "title": "Moot Court Competition - National Level", "date": "2025-01-10", "type": "event" },
+    { "title": "Guest Lecture by Hon'ble Justice Ahmed", "date": "2025-01-05", "type": "event" },
+    { "title": "Legal Aid Clinic Registration Open", "date": "2024-12-28", "type": "event" }
+  ],
+  "contact": {
+    "address": "Department of Law\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-123456 (Ext. 270)",
+    "email": "law@pciu.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "University Library", "url": "/library" },
+    { "label": "Law Journal", "url": "#" },
+    { "label": "Moot Court Society", "url": "#" },
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Scholarship Information", "url": "#" },
+    { "label": "Bar Council Registration", "url": "#" }
+  ],
+  "facultyMembers": [
+    { "name": "Prof. Dr. Shafiqur Rahman", "designation": "Chairman & Professor", "specialization": "Constitutional Law" },
+    { "name": "Prof. Abdul Latif", "designation": "Professor", "specialization": "Criminal Law" },
+    { "name": "Dr. Nasima Begum", "designation": "Associate Professor", "specialization": "Human Rights Law" },
+    { "name": "Dr. Kamrul Hasan", "designation": "Assistant Professor", "specialization": "Corporate Law" },
+    { "name": "Dr. Shariful Islam", "designation": "Assistant Professor", "specialization": "International Law" },
+    { "name": "Ms. Fatema Tuz Zohra", "designation": "Lecturer", "specialization": "Commercial Law" }
+  ],
+  "researchAreas": [
+    { "title": "Constitutional Law & Human Rights", "author": "Prof. Dr. Shafiqur Rahman, Dr. Nasima Begum", "description": "Research on constitutional developments, fundamental rights, and human rights jurisprudence in Bangladesh." },
+    { "title": "Corporate & Commercial Law", "author": "Dr. Kamrul Hasan, Ms. Fatema Tuz Zohra", "description": "Legal frameworks for business, corporate governance, and commercial transactions." },
+    { "title": "Criminal Justice System", "author": "Prof. Abdul Latif, Dr. Rahima Khatun", "description": "Analysis of criminal law, procedure, and justice administration in Bangladesh." },
+    { "title": "International Law & Treaties", "author": "Dr. Shariful Islam", "description": "Study of international legal frameworks, treaties, and Bangladesh's international obligations." }
+  ],
+  "achievements": [
+    { "value": "200+", "label": "Graduates" },
+    { "value": "50+", "label": "Moot Court Victories" },
+    { "value": "10+", "label": "Legal Aid Cases" }
+  ]
+}

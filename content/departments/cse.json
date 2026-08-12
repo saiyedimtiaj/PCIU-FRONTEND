@@ -1,0 +1,78 @@
+{
+  "slug": "cse",
+  "chairmanHeading": "Message from Chairman",
+  "facilitiesHeading": "Lab Facilities",
+  "facultyQueryParam": "Computer Science and Engineering",
+  "hero": {
+    "badge": "Faculty of Science and Engineering",
+    "title": "Department of Computer Science and Engineering",
+    "subtitle": "Empowering future tech leaders through excellence in computer science education, research, and innovation."
+  },
+  "chairman": {
+    "name": "Prof. Dr. Mohammad Rahman",
+    "designation": "Chairman & Professor",
+    "message": [
+      "Welcome to the Department of Computer Science and Engineering. The goal of our department is to facilitate our students to be the best computer engineers and contribute to the development of our nation as well as the whole world with their creativities.",
+      "We also have our faculties with their best knowledge and research activities. Our faculties are friendly and helpful to our students. Hence the relationship between our faculty members and students is really precious and wonderful. All students can reach to the faculty members when they need.",
+      "Our department provides quality education with modern curriculum, state-of-the-art computer labs, and industry-oriented training to prepare students for the rapidly evolving tech industry."
+    ]
+  },
+  "overview": {
+    "hasImage": true,
+    "content": [
+      "The Department of Computer Science and Engineering at Port City International University is committed to providing world-class education in computing and information technology. Our curriculum is designed to meet industry demands and prepare students for successful careers in the tech sector.",
+      "Computer Science is a dynamic and innovative discipline. As undergraduate students progress through their studies, they are exposed to a wide range of subject matter within the discipline. Our degree courses give students a deeper understanding of the many diverse and interesting areas of computer science, preparing them for an industry or research-oriented career path.",
+      "The department aims to provide fundamental software skills and professional IT values, equip students with cutting-edge technologies, and foster innovation and entrepreneurship."
+    ]
+  },
+  "programs": [
+    { "name": "BSc in Computer Science & Engineering", "duration": "4 Years", "credits": "160", "description": "Comprehensive undergraduate program in computer science.", "concentrations": [] },
+    { "name": "MSc in Computer Science", "duration": "1.5 Years", "credits": "45", "description": "Advanced graduate program in computer science.", "concentrations": [] },
+    { "name": "PhD in Computer Science", "duration": "3-5 Years", "credits": "60", "description": "Doctoral program in computer science research.", "concentrations": [] }
+  ],
+  "facilities": [
+    { "name": "Programming Lab", "icon": "code" },
+    { "name": "Database Lab", "icon": "database" },
+    { "name": "Network Lab", "icon": "monitor" },
+    { "name": "Hardware Lab", "icon": "cpu" }
+  ],
+  "notices": [
+    { "title": "Registration Open for BSc in CSE Spring 2025", "date": "2025-01-15", "type": "admission" },
+    { "title": "Programming Contest - Code Fest 2025", "date": "2025-01-10", "type": "event" },
+    { "title": "Internship Fair for Final Year Students", "date": "2025-01-05", "type": "event" },
+    { "title": "Workshop on Machine Learning Fundamentals", "date": "2024-12-28", "type": "event" }
+  ],
+  "contact": {
+    "address": "Department of CSE\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-123456 (Ext. 220)",
+    "email": "cse@pciu.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "University Library", "url": "/library" },
+    { "label": "Student Portal", "url": "#" },
+    { "label": "Research Publications", "url": "#" },
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Scholarship Information", "url": "#" },
+    { "label": "Career Services", "url": "#" }
+  ],
+  "facultyMembers": [
+    { "name": "Prof. Dr. Mohammad Rahman", "designation": "Chairman & Professor", "specialization": "Artificial Intelligence" },
+    { "name": "Dr. Ahmed Karim", "designation": "Associate Professor", "specialization": "Machine Learning" },
+    { "name": "Dr. Nasrin Sultana", "designation": "Associate Professor", "specialization": "Cybersecurity" },
+    { "name": "Dr. Farhan Ahmed", "designation": "Assistant Professor", "specialization": "IoT & Embedded Systems" },
+    { "name": "Mr. Tanvir Islam", "designation": "Lecturer", "specialization": "Cloud Computing" },
+    { "name": "Ms. Fatima Begum", "designation": "Lecturer", "specialization": "Software Engineering" }
+  ],
+  "researchAreas": [
+    { "title": "Artificial Intelligence & Machine Learning", "author": "Dr. Ahmed Karim, Prof. Mohammad Rahman", "description": "Research on deep learning algorithms, neural networks, and AI applications in healthcare and agriculture." },
+    { "title": "Internet of Things (IoT) Systems", "author": "Dr. Farhan Ahmed, Mr. Tanvir Islam", "description": "Developing smart IoT solutions for industrial automation and smart city applications." },
+    { "title": "Cybersecurity & Network Security", "author": "Dr. Nasrin Sultana", "description": "Research on intrusion detection systems, cryptographic protocols, and secure communication." },
+    { "title": "Software Engineering & DevOps", "author": "Mr. Rakib Hassan, Ms. Fatima Begum", "description": "Best practices in agile development, continuous integration, and cloud-native applications." }
+  ],
+  "achievements": [
+    { "value": "800+", "label": "Graduates" },
+    { "value": "30+", "label": "Research Publications" },
+    { "value": "15+", "label": "Industry Partners" }
+  ]
+}

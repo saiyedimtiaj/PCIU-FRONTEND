@@ -1,0 +1,76 @@
+{
+  "slug": "civil",
+  "chairmanHeading": "Message from Chairman",
+  "facilitiesHeading": "Lab Facilities",
+  "facultyQueryParam": "Civil Engineering",
+  "hero": {
+    "badge": "Faculty of Science and Engineering",
+    "title": "Department of Civil Engineering",
+    "subtitle": "Building the future through innovation in civil engineering education and sustainable infrastructure development."
+  },
+  "chairman": {
+    "name": "Prof. Dr. Abdul Karim",
+    "designation": "Chairman & Professor",
+    "message": [
+      "Welcome to the Department of Civil Engineering at Port City International University. Civil Engineering is one of the oldest and most respected engineering disciplines, focusing on the design, construction, and maintenance of the built environment.",
+      "Our department is committed to producing competent civil engineers who can address infrastructure challenges and contribute to sustainable development. With state-of-the-art laboratory facilities and experienced faculty, we provide comprehensive education covering structural engineering, geotechnical engineering, transportation, and environmental engineering.",
+      "We emphasize both theoretical knowledge and practical skills, preparing our graduates for successful careers in construction, consulting, and research."
+    ]
+  },
+  "overview": {
+    "hasImage": true,
+    "content": [
+      "The Department of Civil Engineering at Port City International University was established to produce skilled civil engineers capable of meeting infrastructure challenges. Our curriculum covers structural, geotechnical, transportation, and environmental engineering with hands-on practical experience."
+    ]
+  },
+  "programs": [
+    { "name": "BSc in Civil Engineering", "duration": "4 Years", "credits": "165", "description": "Comprehensive undergraduate program in civil engineering.", "concentrations": [] },
+    { "name": "MSc in Structural Engineering", "duration": "1.5 Years", "credits": "45", "description": "Advanced graduate program in structural engineering.", "concentrations": [] },
+    { "name": "PhD in Civil Engineering", "duration": "3-5 Years", "credits": "60", "description": "Doctoral research program.", "concentrations": [] }
+  ],
+  "facilities": [
+    { "name": "Structural Engineering Lab", "icon": "building" },
+    { "name": "Geotechnical Lab", "icon": "hard-hat" },
+    { "name": "Surveying Lab", "icon": "ruler" },
+    { "name": "Hydraulics Lab", "icon": "droplets" }
+  ],
+  "notices": [
+    { "title": "Admission Open for BSc in Civil Engineering 2025", "date": "2025-01-15", "type": "admission" },
+    { "title": "Site Visit to Karnaphuli Tunnel Project", "date": "2025-01-10", "type": "event" },
+    { "title": "Seminar on Earthquake Resistant Design", "date": "2025-01-05", "type": "event" },
+    { "title": "Final Year Project Presentation Schedule", "date": "2024-12-28", "type": "exam" }
+  ],
+  "contact": {
+    "address": "Department of Civil Engineering\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-123456 (Ext. 240)",
+    "email": "civil@pciu.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "University Library", "url": "/library" },
+    { "label": "Student Portal", "url": "#" },
+    { "label": "Research Publications", "url": "#" },
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Scholarship Information", "url": "#" },
+    { "label": "Career Services", "url": "#" }
+  ],
+  "facultyMembers": [
+    { "name": "Prof. Dr. Abdul Karim", "designation": "Chairman & Professor", "specialization": "Structural Engineering" },
+    { "name": "Prof. Shahidul Islam", "designation": "Professor", "specialization": "Earthquake Engineering" },
+    { "name": "Dr. Mizanur Rahman", "designation": "Associate Professor", "specialization": "Construction Materials" },
+    { "name": "Dr. Salim Ahmed", "designation": "Assistant Professor", "specialization": "Water Resources" },
+    { "name": "Dr. Fatema Khatun", "designation": "Assistant Professor", "specialization": "Geotechnical Engineering" },
+    { "name": "Mr. Imran Hossain", "designation": "Lecturer", "specialization": "Transportation Engineering" }
+  ],
+  "researchAreas": [
+    { "title": "Sustainable Construction Materials", "author": "Dr. Abdul Karim, Dr. Mizanur Rahman", "description": "Research on eco-friendly construction materials including recycled aggregates and green concrete." },
+    { "title": "Earthquake Engineering", "author": "Prof. Shahidul Islam, Dr. Fatema Khatun", "description": "Structural analysis and design for seismic resistance in high-rise buildings and bridges." },
+    { "title": "Water Resources Management", "author": "Dr. Salim Ahmed", "description": "Flood management, river engineering, and sustainable water resource utilization for Bangladesh." },
+    { "title": "Transportation Planning", "author": "Mr. Imran Hossain, Dr. Nabila Akter", "description": "Urban traffic management, road safety analysis, and sustainable transportation systems." }
+  ],
+  "achievements": [
+    { "value": "400+", "label": "Graduates" },
+    { "value": "20+", "label": "Research Publications" },
+    { "value": "15+", "label": "Industry Partners" }
+  ]
+}

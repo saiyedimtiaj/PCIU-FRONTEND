@@ -1,0 +1,78 @@
+{
+  "slug": "textile",
+  "chairmanHeading": "Message from Chairman",
+  "facilitiesHeading": "Lab Facilities",
+  "facultyQueryParam": "Textile Engineering",
+  "hero": {
+    "badge": "Faculty of Science and Engineering",
+    "title": "Department of Textile Engineering",
+    "subtitle": "Weaving excellence in textile education for Bangladesh's largest industrial sector."
+  },
+  "chairman": {
+    "name": "Prof. Dr. Aminul Haque",
+    "designation": "Chairman & Professor",
+    "message": [
+      "Welcome to the Department of Textile Engineering at Port City International University. Bangladesh is a developing country and textile is the largest industrial sector of Bangladesh. We earned about 85% of our foreign currency from this sector.",
+      "Over the last couple of decades, the face of textiles has changed dramatically all over the world. The department provides an outstanding opportunity to students to get quality education in Textile Engineering. It started its academic activities from January 2013.",
+      "This department helps produce qualified engineers who will be ready to take the challenges of the textile industry and contribute to the economic development of Bangladesh."
+    ]
+  },
+  "overview": {
+    "hasImage": true,
+    "content": [
+      "Bangladesh is a developing country and textile is the largest industrial sector of Bangladesh. We earned about 85% of our foreign currency from this sector. Over the last couple of decades, the face of textiles has changed dramatically all over the world.",
+      "The department provides an outstanding opportunity to students to get quality education in Textile Engineering. Our curriculum covers all aspects of textile manufacturing from fiber to finished fabric, including spinning, weaving, knitting, dyeing, finishing, and quality control.",
+      "With strong industry connections and modern laboratory facilities, our graduates are well-prepared to take leadership roles in Bangladesh's thriving textile and garment industry."
+    ]
+  },
+  "programs": [
+    { "name": "BSc in Textile Engineering", "duration": "4 Years", "credits": "163", "description": "Undergraduate program in textile engineering.", "concentrations": [] },
+    { "name": "MSc in Textile Technology", "duration": "1.5 Years", "credits": "45", "description": "Graduate program in textile technology.", "concentrations": [] },
+    { "name": "Diploma in Textile", "duration": "2 Years", "credits": "80", "description": "Diploma program in textile.", "concentrations": [] }
+  ],
+  "facilities": [
+    { "name": "Spinning Lab", "icon": "factory" },
+    { "name": "Weaving Lab", "icon": "shirt" },
+    { "name": "Dyeing & Finishing Lab", "icon": "palette" },
+    { "name": "Testing Lab", "icon": "scissors" }
+  ],
+  "notices": [
+    { "title": "Admission Open for BSc in Textile Engineering 2025", "date": "2025-01-15", "type": "admission" },
+    { "title": "Industrial Visit to Textile Mills", "date": "2025-01-08", "type": "event" },
+    { "title": "Workshop on Sustainable Textile Production", "date": "2025-01-03", "type": "event" },
+    { "title": "Textile Design Competition 2025", "date": "2024-12-26", "type": "event" }
+  ],
+  "contact": {
+    "address": "Department of Textile Engineering\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-123456 (Ext. 250)",
+    "email": "textile@pciu.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "University Library", "url": "/library" },
+    { "label": "Student Portal", "url": "#" },
+    { "label": "Research Publications", "url": "#" },
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Scholarship Information", "url": "#" },
+    { "label": "Career Services", "url": "#" }
+  ],
+  "facultyMembers": [
+    { "name": "Prof. Dr. Aminul Haque", "designation": "Chairman & Professor", "specialization": "Textile Chemistry" },
+    { "name": "Prof. Nurul Amin", "designation": "Professor", "specialization": "Fabric Manufacturing" },
+    { "name": "Dr. Rashida Begum", "designation": "Associate Professor", "specialization": "Sustainable Textiles" },
+    { "name": "Dr. Kamrul Islam", "designation": "Assistant Professor", "specialization": "Technical Textiles" },
+    { "name": "Dr. Salma Khatun", "designation": "Assistant Professor", "specialization": "Quality Management" },
+    { "name": "Mr. Habibur Rahman", "designation": "Lecturer", "specialization": "Fiber Science" }
+  ],
+  "researchAreas": [
+    { "title": "Sustainable Textile Production", "author": "Dr. Aminul Haque, Dr. Rashida Begum", "description": "Research on eco-friendly dyeing processes, water treatment, and sustainable manufacturing practices." },
+    { "title": "Technical Textiles", "author": "Prof. Nurul Amin, Dr. Kamrul Islam", "description": "Development of smart textiles, medical textiles, and geotextiles for specialized applications." },
+    { "title": "Textile Quality Management", "author": "Dr. Salma Khatun", "description": "Quality control systems, testing methods, and standardization in textile manufacturing." },
+    { "title": "Fiber Science & Technology", "author": "Mr. Habibur Rahman, Ms. Nazia Islam", "description": "Research on natural and synthetic fibers, fiber modification, and new fiber development." }
+  ],
+  "achievements": [
+    { "value": "350+", "label": "Graduates" },
+    { "value": "95%", "label": "Employment Rate" },
+    { "value": "40+", "label": "Industry Partners" }
+  ]
+}

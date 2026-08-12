@@ -1,0 +1,84 @@
+{
+  "slug": "bba",
+  "chairmanHeading": "Message from Chairman",
+  "facilitiesHeading": "Facilities",
+  "facultyQueryParam": "Business Administration",
+  "hero": {
+    "badge": "Faculty of Business Studies",
+    "title": "Department of Business Administration",
+    "subtitle": "Developing Tomorrow's Business Leaders with Excellence in Management Education",
+    "buttonText": "Apply Now",
+    "buttonLink": "/admission?section=requirement"
+  },
+  "stats": [
+    { "value": "500+", "label": "Students" },
+    { "value": "15+", "label": "Faculty Members" },
+    { "value": "2", "label": "Programs Offered" },
+    { "value": "95%", "label": "Placement Rate" }
+  ],
+  "chairman": {
+    "name": "Dr. Mohammad Rahman",
+    "designation": "Professor & Chairman",
+    "message": [
+      "Welcome to the Department of Business Administration at Port City International University. Our department is committed to producing competent business graduates who can excel in the competitive global business environment. With a perfect blend of theoretical knowledge and practical skills, we prepare our students to become future business leaders, entrepreneurs, and change-makers.",
+      "Our curriculum is designed in alignment with international standards and industry requirements. We emphasize case-based learning, industry exposure, and research-oriented education to ensure our graduates are ready to face real-world business challenges."
+    ]
+  },
+  "overview": {
+    "hasImage": false,
+    "content": [
+      "The Department of Business Administration was established with the vision of becoming a center of excellence in management education. We offer both undergraduate (BBA) and graduate (MBA) programs that are designed to meet the demands of the modern business world.",
+      "Our programs focus on developing critical thinking, problem-solving, leadership, and communication skills. Students gain practical experience through internships, industry projects, case competitions, and corporate visits."
+    ]
+  },
+  "programs": [
+    { "name": "Bachelor of Business Administration (BBA)", "duration": "4 Years (12 Semesters)", "credits": "130 Credits", "description": "A comprehensive undergraduate program designed to develop future business leaders with strong analytical, managerial, and entrepreneurial skills.", "concentrations": ["Accounting", "Finance", "Marketing", "HRM", "Management"] },
+    { "name": "Master of Business Administration (MBA)", "duration": "2 Years (4 Semesters)", "credits": "60 Credits", "description": "An advanced graduate program for professionals seeking to enhance their leadership capabilities and strategic management expertise.", "concentrations": ["Finance", "Marketing", "HRM", "International Business", "MIS"] }
+  ],
+  "facilities": [
+    { "name": "Business Simulation Lab", "icon": "building" },
+    { "name": "Bloomberg Terminal Access", "icon": "trending-up" },
+    { "name": "Case Study Room", "icon": "file-text" },
+    { "name": "Conference & Seminar Hall", "icon": "users" }
+  ],
+  "notices": [
+    { "title": "MBA Admission Open for Spring 2025", "date": "2024-12-20", "type": "admission" },
+    { "title": "Business Case Competition Results", "date": "2024-12-15", "type": "event" },
+    { "title": "Industry Visit to Standard Chartered Bank", "date": "2024-12-10", "type": "event" },
+    { "title": "Final Exam Schedule - Fall 2024", "date": "2024-12-05", "type": "exam" }
+  ],
+  "contact": {
+    "address": "Department of Business Administration\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-000000",
+    "email": "bba@portcity.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Course Curriculum", "url": "#" },
+    { "label": "Internship Guidelines", "url": "#" },
+    { "label": "Career Services", "url": "#" },
+    { "label": "Alumni Network", "url": "#" },
+    { "label": "Admission Requirements", "url": "/admission?section=requirement" }
+  ],
+  "facultyMembers": [
+    { "name": "Dr. Mohammad Rahman", "designation": "Professor & Chairman", "specialization": "Strategic Management" },
+    { "name": "Prof. Dr. Mohammed Ali Chowdhury", "designation": "Treasurer & Professor", "specialization": "Finance" },
+    { "name": "Dr. Nasreen Chowdhury", "designation": "Associate Professor", "specialization": "Marketing" },
+    { "name": "Mr. Md. Musa", "designation": "Assistant Professor & Chairman", "specialization": "Human Resource Management" },
+    { "name": "Dr. Farida Yeasmin", "designation": "Assistant Professor", "specialization": "International Business" },
+    { "name": "Mr. Kamrul Hasan", "designation": "Lecturer", "specialization": "Accounting" }
+  ],
+  "researchAreas": [
+    { "title": "Strategic Management & Corporate Governance", "author": "Dr. Mohammad Rahman", "description": "Research on corporate strategy, governance frameworks, and organizational leadership in emerging markets." },
+    { "title": "Marketing & Consumer Behavior", "author": "Dr. Nasreen Chowdhury", "description": "Studies on consumer decision-making, digital marketing adoption, and brand loyalty in Bangladesh." },
+    { "title": "Financial Management & Investment", "author": "Prof. Dr. Mohammed Ali Chowdhury", "description": "Research on capital markets, investment strategy, and financial risk management." },
+    { "title": "Entrepreneurship & Innovation", "author": "Dr. Farida Yeasmin", "description": "Studies on SME growth, startup ecosystems, and innovation-driven entrepreneurship in Bangladesh." }
+  ],
+  "industryPartners": ["Banking", "FMCG", "Telecom", "Manufacturing", "Consulting", "E-Commerce", "Pharmaceuticals"],
+  "achievements": [
+    { "value": "500+", "label": "Students" },
+    { "value": "95%", "label": "Placement Rate" },
+    { "value": "30+", "label": "Corporate Partners" }
+  ]
+}

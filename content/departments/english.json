@@ -1,0 +1,75 @@
+{
+  "slug": "english",
+  "chairmanHeading": "Message from Head of Department",
+  "facilitiesHeading": null,
+  "facultyQueryParam": "English",
+  "hero": {
+    "badge": "Faculty of Humanities, Social Sciences & Law",
+    "title": "Department of English",
+    "subtitle": "Nurturing critical thinkers and effective communicators for a globalized world."
+  },
+  "chairman": {
+    "name": "Dr. Sarah Rahman",
+    "designation": "Associate Professor & Head",
+    "message": [
+      "Welcome to the Department of English at Port City International University (PCIU). Our department is committed to excellence in teaching, research, and community engagement in the fields of English Language and Literature. Since our establishment, we have been dedicated to nurturing critical thinkers, effective communicators, and culturally aware individuals who can thrive in a globalized world.",
+      "Our faculty comprises experienced educators with diverse specializations including British Literature, American Literature, Linguistics, ELT, and Postcolonial Studies. We pride ourselves on fostering a supportive learning environment that encourages intellectual curiosity and academic growth."
+    ]
+  },
+  "overview": {
+    "hasImage": false,
+    "content": [
+      "The Department of English at PCIU offers comprehensive programs in English Language and Literature. Our curriculum is designed to develop critical thinking, communication, and analytical skills essential for success in various professional fields."
+    ]
+  },
+  "programs": [
+    { "name": "BA (Hons) in English", "duration": "4 Years", "credits": "132", "description": "Undergraduate program in English Language and Literature.", "concentrations": [] },
+    { "name": "MA in English Literature", "duration": "1 Year", "credits": "36", "description": "Graduate program in English Literature.", "concentrations": [] },
+    { "name": "MA in ELT", "duration": "1 Year", "credits": "36", "description": "Graduate program in English Language Teaching.", "concentrations": [] }
+  ],
+  "facilities": [
+    { "name": "Language Lab", "icon": "book-open" },
+    { "name": "Digital Library", "icon": "library" },
+    { "name": "Seminar Room", "icon": "users" },
+    { "name": "Research Center", "icon": "microscope" }
+  ],
+  "notices": [
+    { "title": "Admission Notice for MA in English Literature 2025", "date": "2025-01-10", "type": "admission" },
+    { "title": "Seminar on Contemporary Postcolonial Literature", "date": "2025-01-05", "type": "event" },
+    { "title": "Creative Writing Workshop Registration Open", "date": "2024-12-28", "type": "event" },
+    { "title": "Department Annual Literary Festival Announcement", "date": "2024-12-20", "type": "event" }
+  ],
+  "contact": {
+    "address": "Department of English\nPort City International University\nChittagong, Bangladesh",
+    "phone": "+880-31-123456 (Ext. 260)",
+    "email": "english@pciu.edu.bd",
+    "hours": "Sun - Thu: 9:00 AM - 5:00 PM"
+  },
+  "quickLinks": [
+    { "label": "University Library", "url": "/library" },
+    { "label": "Student Portal", "url": "#" },
+    { "label": "Research Publications", "url": "#" },
+    { "label": "Academic Calendar", "url": "#" },
+    { "label": "Scholarship Information", "url": "#" },
+    { "label": "Career Services", "url": "#" }
+  ],
+  "facultyMembers": [
+    { "name": "Dr. Sarah Rahman", "designation": "Associate Professor & Head", "specialization": "Postcolonial Literature" },
+    { "name": "Prof. Ahmed Hossain", "designation": "Professor", "specialization": "Applied Linguistics" },
+    { "name": "Dr. Fatima Akter", "designation": "Associate Professor", "specialization": "Victorian Literature" },
+    { "name": "Dr. Kamal Uddin", "designation": "Assistant Professor", "specialization": "Digital Humanities" },
+    { "name": "Ms. Nusrat Jahan", "designation": "Lecturer", "specialization": "ELT Methodology" },
+    { "name": "Dr. Rabeya Islam", "designation": "Assistant Professor", "specialization": "American Literature" }
+  ],
+  "researchAreas": [
+    { "title": "Postcolonial Literature and Identity Politics", "author": "Dr. Fatima Akter, Dr. Sarah Rahman", "description": "Research exploring themes of identity, diaspora, and cultural hybridity in South Asian literature." },
+    { "title": "Second Language Acquisition in Bangladeshi Context", "author": "Prof. Ahmed Hossain, Ms. Nusrat Jahan", "description": "Investigating effective methodologies for English language teaching in the Bangladeshi educational system." },
+    { "title": "Digital Humanities and Literary Analysis", "author": "Dr. Kamal Uddin", "description": "Applying computational methods to analyze patterns in classical and contemporary English literature." },
+    { "title": "Eco-criticism in Contemporary Fiction", "author": "Dr. Rabeya Islam", "description": "Examining environmental consciousness and ecological themes in modern English novels." }
+  ],
+  "achievements": [
+    { "value": "300+", "label": "Graduates" },
+    { "value": "15+", "label": "Research Publications" },
+    { "value": "10+", "label": "Literary Events/Year" }
+  ]
+}
