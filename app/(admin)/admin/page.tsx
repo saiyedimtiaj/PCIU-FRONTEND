@@ -17,7 +17,7 @@ const STATS = [
 ];
 
 const QUICK_LINKS = [
-  { label: "Edit Homepage", href: "/admin/homepage", icon: FileText },
+  { label: "Add Teacher", href: "/admin/people/teacher/new", icon: Users },
   { label: "Manage Faculty", href: "/admin/faculty", icon: Users },
   { label: "All Pages", href: "/admin/pages", icon: PencilLine },
 ];

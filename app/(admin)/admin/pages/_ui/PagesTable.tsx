@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Pencil, Trash2, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import DataTable, { type DataTableColumn } from "@/components/shared/DataTable";
 import { Modal } from "@/components/shared/Modal";
 import { AlertDialog } from "@/components/shared/Aleart";
@@ -141,20 +143,13 @@ export default function PagesTable() {
       >
         {editTarget && (
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-foreground">Title</label>
-              <input
-                defaultValue={editTarget.title}
-                className="mt-1.5 flex h-11 w-full rounded-lg border border-input bg-card px-4 py-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              />
+            <div className="space-y-1.5">
+              <Label htmlFor="page-title">Title</Label>
+              <Input id="page-title" defaultValue={editTarget.title} />
             </div>
-            <div>
-              <label className="text-sm font-medium text-foreground">Path</label>
-              <input
-                defaultValue={editTarget.path}
-                disabled
-                className="mt-1.5 flex h-11 w-full rounded-lg border border-input bg-muted px-4 py-3 text-sm text-muted-foreground outline-none"
-              />
+            <div className="space-y-1.5">
+              <Label htmlFor="page-path">Path</Label>
+              <Input id="page-path" defaultValue={editTarget.path} disabled className="bg-muted text-muted-foreground" />
             </div>
           </div>
         )}
