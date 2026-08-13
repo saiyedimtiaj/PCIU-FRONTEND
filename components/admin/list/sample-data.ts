@@ -181,15 +181,38 @@ const FALLBACK_NAMES = [
   "Sample Record Five",
 ];
 
-// Pre-formatted date strings — never computed with toLocaleDateString() at
-// render time (that call can differ by runtime ICU data and has caused
-// hydration warnings elsewhere in this codebase before).
+// Stored as plain ISO strings (yyyy-MM-dd) — required so an edit page can
+// feed one straight into <input type="date">, and so date filtering/sorting
+// is a stable string comparison instead of the old locale-formatted
+// "03 Jan 2026" strings (alphabetical, not chronological, and rejected by
+// <input type="date">). Display formatting happens separately in
+// columns.tsx via formatSampleDate() — never toLocaleDateString() at render
+// time, since that call can differ by runtime ICU data and has caused
+// hydration warnings elsewhere in this codebase before.
 const SAMPLE_DATES = [
-  "03 Jan 2026", "11 Jan 2026", "22 Jan 2026", "05 Feb 2026", "14 Feb 2026",
-  "01 Mar 2026", "12 Mar 2026", "26 Mar 2026", "08 Apr 2026", "19 Apr 2026",
-  "02 May 2026", "15 May 2026", "27 May 2026", "09 Jun 2026", "20 Jun 2026",
-  "03 Jul 2026", "16 Jul 2026", "28 Jul 2026", "11 Aug 2026", "24 Aug 2026",
+  "2026-01-03", "2026-01-11", "2026-01-22", "2026-02-05", "2026-02-14",
+  "2026-03-01", "2026-03-12", "2026-03-26", "2026-04-08", "2026-04-19",
+  "2026-05-02", "2026-05-15", "2026-05-27", "2026-06-09", "2026-06-20",
+  "2026-07-03", "2026-07-16", "2026-07-28", "2026-08-11", "2026-08-24",
 ];
+
+const MONTH_ABBR = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+] as const;
+
+/**
+ * Formats an ISO "yyyy-MM-dd" (optionally "yyyy-MM-ddTHH:mm") string as
+ * "03 Jan 2026" for display — a pure string→string transform with no
+ * locale/timezone lookups, so it renders identically on server and client.
+ * Never use toLocaleDateString() here (see the SAMPLE_DATES comment above).
+ */
+export function formatSampleDate(iso: string): string {
+  const [datePart] = iso.split("T");
+  const [year, month, day] = datePart.split("-");
+  const monthName = MONTH_ABBR[Number(month) - 1];
+  if (!year || !monthName || !day) return iso;
+  return `${day} ${monthName} ${year}`;
+}
 
 function slugify(value: string): string {
   return value
@@ -233,17 +256,24 @@ function generateFieldValue(
     case "url":
       return `https://portcity.edu.bd/${slugify(generatedName)}`;
     case "date":
-    case "datetime":
       return pick(SAMPLE_DATES, ...seedBase);
+    case "datetime": {
+      const isoDate = pick(SAMPLE_DATES, ...seedBase);
+      const hour = String(9 + (hashString(seedBase.join("::")) % 9)).padStart(2, "0");
+      return `${isoDate}T${hour}:00`;
+    }
     case "time":
       return pick(["09:00 AM", "10:30 AM", "12:00 PM", "02:00 PM", "03:30 PM"], ...seedBase);
     case "enum":
     case "select":
     case "radio":
     case "relation":
+      // Store the option's stable `value` (what a real <Select> binds to
+      // and what an edit form needs for defaultValues), not its `label` —
+      // display formatting resolves the label back out in columns.tsx.
       return field.options && field.options.length > 0
-        ? pick(field.options, ...seedBase).label
-        : "—";
+        ? pick(field.options, ...seedBase).value
+        : "";
     case "switch":
     case "checkbox":
       return seededRandom(...seedBase) > 0.3;

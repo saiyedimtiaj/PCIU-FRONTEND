@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { Pencil, Trash2 } from "lucide-react";
 import type { EntitySchema, FieldDescriptor, FieldType } from "@/components/admin/form/form-types";
 import type { DataTableColumn } from "@/components/shared/DataTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { SampleRow } from "./sample-data";
+import { groupRouteSegment } from "@/components/admin/nav-groups";
+import { formatSampleDate, type SampleRow } from "./sample-data";
 
 // Field types that never make good table columns — long-form content,
 // secrets, or structures that don't compress into a single cell.
@@ -51,6 +53,14 @@ function PrimaryCell({ value, subtitle }: { value: string; subtitle?: string }) 
   );
 }
 
+// Sample rows store the option's stable `value` (see sample-data.ts), which
+// is what an edit form's <Select> needs — resolve it back to a human label
+// here for display, the one place raw values become readable text.
+function optionLabel(field: FieldDescriptor, value: unknown): string {
+  const match = field.options?.find((o) => o.value === value);
+  return match?.label ?? (typeof value === "string" && value ? value : "—");
+}
+
 function FieldCell({ field, value }: { field: FieldDescriptor; value: unknown }) {
   switch (field.type) {
     case "switch":
@@ -61,9 +71,16 @@ function FieldCell({ field, value }: { field: FieldDescriptor; value: unknown })
     case "enum":
     case "select":
     case "radio":
-      return <Badge variant="secondary">{String(value ?? "—")}</Badge>;
+      return <Badge variant="secondary">{optionLabel(field, value)}</Badge>;
     case "relation":
-      return <span className="text-sm text-muted-foreground">{String(value ?? "—")}</span>;
+      return <span className="text-sm text-muted-foreground">{optionLabel(field, value)}</span>;
+    case "date":
+    case "datetime":
+      return (
+        <span className="text-sm tabular-nums text-foreground">
+          {typeof value === "string" && value ? formatSampleDate(value) : "—"}
+        </span>
+      );
     case "number":
     case "decimal":
       return <span className="text-sm tabular-nums text-foreground">{String(value ?? "—")}</span>;
@@ -86,7 +103,6 @@ function FieldCell({ field, value }: { field: FieldDescriptor; value: unknown })
 }
 
 export interface DeriveColumnsActions {
-  onEdit: (row: SampleRow) => void;
   onDelete: (row: SampleRow) => void;
 }
 
@@ -152,6 +168,8 @@ export function deriveColumns(
     });
   });
 
+  const basePath = `/admin/${groupRouteSegment(schema.group)}/${schema.slug}`;
+
   columns.push({
     key: "actions",
     header: "",
@@ -161,7 +179,8 @@ export function deriveColumns(
         <Button
           variant="ghost"
           size="icon-sm"
-          onClick={() => actions.onEdit(row)}
+          render={<Link href={`${basePath}/${row.__id}/edit`} />}
+          nativeButton={false}
           aria-label={`Edit ${schema.title.toLowerCase()}`}
         >
           <Pencil className="size-4" />

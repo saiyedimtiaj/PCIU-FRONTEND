@@ -46,6 +46,16 @@ function pageTitle(pathname: string) {
     return entity.pluralTitle ?? pluralize(entity.title);
   }
 
+  // /admin/<group>/<slug>/<id>/edit — an entity edit page. Matched before
+  // the /admin/faculty/... branch below so a 4-segment path can never be
+  // shadowed by it (that branch only fires when the group segment is
+  // literally "faculty", so today there's no real overlap, but the explicit
+  // /edit suffix keeps it that way even if a future entity slug collides).
+  const editMatch = pathname.match(/^\/admin\/[^/]+\/([^/]+)\/[^/]+\/edit$/)?.[1];
+  if (editMatch && ENTITY_REGISTRY[editMatch]) {
+    return `Edit ${ENTITY_REGISTRY[editMatch].title}`;
+  }
+
   // /admin/faculty/<id> and its section sub-routes (/profile, /education,
   // /publications, ...) — the per-teacher profile workspace. Resolved
   // separately from the entity-registry routes above since "faculty" here
