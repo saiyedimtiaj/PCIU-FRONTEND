@@ -5,12 +5,26 @@ import { PanelLeftClose, PanelLeftOpen, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ENTITY_REGISTRY } from "@/lib/admin/entities";
 import { pluralize } from "./nav-groups";
+import profiles from "@/content/faculty-directory/profiles.json";
+import type { FacultyProfile } from "@/types/faculty-directory";
+
+const FACULTY_PROFILES = profiles as FacultyProfile[];
 
 const PAGE_TITLES: Record<string, string> = {
   "/admin": "Dashboard",
   "/admin/pages": "Pages",
   "/admin/faculty": "Faculty Directory",
   "/admin/settings": "Settings",
+};
+
+const FACULTY_SECTION_TITLES: Record<string, string> = {
+  profile: "Profile",
+  education: "Education",
+  publications: "Publications",
+  experience: "Experience",
+  awards: "Awards",
+  memberships: "Memberships",
+  conferences: "Conferences",
 };
 
 function pageTitle(pathname: string) {
@@ -30,6 +44,18 @@ function pageTitle(pathname: string) {
   if (listMatch && ENTITY_REGISTRY[listMatch]) {
     const entity = ENTITY_REGISTRY[listMatch];
     return entity.pluralTitle ?? pluralize(entity.title);
+  }
+
+  // /admin/faculty/<id> and its section sub-routes (/profile, /education,
+  // /publications, ...) — the per-teacher profile workspace. Resolved
+  // separately from the entity-registry routes above since "faculty" here
+  // is the directory listing, not an ENTITY_REGISTRY group/slug pair.
+  const facultyMatch = pathname.match(/^\/admin\/faculty\/([^/]+)(?:\/([^/]+))?$/);
+  if (facultyMatch) {
+    const [, id, section] = facultyMatch;
+    const profile = FACULTY_PROFILES.find((p) => p.id === id);
+    const name = profile ? profile.name : "Faculty Profile";
+    return section ? `${name} — ${FACULTY_SECTION_TITLES[section] ?? section}` : name;
   }
 
   const match = Object.keys(PAGE_TITLES)
