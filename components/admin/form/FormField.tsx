@@ -173,7 +173,11 @@ export function FormField({ field, control, register, error }: FormFieldProps) {
               {field.label}
               {field.required && <span className="ml-0.5 text-destructive">*</span>}
             </Label>
-            <Select value={rhf.value ?? ""} onValueChange={(value) => rhf.onChange(value ?? "")}>
+            <Select
+              items={options}
+              value={rhf.value ?? ""}
+              onValueChange={(value) => rhf.onChange(value ?? "")}
+            >
               <SelectTrigger id={field.name} aria-invalid={!!error}>
                 <SelectValue placeholder={field.placeholder ?? `Select ${field.label.toLowerCase()}`} />
               </SelectTrigger>
