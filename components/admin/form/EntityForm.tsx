@@ -105,7 +105,7 @@ export default function EntityForm({ schema, cancelHref = "/admin" }: EntityForm
         ))}
       </div>
 
-      <div className="sticky bottom-0 z-30 -mx-6 mt-8 flex items-center justify-between gap-3 border-t border-border bg-card px-6 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-4px_12px_-4px_hsl(0_0%_0%/0.08)]">
+      <div className="mt-8 flex items-center justify-between gap-3 border-t border-border pt-6">
         <Button
           type="button"
           variant="ghost"

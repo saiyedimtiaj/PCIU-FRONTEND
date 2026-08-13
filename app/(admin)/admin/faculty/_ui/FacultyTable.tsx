@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import DataTable, { type DataTableColumn } from "@/components/shared/DataTable";
@@ -18,15 +18,15 @@ export default function FacultyTable({ profiles }: { profiles: FacultyProfile[] 
       key: "name",
       header: "Name",
       cell: (row) => (
-        <div className="flex items-center gap-3">
+        <Link href={`/admin/faculty/${row.id}`} className="flex items-center gap-3 group/name">
           <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-sm font-bold text-primary">
             {row.name.replace(/^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.)\s*/g, "")[0]}
           </div>
           <div className="min-w-0">
-            <p className="font-medium text-foreground truncate">{row.name}</p>
+            <p className="font-medium text-foreground truncate group-hover/name:text-primary transition-colors">{row.name}</p>
             <p className="text-xs text-muted-foreground truncate">{row.designation}</p>
           </div>
-        </div>
+        </Link>
       ),
       skeletonWidth: "w-40",
     },
@@ -62,7 +62,13 @@ export default function FacultyTable({ profiles }: { profiles: FacultyProfile[] 
       align: "right",
       cell: (row) => (
         <div className="flex items-center justify-end gap-1">
-          <Button variant="ghost" size="icon-sm" aria-label="Edit faculty member">
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            render={<Link href={`/admin/faculty/${row.id}`} />}
+            nativeButton={false}
+            aria-label="Edit faculty member"
+          >
             <Pencil className="size-4" />
           </Button>
           <Button
@@ -88,18 +94,6 @@ export default function FacultyTable({ profiles }: { profiles: FacultyProfile[] 
 
   return (
     <>
-      <div className="flex justify-end mb-4">
-        <Button
-          variant="highlight"
-          size="admin"
-          render={<Link href="/admin/people/teacher/new" />}
-          nativeButton={false}
-        >
-          <Plus className="size-4" />
-          Add Faculty Member
-        </Button>
-      </div>
-
       <DataTable
         columns={columns}
         data={profiles}
