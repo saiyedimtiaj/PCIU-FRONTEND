@@ -33,9 +33,10 @@ export default function ExamRoutineInteractive({
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
   };
 
-  const [departmentFilter, setDepartmentFilter] = useState<string>("all");
-  const [batchFilter, setBatchFilter] = useState<string>("all");
-  const [sectionFilter, setSectionFilter] = useState<string>("all");
+  const [departmentFilter, setDepartmentFilter] =
+    useState<string>("Department");
+  const [batchFilter, setBatchFilter] = useState<string>("Batch");
+  const [sectionFilter, setSectionFilter] = useState<string>("Section");
   const [dateFilter, setDateFilter] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -61,11 +62,11 @@ export default function ExamRoutineInteractive({
   const filteredRoutines = useMemo(() => {
     return routines.filter((r) => {
       const matchesDept =
-        departmentFilter === "all" || r.department === departmentFilter;
+        departmentFilter === "Department" || r.department === departmentFilter;
       const matchesBatch =
-        batchFilter === "all" || parseInt(r.batch) === parseInt(batchFilter);
+        batchFilter === "Batch" || parseInt(r.batch) === parseInt(batchFilter);
       const matchesSection =
-        sectionFilter === "all" || r.section === sectionFilter;
+        sectionFilter === "Section" || r.section === sectionFilter;
 
       const matchesSearch =
         searchQuery === "" ||
@@ -140,13 +141,15 @@ export default function ExamRoutineInteractive({
             {departments.length > 0 && (
               <Select
                 value={departmentFilter}
-                onValueChange={(val) => setDepartmentFilter(val || "all")}
+                onValueChange={(val) =>
+                  setDepartmentFilter(val || "Department")
+                }
               >
                 <SelectTrigger className="w-30 h-9 bg-background">
                   <SelectValue placeholder="Dept" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Depts</SelectItem>
+                  <SelectItem value="Department">Department</SelectItem>
                   {departments.map((dep) => (
                     <SelectItem key={dep} value={dep}>
                       {dep}
@@ -159,13 +162,13 @@ export default function ExamRoutineInteractive({
             {batches.length > 0 && (
               <Select
                 value={batchFilter}
-                onValueChange={(val) => setBatchFilter(val || "all")}
+                onValueChange={(val) => setBatchFilter(val || "Batch")}
               >
                 <SelectTrigger className="w-30 h-9 bg-background">
                   <SelectValue placeholder="Batch" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Batches</SelectItem>
+                  <SelectItem value="Batch">Batch</SelectItem>
                   {batches.map((b) => (
                     <SelectItem key={b} value={b}>
                       {getOrdinal(Number(b))} Batch
@@ -178,13 +181,13 @@ export default function ExamRoutineInteractive({
             {sections.length > 0 && (
               <Select
                 value={sectionFilter}
-                onValueChange={(val) => setSectionFilter(val || "all")}
+                onValueChange={(val) => setSectionFilter(val || "Section")}
               >
                 <SelectTrigger className="w-30 h-9 bg-background">
                   <SelectValue placeholder="Section" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Sections</SelectItem>
+                  <SelectItem value="Section">Section</SelectItem>
                   {sections.map((s) => (
                     <SelectItem key={s} value={s}>
                       {s}

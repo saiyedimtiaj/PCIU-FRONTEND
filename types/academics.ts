@@ -26,14 +26,18 @@ export interface ClassTimeSlot {
   slot: string;
 }
 
-export interface ClassRoutineRow {
+export interface ClassRoutineItem {
+  id: number;
+  department: string;
+  course: string;
+  teacher: string;
+  building: string;
+  room: string;
+  timeSlot: string;
+  batch: string;
+  section: string;
   day: string;
-  slotA: string;
-  slotB: string;
-  slotC: string;
-  slotD: string;
-  slotE: string;
-  slotF: string;
+  studentRange: string;
 }
 
 export interface GradeRow {
@@ -67,7 +71,7 @@ export interface AcademicsPageContent {
   };
   classSchedule: {
     timeSlots: ClassTimeSlot[];
-    routine: ClassRoutineRow[];
+    routines: ClassRoutineItem[];
   };
   resultGrading: {
     dressCodeViolations: string[];

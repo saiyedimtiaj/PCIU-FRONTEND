@@ -103,20 +103,79 @@
   },
   "classSchedule": {
     "timeSlots": [
-      { "time": "8:30 AM – 10:00 AM", "slot": "A" },
-      { "time": "10:00 AM – 11:30 AM", "slot": "B" },
-      { "time": "11:30 AM – 1:00 PM", "slot": "C" },
-      { "time": "2:00 PM – 3:30 PM", "slot": "D" },
-      { "time": "3:30 PM – 5:00 PM", "slot": "E" },
-      { "time": "5:00 PM – 6:30 PM", "slot": "F" }
+      { "time": "8:30 AM – 9:55 AM", "slot": "A" },
+      { "time": "10:00 AM – 11:25 AM", "slot": "B" },
+      { "time": "11:30 AM – 12:55 PM", "slot": "C" },
+      { "time": "1:30 PM – 2:55 PM", "slot": "D" },
+      { "time": "3:00 PM – 4:25 PM", "slot": "E" },
+      { "time": "4:30 PM – 5:55 PM", "slot": "F" }
     ],
-    "routine": [
-      { "day": "Saturday", "slotA": "CSE 101", "slotB": "ENG 102", "slotC": "MAT 101", "slotD": "PHY 101", "slotE": "—", "slotF": "—" },
-      { "day": "Sunday", "slotA": "BBA 201", "slotB": "LAW 101", "slotC": "CSE 203", "slotD": "—", "slotE": "EEE 101", "slotF": "CE 101" },
-      { "day": "Monday", "slotA": "MAT 101", "slotB": "CSE 101", "slotC": "PHY 101", "slotD": "ENG 102", "slotE": "—", "slotF": "—" },
-      { "day": "Tuesday", "slotA": "CSE 203", "slotB": "BBA 201", "slotC": "—", "slotD": "LAW 101", "slotE": "TEX 201", "slotF": "—" },
-      { "day": "Wednesday", "slotA": "ENG 102", "slotB": "MAT 101", "slotC": "CSE 101", "slotD": "—", "slotE": "PHY 101", "slotF": "EEE 101" },
-      { "day": "Thursday", "slotA": "PHY 101", "slotB": "CSE 203", "slotC": "BBA 201", "slotD": "ENG 102", "slotE": "—", "slotF": "—" }
+    "routines": [
+      {
+        "id": 1,
+        "department": "CSE",
+        "course": "CSE 101 – Introduction to Computer Science",
+        "teacher": "Dr. John Doe",
+        "building": "Main Building",
+        "room": "Room 301",
+        "timeSlot": "8:30 AM – 9:55 AM",
+        "batch": "24th",
+        "section": "A",
+        "day": "Saturday",
+        "studentRange": "ID 1001 - 1045"
+      },
+      {
+        "id": 2,
+        "department": "CSE",
+        "course": "ENG 102 – English Composition",
+        "teacher": "Prof. Jane Smith",
+        "building": "Academic Building 1",
+        "room": "Room 204",
+        "timeSlot": "10:00 AM – 11:25 AM",
+        "batch": "24th",
+        "section": "B",
+        "day": "Saturday",
+        "studentRange": "ID 1046 - 1090"
+      },
+      {
+        "id": 3,
+        "department": "BBA",
+        "course": "BBA 201 – Principles of Management",
+        "teacher": "Mr. Alan Turing",
+        "building": "Business Center",
+        "room": "Room 105",
+        "timeSlot": "11:30 AM – 12:55 PM",
+        "batch": "30th",
+        "section": "A",
+        "day": "Sunday",
+        "studentRange": "ID 3001 - 3040"
+      },
+      {
+        "id": 4,
+        "department": "ENG",
+        "course": "LAW 101 – Introduction to Law",
+        "teacher": "Mrs. Ada Lovelace",
+        "building": "Main Building",
+        "room": "Room 302",
+        "timeSlot": "1:30 PM – 2:55 PM",
+        "batch": "18th",
+        "section": "A",
+        "day": "Monday",
+        "studentRange": "ID 2001 - 2050"
+      },
+      {
+        "id": 5,
+        "department": "CSE",
+        "course": "CSE 203 – Data Structures",
+        "teacher": "Dr. John Doe",
+        "building": "Main Building",
+        "room": "Lab 1",
+        "timeSlot": "3:00 PM – 4:25 PM",
+        "batch": "23rd",
+        "section": "A",
+        "day": "Tuesday",
+        "studentRange": "ID 1001 - 1050"
+      }
     ]
   },
   "resultGrading": {
