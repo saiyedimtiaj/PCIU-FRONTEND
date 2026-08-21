@@ -12,14 +12,15 @@ import { Button } from "@/components/ui/button";
 import type { AcademicsPageContent } from "@/types/academics";
 import ExamRoutineInteractive from "./ExamRoutineInteractive";
 
-export default function ExamScheduleSection({
+export default async function ExamScheduleSection({
   content,
-  examId,
+  searchParams,
 }: {
   content: AcademicsPageContent["examSchedule"];
-  examId?: string;
+  searchParams: Promise<{ examId?: string }>;
 }) {
   const { exams, routines, guidelines } = content;
+  const { examId } = await searchParams;
 
   // Determine active exam
   const parsedExamId = examId ? parseInt(examId, 10) : NaN;
@@ -96,7 +97,7 @@ export default function ExamScheduleSection({
                       className="flex-1"
                       render={
                         <Link
-                          href={`/academics?section=exam-schedule&examId=${exam.id}`}
+                          href={`/academics/exam-schedule?examId=${exam.id}`}
                           scroll={false}
                         />
                       }
