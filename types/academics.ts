@@ -1,15 +1,24 @@
-export interface ExamScheduleEntry {
-  semester: string;
-  midterm: string;
-  final: string;
+export interface Exam {
+  id: number;
+  name: string;
+  routeFile: string | null;
+  startDate: string;
+  endDate: string;
   status: string;
 }
 
-export interface RoutineEntry {
-  date: string;
-  time: string;
+export interface ExamRoutine {
+  id: number;
+  examId: number;
+  department: string;
   course: string;
+  building: string;
   room: string;
+  timeSlot: string;
+  batch: string;
+  section: string;
+  date: string;
+  studentRange: string;
 }
 
 export interface ClassTimeSlot {
@@ -52,8 +61,8 @@ export interface ResultStep {
 
 export interface AcademicsPageContent {
   examSchedule: {
-    schedules: ExamScheduleEntry[];
-    routine: RoutineEntry[];
+    exams: Exam[];
+    routines: ExamRoutine[];
     guidelines: string[];
   };
   classSchedule: {

@@ -1,21 +1,97 @@
 {
   "examSchedule": {
-    "schedules": [
-      { "semester": "Spring 2026", "midterm": "March 15 – March 25, 2026", "final": "May 20 – June 5, 2026", "status": "Ongoing" },
-      { "semester": "Summer 2026", "midterm": "July 10 – July 20, 2026", "final": "September 15 – September 30, 2026", "status": "Upcoming" },
-      { "semester": "Fall 2026", "midterm": "November 5 – November 15, 2026", "final": "January 10 – January 25, 2027", "status": "Upcoming" }
+    "exams": [
+      {
+        "id": 1,
+        "name": "Spring 2026 Midterm Examination",
+        "routeFile": "#",
+        "startDate": "2026-03-15",
+        "endDate": "2026-03-25",
+        "status": "Ongoing"
+      },
+      {
+        "id": 2,
+        "name": "Summer 2026 Midterm Examination",
+        "routeFile": null,
+        "startDate": "2026-07-10",
+        "endDate": "2026-07-20",
+        "status": "Upcoming"
+      },
+      {
+        "id": 3,
+        "name": "Fall 2026 Midterm Examination",
+        "routeFile": null,
+        "startDate": "2026-11-05",
+        "endDate": "2026-11-15",
+        "status": "Upcoming"
+      }
     ],
-    "routine": [
-      { "date": "March 15, 2026 (Sat)", "time": "10:00 AM – 1:00 PM", "course": "CSE 101 – Introduction to Computer Science", "room": "Room 301" },
-      { "date": "March 16, 2026 (Sun)", "time": "10:00 AM – 1:00 PM", "course": "ENG 102 – English Composition", "room": "Room 204" },
-      { "date": "March 17, 2026 (Mon)", "time": "10:00 AM – 1:00 PM", "course": "MAT 101 – Calculus I", "room": "Room 105" },
-      { "date": "March 18, 2026 (Tue)", "time": "2:00 PM – 5:00 PM", "course": "PHY 101 – Physics I", "room": "Room 302" },
-      { "date": "March 19, 2026 (Wed)", "time": "10:00 AM – 1:00 PM", "course": "BBA 201 – Principles of Management", "room": "Room 401" },
-      { "date": "March 20, 2026 (Thu)", "time": "10:00 AM – 1:00 PM", "course": "LAW 101 – Introduction to Law", "room": "Room 202" },
-      { "date": "March 22, 2026 (Sat)", "time": "2:00 PM – 5:00 PM", "course": "CSE 203 – Data Structures", "room": "Room 303" },
-      { "date": "March 23, 2026 (Sun)", "time": "10:00 AM – 1:00 PM", "course": "EEE 101 – Basic Electrical Engineering", "room": "Room 106" },
-      { "date": "March 24, 2026 (Mon)", "time": "10:00 AM – 1:00 PM", "course": "CE 101 – Engineering Mechanics", "room": "Room 107" },
-      { "date": "March 25, 2026 (Tue)", "time": "2:00 PM – 5:00 PM", "course": "TEX 201 – Textile Fibers", "room": "Room 501" }
+    "routines": [
+      {
+        "id": 1,
+        "examId": 1,
+        "department": "CSE",
+        "course": "CSE 101 – Introduction to Computer Science",
+        "building": "Main Building",
+        "room": "Room 301",
+        "timeSlot": "10:00 AM – 1:00 PM",
+        "batch": "24th",
+        "section": "A",
+        "date": "2026-03-15",
+        "studentRange": "ID 1001 - 1045"
+      },
+      {
+        "id": 2,
+        "examId": 1,
+        "department": "CSE",
+        "course": "CSE 101 – Introduction to Computer Science",
+        "building": "Main Building",
+        "room": "Room 302",
+        "timeSlot": "10:00 AM – 1:00 PM",
+        "batch": "24th",
+        "section": "B",
+        "date": "2026-03-15",
+        "studentRange": "ID 1046 - 1090"
+      },
+      {
+        "id": 3,
+        "examId": 1,
+        "department": "ENG",
+        "course": "ENG 102 – English Composition",
+        "building": "Academic Building 1",
+        "room": "Room 204",
+        "timeSlot": "10:00 AM – 1:00 PM",
+        "batch": "18th",
+        "section": "A",
+        "date": "2026-03-16",
+        "studentRange": "ID 2001 - 2050"
+      },
+      {
+        "id": 4,
+        "examId": 1,
+        "department": "BBA",
+        "course": "MAT 101 – Calculus I",
+        "building": "Business Center",
+        "room": "Room 105",
+        "timeSlot": "10:00 AM – 1:00 PM",
+        "batch": "30th",
+        "section": "A",
+        "date": "2026-03-17",
+        "studentRange": "ID 3001 - 3040"
+      },
+      {
+        "id": 5,
+        "examId": 1,
+        "department": "CSE",
+        "course": "PHY 101 – Physics I",
+        "building": "Main Building",
+        "room": "Room 302",
+        "timeSlot": "2:00 PM – 5:00 PM",
+        "batch": "23rd",
+        "section": "A",
+        "date": "2026-03-18",
+        "studentRange": "ID 1001 - 1050"
+      }
     ],
     "guidelines": [
       "Students must carry their university ID card to the examination hall.",
