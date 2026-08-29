@@ -14,16 +14,15 @@ export interface SectionShellProps {
   items: SectionNavItem[];
   activeId: string;
   basePath: string;
+  routingMode?: "query" | "path";
   children: ReactNode;
 }
 
 /**
  * Sidebar-nav + content layout shared by the `?section=` query-param pages
- * (Academics, Admission). Server component — active section comes from the
- * URL via a prop, links are real `next/link`s to `?section=x` so navigation
- * needs zero client JS.
+ * (Academics, Admission) and nested path pages. Server component.
  */
-export default function SectionShell({ title, items, activeId, basePath, children }: SectionShellProps) {
+export default function SectionShell({ title, items, activeId, basePath, routingMode = "query", children }: SectionShellProps) {
   return (
     <div className="grid lg:grid-cols-4 gap-8">
       <aside className="lg:col-span-1">
@@ -35,10 +34,11 @@ export default function SectionShell({ title, items, activeId, basePath, childre
             {items.map((item) => {
               const Icon = iconMap[item.icon];
               const isActive = item.id === activeId;
+              const href = routingMode === "path" ? `${basePath}/${item.id}` : `${basePath}?section=${item.id}`;
               return (
                 <Link
                   key={item.id}
-                  href={`${basePath}?section=${item.id}`}
+                  href={href}
                   scroll={false}
                   className={cn(
                     "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm transition-colors",
