@@ -1,7 +1,7 @@
 import { AlertTriangle } from "lucide-react";
 import InfoCard from "@/components/shared/InfoCard";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { AcademicsPageContent } from "@/types/academics";
+import ClassRoutineInteractive from "./ClassRoutineInteractive";
 
 export default function ClassScheduleSection({
   content,
@@ -12,29 +12,15 @@ export default function ClassScheduleSection({
     <div className="space-y-6">
       <div>
         <h2 className="font-heading font-bold text-2xl text-foreground mb-1">Class Schedule</h2>
-        <p className="text-sm text-muted-foreground">Weekly class routine sample.</p>
+        <p className="text-sm text-muted-foreground">Weekly class routine.</p>
       </div>
-
-      <InfoCard title="Class Time Slots">
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {content.timeSlots.map((slot) => (
-            <div
-              key={slot.slot}
-              className="flex items-center justify-between rounded-lg bg-muted px-3 py-2 text-sm"
-            >
-              <span className="font-semibold text-foreground">Slot {slot.slot}</span>
-              <span className="text-muted-foreground">{slot.time}</span>
-            </div>
-          ))}
-        </div>
-      </InfoCard>
 
       <div className="grid sm:grid-cols-2 gap-4">
         <InfoCard title="Day Section">
           <ul className="space-y-1.5 text-sm text-muted-foreground">
             <li>Classes: Saturday – Thursday</li>
-            <li>Time: 8:30 AM – 5:00 PM</li>
-            <li>Break: 1:00 PM – 2:00 PM (Jumma Prayer)</li>
+            <li>Time: 8:30 AM – 5:55 PM</li>
+            <li>Break: 1:00 PM – 1:30 PM (Jumma Prayer on Friday)</li>
             <li>Weekly Holiday: Friday</li>
           </ul>
         </InfoCard>
@@ -48,34 +34,10 @@ export default function ClassScheduleSection({
         </InfoCard>
       </div>
 
-      <InfoCard title="Class Routine – Spring 2026 (Sample)">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Day</TableHead>
-              <TableHead>A</TableHead>
-              <TableHead>B</TableHead>
-              <TableHead>C</TableHead>
-              <TableHead>D</TableHead>
-              <TableHead>E</TableHead>
-              <TableHead>F</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {content.routine.map((row) => (
-              <TableRow key={row.day}>
-                <TableCell className="font-medium text-foreground">{row.day}</TableCell>
-                <TableCell>{row.slotA}</TableCell>
-                <TableCell>{row.slotB}</TableCell>
-                <TableCell>{row.slotC}</TableCell>
-                <TableCell>{row.slotD}</TableCell>
-                <TableCell>{row.slotE}</TableCell>
-                <TableCell>{row.slotF}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </InfoCard>
+      <ClassRoutineInteractive 
+        routines={content.routines} 
+        timeSlots={content.timeSlots} 
+      />
 
       <InfoCard className="border-l-4 border-l-accent">
         <p className="flex items-start gap-2 text-sm text-muted-foreground">

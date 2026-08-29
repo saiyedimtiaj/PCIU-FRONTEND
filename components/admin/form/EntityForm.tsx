@@ -18,12 +18,19 @@ export interface EntityFormProps {
   schema: EntitySchema;
   /** Where Cancel navigates back to. Defaults to /admin. */
   cancelHref?: string;
+  /** "edit" pre-fills from initialValues and swaps the heading/submit-label/
+   * toast copy — everything else about the form is identical to "create". */
+  mode?: "create" | "edit";
+  /** Only meaningful in edit mode. Merged over schema.defaultValues so a
+   * field the sample record doesn't happen to set still has a sane default. */
+  initialValues?: FieldValues;
 }
 
-export default function EntityForm({ schema, cancelHref = "/admin" }: EntityFormProps) {
+export default function EntityForm({ schema, cancelHref = "/admin", mode = "create", initialValues }: EntityFormProps) {
   const router = useRouter();
   const toast = useToastManager();
   const [submitting, setSubmitting] = useState(false);
+  const isEdit = mode === "edit";
 
   const {
     control,
@@ -35,7 +42,7 @@ export default function EntityForm({ schema, cancelHref = "/admin" }: EntityForm
     // Entity schemas are dynamic (schema-driven, one zod shape per entity file),
     // so the resolver can't statically infer FieldValues — cast is intentional.
     resolver: zodResolver(schema.zodSchema as z.ZodType<FieldValues, FieldValues>),
-    defaultValues: schema.defaultValues as FieldValues,
+    defaultValues: { ...schema.defaultValues, ...initialValues } as FieldValues,
   });
 
   async function onSubmit(values: FieldValues) {
@@ -45,8 +52,8 @@ export default function EntityForm({ schema, cancelHref = "/admin" }: EntityForm
     setSubmitting(false);
     toast.add({
       type: "success",
-      title: `${schema.title} created`,
-      description: `${(values.name ?? values.title ?? "The new record") as string} would be saved here once persistence exists.`,
+      title: isEdit ? `${schema.title} updated` : `${schema.title} created`,
+      description: `${(values.name ?? values.title ?? "The record") as string} would be saved here once persistence exists.`,
     });
     // Land back on the listing (the expected CMS flow) rather than
     // resetting in place, when the caller gave us somewhere to go.
@@ -59,7 +66,11 @@ export default function EntityForm({ schema, cancelHref = "/admin" }: EntityForm
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <PageHeader title={`Add ${schema.title}`} description={schema.description} icon={schema.icon} />
+      <PageHeader
+        title={isEdit ? `Edit ${schema.title}` : `Add ${schema.title}`}
+        description={schema.description}
+        icon={schema.icon}
+      />
 
       <div className="space-y-6">
         {schema.sections.map((section) => (
@@ -116,7 +127,7 @@ export default function EntityForm({ schema, cancelHref = "/admin" }: EntityForm
           Cancel
         </Button>
         <Button type="submit" variant="highlight" size="admin" loading={submitting}>
-          Save {schema.title}
+          {isEdit ? "Save changes" : `Save ${schema.title}`}
         </Button>
       </div>
     </form>

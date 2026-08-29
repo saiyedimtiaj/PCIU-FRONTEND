@@ -16,50 +16,88 @@ const researchMenu = [
   { name: "Research Centres", href: "/research?section=centres" },
   { name: "Research Areas", href: "/research?section=areas" },
   { name: "Research & Publications", href: "/research?section=publications" },
-  { name: "Partnerships & Collaboration", href: "/research?section=partnerships" },
+  {
+    name: "Partnerships & Collaboration",
+    href: "/research?section=partnerships",
+  },
   { name: "MoUs", href: "/research?section=mous" },
   { name: "Port City Journal", href: "/research/port-city-journal" },
   { name: "Call For Paper", href: "/research/call-for-paper" },
-  { name: "Call For Paper Guidelines", href: "/research/call-for-paper-guidelines" },
+  {
+    name: "Call For Paper Guidelines",
+    href: "/research/call-for-paper-guidelines",
+  },
 ];
 
 const academicsMenu = {
   quickLinks: [
-    { name: "Exam Schedule", href: "/academics?section=exam-schedule" },
-    { name: "Class Schedule", href: "/academics?section=class-schedule" },
-    { name: "Rules & Grading System", href: "/academics?section=result-grading" },
-    { name: "Examination Policies", href: "/academics?section=examination-policies" },
-    { name: "Academic Results", href: "/academics?section=academic-results" },
-    { name: "Online Certification Verification", href: "/academics?section=certification-verification" },
+    { name: "Exam Schedule", href: "/academics/exam-schedule" },
+    { name: "Class Schedule", href: "/academics/class-schedule" },
+    {
+      name: "Rules & Grading System",
+      href: "/academics/result-grading",
+    },
+    {
+      name: "Examination Policies",
+      href: "/academics/examination-policies",
+    },
+    { name: "Academic Results", href: "/academics/academic-results" },
+    {
+      name: "Online Certification Verification",
+      href: "/academics/certification-verification",
+    },
   ],
   faculties: [
     {
       name: "Faculty of Business Studies",
-      departments: [{ name: "Department of Business Administration", href: "/department/bba" }],
+      departments: [
+        {
+          name: "Department of Business Administration",
+          href: "/department/bba",
+        },
+      ],
     },
     {
       name: "Faculty of Humanities, Social Sciences & Law",
       departments: [
         { name: "Department of English", href: "/department/english" },
         { name: "Department of Law", href: "/department/law" },
-        { name: "Department of Journalism and Media Studies", href: "/department/journalism" },
+        {
+          name: "Department of Journalism and Media Studies",
+          href: "/department/journalism",
+        },
       ],
     },
     {
       name: "Faculty of Science and Engineering",
       departments: [
-        { name: "Department of Computer Science and Engineering", href: "/department/cse" },
-        { name: "Department of Electrical and Electronic Engineering", href: "/department/eee" },
+        {
+          name: "Department of Computer Science and Engineering",
+          href: "/department/cse",
+        },
+        {
+          name: "Department of Electrical and Electronic Engineering",
+          href: "/department/eee",
+        },
         { name: "Department of Civil Engineering", href: "/department/civil" },
-        { name: "Department of Textile Engineering", href: "/department/textile" },
-        { name: "Department of Fashion Design and Technology", href: "/department/fashion" },
+        {
+          name: "Department of Textile Engineering",
+          href: "/department/textile",
+        },
+        {
+          name: "Department of Fashion Design and Technology",
+          href: "/department/fashion",
+        },
       ],
     },
   ],
 };
 
 const admissionMenu = [
-  { name: "Admission Advertisement", href: "/admission?section=admission-advertisement" },
+  {
+    name: "Admission Advertisement",
+    href: "/admission?section=admission-advertisement",
+  },
   { name: "Admission Requirement", href: "/admission?section=requirement" },
   { name: "Admission Schedule", href: "/admission?section=admission-schedule" },
   { name: "Admission Test", href: "/admission?section=admission-test" },
@@ -69,8 +107,14 @@ const admissionMenu = [
   { name: "Online Admission", href: "/admission?section=online-admission" },
   { name: "Tuition & Others Fees", href: "/admission?section=tuition-fees" },
   { name: "FAQ", href: "/admission?section=faq" },
-  { name: "Admission Test Result", href: "/admission?section=admission-test-result" },
-  { name: "Scholarship & Financial Assistance", href: "/admission?section=scholarship" },
+  {
+    name: "Admission Test Result",
+    href: "/admission?section=admission-test-result",
+  },
+  {
+    name: "Scholarship & Financial Assistance",
+    href: "/admission?section=scholarship",
+  },
   { name: "Admission Contact", href: "/admission?section=admission-contact" },
 ];
 
@@ -102,19 +146,34 @@ export default function Navbar() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-6">
-              <Link href="#prospective" className="hover:text-accent transition-colors">
+              <Link
+                href="#prospective"
+                className="hover:text-accent transition-colors"
+              >
                 Prospective Students
               </Link>
-              <Link href="#current" className="hover:text-accent transition-colors">
+              <Link
+                href="#current"
+                className="hover:text-accent transition-colors"
+              >
                 Current Students
               </Link>
-              <Link href="/faculty" className="hover:text-accent transition-colors">
+              <Link
+                href="/faculty"
+                className="hover:text-accent transition-colors"
+              >
                 Faculty &amp; Staff
               </Link>
-              <Link href="#alumni" className="hover:text-accent transition-colors">
+              <Link
+                href="#alumni"
+                className="hover:text-accent transition-colors"
+              >
                 Alumni
               </Link>
-              <Link href="/signin" className="hover:text-accent transition-colors font-medium">
+              <Link
+                href="/signin"
+                className="hover:text-accent transition-colors font-medium"
+              >
                 Faculty Portal
               </Link>
             </div>
@@ -133,7 +192,10 @@ export default function Navbar() {
                 <Globe className="w-4 h-4" />
                 <span>EN</span>
               </button>
-              <button className="hover:text-accent transition-colors" aria-label="Search">
+              <button
+                className="hover:text-accent transition-colors"
+                aria-label="Search"
+              >
                 <Search className="w-4 h-4" />
               </button>
             </div>
@@ -148,9 +210,9 @@ export default function Navbar() {
         }`}
       >
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-[70px]">
+          <div className="flex items-center justify-between h-17.5">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href="/" className="flex items-center gap-3 shrink-0">
               <Image
                 src="/images/pciu-logo.png"
                 alt="Port City International University Logo"
@@ -162,7 +224,9 @@ export default function Navbar() {
                 <div className="font-bold text-lg text-primary leading-tight">
                   Port City International
                 </div>
-                <div className="text-xs text-muted-foreground tracking-wide">University</div>
+                <div className="text-xs text-muted-foreground tracking-wide">
+                  University
+                </div>
               </div>
             </Link>
 
@@ -175,7 +239,7 @@ export default function Navbar() {
               </DropdownNavItem>
 
               <DropdownNavItem label="Academics" wide>
-                <div className="w-[820px] p-6">
+                <div className="w-205 p-6">
                   <div className="flex flex-wrap gap-x-4 gap-y-1 mb-5 pb-3 border-b border-border">
                     {academicsMenu.quickLinks.map((link) => (
                       <Link
@@ -229,7 +293,11 @@ export default function Navbar() {
 
             {/* CTA & Mobile Menu */}
             <div className="flex items-center gap-3">
-              <Button variant="accent" className="hidden md:flex" aria-label="Apply now">
+              <Button
+                variant="accent"
+                className="hidden md:flex"
+                aria-label="Apply now"
+              >
                 Apply Now
               </Button>
 
@@ -248,16 +316,24 @@ export default function Navbar() {
 
       {/* Mobile Menu Panel */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] lg:hidden">
+        <div className="fixed inset-0 z-60 lg:hidden">
           <div
             className="absolute inset-0 bg-black/50"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="absolute right-0 top-0 h-full w-[300px] sm:w-[350px] bg-card overflow-y-auto p-6 shadow-xl">
+          <div className="absolute right-0 top-0 h-full w-75 sm:w-87.5 bg-card overflow-y-auto p-6 shadow-xl">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <Image src="/images/pciu-logo.png" alt="PCIU Logo" width={32} height={32} className="w-8 h-8" />
-                <span className="text-primary font-heading font-bold">PCIU</span>
+                <Image
+                  src="/images/pciu-logo.png"
+                  alt="PCIU Logo"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
+                <span className="text-primary font-heading font-bold">
+                  PCIU
+                </span>
               </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -279,7 +355,9 @@ export default function Navbar() {
               <MobileDropdown
                 label="About"
                 isOpen={openSubmenu === "about"}
-                onToggle={() => setOpenSubmenu(openSubmenu === "about" ? null : "about")}
+                onToggle={() =>
+                  setOpenSubmenu(openSubmenu === "about" ? null : "about")
+                }
               >
                 {aboutMenu.map((item) => (
                   <Link
@@ -296,7 +374,11 @@ export default function Navbar() {
               <MobileDropdown
                 label="Academics"
                 isOpen={openSubmenu === "academics"}
-                onToggle={() => setOpenSubmenu(openSubmenu === "academics" ? null : "academics")}
+                onToggle={() =>
+                  setOpenSubmenu(
+                    openSubmenu === "academics" ? null : "academics",
+                  )
+                }
               >
                 {academicsMenu.quickLinks.map((link) => (
                   <Link
@@ -330,7 +412,11 @@ export default function Navbar() {
               <MobileDropdown
                 label="Admission"
                 isOpen={openSubmenu === "admission"}
-                onToggle={() => setOpenSubmenu(openSubmenu === "admission" ? null : "admission")}
+                onToggle={() =>
+                  setOpenSubmenu(
+                    openSubmenu === "admission" ? null : "admission",
+                  )
+                }
               >
                 {admissionMenu.map((item) => (
                   <Link
@@ -347,7 +433,11 @@ export default function Navbar() {
               <MobileDropdown
                 label="Facilities"
                 isOpen={openSubmenu === "facilities"}
-                onToggle={() => setOpenSubmenu(openSubmenu === "facilities" ? null : "facilities")}
+                onToggle={() =>
+                  setOpenSubmenu(
+                    openSubmenu === "facilities" ? null : "facilities",
+                  )
+                }
               >
                 {facilitiesMenu.map((item) => (
                   <Link
@@ -364,7 +454,9 @@ export default function Navbar() {
               <MobileDropdown
                 label="Research"
                 isOpen={openSubmenu === "research"}
-                onToggle={() => setOpenSubmenu(openSubmenu === "research" ? null : "research")}
+                onToggle={() =>
+                  setOpenSubmenu(openSubmenu === "research" ? null : "research")
+                }
               >
                 {researchMenu.map((item) => (
                   <Link
@@ -413,7 +505,7 @@ function NavItem({ href, label }: { href: string; label: string }) {
       className="relative h-full flex items-center px-4 text-sm font-medium text-foreground hover:text-primary transition-colors group"
     >
       {label}
-      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[3px] bg-accent transition-all duration-300 group-hover:w-full rounded-t" />
+      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.75 bg-accent transition-all duration-300 group-hover:w-full rounded-t" />
     </Link>
   );
 }
@@ -454,7 +546,7 @@ function DropdownNavItem({
           className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
         <span
-          className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[3px] bg-accent transition-all duration-300 rounded-t ${
+          className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.75 bg-accent transition-all duration-300 rounded-t ${
             open ? "w-full" : "w-0 group-hover:w-full"
           }`}
         />
@@ -464,7 +556,9 @@ function DropdownNavItem({
         className={`absolute top-full ${
           wide ? "left-1/2 -translate-x-1/2" : "left-0"
         } pt-0 transition-all duration-200 ${
-          open ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-1"
+          open
+            ? "opacity-100 visible translate-y-0"
+            : "opacity-0 invisible -translate-y-1"
         }`}
       >
         <div className="bg-card rounded-b-lg shadow-lg border border-border border-t-[3px] border-t-accent overflow-hidden">
@@ -475,9 +569,13 @@ function DropdownNavItem({
   );
 }
 
-function SimpleDropdown({ items }: { items: { name: string; href: string }[] }) {
+function SimpleDropdown({
+  items,
+}: {
+  items: { name: string; href: string }[];
+}) {
   return (
-    <div className="w-[240px] py-2">
+    <div className="w-60 py-2">
       {items.map((item) => (
         <Link
           key={item.name}
@@ -510,7 +608,9 @@ function MobileDropdown({
         className="flex items-center justify-between w-full text-foreground hover:text-primary font-medium py-3 px-2 border-b border-border"
       >
         {label}
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
       {isOpen && <div className="bg-muted/50 rounded-md mt-1">{children}</div>}
     </div>

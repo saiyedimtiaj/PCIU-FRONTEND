@@ -1,15 +1,24 @@
-export interface ExamScheduleEntry {
-  semester: string;
-  midterm: string;
-  final: string;
+export interface Exam {
+  id: number;
+  name: string;
+  routeFile: string | null;
+  startDate: string;
+  endDate: string;
   status: string;
 }
 
-export interface RoutineEntry {
-  date: string;
-  time: string;
+export interface ExamRoutine {
+  id: number;
+  examId: number;
+  department: string;
   course: string;
+  building: string;
   room: string;
+  timeSlot: string;
+  batch: string;
+  section: string;
+  date: string;
+  studentRange: string;
 }
 
 export interface ClassTimeSlot {
@@ -17,14 +26,18 @@ export interface ClassTimeSlot {
   slot: string;
 }
 
-export interface ClassRoutineRow {
+export interface ClassRoutineItem {
+  id: number;
+  department: string;
+  course: string;
+  teacher: string;
+  building: string;
+  room: string;
+  timeSlot: string;
+  batch: string;
+  section: string;
   day: string;
-  slotA: string;
-  slotB: string;
-  slotC: string;
-  slotD: string;
-  slotE: string;
-  slotF: string;
+  studentRange: string;
 }
 
 export interface GradeRow {
@@ -52,13 +65,13 @@ export interface ResultStep {
 
 export interface AcademicsPageContent {
   examSchedule: {
-    schedules: ExamScheduleEntry[];
-    routine: RoutineEntry[];
+    exams: Exam[];
+    routines: ExamRoutine[];
     guidelines: string[];
   };
   classSchedule: {
     timeSlots: ClassTimeSlot[];
-    routine: ClassRoutineRow[];
+    routines: ClassRoutineItem[];
   };
   resultGrading: {
     dressCodeViolations: string[];
