@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { ScrollText } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -11,7 +12,7 @@ const pcjArticlesSchema = z.object({
   keywords: z.string().max(255).optional().or(z.literal("")),
   pages: z.string().max(255).optional().or(z.literal("")),
   doi: z.string().max(255).optional().or(z.literal("")),
-  pdf_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  pdf_url: optionalUpload,
   publication_date: z.string().min(1, "Publication date is required"),
   display_order: z.coerce.number().int().nonnegative().default(0),
   status: z.boolean().default(true),

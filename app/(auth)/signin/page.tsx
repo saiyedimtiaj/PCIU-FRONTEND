@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import AuthShell from "@/components/shared/AuthShell";
 import { SignInForm } from "./_ui/SignInForm";
@@ -42,7 +43,9 @@ export default function SignInPage() {
         </>
       }
     >
-      <SignInForm />
+      <Suspense fallback={null}>
+        <SignInForm />
+      </Suspense>
     </AuthShell>
   );
 }

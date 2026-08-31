@@ -8,7 +8,7 @@ const facultySchema = z.object({
   teacher_id: z.string().optional().or(z.literal("")),
   about: z.string().optional().or(z.literal("")),
   mission: z.string().optional().or(z.literal("")),
-  vission: z.string().optional().or(z.literal("")),
+  vision: z.string().optional().or(z.literal("")),
   key_point: z.array(z.string()).default([]),
   status: z.boolean().default(true),
 });
@@ -35,7 +35,7 @@ export const facultyEntity: EntitySchema<typeof facultySchema> = {
       fields: [
         { name: "about", label: "About", type: "richtext", colSpan: 2 },
         { name: "mission", label: "Mission", type: "textarea", colSpan: 2 },
-        { name: "vission", label: "Vision", type: "textarea", colSpan: 2 },
+        { name: "vision", label: "Vision", type: "textarea", colSpan: 2 },
         { name: "key_point", label: "Key Points", type: "json-list", colSpan: 2, placeholder: "Industry-aligned curriculum" },
       ],
     },

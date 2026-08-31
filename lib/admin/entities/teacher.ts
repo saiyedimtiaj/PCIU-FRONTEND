@@ -1,15 +1,18 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { GraduationCap } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const teacherSchema = z.object({
   name: z.string().min(2, "Name is required").max(255),
+  email: z.email("Must be a valid email"),
+  password: z.string().min(6, "At least 6 characters").optional().or(z.literal("")),
   slug: z.string().min(2, "Slug is required").max(255),
   designation: z.string().min(2, "Designation is required").max(255),
   faculty_id: z.string().min(1, "Faculty is required"),
   department_id: z.string().min(1, "Department is required"),
   office: z.string().max(255).optional().or(z.literal("")),
-  image_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  image_url: optionalUpload,
   short_bio: z.string().max(1000).optional().or(z.literal("")),
   bio: z.string().optional().or(z.literal("")),
   teaching_areas: z.array(z.string()).default([]),
@@ -23,6 +26,9 @@ const teacherSchema = z.object({
   leave_period: z.string().max(255).optional().or(z.literal("")),
   is_vc: z.boolean().default(false),
   is_management: z.boolean().default(false),
+  is_active: z.boolean().default(true),
+  is_adjunct_faculty: z.boolean().default(false),
+  seniority_order: z.coerce.number().int().nonnegative().optional(),
 });
 
 export const teacherEntity: EntitySchema<typeof teacherSchema> = {
@@ -34,6 +40,8 @@ export const teacherEntity: EntitySchema<typeof teacherSchema> = {
   zodSchema: teacherSchema,
   defaultValues: {
     teaching_areas: [],
+    is_active: true,
+    is_adjunct_faculty: false,
     is_study_leave: false,
     is_vc: false,
     is_management: false,
@@ -45,6 +53,20 @@ export const teacherEntity: EntitySchema<typeof teacherSchema> = {
         { name: "name", label: "Full Name", type: "text", required: true, placeholder: "Dr. Jane Doe" },
         { name: "slug", label: "Slug", type: "text", required: true, placeholder: "jane-doe", helper: "Used in the profile URL." },
         { name: "designation", label: "Designation", type: "text", required: true, placeholder: "Associate Professor" },
+        {
+          name: "email",
+          label: "Login Email",
+          type: "email",
+          required: true,
+          immutableOnEdit: true,
+          helper: "Creates the teacher's sign-in account.",
+        },
+        {
+          name: "password",
+          label: "Password",
+          type: "password",
+          helper: "Only needed when creating a new teacher.",
+        },
         { name: "office", label: "Office", type: "text", placeholder: "Room 402, Admin Building" },
         {
           name: "faculty_id",
@@ -107,6 +129,9 @@ export const teacherEntity: EntitySchema<typeof teacherSchema> = {
       fields: [
         { name: "is_study_leave", label: "On Study Leave", type: "switch" },
         { name: "leave_period", label: "Leave Period", type: "text", placeholder: "Jan 2026 – Dec 2026" },
+        { name: "is_active", label: "Active", type: "switch", helper: "Show this profile on the public directory." },
+        { name: "is_adjunct_faculty", label: "Adjunct Faculty", type: "switch" },
+        { name: "seniority_order", label: "Seniority Order", type: "number", helper: "Lower numbers appear first." },
         { name: "is_vc", label: "Vice Chancellor", type: "switch", helper: "Marks this profile as the university's VC." },
         { name: "is_management", label: "Management Member", type: "switch", helper: "Also appears on the Management page." },
       ],

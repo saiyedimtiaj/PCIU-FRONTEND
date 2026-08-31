@@ -12,10 +12,6 @@ export interface FieldArrayInputProps {
   placeholder?: string;
 }
 
-/**
- * Repeatable single-line text rows backing a `json-list` field (string[]).
- * Used for things like quick_link labels, teaching_areas, keywords, tags.
- */
 export function FieldArrayInput({ control, register, name, placeholder }: FieldArrayInputProps) {
   const { fields, append, remove } = useFieldArray({
     control,

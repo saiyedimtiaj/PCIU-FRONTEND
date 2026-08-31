@@ -8,12 +8,6 @@ export interface PageHeaderProps {
   actions?: ReactNode;
 }
 
-/**
- * Shared title block for admin pages — an icon chip, title, description,
- * and a right-aligned actions slot (typically an "Add X" button). Used by
- * both EntityForm (the create/edit form heading) and EntityListClient (the
- * listing heading) so the two read as one consistent surface.
- */
 export default function PageHeader({ title, description, icon: Icon, actions }: PageHeaderProps) {
   return (
     <div className="mb-6 flex flex-wrap items-start justify-between gap-4">

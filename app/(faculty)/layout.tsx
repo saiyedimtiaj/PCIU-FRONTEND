@@ -15,13 +15,13 @@ export default function FacultyRouteLayout({ children }: { children: ReactNode }
   const profile = buildWorkspaceProfile(DEMO_PROFILE);
 
   return (
-    <ToastProvider>
+    <ToastProvider timeout={5000} limit={3}>
       <div className="admin-theme text-foreground">
         <FacultyProfileProvider initialProfile={profile}>
           <FacultyPortalShell>{children}</FacultyPortalShell>
         </FacultyProfileProvider>
+        <Toaster />
       </div>
-      <Toaster />
     </ToastProvider>
   );
 }

@@ -6,7 +6,7 @@ const settingSchema = z.object({
   page_id: z.string().optional().or(z.literal("")),
   key: z.string().min(1, "Key is required").max(255),
   value: z.string().min(1, "Value is required"),
-  pages: z.string().max(255).optional().or(z.literal("")),
+  page: z.string().max(255).optional().or(z.literal("")),
   status: z.boolean().default(true),
 });
 
@@ -23,7 +23,7 @@ export const settingEntity: EntitySchema<typeof settingSchema> = {
       title: "Setting",
       fields: [
         { name: "key", label: "Key", type: "text", required: true, placeholder: "site_tagline" },
-        { name: "pages", label: "Scope (page path)", type: "text", placeholder: "/" },
+        { name: "page", label: "Scope (page path)", type: "text", placeholder: "/" },
         { name: "page_id", label: "Related Page", type: "relation", relationTo: "pages", options: [] },
         { name: "value", label: "Value", type: "textarea", required: true, colSpan: 2 },
         { name: "status", label: "Active", type: "switch" },

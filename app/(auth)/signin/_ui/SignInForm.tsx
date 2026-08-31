@@ -1,18 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Lock, Eye, ArrowRight, Check } from "lucide-react";
+import { Mail, Lock, ArrowRight, Check } from "lucide-react";
 import { Checkbox } from "@base-ui/react/checkbox";
 import { AuthField } from "@/components/shared/auth-field";
 import { Button } from "@/components/ui/button";
 import { type FormEvent, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { loginAction } from "@/app/(auth)/actions";
 
 export function SignInForm() {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const from = useSearchParams().get("from");
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,8 +26,15 @@ export function SignInForm() {
       if (result?.error) {
         setError(result.error);
       } else if (result?.success) {
-        // Redirect to a dashboard or home page on successful login
-        router.push("/dashboard");
+        // TEACHER accounts get the faculty portal; every other role is an
+        // admin of some kind. `from` is set by middleware.ts when it bounces
+        // an unauthenticated request, so we land back where they were going.
+        const role = result?.data?.role as string | undefined;
+        const fallback = role === "TEACHER" ? "/faculty-portal" : "/admin";
+        router.push(from || fallback);
+        router.refresh();
+      } else {
+        setError(result?.message ?? "Unable to sign in. Please try again.");
       }
     });
   };
@@ -53,7 +61,6 @@ export function SignInForm() {
         name="password"
         autoComplete="current-password"
         placeholder="••••••••"
-        trailing={<Eye aria-hidden />}
         action={
           <Link
             href="/forgot-password"

@@ -7,10 +7,6 @@ export interface IconHeroProps {
   subtitle?: string;
 }
 
-/**
- * Centered icon-circle hero for content pages with no photo and no color
- * band (e.g. Library) — the icon badge itself acts as the visual anchor.
- */
 export default function IconHero({ icon, title, subtitle }: IconHeroProps) {
   const Icon = iconMap[icon];
   return (

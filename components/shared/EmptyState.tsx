@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  FileText,
-  ImageIcon,
-  LayoutGrid,
-  FolderOpen,
-  Tag,
-  Video,
-  Music,
-  Archive,
-} from "lucide-react";
+import { Waves } from "lucide-react";
 
 export interface EmptyStateProps {
   title: string;
@@ -20,108 +11,72 @@ export interface EmptyStateProps {
   className?: string;
 }
 
-const clusterSizeMap: Record<NonNullable<EmptyStateProps["size"]>, number> = {
-  sm: 128,
-  md: 160,
-  lg: 220,
-};
-
 const containerPaddingMap: Record<NonNullable<EmptyStateProps["size"]>, string> = {
-  sm: "py-6",
-  md: "py-8",
+  sm: "py-8",
+  md: "py-12",
   lg: "py-16",
 };
 
-const RING_RADIUS_PCT = [14, 28, 42, 56];
+const sceneWidthMap: Record<NonNullable<EmptyStateProps["size"]>, string> = {
+  sm: "max-w-[180px]",
+  md: "max-w-[240px]",
+  lg: "max-w-[300px]",
+};
 
-const ring2Icons = [
-  { Icon: FileText, color: "var(--secondary)", bg: "var(--secondary-light)" },
-  { Icon: ImageIcon, color: "var(--accent)", bg: "var(--accent-light)" },
-  { Icon: LayoutGrid, color: "var(--primary)", bg: "color-mix(in oklch, var(--primary), transparent 90%)" },
-  { Icon: FolderOpen, color: "var(--highlight)", bg: "color-mix(in oklch, var(--highlight), transparent 85%)" },
-];
-
-const ring4Icons = [
-  { Icon: Tag, color: "var(--secondary)", bg: "var(--secondary-light)" },
-  { Icon: Video, color: "var(--accent)", bg: "var(--accent-light)" },
-  { Icon: Music, color: "var(--primary)", bg: "color-mix(in oklch, var(--primary), transparent 90%)" },
-  { Icon: Archive, color: "var(--highlight)", bg: "color-mix(in oklch, var(--highlight), transparent 85%)" },
-];
-
-function ringIconPositions(radiusPct: number, startDeg: number) {
-  return [0, 90, 180, 270].map((offset) => {
-    const rad = ((startDeg + offset) * Math.PI) / 180;
-    return {
-      left: `${50 + radiusPct * Math.cos(rad)}%`,
-      top: `${50 + radiusPct * Math.sin(rad)}%`,
-    };
-  });
-}
-
-function EmptyStateCluster({ size }: { size: NonNullable<EmptyStateProps["size"]> }) {
-  const dim = clusterSizeMap[size];
-  const ring2Pos = ringIconPositions(RING_RADIUS_PCT[1], 45);
-  const ring4Pos = ringIconPositions(RING_RADIUS_PCT[3], 0);
-  const chipSize = size === "sm" ? 20 : size === "md" ? 24 : 28;
-  const iconSize = size === "sm" ? 11 : size === "md" ? 13 : 15;
-  const centerSize = size === "sm" ? 22 : size === "md" ? 26 : 34;
-
+function BayScene({ size }: { size: NonNullable<EmptyStateProps["size"]> }) {
   return (
-    <div className="relative shrink-0 animate-fade-in" style={{ width: dim, height: dim }}>
-      {/* 4 concentric rings */}
-      {RING_RADIUS_PCT.map((pct, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full border border-border/50"
-          style={{
-            left: `${50 - pct}%`,
-            top: `${50 - pct}%`,
-            width: `${pct * 2}%`,
-            height: `${pct * 2}%`,
-          }}
+    <div className={`w-full ${sceneWidthMap[size]} animate-fade-in`}>
+      <svg
+        viewBox="0 0 240 130"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label="An empty bay at sunrise"
+        className="w-full"
+      >
+        <defs>
+          <linearGradient id="es-sun" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--highlight)" />
+            <stop offset="100%" stopColor="var(--accent)" />
+          </linearGradient>
+          <linearGradient id="es-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+          </linearGradient>
+          <clipPath id="es-clip">
+            <rect x="0" y="0" width="240" height="86" />
+          </clipPath>
+        </defs>
+
+        <rect x="0" y="0" width="240" height="86" fill="url(#es-sky)" />
+
+        <g clipPath="url(#es-clip)">
+          <circle cx="120" cy="86" r="46" fill="var(--highlight)" opacity="0.10" />
+          <circle cx="120" cy="86" r="32" fill="var(--highlight)" opacity="0.14" />
+          <circle cx="120" cy="86" r="20" fill="url(#es-sun)" />
+        </g>
+
+        <line
+          x1="18"
+          y1="86"
+          x2="222"
+          y2="86"
+          stroke="var(--border)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
         />
-      ))}
 
-      {/* Ring 2 icon chips */}
-      {ring2Icons.map(({ Icon, color, bg }, i) => (
-        <div
-          key={`r2-${i}`}
-          className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl border shadow-sm animate-float"
-          style={{
-            ...ring2Pos[i],
-            width: chipSize,
-            height: chipSize,
-            backgroundColor: bg,
-            borderColor: color,
-            animationDelay: `${i * 0.4}s`,
-          }}
-        >
-          <Icon style={{ color, width: iconSize, height: iconSize }} />
-        </div>
-      ))}
+        <g stroke="var(--primary)" strokeLinecap="round" fill="none">
+          <path d="M32 98h40M84 98h52M148 98h44" strokeWidth="2.5" opacity="0.28" />
+          <path d="M50 108h34M96 108h48M156 108h32" strokeWidth="2.5" opacity="0.20" />
+          <path d="M68 118h44M124 118h40" strokeWidth="2.5" opacity="0.12" />
+        </g>
 
-      {/* Ring 4 icon chips */}
-      {ring4Icons.map(({ Icon, color, bg }, i) => (
-        <div
-          key={`r4-${i}`}
-          className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl border shadow-sm animate-float"
-          style={{
-            ...ring4Pos[i],
-            width: chipSize,
-            height: chipSize,
-            backgroundColor: bg,
-            borderColor: color,
-            animationDelay: `${0.5 + i * 0.4}s`,
-          }}
-        >
-          <Icon style={{ color, width: iconSize, height: iconSize }} />
-        </div>
-      ))}
-
-      {/* Small center icon — no background box, solid foreground fill */}
-      <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center text-muted-foreground">
-        <FileText style={{ width: centerSize, height: centerSize }} strokeWidth={2} />
-      </div>
+        <g className="animate-float" style={{ transformOrigin: "182px 86px" }}>
+          <path d="M182 86V64l14 22h-14Z" fill="var(--secondary)" opacity="0.85" />
+          <path d="M180 86h18l-3 4h-12l-3-4Z" fill="var(--primary)" opacity="0.55" />
+        </g>
+      </svg>
     </div>
   );
 }
@@ -137,24 +92,26 @@ export default function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
-      className={`flex flex-col items-center justify-center text-center px-6 gap-3 ${containerPaddingMap[size]} ${className}`}
+      className={`flex flex-col items-center justify-center gap-4 px-6 text-center ${containerPaddingMap[size]} ${className}`}
     >
       {variant === "animation" ? (
-        <EmptyStateCluster size={size} />
+        <BayScene size={size} />
       ) : (
-        <div className="w-14 h-14 rounded-2xl bg-muted/50 flex items-center justify-center">
-          {icon}
+        <div className="flex size-14 items-center justify-center rounded-2xl border border-border bg-muted/40 text-muted-foreground">
+          {icon ?? <Waves className="size-6" />}
         </div>
       )}
-      <div className="mt-6">
-        <p className="text-lg font-bold text-foreground">{title}</p>
+
+      <div className="space-y-1.5">
+        <p className="font-heading text-lg font-bold text-foreground">{title}</p>
         {description && (
-          <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
+          <p className="mx-auto max-w-sm text-sm leading-relaxed text-muted-foreground">
             {description}
           </p>
         )}
       </div>
-      {action && <div className="mt-1">{action}</div>}
+
+      {action && <div className="pt-1">{action}</div>}
     </div>
   );
 }

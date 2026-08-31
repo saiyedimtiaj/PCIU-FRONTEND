@@ -40,8 +40,8 @@ export const admissionSchedulesEntity: EntitySchema<typeof admissionSchedulesSch
           type: "select",
           required: true,
           options: [
-            { label: "Undergraduate", value: "undergraduate" },
-            { label: "Graduate", value: "graduate" },
+            { label: "Undergraduate", value: "UNDERGRADUATE" },
+            { label: "Graduate", value: "GRADUATE" },
           ],
         },
       ],

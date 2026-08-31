@@ -232,10 +232,11 @@
   --scrollbar-thumb-hover: hsl(222 30% 42%);
   --scrollbar-track: transparent;
 
-  /* Admin-only font — see app/layout.tsx for the Plus Jakarta Sans
-     next/font load that feeds --font-admin. Redeclaring the existing
+  /* Admin-only font — see app/layout.tsx for the Poppins next/font load
+     (full weight range, separate from the public site's heading-only
+     instance) that feeds --font-admin. Redeclaring the existing
      self-referential --font-sans/--font-heading tokens here flips every
-     font-sans/font-heading utility used inside admin to Jakarta, with
+     font-sans/font-heading utility used inside admin to Poppins, with
      zero component edits (same cascade trick as the colors above). */
   --font-sans: var(--font-admin);
   --font-heading: var(--font-admin);

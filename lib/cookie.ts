@@ -1,47 +1,47 @@
 import { cookies } from "next/headers";
-import { parseCookie } from "cookie";
+import { parseSetCookie } from "cookie";
+
+export const AUTH_COOKIE_NAME = "better-auth.session_token";
 
 export const getCookies = async () => {
   const cookieStore = await cookies();
-  const betterAuthToken =
-    cookieStore.get("better-auth.session_token")?.value || null;
+  const betterAuthToken = cookieStore.get(AUTH_COOKIE_NAME)?.value || null;
   return { betterAuthToken };
 };
 
+/**
+ * Mirrors the backend's `Set-Cookie` for the session token onto our own
+ * domain. The API is a separate origin, so the browser never stores its
+ * cookie for us — `serverFetch` replays this value as a `Cookie` header
+ * on each server-side call.
+ */
 export const setCookies = async (cookieHeader: string[]) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let betterAuthToken: any;
-
-  if (cookieHeader && cookieHeader.length) {
-    cookieHeader.forEach((cookiesStr) => {
-      const parsedCookie = parseCookie(cookiesStr);
-
-      if (parsedCookie["better-auth.session_token"]) {
-        betterAuthToken = parsedCookie as Record<string, string>;
-      }
-    });
-  } else {
+  if (!cookieHeader?.length) {
     throw new Error("No authentication response from server!");
   }
 
+  const sessionCookie = cookieHeader
+    .map((cookieStr) => parseSetCookie(cookieStr))
+    .find((parsed) => parsed.name === AUTH_COOKIE_NAME);
+
+  if (!sessionCookie?.value) return;
+
   const nextCookie = await cookies();
 
-  if (betterAuthToken) {
-    nextCookie.set(
-      "better-auth.session_token",
-      betterAuthToken["better-auth.session_token"],
-      {
-        httpOnly: true,
-        maxAge: betterAuthToken["Max-Age"]
-          ? parseInt(betterAuthToken["Max-Age"])
-          : undefined,
-        expires: betterAuthToken.Expires
-          ? new Date(betterAuthToken.Expires)
-          : undefined,
-        secure: true,
-        path: betterAuthToken.Path || "/",
-        sameSite: betterAuthToken.SameSite?.toLowerCase() || "none",
-      },
-    );
-  }
+  nextCookie.set(AUTH_COOKIE_NAME, sessionCookie.value, {
+    httpOnly: true,
+    secure: true,
+    maxAge: sessionCookie.maxAge,
+    expires: sessionCookie.expires,
+    path: sessionCookie.path || "/",
+    // The backend sends SameSite=Lax; keep whatever it chose so the cookie
+    // behaves the same on our domain.
+    sameSite: sessionCookie.sameSite ?? "lax",
+  });
+};
+
+/** Clears the session cookie — used by logout. */
+export const clearAuthCookie = async () => {
+  const nextCookie = await cookies();
+  nextCookie.delete(AUTH_COOKIE_NAME);
 };

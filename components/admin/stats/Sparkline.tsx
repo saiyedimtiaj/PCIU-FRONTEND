@@ -9,8 +9,6 @@ export interface SparklineProps {
   className?: string;
 }
 
-// Static Record — same reasoning as StatCard's TONES: Tailwind can't see a
-// templated `text-${tone}` class, so the mapping must be literal strings.
 const TONE_CLASS: Record<NonNullable<SparklineProps["tone"]>, string> = {
   primary: "text-primary",
   success: "text-success",

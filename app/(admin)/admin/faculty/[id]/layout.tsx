@@ -14,7 +14,6 @@ export function generateStaticParams() {
   return PROFILES.map((p) => ({ id: p.id }));
 }
 
-
 export default async function FacultyWorkspaceLayout({
   children,
   params,
