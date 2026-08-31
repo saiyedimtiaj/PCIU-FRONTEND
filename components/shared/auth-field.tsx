@@ -1,23 +1,25 @@
-import type { ComponentProps, ReactNode } from "react";
+"use client";
+
+import { useState, type ComponentProps, type ReactNode } from "react";
 import { Field } from "@base-ui/react/field";
+import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 interface AuthFieldProps extends ComponentProps<"input"> {
   label: string;
   icon: ReactNode;
-  /** Rendered inline next to the label, e.g. a "Forgot password?" link. */
   action?: ReactNode;
-  /** Rendered inside the field on the right, e.g. a decorative show/hide icon. */
   trailing?: ReactNode;
 }
 
-/**
- * Shared auth-form field: base-ui Field gives free label<->control `id`
- * association (full a11y) with zero state, while `render` lets it wrap our
- * existing styled Input so field styling stays defined in one place.
- */
-export function AuthField({ label, icon, action, trailing, className, ...props }: AuthFieldProps) {
+export function AuthField({ label, icon, action, trailing, className, type, ...props }: AuthFieldProps) {
+  const [revealed, setRevealed] = useState(false);
+  const isPassword = type === "password";
+  const inputType = isPassword && revealed ? "text" : type;
+
+  const hasTrailing = isPassword || !!trailing;
+
   return (
     <Field.Root className="space-y-2">
       <div className="flex items-center justify-between">
@@ -30,13 +32,27 @@ export function AuthField({ label, icon, action, trailing, className, ...props }
         </span>
         <Field.Control
           {...props}
+          type={inputType}
           render={<Input />}
-          className={cn("pl-10", trailing && "pr-11", className)}
+          className={cn("pl-10", hasTrailing && "pr-11", className)}
         />
-        {trailing && (
-          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground [&_svg]:size-4">
-            {trailing}
-          </span>
+
+        {isPassword ? (
+          <button
+            type="button"
+            onClick={() => setRevealed((v) => !v)}
+            aria-label={revealed ? "Hide password" : "Show password"}
+            aria-pressed={revealed}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring [&_svg]:size-4"
+          >
+            {revealed ? <EyeOff aria-hidden /> : <Eye aria-hidden />}
+          </button>
+        ) : (
+          trailing && (
+            <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground [&_svg]:size-4">
+              {trailing}
+            </span>
+          )
         )}
       </div>
     </Field.Root>

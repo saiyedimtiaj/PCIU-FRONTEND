@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { Building2 } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -12,7 +13,7 @@ const departmentSchema = z.object({
   subtitle: z.string().max(255).optional().or(z.literal("")),
   phone: z.string().max(255).optional().or(z.literal("")),
   email: z.email("Must be a valid email").optional().or(z.literal("")),
-  image: z.url("Must be a valid URL").optional().or(z.literal("")),
+  image: optionalUpload,
   office_location: z.string().max(255).optional().or(z.literal("")),
   graduate: z.coerce.number().int().nonnegative().optional(),
   number_of_research: z.coerce.number().int().nonnegative().optional(),
@@ -71,15 +72,15 @@ export const departmentEntity: EntitySchema<typeof departmentSchema> = {
           relationTo: "teacher",
           options: [],
         },
-        { name: "title", label: "Hero Title", type: "text" },
-        { name: "subtitle", label: "Hero Subtitle", type: "text" },
+        { name: "title", label: "Title", type: "text" },
+        { name: "subtitle", label: "Subtitle", type: "text" },
       ],
     },
     {
       title: "Contact",
       fields: [
         { name: "phone", label: "Phone", type: "tel" },
-        { name: "email", label: "Email", type: "email" },
+        { name: "email", label: "Email", type: "email", immutableOnEdit: true },
         {
           name: "office_location",
           label: "Office Location",

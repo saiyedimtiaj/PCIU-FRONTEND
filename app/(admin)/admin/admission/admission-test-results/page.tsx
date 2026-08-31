@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import EntityListClient from "@/components/admin/list/EntityListClient";
+import EntityFormClient from "@/components/admin/form/EntityFormClient";
 
 export const metadata: Metadata = {
-  title: "Admission Test Results | Admin | Port City International University",
+  title: "Admission Test Result | Admin | Port City International University",
 };
 
-export default function AdmissionTestResultsListPage() {
-  return <EntityListClient slug="admission-test-results" />;
+export default function AdmissionTestResultPage() {
+  return (
+    <div className="w-full p-6">
+      <EntityFormClient slug="admission-test-results" recordId="1" cancelHref="/admin" />
+    </div>
+  );
 }

@@ -8,8 +8,6 @@ export const metadata: Metadata = {
   title: "Edit IQAC Section | Admin | Port City International University",
 };
 
-// Same deterministic sample rows the listing renders, so every id the
-// listing links to has a matching prerendered edit page.
 export function generateStaticParams() {
   const schema = getEntitySchema("iqac-sections");
   if (!schema) return [];

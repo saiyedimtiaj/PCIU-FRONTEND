@@ -11,7 +11,7 @@ const contactSchema = z.object({
   display_order: z.coerce.number().int().nonnegative().default(0),
   contact_person: z.string().max(255).optional().or(z.literal("")),
   available_hours: z.string().max(255).optional().or(z.literal("")),
-  type: z.enum(["department", "Security", "Medical", "Administration", "inquiries", "iqac", "journal"]),
+  type: z.enum(["DEPARTMENT", "SECURITY", "MEDICAL", "ADMINISTRATION", "INQUIRIES", "IQAC", "JOURNAL"]),
   status: z.boolean().default(true),
 });
 
@@ -22,7 +22,7 @@ export const contactEntity: EntitySchema<typeof contactSchema> = {
   icon: Phone,
   group: "System",
   zodSchema: contactSchema,
-  defaultValues: { type: "inquiries", status: true, display_order: 0 },
+  defaultValues: { type: "INQUIRIES", status: true, display_order: 0 },
   sections: [
     {
       title: "Contact",
@@ -34,13 +34,13 @@ export const contactEntity: EntitySchema<typeof contactSchema> = {
           type: "enum",
           required: true,
           options: [
-            { label: "Department", value: "department" },
-            { label: "Security", value: "Security" },
-            { label: "Medical", value: "Medical" },
-            { label: "Administration", value: "Administration" },
-            { label: "Inquiries", value: "inquiries" },
-            { label: "IQAC", value: "iqac" },
-            { label: "Journal", value: "journal" },
+            { label: "Department", value: "DEPARTMENT" },
+            { label: "Security", value: "SECURITY" },
+            { label: "Medical", value: "MEDICAL" },
+            { label: "Administration", value: "ADMINISTRATION" },
+            { label: "Inquiries", value: "INQUIRIES" },
+            { label: "IQAC", value: "IQAC" },
+            { label: "Journal", value: "JOURNAL" },
           ],
         },
         { name: "contact_person", label: "Contact Person", type: "text" },

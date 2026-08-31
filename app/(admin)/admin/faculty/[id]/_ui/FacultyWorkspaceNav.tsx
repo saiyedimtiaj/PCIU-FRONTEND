@@ -32,12 +32,6 @@ const NAV_ITEMS: WorkspaceNavItem[] = [
   { label: "Conferences", segment: "/conferences", icon: CalendarDays },
 ];
 
-/**
- * Section sub-nav for one teacher's admin workspace. Not a second sidebar —
- * the admin's real sidebar (all 50 entities) stays put; this is scoped
- * in-page navigation between a single teacher's Overview/Profile/Education/
- * etc. sub-routes, styled as a horizontal pill bar under the page header.
- */
 export default function FacultyWorkspaceNav({ teacherId }: { teacherId: string }) {
   const pathname = usePathname();
   const base = `/admin/faculty/${teacherId}`;

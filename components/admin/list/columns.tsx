@@ -1,19 +1,16 @@
 import Link from "next/link";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, UserX } from "lucide-react";
 import type { EntitySchema, FieldDescriptor, FieldType } from "@/components/admin/form/form-types";
 import type { DataTableColumn } from "@/components/shared/DataTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { groupRouteSegment } from "@/components/admin/nav-groups";
-import { formatSampleDate, type SampleRow } from "./sample-data";
+import { formatSampleDate, formatTimeOfDay, type SampleRow } from "./sample-data";
 
-// Field types that never make good table columns — long-form content,
-// secrets, or structures that don't compress into a single cell.
 const EXCLUDED_TYPES: readonly FieldType[] = ["textarea", "richtext", "password", "file", "json-list"];
 
 const PRIMARY_NAME_PATTERN = /^(name|title|slug|label|heading)$/i;
 
-// Priority order for filling the remaining (non-primary) column slots.
 const TYPE_PRIORITY: readonly FieldType[] = [
   "relation",
   "enum",
@@ -48,20 +45,45 @@ function PrimaryCell({ value, subtitle }: { value: string; subtitle?: string }) 
   return (
     <div>
       <p className="font-medium text-foreground">{value}</p>
-      {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+      {subtitle && (
+        <p className="max-w-xs truncate text-xs text-muted-foreground" title={subtitle}>
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }
 
-// Sample rows store the option's stable `value` (see sample-data.ts), which
-// is what an edit form's <Select> needs — resolve it back to a human label
-// here for display, the one place raw values become readable text.
 function optionLabel(field: FieldDescriptor, value: unknown): string {
   const match = field.options?.find((o) => o.value === value);
   return match?.label ?? (typeof value === "string" && value ? value : "—");
 }
 
-function FieldCell({ field, value }: { field: FieldDescriptor; value: unknown }) {
+/**
+ * Relation fields (`faculty_id`, `chairman_id`, ...) ship a hand-authored
+ * `options` list as a placeholder — there's no admin UI to manage every
+ * related table, and those ids drift out of sync with the real database
+ * (e.g. faculty id 1 in the placeholder list vs. id 4 for the same faculty
+ * once real rows exist). The API itself already resolves the relation and
+ * includes it as a sibling key on the row — `faculty_id` pairs with a
+ * `faculty` object, `teacher_id` with `teacher`, etc. — so that's tried
+ * first and is always accurate; the placeholder list is only a fallback
+ * for rows the join hasn't populated (or for design-only sample data).
+ */
+function relationLabel(field: FieldDescriptor, row: SampleRow): string {
+  const joinedKey = field.name.replace(/_id$/, "");
+  const joined = row[joinedKey];
+  if (joined && typeof joined === "object") {
+    const label =
+      (joined as Record<string, unknown>).name ??
+      (joined as Record<string, unknown>).title ??
+      (joined as Record<string, unknown>).designation;
+    if (typeof label === "string" && label) return label;
+  }
+  return optionLabel(field, row[field.name]);
+}
+
+function FieldCell({ field, value, row }: { field: FieldDescriptor; value: unknown; row: SampleRow }) {
   switch (field.type) {
     case "switch":
     case "checkbox":
@@ -73,12 +95,18 @@ function FieldCell({ field, value }: { field: FieldDescriptor; value: unknown })
     case "radio":
       return <Badge variant="secondary">{optionLabel(field, value)}</Badge>;
     case "relation":
-      return <span className="text-sm text-muted-foreground">{optionLabel(field, value)}</span>;
+      return <span className="text-sm text-muted-foreground">{relationLabel(field, row)}</span>;
     case "date":
     case "datetime":
       return (
         <span className="text-sm tabular-nums text-foreground">
           {typeof value === "string" && value ? formatSampleDate(value) : "—"}
+        </span>
+      );
+    case "time":
+      return (
+        <span className="text-sm tabular-nums text-foreground">
+          {typeof value === "string" && value ? formatTimeOfDay(value) : "—"}
         </span>
       );
     case "number":
@@ -104,14 +132,16 @@ function FieldCell({ field, value }: { field: FieldDescriptor; value: unknown })
 
 export interface DeriveColumnsActions {
   onDelete: (row: SampleRow) => void;
+  /** Hidden when the resource exposes no DELETE route (e.g. teachers). */
+  canDelete?: boolean;
+  /**
+   * When set (see `EndpointConfig.deactivateField`), the row action is a
+   * "deactivate" icon instead of delete — still calls `onDelete`, which
+   * the caller wires to a PATCH instead of a DELETE for these resources.
+   */
+  deactivateMode?: boolean;
 }
 
-/**
- * Derives a DataTable column set from an entity's field descriptors. This
- * is a heuristic, not a per-entity hand-picked layout — see
- * components/admin/list/EntityListClient.tsx for where it's consumed, and
- * the plan doc for the priority rules this encodes.
- */
 export function deriveColumns(
   schema: EntitySchema,
   actions: DeriveColumnsActions
@@ -122,11 +152,16 @@ export function deriveColumns(
   const primary = pickPrimaryField(eligible.length > 0 ? eligible : allFields);
   const remaining = eligible.filter((f) => f.name !== primary.name);
 
-  // Secondary subtitle under the primary column: the slug field if the
-  // primary isn't already the slug, else the second text field.
+  // A slug reads naturally as the subtitle under a name/title. When there
+  // isn't one, fall back to the entity's own long-text field (a textarea/
+  // richtext "value" or "description") rather than dropping it from the
+  // table entirely — those are excluded from the general column list
+  // because a full paragraph doesn't fit a column, but a single truncated
+  // line under the primary field does.
+  const longTextField = allFields.find((f) => f.type === "textarea" || f.type === "richtext");
   const subtitleField =
     primary.name !== "slug"
-      ? remaining.find((f) => f.name === "slug")
+      ? (remaining.find((f) => f.name === "slug") ?? longTextField)
       : remaining.find((f) => f.type === "text");
 
   const rankOf = (f: FieldDescriptor) => {
@@ -164,7 +199,7 @@ export function deriveColumns(
         ? field.name
         : undefined,
       align: field.type === "number" || field.type === "decimal" ? "right" : "left",
-      cell: (row) => <FieldCell field={field} value={row[field.name]} />,
+      cell: (row) => <FieldCell field={field} value={row[field.name]} row={row} />,
     });
   });
 
@@ -185,15 +220,29 @@ export function deriveColumns(
         >
           <Pencil className="size-4" />
         </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className="text-destructive hover:bg-destructive/10"
-          onClick={() => actions.onDelete(row)}
-          aria-label={`Delete ${schema.title.toLowerCase()}`}
-        >
-          <Trash2 className="size-4" />
-        </Button>
+        {actions.deactivateMode ? (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="text-warning-foreground hover:bg-warning-light"
+            onClick={() => actions.onDelete(row)}
+            aria-label={`Deactivate ${schema.title.toLowerCase()}`}
+          >
+            <UserX className="size-4" />
+          </Button>
+        ) : (
+          actions.canDelete !== false && (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="text-destructive hover:bg-destructive/10"
+              onClick={() => actions.onDelete(row)}
+              aria-label={`Delete ${schema.title.toLowerCase()}`}
+            >
+              <Trash2 className="size-4" />
+            </Button>
+          )
+        )}
       </div>
     ),
   });

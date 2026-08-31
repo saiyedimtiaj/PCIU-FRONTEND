@@ -58,13 +58,8 @@ import { managementEntity } from "./management";
 
 import { contactEntity } from "./contact";
 import { settingEntity } from "./setting";
+import { popupEntity } from "./popup";
 
-/**
- * Slug -> EntitySchema. `EntityForm` looks schemas up here rather than
- * receiving them as props, so server page.tsx files only ever pass a
- * slug string across the server/client boundary (zod schemas and
- * LucideIcon components can't cross it).
- */
 export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   department: departmentEntity,
   faculty: facultyEntity,
@@ -124,9 +119,9 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
 
   contact: contactEntity,
   setting: settingEntity,
+  popup: popupEntity,
 };
 
-/** Display order for the sidebar and any future index pages. */
 export const ENTITY_GROUP_ORDER = [
   "Academics",
   "People",

@@ -20,8 +20,6 @@ const QUICK_LINKS = [
 ];
 
 export default function AdminDashboardPage() {
-  // Server-computed so this page stays a static server component — only
-  // DashboardTabs (the interactive part) is "use client".
   const groupCounts = ENTITY_GROUP_ORDER.map((group) => ({
     group,
     segment: groupRouteSegment(group),

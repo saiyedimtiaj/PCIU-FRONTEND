@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Lock, Eye, ArrowLeft, ShieldCheck } from "lucide-react";
+import { Lock, ArrowLeft, ShieldCheck } from "lucide-react";
 import AuthShell from "@/components/shared/AuthShell";
 import { AuthField } from "@/components/shared/auth-field";
 import { Button } from "@/components/ui/button";
@@ -44,7 +44,6 @@ export default function ResetPasswordPage() {
           name="password"
           autoComplete="new-password"
           placeholder="••••••••"
-          trailing={<Eye aria-hidden />}
         />
 
         <AuthField
@@ -54,7 +53,6 @@ export default function ResetPasswordPage() {
           name="confirmPassword"
           autoComplete="new-password"
           placeholder="••••••••"
-          trailing={<Eye aria-hidden />}
         />
 
         <Button type="submit" size="cta" className="w-full">

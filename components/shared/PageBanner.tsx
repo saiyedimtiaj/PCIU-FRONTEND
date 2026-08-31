@@ -7,11 +7,6 @@ export interface PageBannerProps {
   variant?: "solid" | "gradient" | "blobs";
 }
 
-/**
- * Flat/gradient hero band for content pages that don't have a photo hero
- * (e.g. VCMessage, Notices, Management). For image-based heroes, see
- * about-the-university/_ui/AboutHero.tsx instead.
- */
 export default function PageBanner({
   title,
   subtitle,

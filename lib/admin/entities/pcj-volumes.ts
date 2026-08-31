@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { BookMarked } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -6,7 +7,7 @@ const pcjVolumesSchema = z.object({
   volume_number: z.coerce.number().int().positive("Volume number is required"),
   issue_number: z.coerce.number().int().positive("Issue number is required"),
   publication_date: z.string().min(1, "Publication date is required"),
-  cover_image: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  cover_image: optionalUpload,
   description: z.string().optional().or(z.literal("")),
   status: z.boolean().default(true),
 });

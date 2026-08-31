@@ -7,6 +7,7 @@ import { getEntitySchema } from "@/lib/admin/entities";
 import { groupRouteSegment, pluralize } from "@/components/admin/nav-groups";
 import PageHeader from "@/components/admin/PageHeader";
 import DataTable from "@/components/shared/DataTable";
+import EmptyState from "@/components/shared/EmptyState";
 import { AlertDialog, Alert } from "@/components/shared/Aleart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,24 +17,26 @@ import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem } from "@
 import type { FieldDescriptor } from "@/components/admin/form/form-types";
 import { generateSampleRows, type SampleRow } from "./sample-data";
 import { deriveColumns } from "./columns";
+import { isConnected, getEndpoint } from "@/services/endpoints";
+import { useEntityList, useDeleteEntity, useUpdateEntity } from "@/features/entity";
+import { useToastManager } from "@/components/ui/toast";
 
 export interface EntityListClientProps {
-  /** Entity slug, e.g. "teacher". Resolved to its EntitySchema client-side —
-   * never pass the schema itself across the server/client boundary. */
   slug: string;
+  /**
+   * Overrides the derived `/admin/<group>/<slug>` base path used for the
+   * "Add" button and each row's Edit link. Needed when an entity is also
+   * reachable from a second, top-level route (e.g. "pages" lives at both
+   * `/admin/content/pages` and the top-level `/admin/pages` sidebar item)
+   * — without this, links on the second route would silently jump back to
+   * the first.
+   */
+  basePath?: string;
 }
 
 const PAGE_SIZE = 10;
-// More than this many option-backed fields (enum/select/relation-with-options)
-// and the filter bar stops rendering every one inline — the rest collapse
-// behind "More filters" so a 6+ field schema doesn't produce a wall of
-// dropdowns above the table.
 const MAX_INLINE_OPTION_FILTERS = 2;
 
-// Prefer a field that's unambiguously "the" status flag before falling back
-// to the first loose match — otherwise entities whose first is_*/status-like
-// switch isn't the semantic status field (e.g. teacher.is_study_leave,
-// notices.is_home) get a filter that's mislabeled about what it does.
 function pickStatusField(fields: FieldDescriptor[]): FieldDescriptor | undefined {
   const switches = fields.filter((f) => f.type === "switch");
   const exact = switches.find((f) => /^(is_active|status|active)$/i.test(f.name));
@@ -49,16 +52,11 @@ function isOptionField(field: FieldDescriptor): boolean {
   );
 }
 
-// base-ui's <Select.Value> only resolves a value to its label via this
-// `items` list — without it, a pre-selected value (as every filter's "all"
-// default is) renders as the raw value string instead of a label until the
-// user manually reopens and reselects it. See FormField.tsx for the same fix
-// applied to the entity form's own selects.
 function selectItems(field: FieldDescriptor, allLabel: string) {
   return [{ label: allLabel, value: "all" }, ...(field.options ?? [])];
 }
 
-export default function EntityListClient({ slug }: EntityListClientProps) {
+export default function EntityListClient({ slug, basePath: basePathOverride }: EntityListClientProps) {
   const schema = getEntitySchema(slug);
 
   const [query, setQuery] = useState("");
@@ -82,10 +80,45 @@ export default function EntityListClient({ slug }: EntityListClientProps) {
   const hiddenOptionFields = optionFields.slice(MAX_INLINE_OPTION_FILTERS);
   const hasMoreFilters = hiddenOptionFields.length > 0 || !!dateField;
 
-  const rows = useMemo(() => (schema ? generateSampleRows(schema) : []), [schema]);
+  const connected = isConnected(slug);
+  // Singletons hold exactly one record: "Add" would POST a duplicate
+  // instead of editing it, so the row is edited directly.
+  const isSingleton = !!getEndpoint(slug)?.singleton;
+  // Some resources (teachers) have no DELETE route in the API — verified
+  // live (404). Those instead expose a boolean field the API does accept
+  // a PATCH for, which the row action uses as a deactivate in its place.
+  const deactivateField = getEndpoint(slug)?.deactivateField;
+  const canDelete = !getEndpoint(slug)?.noDelete || !!deactivateField;
+  // Verified live for iqac: DELETE hits the bare collection path and the
+  // backend always keeps one row — a GET right after returns a fresh
+  // default row, not 404/empty. So this "delete" is really a reset.
+  const resetsAtRoot = !!getEndpoint(slug)?.deleteAtRoot;
+  const toast = useToastManager();
+
+  const {
+    data: apiRows,
+    isLoading,
+    isError,
+    error,
+  } = useEntityList(slug, undefined, { enabled: connected });
+
+  const deleteEntity = useDeleteEntity(slug);
+  const updateEntity = useUpdateEntity(slug);
+
+  const rows = useMemo<SampleRow[]>(() => {
+    if (connected) return (apiRows ?? []) as unknown as SampleRow[];
+    return schema ? generateSampleRows(schema) : [];
+  }, [connected, apiRows, schema]);
   const columns = useMemo(
-    () => (schema ? deriveColumns(schema, { onDelete: setDeleteTarget }) : []),
-    [schema]
+    () =>
+      schema
+        ? deriveColumns(schema, {
+            onDelete: setDeleteTarget,
+            canDelete,
+            deactivateMode: !!deactivateField,
+          })
+        : [],
+    [schema, canDelete, deactivateField]
   );
 
   const activeFilterCount =
@@ -147,7 +180,7 @@ export default function EntityListClient({ slug }: EntityListClientProps) {
     );
   }
 
-  const basePath = `/admin/${groupRouteSegment(schema.group)}/${schema.slug}`;
+  const basePath = basePathOverride ?? `/admin/${groupRouteSegment(schema.group)}/${schema.slug}`;
   const pluralTitle = schema.pluralTitle ?? pluralize(schema.title);
   const entityTitle = schema.title;
 
@@ -181,12 +214,53 @@ export default function EntityListClient({ slug }: EntityListClientProps) {
 
   async function confirmDelete() {
     if (!deleteTarget) return;
+
+    if (!connected) {
+      setDeleting(true);
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      setDeleting(false);
+      toast.add({
+        type: "info",
+        title: `${entityTitle} not deleted`,
+        description: `${pluralTitle} aren't connected to the backend yet.`,
+      });
+      setDeleteTarget(null);
+      return;
+    }
+
     setDeleting(true);
-    // Design-only: no backend to persist this against yet.
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setDeleting(false);
-    setNotice(`This ${entityTitle.toLowerCase()} would be removed here once content persistence exists.`);
-    setDeleteTarget(null);
+    try {
+      if (deactivateField) {
+        await updateEntity.mutateAsync({
+          id: deleteTarget.__id,
+          values: { [deactivateField]: false },
+        });
+        toast.add({
+          type: "success",
+          title: `${entityTitle} deactivated`,
+          description: "It no longer appears on the public site.",
+        });
+      } else {
+        await deleteEntity.mutateAsync(deleteTarget.__id);
+        toast.add({
+          type: "success",
+          title: resetsAtRoot ? `${entityTitle} reset` : `${entityTitle} deleted`,
+          description: resetsAtRoot
+            ? "It's back to blank defaults."
+            : "The record has been removed.",
+        });
+      }
+      setDeleteTarget(null);
+    } catch (err) {
+      const action = deactivateField ? "deactivate" : resetsAtRoot ? "reset" : "delete";
+      toast.add({
+        type: "error",
+        title: `Could not ${action} this ${entityTitle.toLowerCase()}`,
+        description: err instanceof Error ? err.message : "Please try again.",
+      });
+    } finally {
+      setDeleting(false);
+    }
   }
 
   const hasAnyFilter = activeFilterCount > 0 || query.trim().length > 0;
@@ -198,12 +272,32 @@ export default function EntityListClient({ slug }: EntityListClientProps) {
         description={schema.description}
         icon={schema.icon}
         actions={
-          <Button variant="highlight" size="admin" render={<Link href={`${basePath}/new`} />} nativeButton={false}>
-            <Plus className="size-4" />
-            Add {schema.title}
-          </Button>
+          isSingleton ? undefined : (
+            <Button variant="highlight" size="admin" render={<Link href={`${basePath}/new`} />} nativeButton={false}>
+              <Plus className="size-4" />
+              Add {schema.title}
+            </Button>
+          )
         }
       />
+
+      {!connected && (
+        <Alert
+          variant="info"
+          message={`${pluralTitle} aren't connected to the backend yet — the rows below are sample data.`}
+        />
+      )}
+
+      {isError && (
+        <Alert
+          variant="error"
+          message={
+            error instanceof Error
+              ? `Could not load ${pluralTitle.toLowerCase()}: ${error.message}`
+              : `Could not load ${pluralTitle.toLowerCase()}.`
+          }
+        />
+      )}
 
       {notice && (
         <Alert variant="info" message={notice} dismissible onDismiss={() => setNotice(null)} />
@@ -346,6 +440,7 @@ export default function EntityListClient({ slug }: EntityListClientProps) {
         data={pageRows}
         rowKey={(row) => row.__id}
         entityLabel={pluralTitle.toLowerCase()}
+        isLoading={isLoading}
         sortBy={sort.by}
         sortOrder={sort.order}
         onSort={handleSort}
@@ -362,7 +457,20 @@ export default function EntityListClient({ slug }: EntityListClientProps) {
                 Clear all filters
               </Button>
             </div>
-          ) : undefined
+          ) : (
+            <EmptyState
+              title={`No ${pluralTitle.toLowerCase()} yet`}
+              description={`Nothing has been added here so far. Create the first ${entityTitle.toLowerCase()} to get started.`}
+              action={
+                isSingleton ? undefined : (
+                  <Button variant="highlight" size="admin" render={<Link href={`${basePath}/new`} />} nativeButton={false}>
+                    <Plus className="size-4" />
+                    Add {entityTitle}
+                  </Button>
+                )
+              }
+            />
+          )
         }
       />
 
@@ -370,10 +478,24 @@ export default function EntityListClient({ slug }: EntityListClientProps) {
         open={deleteTarget !== null}
         onClose={() => setDeleteTarget(null)}
         onConfirm={confirmDelete}
-        title={`Delete this ${schema.title.toLowerCase()}?`}
-        description="This is a design preview — no content is actually persisted or deleted yet."
-        confirmLabel="Delete"
-        variant="danger"
+        title={
+          deactivateField
+            ? `Deactivate this ${schema.title.toLowerCase()}?`
+            : resetsAtRoot
+              ? `Reset ${schema.title.toLowerCase()}?`
+              : `Delete this ${schema.title.toLowerCase()}?`
+        }
+        description={
+          !connected
+            ? "This is a design preview — no content is actually persisted or deleted yet."
+            : deactivateField
+              ? "This hides it from the public site. Their record and login are kept, and they can be reactivated from the edit page at any time."
+              : resetsAtRoot
+                ? "This resets it to blank defaults — this record can never truly be removed, only overwritten. You'll need to fill it in again from the Add page."
+                : "This permanently removes the record. This action cannot be undone."
+        }
+        confirmLabel={deactivateField ? "Deactivate" : resetsAtRoot ? "Reset" : "Delete"}
+        variant={deactivateField ? "default" : "danger"}
         loading={deleting}
       />
     </div>

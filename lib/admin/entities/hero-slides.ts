@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { requiredUpload } from "./_upload";
 import { GalleryVerticalEnd } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const heroSlidesSchema = z.object({
   heading: z.string().min(2, "Heading is required").max(255),
   subheading: z.string().max(255).optional().or(z.literal("")),
-  image: z.string().url("Must be a valid URL"),
+  image: requiredUpload,
   cta_label: z.string().max(255).optional().or(z.literal("")),
   cta_url: z.string().max(255).optional().or(z.literal("")),
   sort_order: z.coerce.number().int().nonnegative().default(0),

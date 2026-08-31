@@ -38,7 +38,7 @@ function Toaster() {
               className={cn(
                 "relative flex w-full items-start gap-3 rounded-lg border border-border border-l-4 bg-card p-4 shadow-lg transition-all",
                 "data-starting-style:translate-x-full data-starting-style:opacity-0",
-                "data-ending-style:opacity-0",
+                "data-ending-style:translate-x-full data-ending-style:opacity-0",
                 accent
               )}
             >

@@ -1,5 +1,5 @@
 import envConfig from "@/config/env.config";
-import { getCookies } from "./cookie";
+import { AUTH_COOKIE_NAME, getCookies } from "./cookie";
 
 const api_endpoint = envConfig.backend_base_url;
 
@@ -13,23 +13,33 @@ const serverFetchHelper = async (
 
   const { betterAuthToken } = await getCookies();
 
-  const token = `better-auth.session_token=${betterAuthToken || ""}`;
+  // Only send a Cookie header when there is an actual session. Building the
+  // string unconditionally would always be truthy and ship a malformed
+  // empty-valued cookie ("better-auth.session_token=") on every anonymous
+  // request, including the login POST itself.
+  if (betterAuthToken) {
+    finalHeaders.set("Cookie", `${AUTH_COOKIE_NAME}=${betterAuthToken}`);
+  }
+
+  // FormData must set its own multipart boundary — forcing a Content-Type
+  // here would corrupt the body for file uploads.
+  const isFormData = rest.body instanceof FormData;
 
   if (
     method &&
     ["POST", "PUT", "PATCH", "DELETE"].includes(method) &&
+    !isFormData &&
     !finalHeaders.has("Content-Type")
   ) {
     finalHeaders.set("Content-Type", "application/json");
   }
 
   return await fetch(api_endpoint + endpoint, {
-    headers: {
-      Cookie: token ? token : "",
-      ...Object.fromEntries(finalHeaders.entries()),
-    },
-    credentials: "include",
+    // `rest` first so the auth headers and credentials below can't be
+    // clobbered by a caller-supplied RequestInit.
     ...rest,
+    headers: finalHeaders,
+    credentials: "include",
   });
 };
 
