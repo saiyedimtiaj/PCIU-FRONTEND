@@ -18,10 +18,6 @@ export interface SectionShellProps {
   children: ReactNode;
 }
 
-/**
- * Sidebar-nav + content layout shared by the `?section=` query-param pages
- * (Academics, Admission) and nested path pages. Server component.
- */
 export default function SectionShell({ title, items, activeId, basePath, routingMode = "query", children }: SectionShellProps) {
   return (
     <div className="grid lg:grid-cols-4 gap-8">

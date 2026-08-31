@@ -23,9 +23,6 @@ export interface ModalProps {
   footer?: React.ReactNode;
   showCloseButton?: boolean;
   closeOnOverlayClick?: boolean;
-  /** When false, Escape no longer closes the modal — only an explicit close
-   * action does. Pair with closeOnOverlayClick={false} for form takeovers
-   * where an accidental dismissal would lose the user's input. */
   closeOnEscape?: boolean;
   loading?: boolean;
   className?: string;

@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { requiredUpload } from "./_upload";
 import { Bell } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const admissionAdvertisementsSchema = z.object({
   semesterName: z.string().min(2, "Semester is required").max(255),
   year: z.coerce.number().int().min(2000).max(2100),
-  imageUrl: z.string().url("Must be a valid URL"),
+  imageUrl: requiredUpload,
   isActive: z.boolean().default(true),
 });
 

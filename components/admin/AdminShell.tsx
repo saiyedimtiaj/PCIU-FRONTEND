@@ -10,7 +10,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <ToastProvider>
+    <ToastProvider timeout={5000} limit={3}>
       <div className="admin-theme flex min-h-screen w-full bg-background text-foreground">
         <AdminSidebar
           collapsed={collapsed}
@@ -25,8 +25,10 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           />
           <main className="min-w-0 flex-1 bg-muted/30">{children}</main>
         </div>
+        {/* Inside .admin-theme: that class redeclares the whole token set,
+            so a Toaster outside it renders in public-site colours. */}
+        <Toaster />
       </div>
-      <Toaster />
     </ToastProvider>
   );
 }

@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { requiredUpload } from "./_upload";
 import { ClipboardList } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const admissionTestResultsSchema = z.object({
   semesterName: z.string().min(2, "Semester is required").max(255),
   year: z.coerce.number().int().min(2000).max(2100),
-  pdfUrl: z.string().url("Must be a valid URL"),
+  pdfUrl: requiredUpload,
   publishedAt: z.string().min(1, "Publish date is required"),
   isActive: z.boolean().default(true),
 });

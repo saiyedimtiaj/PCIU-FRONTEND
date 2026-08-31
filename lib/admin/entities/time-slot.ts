@@ -4,7 +4,7 @@ import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const timeSlotSchema = z
   .object({
-    type: z.enum(["class", "exam"]),
+    type: z.enum(["CLASS", "EXAM"]),
     start_time: z.string().min(1, "Start time is required"),
     end_time: z.string().min(1, "End time is required"),
     status: z.boolean().default(true),
@@ -21,7 +21,7 @@ export const timeSlotEntity: EntitySchema<typeof timeSlotSchema> = {
   icon: Clock,
   group: "Scheduling",
   zodSchema: timeSlotSchema,
-  defaultValues: { type: "class", status: true },
+  defaultValues: { type: "CLASS", status: true },
   sections: [
     {
       title: "Time Slot",
@@ -32,8 +32,8 @@ export const timeSlotEntity: EntitySchema<typeof timeSlotSchema> = {
           type: "enum",
           required: true,
           options: [
-            { label: "Class", value: "class" },
-            { label: "Exam", value: "exam" },
+            { label: "Class", value: "CLASS" },
+            { label: "Exam", value: "EXAM" },
           ],
         },
         { name: "start_time", label: "Start Time", type: "time", required: true },

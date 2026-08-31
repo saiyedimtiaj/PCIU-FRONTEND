@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { User, Mail, Lock, Eye, ArrowRight, Check } from "lucide-react";
+import { User, Mail, Lock, ArrowRight, Check } from "lucide-react";
 import { Checkbox } from "@base-ui/react/checkbox";
 import AuthShell from "@/components/shared/AuthShell";
 import { AuthField } from "@/components/shared/auth-field";
@@ -67,7 +67,6 @@ export default function SignUpPage() {
           name="password"
           autoComplete="new-password"
           placeholder="••••••••"
-          trailing={<Eye aria-hidden />}
         />
 
         <AuthField
@@ -77,7 +76,6 @@ export default function SignUpPage() {
           name="confirmPassword"
           autoComplete="new-password"
           placeholder="••••••••"
-          trailing={<Eye aria-hidden />}
         />
 
         <label className="flex items-start gap-2.5 text-sm text-muted-foreground select-none">

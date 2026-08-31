@@ -17,8 +17,6 @@ export interface DashboardTabsProps {
   groupCounts: GroupCount[];
 }
 
-// Deterministic sparkline series, one per stat card — see sample-data.ts
-// for why this must stay seeded rather than random.
 const PAGES_SERIES = generateSeries("dashboard-pages", 12, 8, 16);
 const PUBLISHED_SERIES = generateSeries("dashboard-published", 12, 8, 16);
 const SECTIONS_SERIES = generateSeries("dashboard-sections", 12, 20, 40);
