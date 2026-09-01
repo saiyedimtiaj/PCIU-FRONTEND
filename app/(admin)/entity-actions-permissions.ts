@@ -52,3 +52,16 @@ export async function updatePermissionAction(
     }),
   );
 }
+
+/**
+ * Not every role has a row for every resource yet (MODERATOR only has 14
+ * of the 48 resources SUPER_ADMIN/ADMIN have) — POST adds the missing
+ * combination. Verified live: POST rejects an existing role+resource pair
+ * with a 409 and a clear message, so no client-side duplicate check is
+ * needed — the API's own error surfaces as-is.
+ */
+export async function createPermissionAction(
+  values: Omit<PermissionRow, "id">,
+): Promise<PermissionResult<PermissionRow>> {
+  return run(() => api.post<PermissionRow>("/permissions", values));
+}
