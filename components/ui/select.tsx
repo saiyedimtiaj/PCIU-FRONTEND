@@ -37,7 +37,19 @@ function SelectContent({
 }: SelectPrimitive.Popup.Props) {
   return (
     <SelectPrimitive.Portal>
-      <SelectPrimitive.Positioner sideOffset={6} className="z-50">
+      <SelectPrimitive.Positioner
+        sideOffset={6}
+        className="z-50"
+        // Default collision boundary is the nearest clipping ancestor —
+        // inside a Modal that's the modal's own scrollable content div,
+        // not the viewport, so --available-height shrinks to whatever
+        // room is left in that small box and the list barely scrolls.
+        // The full document is always a safe superset of any narrower
+        // scroll container, so this is correct standalone too.
+        collisionBoundary={
+          typeof document !== "undefined" ? document.documentElement : undefined
+        }
+      >
         <SelectPrimitive.Popup
           data-slot="select-content"
           className={cn(
