@@ -1,8 +1,9 @@
 // import type { ApiResponse, HeroSliderItem } from "@/types/home";
-import type { ApiResponse, HeroSliderItem, NoticeItem } from "@/types/home";
+import type { ApiResponse, HeroSliderItem, NoticeItem, VCInfo } from "@/types/home";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
+//**------ HeroSliderItem ------------------ */
 export async function getHeroSlides(): Promise<HeroSliderItem[]> {
   if (!API_BASE_URL) {
     console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
@@ -34,6 +35,7 @@ export async function getHeroSlides(): Promise<HeroSliderItem[]> {
   }
 }
 
+//**------NoticeItem------------------ */
 export async function getHomeNotices(): Promise<NoticeItem[]> {
   if (!API_BASE_URL) {
     console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
@@ -65,4 +67,42 @@ export async function getHomeNotices(): Promise<NoticeItem[]> {
   }
 }
 
+/** --------- VC info---------- */
+export async function getVCInfo(): Promise<VCInfo | null> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return null;
+  }
 
+  try {
+    const res = await fetch(`${API_BASE_URL}/home/vc`, {
+      next: { revalidate: 3600 }, // 1 hour — VC info rarely changes
+    });
+
+    if (!res.ok) {
+      console.error(`VC info request failed: ${res.status}`);
+      return null;
+    }
+
+    const json: ApiResponse<VCInfo> = await res.json();
+
+    if (!json.success || !json.data) {
+      return null;
+    }
+
+    return json.data;
+  } catch (error) {
+    console.error("Error fetching VC info:", error);
+    return null;
+  }
+}
+
+/** --------- VC info---------- */
+
+
+
+/** --------- VC info---------- */
+
+
+
+/** --------- VC info---------- */

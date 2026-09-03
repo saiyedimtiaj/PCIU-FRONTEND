@@ -71,12 +71,35 @@ export interface NoticeItem {
 
 
 /** VC message */
-export interface VCMessageContent {
+// export interface VCMessageContent {
+//   name: string;
+//   title: string;
+//   message: string;
+//   photo: string;
+// }
+
+
+/** Vice Chancellor (from /home/vc API) */
+export interface VCInfo {
+  id: number;
   name: string;
-  title: string;
-  message: string;
-  photo: string;
+  slug: string;
+  imageUrl: string | null;
+  office: string | null;
+  designation: string | null;
+  shortBio: string | null;
+  googleScholarUrl: string | null;
+  researchgateUrl: string | null;
+  linkedinUrl: string | null;
+  facebookUrl: string | null;
+  twitterUrl: string | null;
+  websiteUrl: string | null;
 }
+
+/** Vice Chancellor (from /home/vc API) */
+
+
+
 
 /** Program finder */
 export interface Program {
