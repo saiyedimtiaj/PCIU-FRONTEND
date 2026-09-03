@@ -1,3 +1,4 @@
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -368,8 +369,6 @@
   --animate-scale-in: scale-in 0.2s ease-out;
   --animate-slide-in: slide-in 20s linear infinite;
   --animate-float: float 2.8s ease-in-out infinite;
-  --animate-border-flow: border-flow 4s linear infinite;
-  --animate-border-flow-fast: border-flow 1.5s linear infinite;
 }
 
 @keyframes fade-in {
@@ -421,15 +420,6 @@
   }
   50% {
     transform: translate(-50%, -50%) translateY(-5px);
-  }
-}
-
-@keyframes border-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 300% 50%;
   }
 }
 
@@ -492,3 +482,14 @@
     @apply bg-background text-foreground font-sans overflow-x-hidden;
   }
 }
+
+
+@keyframes border-spin {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
+

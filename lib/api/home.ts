@@ -1,5 +1,5 @@
 // import type { ApiResponse, HeroSliderItem } from "@/types/home";
-import type { ApiResponse, HeroSliderItem, NoticeItem, VCInfo } from "@/types/home";
+import type { ApiResponse, FacultyItem, HeroSliderItem, NoticeItem, VCInfo } from "@/types/home";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
@@ -97,9 +97,35 @@ export async function getVCInfo(): Promise<VCInfo | null> {
   }
 }
 
-/** --------- VC info---------- */
+/** --------- FacultyItem---------- */
+export async function getFaculties(): Promise<FacultyItem[]> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return [];
+  }
 
+  try {
+    const res = await fetch(`${API_BASE_URL}/home/faculties`, {
+      next: { revalidate: 300 }, // 5 min — was 3600, too long during active editing
+    });
 
+    if (!res.ok) {
+      console.error(`Faculties request failed: ${res.status}`);
+      return [];
+    }
+
+    const json: ApiResponse<FacultyItem[]> = await res.json();
+
+    if (!json.success || !Array.isArray(json.data)) {
+      return [];
+    }
+
+    return json.data;
+  } catch (error) {
+    console.error("Error fetching faculties:", error);
+    return [];
+  }
+}
 
 /** --------- VC info---------- */
 

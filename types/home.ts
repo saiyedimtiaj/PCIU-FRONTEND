@@ -95,22 +95,46 @@ export interface VCInfo {
   twitterUrl: string | null;
   websiteUrl: string | null;
 }
-
 /** Vice Chancellor (from /home/vc API) */
 
 
 
 
 /** Program finder */
-export interface Program {
-  title: string;
-  degree: string;
-  level: "Undergraduate" | "Graduate";
-  duration: string;
-  faculty: string;
-  description: string;
-  href: string;
+// export interface Program {
+//   title: string;
+//   degree: string;
+//   level: "Undergraduate" | "Graduate";
+//   duration: string;
+//   faculty: string;
+//   description: string;
+//   href: string;
+// }
+
+/** Faculty (from /home/faculties API) */
+export interface FacultyDepartment {
+  id: number;
+  name: string;
+  shortName: string | null;
+  slug: string;
 }
+export interface FacultyDean {
+  id: number;
+  name: string;
+  designation: string | null;
+  imageUrl: string | null;
+}
+
+export interface FacultyItem {
+  id: number;
+  name: string;
+  slug: string;
+  about: string | null;
+  dean: FacultyDean | null;
+  departments: FacultyDepartment[];
+}
+/** Faculty (from /home/faculties API) */
+
 
 /** Faculties */
 export interface Faculty {
