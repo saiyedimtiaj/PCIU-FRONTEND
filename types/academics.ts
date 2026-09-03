@@ -11,7 +11,8 @@ export interface ExamRoutine {
   id: number;
   examId: number;
   department: string;
-  course: string;
+  courseName: string;
+  courseCode: string;
   building: string;
   room: string;
   timeSlot: string;
@@ -29,7 +30,8 @@ export interface ClassTimeSlot {
 export interface ClassRoutineItem {
   id: number;
   department: string;
-  course: string;
+  courseName: string;
+  courseCode: string;
   teacher: string;
   building: string;
   room: string;

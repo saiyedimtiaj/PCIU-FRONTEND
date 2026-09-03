@@ -79,6 +79,7 @@ export default function CallForPaperPage() {
             <Button
               className="mt-6 gap-2"
               render={<Link href="/research/call-for-paper-guidelines" />}
+              nativeButton={false}
             >
               Read Submission Guidelines
               <ArrowRight className="size-4" />
