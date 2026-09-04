@@ -106,7 +106,7 @@ export async function getFaculties(): Promise<FacultyItem[]> {
 
   try {
     const res = await fetch(`${API_BASE_URL}/home/faculties`, {
-      next: { revalidate: 300 }, // 5 min — was 3600, too long during active editing
+      next: { revalidate: 3600 }, // 1 hour — faculty structure rarely changes
     });
 
     if (!res.ok) {
