@@ -113,29 +113,37 @@ export default function DepartmentTemplate({ content }: { content: DepartmentCon
                 Programs Offered
               </h2>
               <div className="space-y-4">
-                {content.programs.map((program) => (
-                  <Card key={program.name}>
-                    <CardContent>
-                      <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                        <h3 className="font-semibold text-foreground">{program.name}</h3>
-                        <Badge variant="secondary">{program.credits}</Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{program.description}</p>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Duration: {program.duration}
-                      </p>
-                      {program.concentrations.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5">
-                          {program.concentrations.map((c) => (
-                            <Badge key={c} variant="outline">
-                              {c}
-                            </Badge>
-                          ))}
+                {content.programs.length > 0 ? (
+                  content.programs.map((program) => (
+                    <Card key={program.name}>
+                      <CardContent>
+                        <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                          <h3 className="font-semibold text-foreground">{program.name}</h3>
+                          <Badge variant="secondary">{program.credits}</Badge>
                         </div>
-                      )}
+                        <p className="text-sm text-muted-foreground mb-3">{program.description}</p>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Duration: {program.duration}
+                        </p>
+                        {program.concentrations.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {program.concentrations.map((c) => (
+                              <Badge key={c} variant="outline">
+                                {c}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <Card>
+                    <CardContent className="py-8 text-center text-muted-foreground italic">
+                      No programs currently available.
                     </CardContent>
                   </Card>
-                ))}
+                )}
               </div>
             </section>
 
@@ -143,30 +151,40 @@ export default function DepartmentTemplate({ content }: { content: DepartmentCon
             <section>
               <h2 className="font-heading font-bold text-xl text-foreground mb-4 flex items-center justify-between">
                 Faculty Members
-                <Button
-                  variant="ghostAccent"
-                  size="sm"
-                  render={<Link href={`/faculty?department=${encodeURIComponent(content.facultyQueryParam)}`} />}
-                  nativeButton={false}
-                >
-                  View All
-                  <ChevronRight className="size-4" />
-                </Button>
+                {content.facultyMembers.length > 0 && (
+                  <Button
+                    variant="ghostAccent"
+                    size="sm"
+                    render={<Link href={`/faculty?department=${encodeURIComponent(content.facultyQueryParam)}`} />}
+                    nativeButton={false}
+                  >
+                    View All
+                    <ChevronRight className="size-4" />
+                  </Button>
+                )}
               </h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {content.facultyMembers.map((member) => (
-                  <Card key={member.name}>
-                    <CardContent className="text-center py-6">
-                      <div className="w-14 h-14 rounded-full bg-primary/10 text-primary font-heading font-bold flex items-center justify-center mx-auto mb-3">
-                        {member.name.replace(/^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.)\s*/g, "")[0]}
-                      </div>
-                      <p className="text-sm font-semibold text-foreground">{member.name}</p>
-                      <p className="text-xs text-muted-foreground">{member.designation}</p>
-                      <p className="text-xs text-accent mt-1">{member.specialization}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              {content.facultyMembers.length > 0 ? (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {content.facultyMembers.map((member) => (
+                    <Card key={member.name}>
+                      <CardContent className="text-center py-6">
+                        <div className="w-14 h-14 rounded-full bg-primary/10 text-primary font-heading font-bold flex items-center justify-center mx-auto mb-3">
+                          {member.name.replace(/^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.)\s*/g, "")[0]}
+                        </div>
+                        <p className="text-sm font-semibold text-foreground">{member.name}</p>
+                        <p className="text-xs text-muted-foreground">{member.designation}</p>
+                        <p className="text-xs text-accent mt-1">{member.specialization}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="py-8 text-center text-muted-foreground italic">
+                    No faculty members currently available.
+                  </CardContent>
+                </Card>
+              )}
             </section>
 
             {/* Research activities */}
@@ -175,15 +193,23 @@ export default function DepartmentTemplate({ content }: { content: DepartmentCon
                 Research Activities
               </h2>
               <div className="space-y-4">
-                {content.researchAreas.map((area) => (
-                  <Card key={area.title}>
-                    <CardContent>
-                      <h3 className="font-semibold text-foreground text-sm mb-1">{area.title}</h3>
-                      <p className="text-xs text-accent mb-2">{area.author}</p>
-                      <p className="text-sm text-muted-foreground">{area.description}</p>
+                {content.researchAreas.length > 0 ? (
+                  content.researchAreas.map((area) => (
+                    <Card key={area.title}>
+                      <CardContent>
+                        <h3 className="font-semibold text-foreground text-sm mb-1">{area.title}</h3>
+                        <p className="text-xs text-accent mb-2">{area.author}</p>
+                        <p className="text-sm text-muted-foreground">{area.description}</p>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <Card>
+                    <CardContent className="py-8 text-center text-muted-foreground italic">
+                      No research activities currently available.
                     </CardContent>
                   </Card>
-                ))}
+                )}
               </div>
               {content.industryPartners && content.industryPartners.length > 0 && (
                 <Card className="mt-4">
@@ -209,14 +235,18 @@ export default function DepartmentTemplate({ content }: { content: DepartmentCon
             <Card className="bg-primary text-primary-foreground">
               <CardContent>
                 <h3 className="font-heading font-bold mb-4">Latest Notices</h3>
-                <ul className="space-y-3">
-                  {content.notices.map((notice) => (
-                    <li key={notice.title} className="border-l-2 border-accent pl-3">
-                      <p className="text-sm">{notice.title}</p>
-                      <p className="text-xs text-primary-foreground/60">{notice.date}</p>
-                    </li>
-                  ))}
-                </ul>
+                {content.notices.length > 0 ? (
+                  <ul className="space-y-3">
+                    {content.notices.map((notice) => (
+                      <li key={notice.title} className="border-l-2 border-accent pl-3">
+                        <p className="text-sm">{notice.title}</p>
+                        <p className="text-xs text-primary-foreground/60">{notice.date}</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-primary-foreground/80 italic">No recent notices.</p>
+                )}
               </CardContent>
             </Card>
 
