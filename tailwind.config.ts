@@ -1,4 +1,5 @@
-theme: {
+const config = {
+  theme: {
   extend: {
     // ... তোমার existing extend কনফিগ থাকলে সেটা রেখে এই দুটো যোগ করো
     keyframes: {
@@ -13,3 +14,6 @@ theme: {
     },
   },
 },
+};
+
+export default config;

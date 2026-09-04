@@ -106,7 +106,7 @@ export default function FacultyCard({ id, name, about, departments, icon }: Facu
           strokeLinecap="round"
           pathLength={100}
           strokeDasharray="22 78"
-          style={{ animation: "pciuChase 3.5s linear infinite" }}
+          style={{ animation: "pciuChase 4.5s linear infinite" }}
         />
       </svg>
     </div>

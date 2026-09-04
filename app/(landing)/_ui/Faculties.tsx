@@ -9,50 +9,29 @@ export default async function Faculties() {
 
   return (
     <section className="relative overflow-hidden bg-white py-16 sm:py-20 md:py-24" id="faculties">
-      {/* Crescent-shaped glow behind the heading — layered for more depth */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[420px] overflow-hidden">
-        <div
-          className="absolute left-1/2 top-[-140px] h-[420px] w-[1100px] -translate-x-1/2"
-          style={{
-            background:
-              "radial-gradient(ellipse 550px 300px at center, hsl(210 80% 78% / 0.85), hsl(210 75% 85% / 0.5) 40%, transparent 70%)",
-            filter: "blur(50px)",
-          }}
-        />
-        <div
-          className="absolute left-1/2 top-[-100px] h-[320px] w-[750px] -translate-x-1/2"
-          style={{
-            background:
-              "radial-gradient(ellipse 380px 200px at center, hsl(42 85% 78% / 0.7), transparent 68%)",
-            filter: "blur(40px)",
-          }}
-        />
-        {/* Thin gold arc tracing the crescent's lower edge */}
+     {/* Layered thin arcs behind the heading with a gentle 180-degree turn */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 z-0 h-24 w-[min(820px,90vw)] -translate-x-1/2"
+      >
         <svg
-          className="absolute left-1/2 top-[80px] -translate-x-1/2"
-          width="820"
-          height="60"
-          viewBox="0 0 820 60"
+          className="h-full w-full motion-safe:animate-arc-rotate"
+          viewBox="0 0 820 110"
           fill="none"
+          preserveAspectRatio="none"
         >
-          <path
-            d="M10 5 Q410 75 810 5"
-            stroke="url(#crescent-arc)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            opacity="0.5"
-          />
-          <defs>
-            <linearGradient id="crescent-arc" x1="0" y1="0" x2="820" y2="0">
-              <stop offset="0%" stopColor="hsl(210 70% 80%)" stopOpacity="0" />
-              <stop offset="50%" stopColor="hsl(42 80% 60%)" />
-              <stop offset="100%" stopColor="hsl(210 70% 80%)" stopOpacity="0" />
-            </linearGradient>
-          </defs>
+          <path d="M20 6 Q410 82 800 6" stroke="hsl(42 85% 58%)" strokeWidth="0.9" strokeLinecap="round" opacity="0.42" />
+          <path d="M10 18 Q410 94 810 18" stroke="hsl(230 70% 50%)" strokeWidth="0.9" strokeLinecap="round" opacity="0.24" />
+          <path d="M28 30 Q410 102 792 30" stroke="hsl(42 85% 72%)" strokeWidth="0.9" strokeLinecap="round" opacity="0.38" />
+          <path d="M45 42 Q410 108 775 42" stroke="hsl(231 77% 22%)" strokeWidth="0.9" strokeLinecap="round" opacity="0.16" />
+          <path d="M36 12 Q410 76 784 12" stroke="hsl(230 70% 50%)" strokeWidth="0.7" strokeLinecap="round" opacity="0.18" />
+          <path d="M18 26 Q410 100 802 26" stroke="hsl(42 85% 58%)" strokeWidth="0.7" strokeLinecap="round" opacity="0.25" />
+          <path d="M54 38 Q410 106 766 38" stroke="hsl(42 85% 72%)" strokeWidth="0.7" strokeLinecap="round" opacity="0.22" />
+          <path d="M68 50 Q410 110 752 50" stroke="hsl(231 77% 22%)" strokeWidth="0.7" strokeLinecap="round" opacity="0.12" />
         </svg>
       </div>
 
-      <div className="container relative mx-auto px-4 sm:px-6 md:px-12">
+      <div className="container relative z-10 mx-auto px-4 sm:px-6 md:px-12">
         <div className="mb-10 text-center sm:mb-14">
           <h2 className="font-heading mb-3 text-3xl font-bold text-primary sm:mb-4 sm:text-4xl md:text-5xl">
             Our Faculties

@@ -28,14 +28,16 @@
   --secondary-foreground: hsl(0 0% 100%);
   --secondary-light: hsl(230 60% 90%);
 
-  /* Accent - Gold #DBA22E */
-  --accent: hsl(40 70% 52%);
-  --accent-foreground: hsl(0 0% 100%);
+  /* Accent - Brand Gold #F5B71D */
+  --accent: #f5b71d;
+  --accent-foreground: #000000;
+  --accent-hover: #d99d08;
   --accent-light: hsl(40 60% 90%);
 
-  /* Highlight - Gold for emphasis */
-  --highlight: hsl(40 70% 52%);
-  --highlight-foreground: hsl(0 0% 100%);
+  /* Highlight - Brand Gold for emphasis */
+  --highlight: #f5b71d;
+  --highlight-foreground: #000000;
+  --highlight-hover: #d99d08;
 
   --muted: hsl(230 20% 95%);
   --muted-foreground: hsl(231 40% 35%);
@@ -324,9 +326,11 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-light: var(--accent-light);
+  --color-accent-hover: var(--accent-hover);
 
   --color-highlight: var(--highlight);
   --color-highlight-foreground: var(--highlight-foreground);
+  --color-highlight-hover: var(--highlight-hover);
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -370,6 +374,7 @@
   --animate-float: float 2.8s ease-in-out infinite;
   --animate-border-flow: border-flow 4s linear infinite;
   --animate-border-flow-fast: border-flow 1.5s linear infinite;
+  --animate-arc-rotate: arc-rotate 18s ease-in-out infinite alternate;
 }
 
 @keyframes fade-in {
@@ -490,5 +495,14 @@
 
   body {
     @apply bg-background text-foreground font-sans overflow-x-hidden;
+  }
+}
+
+@keyframes arc-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
   }
 }

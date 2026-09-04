@@ -295,6 +295,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               <Button
                 variant="accent"
+                size="cta"
                 className="hidden md:flex"
                 aria-label="Apply now"
               >
@@ -485,7 +486,7 @@ export default function Navbar() {
                 Contact
               </Link>
 
-              <Button variant="accent" className="w-full mt-4">
+              <Button variant="accent" size="cta" className="w-full mt-4">
                 Apply Now
               </Button>
             </nav>

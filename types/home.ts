@@ -101,15 +101,15 @@ export interface VCInfo {
 
 
 /** Program finder */
-// export interface Program {
-//   title: string;
-//   degree: string;
-//   level: "Undergraduate" | "Graduate";
-//   duration: string;
-//   faculty: string;
-//   description: string;
-//   href: string;
-// }
+export interface Program {
+  title: string;
+  degree: string;
+  level: "Undergraduate" | "Graduate";
+  duration: string;
+  faculty: string;
+  description: string;
+  href: string;
+}
 
 /** Faculty (from /home/faculties API) */
 export interface FacultyDepartment {
