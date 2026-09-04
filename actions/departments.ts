@@ -1,9 +1,14 @@
 "use server";
 
 import { publicFetch } from "@/lib/server-fetch";
-import type { ApiDepartmentResponse, DepartmentContent } from "@/types/department";
+import type {
+  ApiDepartmentResponse,
+  DepartmentContent,
+} from "@/types/department";
 
-export async function getDepartmentBySlug(slug: string): Promise<DepartmentContent | null> {
+export async function getDepartmentBySlug(
+  slug: string,
+): Promise<DepartmentContent | null> {
   try {
     const res = await publicFetch.get(`/department/${slug}`, {
       next: { tags: ["department", slug] },
@@ -16,13 +21,18 @@ export async function getDepartmentBySlug(slug: string): Promise<DepartmentConte
       }
     }
   } catch (error) {
-    console.error(`[Actions: getDepartmentBySlug] Failed to fetch department ${slug}:`, error);
+    console.error(
+      `[Actions: getDepartmentBySlug] Failed to fetch department ${slug}:`,
+      error,
+    );
   }
 
   return null;
 }
 
-function mapApiDepartmentToContent(apiData: ApiDepartmentResponse): DepartmentContent {
+function mapApiDepartmentToContent(
+  apiData: ApiDepartmentResponse,
+): DepartmentContent {
   return {
     slug: apiData.slug,
     chairmanHeading: "Message from the Chairman",
@@ -52,8 +62,8 @@ function mapApiDepartmentToContent(apiData: ApiDepartmentResponse): DepartmentCo
       hasImage: !!apiData.image,
     },
     facilities: [], // Empty state
-    programs: [],   // Empty state
-    notices: [],    // Empty state
+    programs: [], // Empty state
+    notices: [], // Empty state
     contact: {
       address: apiData.officeLocation,
       phone: apiData.phone,
@@ -65,11 +75,17 @@ function mapApiDepartmentToContent(apiData: ApiDepartmentResponse): DepartmentCo
       url: "#",
     })),
     facultyMembers: [], // Empty state
-    researchAreas: [],  // Empty state
+    researchAreas: [], // Empty state
     industryPartners: [], // Empty state
     achievements: [
-      { label: "Research Papers", value: (apiData.numberOfResearch || 0).toString() },
-      { label: "Industry Partners", value: (apiData.numberOfPartner || 0).toString() },
+      {
+        label: "Research Papers",
+        value: (apiData.numberOfResearch || 0).toString(),
+      },
+      {
+        label: "Industry Partners",
+        value: (apiData.numberOfPartner || 0).toString(),
+      },
     ],
     facultyQueryParam: apiData.slug,
   };
