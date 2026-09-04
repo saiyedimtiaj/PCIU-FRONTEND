@@ -481,3 +481,25 @@
     @apply bg-background text-foreground font-sans overflow-x-hidden;
   }
 }
+
+/* Isolates a single element (id="printable-print-target") as the entire page
+   when printing — used by "Download" buttons that call window.print() to
+   export just a data table/grid without the surrounding nav, filters, or
+   footer. Classic visibility-swap trick: hidden elements keep their layout
+   box (unlike display:none), so the target's ancestors don't collapse. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printable-print-target,
+  #printable-print-target * {
+    visibility: visible;
+  }
+
+  #printable-print-target {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+}

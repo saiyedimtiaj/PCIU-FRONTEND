@@ -27,6 +27,7 @@ export default function DepartmentTemplate({ content }: { content: DepartmentCon
               size="cta"
               className="mt-6"
               render={<Link href={content.hero.buttonLink} />}
+              nativeButton={false}
             >
               {content.hero.buttonText}
             </Button>
@@ -146,6 +147,7 @@ export default function DepartmentTemplate({ content }: { content: DepartmentCon
                   variant="ghostAccent"
                   size="sm"
                   render={<Link href={`/faculty?department=${encodeURIComponent(content.facultyQueryParam)}`} />}
+                  nativeButton={false}
                 >
                   View All
                   <ChevronRight className="size-4" />

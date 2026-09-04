@@ -28,11 +28,6 @@ export default async function ExamScheduleSection({
     exams.find((e) => e.id === parsedExamId) ||
     (exams.length > 0 ? exams[0] : null);
 
-  // Filter routines for the active exam
-  const activeRoutines = activeExam
-    ? routines.filter((r) => r.examId === activeExam.id)
-    : [];
-
   return (
     <div className="space-y-8">
       <div>
@@ -143,7 +138,11 @@ export default async function ExamScheduleSection({
               {activeExam.name} - Routine
             </h3>
           </div>
-          <ExamRoutineInteractive routines={activeRoutines} />
+          <ExamRoutineInteractive
+            routines={routines}
+            examId={activeExam.id}
+            examName={activeExam.name}
+          />
         </div>
       )}
 
