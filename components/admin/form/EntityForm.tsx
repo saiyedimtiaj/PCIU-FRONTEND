@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToastManager } from "@/components/ui/toast";
 import PageHeader from "@/components/admin/PageHeader";
 import { FormField } from "./FormField";
-import { FieldArrayInput } from "./FieldArray";
+import { FieldArrayInput, LinkListInput } from "./FieldArray";
 import type { EntitySchema } from "./form-types";
 import { isConnected } from "@/services/endpoints";
 import { useCreateEntity, useUpdateEntity } from "@/features/entity";
@@ -147,7 +147,7 @@ export default function EntityForm({
             <CardContent className="pt-5">
               <div className="grid gap-5 sm:grid-cols-2">
                 {section.fields.map((field) =>
-                  field.type === "json-list" ? (
+                  field.type === "json-list" || field.type === "link-list" ? (
                     <div
                       key={field.name}
                       className={cn(
@@ -162,12 +162,21 @@ export default function EntityForm({
                       {field.helper && (
                         <p className="text-xs text-muted-foreground">{field.helper}</p>
                       )}
-                      <FieldArrayInput
-                        control={control}
-                        register={register}
-                        name={field.name}
-                        placeholder={field.placeholder}
-                      />
+                      {field.type === "link-list" ? (
+                        <LinkListInput
+                          control={control}
+                          register={register}
+                          name={field.name}
+                          placeholder={field.placeholder}
+                        />
+                      ) : (
+                        <FieldArrayInput
+                          control={control}
+                          register={register}
+                          name={field.name}
+                          placeholder={field.placeholder}
+                        />
+                      )}
                     </div>
                   ) : (
                     <FormField
@@ -186,7 +195,6 @@ export default function EntityForm({
         ))}
       </div>
 
-   
       <div className="sticky bottom-0 z-30 -mx-6 mt-6 border-t border-border bg-card/95 px-6 py-3 backdrop-blur supports-backdrop-filter:bg-card/80">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2 text-xs">

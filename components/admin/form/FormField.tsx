@@ -1,11 +1,12 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Controller, useWatch, type Control, type FieldValues, type UseFormRegister } from "react-hook-form";
 import {
   AtSign, Phone, Link2, Lock, Calendar, Clock, Hash, Type,
-  AlignLeft, ListFilter, Image as ImageIcon, Paperclip, Lock as LockIcon,
+  AlignLeft, ListFilter, Image as ImageIcon, Paperclip, Lock as LockIcon, X,
 } from "lucide-react";
+import { resolveUploadUrl } from "@/lib/upload-url";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -128,13 +129,93 @@ function IconInput({
   );
 }
 
-/**
- * `relation` fields (department, faculty, teacher, ...) get a searchable
- * combobox backed by live data from the related entity — see
- * `useRelationOptions` for how a row becomes a label, and why an
- * unconnected `relationTo` (still on sample data) falls back to the
- * field's hand-authored `options` instead.
- */
+function ImageUploadField({
+  field,
+  error,
+  value,
+  onChange,
+  onBlur,
+}: {
+  field: FieldDescriptor;
+  error?: string;
+  value: unknown;
+  onChange: (value: File | string) => void;
+  onBlur: () => void;
+}) {
+  const existing = typeof value === "string" ? value : "";
+  const file = value instanceof File ? value : null;
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+
+  const objectUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  useEffect(() => () => {
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+  }, [objectUrl]);
+
+  const src = objectUrl ?? (existing ? resolveUploadUrl(existing) : "");
+  const hasPreview = !!src && failedSrc !== src;
+
+  return (
+    <FieldShell field={field} error={error}>
+      <label
+        htmlFor={field.name}
+        className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-input bg-muted/20 px-4 py-3 transition-colors hover:border-primary/50 hover:bg-accent/40"
+      >
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <ImageIcon className="size-4" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-medium text-foreground">
+            {file ? file.name : existing ? "Replace file" : "Choose a file"}
+          </span>
+          <span className="block truncate text-xs text-muted-foreground">
+            {file
+              ? `${(file.size / 1024).toFixed(0)} KB selected`
+              : existing || "No file selected yet"}
+          </span>
+        </span>
+      </label>
+      <input
+        id={field.name}
+        type="file"
+        accept="image/*"
+        className="sr-only"
+        onChange={(e) => {
+          const picked = e.target.files?.[0];
+          if (!picked) return;
+          setFailedSrc(null);
+          onChange(picked);
+        }}
+        onBlur={onBlur}
+      />
+      {hasPreview && (
+        <div className="mt-2 flex items-center gap-2">
+          <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted/30">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={src}
+              alt=""
+              className="size-full object-cover"
+              onError={() => setFailedSrc(src)}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setFailedSrc(null);
+              onChange("");
+            }}
+            className="flex items-center gap-1 rounded-md border border-input px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-destructive/50 hover:text-destructive"
+          >
+            <X className="size-3.5" />
+            Remove
+          </button>
+        </div>
+      )}
+    </FieldShell>
+  );
+}
+
+
 function RelationField({
   field,
   control,
@@ -145,15 +226,6 @@ function RelationField({
   error?: string;
 }) {
   const { options, isLoading } = useRelationOptions(field.relationTo, field.options);
-
-  // The edit form's initial values spread the *entire* decoded record
-  // in (see EntityForm's defaultValues), so a joined relation the API
-  // nests alongside the id — department_id's sibling `department: {...}`,
-  // for instance — rides along under its own key even though the schema
-  // never declares a field for it. Reading it here means a record whose
-  // related row has since been deleted (so it's absent from `options`,
-  // fetched fresh) still shows the name it was saved with, rather than
-  // falling back to a bare id.
   const joinedKey = field.name.replace(/_id$/, "");
   const joined = useWatch({ control, name: joinedKey }) as
     | Record<string, unknown>
@@ -163,11 +235,6 @@ function RelationField({
       ? ((joined.name ?? joined.title ?? joined.designation) as string | undefined)
       : undefined;
 
-  // Item.value is the plain id string (matching every other field type's
-  // RHF value), while items={options} are {label, value} objects — the
-  // primitive's own selected-value stringifier only special-cases object
-  // values, so a bare id string falls through to being shown verbatim
-  // ("2" instead of "Department of..."). This looks the label up instead.
   function itemToStringLabel(value: string) {
     if (!value) return "";
     return (
@@ -278,9 +345,25 @@ export function FormField({ field, control, register, error, mode = "create" }: 
     );
   }
 
-  if (field.type === "image" || field.type === "file") {
-    const accept = field.type === "image" ? "image/*" : undefined;
+  if (field.type === "image") {
+    return (
+      <Controller
+        control={control}
+        name={field.name}
+        render={({ field: rhf }) => (
+          <ImageUploadField
+            field={field}
+            error={error}
+            value={rhf.value}
+            onChange={rhf.onChange}
+            onBlur={rhf.onBlur}
+          />
+        )}
+      />
+    );
+  }
 
+  if (field.type === "file") {
     return (
       <Controller
         control={control}
@@ -296,7 +379,7 @@ export function FormField({ field, control, register, error, mode = "create" }: 
                 className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-input bg-muted/20 px-4 py-3 transition-colors hover:border-primary/50 hover:bg-accent/40"
               >
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  {field.type === "image" ? <ImageIcon className="size-4" /> : <Paperclip className="size-4" />}
+                  <Paperclip className="size-4" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium text-foreground">
@@ -312,7 +395,6 @@ export function FormField({ field, control, register, error, mode = "create" }: 
               <input
                 id={field.name}
                 type="file"
-                accept={accept}
                 className="sr-only"
                 onChange={(e) => rhf.onChange(e.target.files?.[0] ?? existing)}
                 onBlur={rhf.onBlur}

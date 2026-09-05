@@ -12,7 +12,6 @@ export const WRITE_ALIASES: Record<string, Record<string, string>> = {
 
 /** Keys the API ignores — dropped so they can't overwrite or bloat a payload. */
 export const WRITE_DROPS: Record<string, string[]> = {
-  department: ["facultyId", "chairmanId"],
   teacher: ["facultyId", "leavePeriod"],
   pages: ["publishedAt"],
   contact: ["displayOrder", "status"],
@@ -46,6 +45,15 @@ export const READ_NESTED: Record<string, Record<string, string>> = {
   teacher: {
     email: "user.email",
     faculty_id: "department.facultyId",
+    // The list table resolves a `relation` column by reading the sibling
+    // object the API joins alongside the id (`faculty_id` -> `faculty`) —
+    // see `relationLabel` in components/admin/list/columns.tsx. A teacher
+    // carries no top-level `faculty`, only `department.faculty`, so the
+    // column fell back to matching the raw id against the schema's
+    // placeholder options and rendered "—". Lifting the joined row up
+    // under the key the table already looks for fixes the column without
+    // the table needing to know anything teacher-specific.
+    faculty: "department.faculty",
   },
   user: {
     full_name: "name",

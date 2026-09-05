@@ -506,3 +506,20 @@
     transform: rotate(180deg);
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printable-print-target,
+  #printable-print-target * {
+    visibility: visible;
+  }
+
+  #printable-print-target {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+}

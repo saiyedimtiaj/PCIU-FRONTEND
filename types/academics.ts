@@ -1,3 +1,22 @@
+export interface AcademicFaculty {
+  id: number;
+  name: string;
+  slug: string;
+  about: string;
+  dean?: {
+    id: number;
+    name: string;
+    designation: string;
+    imageUrl: string;
+  };
+  departments: {
+    id: number;
+    name: string;
+    shortName: string;
+    slug: string;
+  }[];
+}
+
 export interface Exam {
   id: number;
   name: string;
@@ -11,7 +30,8 @@ export interface ExamRoutine {
   id: number;
   examId: number;
   department: string;
-  course: string;
+  courseName: string;
+  courseCode: string;
   building: string;
   room: string;
   timeSlot: string;
@@ -29,7 +49,8 @@ export interface ClassTimeSlot {
 export interface ClassRoutineItem {
   id: number;
   department: string;
-  course: string;
+  courseName: string;
+  courseCode: string;
   teacher: string;
   building: string;
   room: string;
