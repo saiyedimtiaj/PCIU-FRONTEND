@@ -1,290 +1,340 @@
 import Link from "next/link";
-import { GraduationCap, Mail, Phone, MapPin, Clock, Users, Award, BookOpen, ChevronRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {
+  GraduationCap,
+  Mail,
+  Phone,
+  MapPin,
+  User,
+  ChevronRight,
+  FileText,
+  Download,
+  BookOpen,
+  Award,
+  ExternalLink,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { iconMap } from "@/lib/icons";
 import type { DepartmentContent } from "@/types/department";
 
-export default function DepartmentTemplate({ content }: { content: DepartmentContent }) {
+export default function DepartmentTemplate({
+  content,
+}: {
+  content: DepartmentContent;
+}) {
+  // Derive stat numbers for the stats bar
+  const graduatesCount =
+    content.stats?.find((s) => s.label.toLowerCase().includes("graduate"))
+      ?.value || "500+";
+  const facultyCount =
+    content.facultyMembers.length > 0
+      ? content.facultyMembers.length.toString()
+      : "10";
+  const programsCount =
+    content.programs.length > 0 ? content.programs.length.toString() : "10";
+  const publicationsCount =
+    content.researchAreas.length > 0
+      ? content.researchAreas.length.toString() + "+"
+      : "20+";
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50/50">
       {/* Hero */}
-      <section className="bg-primary py-16">
-        <div className="container mx-auto px-4 text-center">
-          <span className="inline-block bg-accent/20 text-accent text-xs font-bold uppercase tracking-wide px-4 py-1.5 rounded-full mb-4">
-            {content.hero.badge}
-          </span>
-          <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-primary-foreground mb-4">
-            {content.hero.title}
-          </h1>
-          <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-            {content.hero.subtitle}
-          </p>
-          {content.hero.buttonText && content.hero.buttonLink && (
-            <Button
-              variant="highlight"
-              size="cta"
-              className="mt-6"
-              render={<Link href={content.hero.buttonLink} />}
-              nativeButton={false}
-            >
-              {content.hero.buttonText}
-            </Button>
-          )}
+      <section className="relative bg-[#2B355A] py-16 md:py-24 overflow-hidden">
+        <div className="container relative z-10 mx-auto px-4">
+          <div className="max-w-3xl">
+            <span className="inline-block bg-[#0ea5e9] text-white text-xs font-bold px-3 py-1 rounded-full mb-6">
+              {content.hero.badge}
+            </span>
+            <h1 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4 leading-tight">
+              {content.hero.title}
+            </h1>
+            <p className="text-white/90 text-lg md:text-xl mb-8">
+              {content.hero.subtitle}
+            </p>
+            <div className="flex flex-wrap items-center gap-4">
+              <Button
+                className="bg-[#0ea5e9] hover:bg-[#0284c7] text-white border-0 h-12 px-8 rounded-md font-semibold text-base"
+                render={<Link href={content.hero.buttonLink || "#"} />}
+                nativeButton={false}
+              >
+                Apply Now
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-12">
+      {/* Stats Bar */}
+      <div className="bg-white border-b shadow-sm">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-100">
+            <div className="text-center px-4">
+              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
+                {graduatesCount}
+              </p>
+              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
+                Graduates
+              </p>
+            </div>
+            <div className="text-center px-4">
+              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
+                {facultyCount}
+              </p>
+              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
+                Faculty Members
+              </p>
+            </div>
+            <div className="text-center px-4">
+              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
+                {programsCount}
+              </p>
+              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
+                Programs Offered
+              </p>
+            </div>
+            <div className="text-center px-4">
+              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
+                {publicationsCount}
+              </p>
+              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
+                Publications
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main column */}
-          <div className="lg:col-span-2 space-y-10">
+          <div className="lg:col-span-2 space-y-16">
             {/* Overview */}
             <section>
-              <h2 className="font-heading font-bold text-xl text-foreground mb-4">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
                 Welcome to {content.hero.title}
               </h2>
-              <div
-                className={
-                  content.overview.hasImage ? "grid md:grid-cols-2 gap-6 items-center" : ""
-                }
-              >
-                <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-                  {content.overview.content.map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
-                </div>
-                {content.overview.hasImage && (
-                  <div className="rounded-2xl bg-primary/10 h-56 flex items-center justify-center">
-                    <GraduationCap className="size-16 text-primary/40" />
-                  </div>
-                )}
+              <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
+                {content.overview.content.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
               </div>
             </section>
 
             {/* Chairman message */}
             <section>
-              <h2 className="font-heading font-bold text-xl text-foreground mb-4">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
                 {content.chairmanHeading}
               </h2>
-              <Card>
-                <CardContent className="flex flex-col sm:flex-row gap-6">
-                  <div className="w-24 h-24 rounded-full bg-primary/10 text-primary font-heading font-bold text-2xl flex items-center justify-center shrink-0">
-                    {content.chairman.name.replace(/^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.)\s*/g, "")[0]}
+              <div className="flex flex-col md:flex-row gap-8">
+                <div className="shrink-0 text-center w-full md:w-48">
+                  <div className="w-full aspect-square rounded-xl bg-slate-100 border text-[#1e3a8a] font-heading font-bold flex items-center justify-center mb-4 overflow-hidden relative">
+                    <User className="w-20 h-20 text-slate-300" />
                   </div>
-                  <div>
-                    <div className="space-y-3 text-sm text-muted-foreground leading-relaxed mb-4">
-                      {content.chairman.message.map((p, i) => (
-                        <p key={i}>{p}</p>
-                      ))}
-                    </div>
-                    <p className="font-semibold text-foreground">{content.chairman.name}</p>
-                    <p className="text-xs text-muted-foreground">{content.chairman.designation}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </section>
-
-            {/* Facilities */}
-            {content.facilitiesHeading && content.facilities.length > 0 && (
-              <section>
-                <h2 className="font-heading font-bold text-xl text-foreground mb-4">
-                  {content.facilitiesHeading}
-                </h2>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {content.facilities.map((facility) => {
-                    const Icon = iconMap[facility.icon];
-                    return (
-                      <Card key={facility.name}>
-                        <CardContent className="text-center py-6">
-                          <Icon className="size-6 text-accent mx-auto mb-2" />
-                          <p className="text-xs font-medium text-foreground">{facility.name}</p>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
+                  <p className="font-bold text-[#1e3a8a]">
+                    {content.chairman.name}
+                  </p>
+                  <p className="text-sm text-[#475569]">
+                    {content.chairman.designation}
+                  </p>
                 </div>
-              </section>
-            )}
+                <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
+                  {content.chairman.message.map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </div>
+              </div>
+            </section>
 
             {/* Programs */}
             <section>
-              <h2 className="font-heading font-bold text-xl text-foreground mb-4">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
                 Programs Offered
               </h2>
-              <div className="space-y-4">
-                {content.programs.map((program) => (
-                  <Card key={program.name}>
-                    <CardContent>
-                      <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
-                        <h3 className="font-semibold text-foreground">{program.name}</h3>
-                        <Badge variant="secondary">{program.credits}</Badge>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {content.programs.length > 0 ? (
+                  content.programs.map((program) => (
+                    <div
+                      key={program.name}
+                      className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow"
+                    >
+                      <GraduationCap className="w-8 h-8 text-[#0ea5e9] mb-4" />
+                      <h3 className="font-bold text-[#1e3a8a] text-lg mb-4">
+                        {program.name}
+                      </h3>
+                      <div className="space-y-1 text-sm text-slate-500">
+                        <p>Duration: {program.duration}</p>
+                        <p>Credit Hours: {program.credits}</p>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">{program.description}</p>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Duration: {program.duration}
-                      </p>
-                      {program.concentrations.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5">
-                          {program.concentrations.map((c) => (
-                            <Badge key={c} variant="outline">
-                              {c}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
+                    </div>
+                  ))
+                ) : (
+                  <div className="sm:col-span-2 bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 italic">
+                    No programs currently available.
+                  </div>
+                )}
               </div>
             </section>
 
             {/* Faculty members */}
             <section>
-              <h2 className="font-heading font-bold text-xl text-foreground mb-4 flex items-center justify-between">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
                 Faculty Members
-                <Button
-                  variant="ghostAccent"
-                  size="sm"
-                  render={<Link href={`/faculty?department=${encodeURIComponent(content.facultyQueryParam)}`} />}
-                  nativeButton={false}
-                >
-                  View All
-                  <ChevronRight className="size-4" />
-                </Button>
               </h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {content.facultyMembers.map((member) => (
-                  <Card key={member.name}>
-                    <CardContent className="text-center py-6">
-                      <div className="w-14 h-14 rounded-full bg-primary/10 text-primary font-heading font-bold flex items-center justify-center mx-auto mb-3">
-                        {member.name.replace(/^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.)\s*/g, "")[0]}
+              <div className="grid sm:grid-cols-2 gap-4">
+                {content.facultyMembers.length > 0 ? (
+                  content.facultyMembers.map((member) => (
+                    <div
+                      key={member.name}
+                      className="flex gap-4 bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition-shadow"
+                    >
+                      <div className="shrink-0 w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
+                        <User className="w-6 h-6 text-slate-400" />
                       </div>
-                      <p className="text-sm font-semibold text-foreground">{member.name}</p>
-                      <p className="text-xs text-muted-foreground">{member.designation}</p>
-                      <p className="text-xs text-accent mt-1">{member.specialization}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
-
-            {/* Research activities */}
-            <section>
-              <h2 className="font-heading font-bold text-xl text-foreground mb-4">
-                Research Activities
-              </h2>
-              <div className="space-y-4">
-                {content.researchAreas.map((area) => (
-                  <Card key={area.title}>
-                    <CardContent>
-                      <h3 className="font-semibold text-foreground text-sm mb-1">{area.title}</h3>
-                      <p className="text-xs text-accent mb-2">{area.author}</p>
-                      <p className="text-sm text-muted-foreground">{area.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              {content.industryPartners && content.industryPartners.length > 0 && (
-                <Card className="mt-4">
-                  <CardContent>
-                    <h3 className="font-semibold text-foreground text-sm mb-3">
-                      Industry Partnerships
-                    </h3>
-                    <div className="flex flex-wrap gap-1.5">
-                      {content.industryPartners.map((partner) => (
-                        <Badge key={partner} variant="secondary">
-                          {partner}
-                        </Badge>
-                      ))}
+                      <div>
+                        <h3 className="font-bold text-[#1e3a8a] text-[15px] leading-tight mb-1">
+                          {member.name}
+                        </h3>
+                        <p className="text-sm text-slate-600 mb-1">
+                          {member.designation}
+                        </p>
+                        {member.specialization && (
+                          <p className="text-xs text-[#0ea5e9] mb-2">
+                            {member.specialization}
+                          </p>
+                        )}
+                        <Link
+                          href={`/faculty?department=${encodeURIComponent(content.facultyQueryParam)}`}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#0ea5e9] hover:text-[#0284c7] transition-colors"
+                        >
+                          View Profile <ExternalLink className="w-3 h-3" />
+                        </Link>
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                  ))
+                ) : (
+                  <div className="sm:col-span-2 bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 italic">
+                    No faculty members currently available.
+                  </div>
+                )}
+              </div>
             </section>
           </div>
 
           {/* Sidebar */}
           <aside className="space-y-6">
-            <Card className="bg-primary text-primary-foreground">
-              <CardContent>
-                <h3 className="font-heading font-bold mb-4">Latest Notices</h3>
-                <ul className="space-y-3">
-                  {content.notices.map((notice) => (
-                    <li key={notice.title} className="border-l-2 border-accent pl-3">
-                      <p className="text-sm">{notice.title}</p>
-                      <p className="text-xs text-primary-foreground/60">{notice.date}</p>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent>
-                <h3 className="font-heading font-bold text-foreground mb-4 pb-2 border-b-2 border-accent inline-block">
-                  Quick Links
+            {/* Notices */}
+            <div className="bg-[#1e293b] rounded-xl overflow-hidden shadow-sm">
+              <div className="p-5 border-b border-slate-700/50 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-white" />
+                <h3 className="font-bold text-white uppercase tracking-wide">
+                  Latest Notices
                 </h3>
-                <ul className="space-y-2">
+              </div>
+              <div className="p-0">
+                {content.notices.length > 0 ? (
+                  <div className="divide-y divide-slate-700/50">
+                    {content.notices.map((notice) => (
+                      <div
+                        key={notice.title}
+                        className="p-5 hover:bg-slate-800/50 transition-colors"
+                      >
+                        <p className="text-sm font-medium text-white mb-2 leading-snug">
+                          {notice.title}
+                        </p>
+                        <p className="text-xs text-slate-400 mb-3">
+                          {notice.date}
+                        </p>
+                        <button className="inline-flex items-center gap-1 text-xs font-semibold text-[#0ea5e9] hover:text-white transition-colors">
+                          <Download className="w-3 h-3" /> Download
+                        </button>
+                      </div>
+                    ))}
+                    <div className="p-5">
+                      <Link
+                        href="#"
+                        className="text-sm text-slate-300 hover:text-white flex items-center gap-1"
+                      >
+                        View all notices <ChevronRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-400 italic text-sm">
+                    No recent notices.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div className="bg-[#0ea5e9] rounded-xl overflow-hidden shadow-sm text-white">
+              <div className="p-5 flex items-center gap-2">
+                <BookOpen className="w-5 h-5" />
+                <h3 className="font-bold text-lg">Quick Links</h3>
+              </div>
+              <div className="px-5 pb-5">
+                <ul className="space-y-3">
                   {content.quickLinks.map((link) => (
                     <li key={link.label}>
                       <Link
                         href={link.url}
-                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                        className="text-sm text-white/90 hover:text-white hover:pl-1 transition-all flex items-center gap-2"
                       >
+                        <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
                         {link.label}
                       </Link>
                     </li>
                   ))}
                 </ul>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card>
-              <CardContent>
-                <h3 className="font-heading font-bold text-foreground mb-4 pb-2 border-b-2 border-secondary inline-block">
-                  Contact Us
-                </h3>
-                <div className="space-y-3 text-sm">
-                  <p className="flex items-start gap-2 text-muted-foreground">
-                    <MapPin className="size-4 shrink-0 mt-0.5" />
-                    <span className="whitespace-pre-line">{content.contact.address}</span>
-                  </p>
-                  <p className="flex items-center gap-2 text-muted-foreground">
-                    <Phone className="size-4 shrink-0" />
-                    {content.contact.phone}
-                  </p>
-                  <p className="flex items-center gap-2 text-muted-foreground">
-                    <Mail className="size-4 shrink-0" />
-                    {content.contact.email}
-                  </p>
-                  <p className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="size-4 shrink-0" />
-                    {content.contact.hours}
-                  </p>
+            {/* Contact Us */}
+            <div className="bg-[#1e40af] rounded-xl p-6 shadow-sm text-white">
+              <h3 className="font-bold text-xl mb-6">Contact Us</h3>
+              <div className="space-y-5 text-sm">
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 shrink-0 text-blue-200" />
+                  <div>
+                    <p className="font-medium text-blue-100 mb-1">
+                      {content.hero.title}
+                    </p>
+                    <p className="text-blue-200 leading-relaxed whitespace-pre-line">
+                      {content.contact.address}
+                    </p>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 shrink-0 text-blue-200" />
+                  <p className="text-blue-200">{content.contact.phone}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Mail className="w-5 h-5 shrink-0 text-blue-200" />
+                  <p className="text-blue-200">{content.contact.email}</p>
+                </div>
+              </div>
+            </div>
 
-            <Card>
-              <CardContent>
-                <h3 className="font-heading font-bold text-foreground mb-4">Achievements</h3>
-                <div className="grid grid-cols-3 gap-2">
-                  {content.achievements.map((achievement, i) => {
-                    const Icon = [Users, Award, BookOpen][i % 3];
-                    return (
-                      <div key={achievement.label} className="text-center">
-                        <Icon className="size-5 text-accent mx-auto mb-1" />
-                        <p className="font-heading font-bold text-foreground">
-                          {achievement.value}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground">{achievement.label}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+            {/* Achievements */}
+            <div className="bg-white border rounded-xl p-6 shadow-sm">
+              <h3 className="font-bold text-lg text-[#1e3a8a] mb-5 flex items-center gap-2">
+                <Award className="w-5 h-5 text-[#0ea5e9]" /> Achievements
+              </h3>
+              <div className="space-y-4">
+                {content.achievements.map((achievement) => (
+                  <div
+                    key={achievement.label}
+                    className="bg-slate-50 rounded-xl p-5 text-center border border-slate-100"
+                  >
+                    <p className="text-3xl font-bold text-[#0ea5e9] mb-1">
+                      {achievement.value}
+                    </p>
+                    <p className="text-sm font-medium text-slate-600">
+                      {achievement.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </aside>
         </div>
       </div>

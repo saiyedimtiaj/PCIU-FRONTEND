@@ -1,3 +1,22 @@
+export interface AcademicFaculty {
+  id: number;
+  name: string;
+  slug: string;
+  about: string;
+  dean?: {
+    id: number;
+    name: string;
+    designation: string;
+    imageUrl: string;
+  };
+  departments: {
+    id: number;
+    name: string;
+    shortName: string;
+    slug: string;
+  }[];
+}
+
 export interface Exam {
   id: number;
   name: string;
