@@ -24,19 +24,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ExamRoutine } from "@/types/academics";
 import {
   downloadRoutinePdf,
+  downloadRoutineGridPdf,
   filenameSegment,
   batchFilenamePart,
   sectionFilenamePart,
+  type RoutineGridRow,
 } from "@/lib/academics/export-pdf";
 import { timeRangeSortKey } from "@/lib/academics/time-sort";
+import { formatIsoDate, courseLabel } from "@/lib/academics/routine-grid";
+import ExamScheduleGrid from "./ExamScheduleGrid";
 
 const DEFAULT_FILTER = { department: "Department", batch: "Batch", section: "Section" };
-
-function courseLabel(r: ExamRoutine): string {
-  return r.courseCode && r.courseName
-    ? `${r.courseCode} – ${r.courseName}`
-    : r.courseCode || r.courseName;
-}
 
 function uniqueSorted(values: string[]): string[] {
   return Array.from(new Set(values.filter(Boolean))).sort();
@@ -129,6 +127,12 @@ export default function ExamRoutineInteractive({
     );
   }, [examRoutines, departmentFilter, batchFilter, sectionFilter, searchQuery, dateFilter]);
 
+  const showGrid =
+    departmentFilter !== DEFAULT_FILTER.department &&
+    batchFilter !== DEFAULT_FILTER.batch &&
+    sectionFilter !== DEFAULT_FILTER.section &&
+    searchQuery.trim() === "";
+
   if (examRoutines.length === 0) {
     return (
       <Card className="shadow-none border border-border/50">
@@ -146,14 +150,40 @@ export default function ExamRoutineInteractive({
       sectionFilter !== DEFAULT_FILTER.section ? sectionFilenamePart(sectionFilter) : null,
     ].filter((v): v is string => Boolean(v));
 
+    const filters = {
+      department: departmentFilter !== DEFAULT_FILTER.department ? departmentFilter : undefined,
+      batch: batchFilter !== DEFAULT_FILTER.batch ? batchFilter : undefined,
+      section: sectionFilter !== DEFAULT_FILTER.section ? sectionFilter : undefined,
+    };
+    const filename = `${(parts.length ? parts : ["All"]).join("_")}_Exam_Routine.pdf`;
+
+    if (showGrid) {
+      const sorted = [...filteredRoutines].sort(
+        (a, b) =>
+          a.date.localeCompare(b.date) || timeRangeSortKey(a.timeSlot) - timeRangeSortKey(b.timeSlot),
+      );
+      const rows: RoutineGridRow[] = sorted.map((r) => ({
+        label: formatIsoDate(r.date),
+        cells: [r.timeSlot, courseLabel(r), [r.room, r.building].filter(Boolean).join(", "), r.studentRange],
+      }));
+
+      await downloadRoutineGridPdf({
+        routineType: "Exam Routine",
+        examName,
+        filters,
+        columns: ["Time", "Course", "Room", "Roll"],
+        rowLabelHeader: "Date",
+        rows,
+        emptyMessage: "No routine found for the selected filters.",
+        filename,
+      });
+      return;
+    }
+
     await downloadRoutinePdf({
       routineType: "Exam Routine",
       examName,
-      filters: {
-        department: departmentFilter !== DEFAULT_FILTER.department ? departmentFilter : undefined,
-        batch: batchFilter !== DEFAULT_FILTER.batch ? batchFilter : undefined,
-        section: sectionFilter !== DEFAULT_FILTER.section ? sectionFilter : undefined,
-      },
+      filters,
       columns: ["Date", "Time", "Course", "Dept / Batch", "Room", "Student Range"],
       rows: filteredRoutines.map((r) => [
         r.date,
@@ -164,13 +194,13 @@ export default function ExamRoutineInteractive({
         r.studentRange,
       ]),
       emptyMessage: "No routine found for the selected filters.",
-      filename: `${(parts.length ? parts : ["All"]).join("_")}_Exam_Routine.pdf`,
+      filename,
     });
   };
 
   return (
     <Card className="shadow-none border border-border/50 bg-card overflow-hidden">
-      <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3 sm:px-6">
+      <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3 sm:px-6 print:hidden">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-3">
             <CardTitle className="text-lg font-semibold">Routine Details</CardTitle>
@@ -265,46 +295,55 @@ export default function ExamRoutineInteractive({
           </div>
         </div>
       </CardHeader>
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/30 hover:bg-muted/30">
-              <TableHead className="w-30">Date</TableHead>
-              <TableHead className="w-35">Time</TableHead>
-              <TableHead>Course</TableHead>
-              <TableHead>Dept / Batch</TableHead>
-              <TableHead className="w-25">Room</TableHead>
-              <TableHead>Student Range</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredRoutines.length > 0 ? (
-              filteredRoutines.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className="font-medium whitespace-nowrap">{row.date}</TableCell>
-                  <TableCell className="text-muted-foreground whitespace-nowrap">
-                    {row.timeSlot}
-                  </TableCell>
-                  <TableCell className="max-w-50 truncate" title={courseLabel(row)}>
-                    {courseLabel(row)}
-                  </TableCell>
-                  <TableCell>
-                    {row.department} - {row.batch} ({row.section})
-                  </TableCell>
-                  <TableCell>{[row.room, row.building].filter(Boolean).join(", ")}</TableCell>
-                  <TableCell className="text-muted-foreground">{row.studentRange}</TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                  No routines found matching your filters.
-                </TableCell>
+      {showGrid ? (
+        <ExamScheduleGrid
+          routines={filteredRoutines}
+          department={departmentFilter}
+          batch={batchFilter}
+          section={sectionFilter}
+        />
+      ) : (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/30 hover:bg-muted/30">
+                <TableHead className="w-30">Date</TableHead>
+                <TableHead className="w-35">Time</TableHead>
+                <TableHead>Course</TableHead>
+                <TableHead>Dept / Batch</TableHead>
+                <TableHead className="w-25">Room</TableHead>
+                <TableHead>Student Range</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {filteredRoutines.length > 0 ? (
+                filteredRoutines.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell className="font-medium whitespace-nowrap">{row.date}</TableCell>
+                    <TableCell className="text-muted-foreground whitespace-nowrap">
+                      {row.timeSlot}
+                    </TableCell>
+                    <TableCell className="max-w-50 truncate" title={courseLabel(row)}>
+                      {courseLabel(row)}
+                    </TableCell>
+                    <TableCell>
+                      {row.department} - {row.batch} ({row.section})
+                    </TableCell>
+                    <TableCell>{[row.room, row.building].filter(Boolean).join(", ")}</TableCell>
+                    <TableCell className="text-muted-foreground">{row.studentRange}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                    No routines found matching your filters.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </Card>
   );
 }

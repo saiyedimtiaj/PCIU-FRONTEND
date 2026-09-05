@@ -23,20 +23,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ClassRoutineItem, ClassTimeSlot } from "@/types/academics";
 import {
   downloadRoutinePdf,
+  downloadRoutineGridPdf,
   filenameSegment,
   batchFilenamePart,
   sectionFilenamePart,
+  type RoutineGridRow,
 } from "@/lib/academics/export-pdf";
 import { timeRangeSortKey } from "@/lib/academics/time-sort";
+import {
+  CLASS_DAYS,
+  buildClassGridColumns,
+  classCellText,
+  courseLabel,
+} from "@/lib/academics/routine-grid";
+import ClassScheduleGrid from "./ClassScheduleGrid";
 
 const DEFAULT_FILTER = { department: "Department", batch: "Batch", section: "Section" };
 const DAY_ORDER = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"];
-
-function courseLabel(r: ClassRoutineItem): string {
-  return r.courseCode && r.courseName
-    ? `${r.courseCode} – ${r.courseName}`
-    : r.courseCode || r.courseName;
-}
 
 function uniqueSorted(values: string[]): string[] {
   return Array.from(new Set(values.filter(Boolean))).sort();
@@ -114,6 +117,12 @@ export default function ClassRoutineInteractive({
     );
   }, [routines, departmentFilter, batchFilter, sectionFilter, searchQuery]);
 
+  const showGrid =
+    departmentFilter !== DEFAULT_FILTER.department &&
+    batchFilter !== DEFAULT_FILTER.batch &&
+    sectionFilter !== DEFAULT_FILTER.section &&
+    searchQuery.trim() === "";
+
   if (routines.length === 0) {
     return (
       <Card className="shadow-none border border-border/50">
@@ -131,13 +140,44 @@ export default function ClassRoutineInteractive({
       sectionFilter !== DEFAULT_FILTER.section ? sectionFilenamePart(sectionFilter) : null,
     ].filter((v): v is string => Boolean(v));
 
+    const filters = {
+      department: departmentFilter !== DEFAULT_FILTER.department ? departmentFilter : undefined,
+      batch: batchFilter !== DEFAULT_FILTER.batch ? batchFilter : undefined,
+      section: sectionFilter !== DEFAULT_FILTER.section ? sectionFilter : undefined,
+    };
+    const filename = `${(filenameParts.length ? filenameParts : ["All"]).join("_")}_Class_Routine.pdf`;
+
+    if (showGrid) {
+      const columns = buildClassGridColumns(filteredRoutines, timeSlots);
+      const rows: RoutineGridRow[] = CLASS_DAYS.map(({ key, label }) => {
+        const dayRows = filteredRoutines.filter((r) => r.day.toLowerCase() === key);
+        if (dayRows.length === 0) return { label, isOff: true };
+        return {
+          label,
+          cells: columns.map((col) =>
+            dayRows
+              .filter((r) => r.timeSlot === col)
+              .map(classCellText)
+              .join("\n\n"),
+          ),
+        };
+      });
+
+      await downloadRoutineGridPdf({
+        routineType: "Class Routine",
+        filters,
+        columns,
+        rowLabelHeader: "Day",
+        rows,
+        emptyMessage: "No classes scheduled for the selected filters.",
+        filename,
+      });
+      return;
+    }
+
     await downloadRoutinePdf({
       routineType: "Class Routine",
-      filters: {
-        department: departmentFilter !== DEFAULT_FILTER.department ? departmentFilter : undefined,
-        batch: batchFilter !== DEFAULT_FILTER.batch ? batchFilter : undefined,
-        section: sectionFilter !== DEFAULT_FILTER.section ? sectionFilter : undefined,
-      },
+      filters,
       columns: ["Day", "Time", "Course", "Teacher", "Dept / Batch", "Room", "Student Range"],
       rows: filteredRoutines.map((r) => [
         r.day,
@@ -149,13 +189,13 @@ export default function ClassRoutineInteractive({
         r.studentRange,
       ]),
       emptyMessage: "No classes scheduled for the selected filters.",
-      filename: `${(filenameParts.length ? filenameParts : ["All"]).join("_")}_Class_Routine.pdf`,
+      filename,
     });
   };
 
   return (
     <Card className="shadow-none border border-border/50 bg-card overflow-hidden">
-      <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3 sm:px-6">
+      <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3 sm:px-6 print:hidden">
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between gap-3">
             <CardTitle className="text-lg font-semibold">Routine Details</CardTitle>
@@ -242,48 +282,58 @@ export default function ClassRoutineInteractive({
           </div>
         </div>
       </CardHeader>
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/30 hover:bg-muted/30">
-              <TableHead className="w-25">Day</TableHead>
-              <TableHead className="w-35">Time</TableHead>
-              <TableHead>Course</TableHead>
-              <TableHead>Teacher</TableHead>
-              <TableHead>Dept / Batch</TableHead>
-              <TableHead className="w-25">Room</TableHead>
-              <TableHead>Student Range</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredRoutines.length > 0 ? (
-              filteredRoutines.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className="font-medium whitespace-nowrap">{row.day}</TableCell>
-                  <TableCell className="text-muted-foreground whitespace-nowrap">
-                    {row.timeSlot}
-                  </TableCell>
-                  <TableCell className="max-w-50 truncate" title={courseLabel(row)}>
-                    {courseLabel(row)}
-                  </TableCell>
-                  <TableCell>{row.teacher}</TableCell>
-                  <TableCell>
-                    {row.department} - {row.batch} ({row.section})
-                  </TableCell>
-                  <TableCell>{[row.room, row.building].filter(Boolean).join(", ")}</TableCell>
-                  <TableCell className="text-muted-foreground">{row.studentRange}</TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                  No classes scheduled matching your filters.
-                </TableCell>
+      {showGrid ? (
+        <ClassScheduleGrid
+          routines={filteredRoutines}
+          timeSlots={timeSlots}
+          department={departmentFilter}
+          batch={batchFilter}
+          section={sectionFilter}
+        />
+      ) : (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/30 hover:bg-muted/30">
+                <TableHead className="w-25">Day</TableHead>
+                <TableHead className="w-35">Time</TableHead>
+                <TableHead>Course</TableHead>
+                <TableHead>Teacher</TableHead>
+                <TableHead>Dept / Batch</TableHead>
+                <TableHead className="w-25">Room</TableHead>
+                <TableHead>Student Range</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {filteredRoutines.length > 0 ? (
+                filteredRoutines.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell className="font-medium whitespace-nowrap">{row.day}</TableCell>
+                    <TableCell className="text-muted-foreground whitespace-nowrap">
+                      {row.timeSlot}
+                    </TableCell>
+                    <TableCell className="max-w-50 truncate" title={courseLabel(row)}>
+                      {courseLabel(row)}
+                    </TableCell>
+                    <TableCell>{row.teacher}</TableCell>
+                    <TableCell>
+                      {row.department} - {row.batch} ({row.section})
+                    </TableCell>
+                    <TableCell>{[row.room, row.building].filter(Boolean).join(", ")}</TableCell>
+                    <TableCell className="text-muted-foreground">{row.studentRange}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                    No classes scheduled matching your filters.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      )}
       {timeSlots.length === 0 && (
         <p className="px-4 py-2 text-xs text-muted-foreground border-t border-border/50">
           Time slots are not configured yet — showing routine times as provided.

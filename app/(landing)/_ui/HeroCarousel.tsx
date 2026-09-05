@@ -57,6 +57,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
                 priority={index === 0}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
+                unoptimized
                 className="object-cover"
               />
             ) : (

@@ -27,6 +27,16 @@ const BADGE_BG = { r: 238, g: 242, b: 255 };
 const BADGE_BORDER = { r: 199, g: 210, b: 254 };
 const BADGE_TEXT = { r: 55, g: 48, b: 163 };
 const HEAD_FILL = { r: 30, g: 41, b: 90 };
+const DAY_OFF_FILL = { r: 241, g: 245, b: 249 };
+
+/** Grid-export palette — matches RoutineInfoBar / ClassScheduleGrid /
+ *  ExamScheduleGrid's on-screen hex values exactly, so the downloaded PDF
+ *  looks like the same document as what's on screen, not the older flat
+ *  list's separate color scheme. */
+const GRID_INK = { r: 13, g: 43, b: 69 }; // #0D2B45
+const GRID_ACCENT = { r: 5, g: 150, b: 105 }; // #059669
+const GRID_BAND = { r: 246, g: 250, b: 255 }; // #F6FAFF
+const GRID_HEADER_HEIGHT = 40;
 
 /** Loads the site's real logo (used already in Navbar/AdminSidebar/AuthShell)
  *  as a data URL for jsPDF.addImage — fetched client-side since PDF export
@@ -223,6 +233,163 @@ export async function downloadRoutinePdf(options: {
     // column header row on each page by default (showHead: "everyPage").
     willDrawPage: () => {
       drawHeader(doc, routineType, examName, filters, logoDataUrl);
+    },
+  });
+
+  doc.save(filename);
+}
+
+/**
+ * Header for the grid-style export — a light-blue band with a centered logo,
+ * title, and a "Program: X   Section: Y   Batch: Z" line, mirroring
+ * RoutineInfoBar's on-screen layout (and its exact hex colors) instead of
+ * downloadRoutinePdf's older centered-title + filter-badge-pills header.
+ */
+function drawGridHeader(
+  doc: jsPDF,
+  routineType: string,
+  filters: RoutinePdfFilters,
+  logoDataUrl: string | null,
+): void {
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  doc.setFillColor(GRID_BAND.r, GRID_BAND.g, GRID_BAND.b);
+  doc.rect(0, 0, pageWidth, GRID_HEADER_HEIGHT, "F");
+
+  let y = 8;
+  if (logoDataUrl) {
+    doc.addImage(
+      logoDataUrl,
+      "PNG",
+      (pageWidth - LOGO_WIDTH_MM) / 2,
+      y,
+      LOGO_WIDTH_MM,
+      LOGO_HEIGHT_MM,
+      undefined,
+      "FAST",
+    );
+    y += LOGO_HEIGHT_MM + 3;
+  }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(GRID_INK.r, GRID_INK.g, GRID_INK.b);
+  doc.text(routineType, pageWidth / 2, y, { align: "center" });
+  y += 7;
+
+  const segments = [
+    filters.department ? `Program: ${filters.department}` : null,
+    filters.section ? `Section: ${filters.section}` : null,
+    filters.batch ? `Batch: ${filters.batch}` : null,
+  ].filter((s): s is string => Boolean(s));
+
+  if (segments.length > 0) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(segments.join("      "), pageWidth / 2, y, { align: "center" });
+  }
+
+  doc.setTextColor(0, 0, 0);
+}
+
+export interface RoutineGridRow {
+  /** Left column value — a day name for Class Routine, a date for Exam Routine. */
+  label: string;
+  /** When true, renders as a single merged "DAY OFF" band instead of per-column cells
+   *  (only meaningful for Class Routine, where every weekday is a known, fixed row). */
+  isOff?: boolean;
+  /** Cell text per column, aligned by index; a blank slot is just an empty string. */
+  cells?: string[];
+}
+
+/**
+ * Grid-style export used once a routine is narrowed to a single Department +
+ * Batch + Section — mirrors the on-screen ClassScheduleGrid/ExamScheduleGrid
+ * (Day or Date rows × time-slot columns) instead of the flat per-record list
+ * downloadRoutinePdf produces. Rendered landscape since a real timetable is
+ * wider than it is tall once every time slot gets its own column.
+ */
+export async function downloadRoutineGridPdf(options: {
+  /** e.g. "Class Routine" / "Exam Routine" — printed as the centered title. */
+  routineType: string;
+  /** Exam Routine only — shown as a subtitle under the title. */
+  examName?: string;
+  filters: RoutinePdfFilters;
+  /** Time-slot column headers, already in chronological order. */
+  columns: string[];
+  /** Header label for the left-hand row column ("Day" or "Date"). */
+  rowLabelHeader: string;
+  rows: RoutineGridRow[];
+  emptyMessage?: string;
+  filename: string;
+}): Promise<void> {
+  const { routineType, filters, columns, rowLabelHeader, rows, emptyMessage, filename } = options;
+
+  const [doc, logoDataUrl] = await Promise.all([
+    Promise.resolve(
+      new jsPDF({ unit: "mm", format: "a4", orientation: "landscape" }) as DocWithAutoTable,
+    ),
+    loadLogoDataUrl(),
+  ]);
+
+  const contentStartY = GRID_HEADER_HEIGHT + 6;
+  drawGridHeader(doc, routineType, filters, logoDataUrl);
+
+  if (rows.length === 0) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(MUTED.r, MUTED.g, MUTED.b);
+    doc.text(
+      emptyMessage ?? "No routine found for the selected filters.",
+      doc.internal.pageSize.getWidth() / 2,
+      contentStartY,
+      { align: "center" },
+    );
+    doc.setTextColor(0, 0, 0);
+    doc.save(filename);
+    return;
+  }
+
+  const roomColumnIndex = columns.findIndex((c) => c.toLowerCase() === "room");
+
+  const body = rows.map((row) => {
+    if (row.isOff) {
+      return [
+        row.label,
+        {
+          content: "DAY OFF",
+          colSpan: columns.length,
+          styles: {
+            halign: "center" as const,
+            fillColor: [DAY_OFF_FILL.r, DAY_OFF_FILL.g, DAY_OFF_FILL.b] as [number, number, number],
+            textColor: [MUTED.r, MUTED.g, MUTED.b] as [number, number, number],
+            fontStyle: "bold" as const,
+          },
+        },
+      ];
+    }
+    return [row.label, ...columns.map((_, i) => row.cells?.[i] || "")];
+  });
+
+  autoTable(doc, {
+    startY: contentStartY,
+    head: [[rowLabelHeader, ...columns]],
+    body,
+    styles: { fontSize: 8, cellPadding: 2.5, valign: "top" },
+    headStyles: { fillColor: [GRID_INK.r, GRID_INK.g, GRID_INK.b], textColor: 255 },
+    alternateRowStyles: { fillColor: [GRID_BAND.r, GRID_BAND.g, GRID_BAND.b] },
+    margin: { top: contentStartY, left: PAGE_MARGIN, right: PAGE_MARGIN },
+    // Column 0 is the row label (Day/Date); a data column's index in the
+    // table is offset by one from its index in `columns`.
+    didParseCell: (data) => {
+      if (roomColumnIndex !== -1 && data.section === "body" && data.column.index === roomColumnIndex + 1) {
+        data.cell.styles.textColor = [GRID_ACCENT.r, GRID_ACCENT.g, GRID_ACCENT.b];
+        data.cell.styles.fontStyle = "bold";
+      }
+    },
+    // Repeats the light-blue header band on every page this table spans.
+    willDrawPage: () => {
+      drawGridHeader(doc, routineType, filters, logoDataUrl);
     },
   });
 
