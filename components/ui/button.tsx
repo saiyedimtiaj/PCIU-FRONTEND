@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-offset-2 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -23,8 +23,9 @@ const buttonVariants = cva(
         // PCIU brand variants — replace ad-hoc className color overrides
         // used throughout the marketing sections.
         highlight:
-          "bg-highlight text-highlight-foreground hover:bg-highlight/90",
-        accent: "bg-accent text-accent-foreground hover:bg-accent/90",
+          "bg-highlight text-black shadow-sm hover:-translate-y-0.5 hover:bg-highlight-hover hover:shadow-md",
+        accent:
+          "bg-accent text-black shadow-sm hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-md",
         outlineAccent:
           "border-accent text-accent bg-transparent hover:bg-accent hover:text-accent-foreground",
         outlineSecondary:
@@ -58,7 +59,7 @@ const buttonVariants = cva(
         "icon-lg": "size-9",
         // Larger marketing CTA size — source hero/section CTAs use h-11,
         // taller than this scaffold's stock `lg` (h-9).
-        cta: "h-11 gap-2 rounded-lg px-8 text-base font-semibold has-data-[icon=inline-end]:pr-6 has-data-[icon=inline-start]:pl-6",
+        cta: "h-10 gap-1.5 rounded-lg px-6 text-sm font-semibold has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5",
         // Admin dashboard's default button size (36px). Used explicitly by
         // admin components rather than changing the shared `default` —
         // the public site has 30+ unsized <Button> call sites that would
