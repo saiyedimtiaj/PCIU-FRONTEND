@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { Building2 } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -11,11 +12,22 @@ const departmentSchema = z.object({
   title: z.string().max(255).optional().or(z.literal("")),
   subtitle: z.string().max(255).optional().or(z.literal("")),
   phone: z.string().max(255).optional().or(z.literal("")),
-  email: z.string().email("Must be a valid email").optional().or(z.literal("")),
-  image: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  email: z.email("Must be a valid email").optional().or(z.literal("")),
+  image: optionalUpload,
   office_location: z.string().max(255).optional().or(z.literal("")),
+  graduate: z.coerce.number().int().nonnegative().optional(),
+  number_of_research: z.coerce.number().int().nonnegative().optional(),
+  number_of_partner: z.coerce.number().int().nonnegative().optional(),
+  current_student: z.coerce.number().int().nonnegative().optional(),
   description: z.string().optional().or(z.literal("")),
-  quick_link: z.array(z.string()).default([]),
+  quick_link: z
+    .array(
+      z.object({
+        title: z.string().min(1, "Title is required"),
+        url: z.url("Must be a valid URL"),
+      }),
+    )
+    .default([]),
   status: z.boolean().default(true),
 });
 
@@ -31,8 +43,19 @@ export const departmentEntity: EntitySchema<typeof departmentSchema> = {
     {
       title: "Identity",
       fields: [
-        { name: "name", label: "Department Name", type: "text", required: true, colSpan: 2 },
-        { name: "short_name", label: "Short Name", type: "text", placeholder: "CSE" },
+        {
+          name: "name",
+          label: "Department Name",
+          type: "text",
+          required: true,
+          colSpan: 2,
+        },
+        {
+          name: "short_name",
+          label: "Short Name",
+          type: "text",
+          placeholder: "CSE",
+        },
         { name: "slug", label: "Slug", type: "text", required: true },
         {
           name: "faculty_id",
@@ -43,28 +66,70 @@ export const departmentEntity: EntitySchema<typeof departmentSchema> = {
           options: [
             { label: "Faculty of Science and Engineering", value: "1" },
             { label: "Faculty of Business Studies", value: "2" },
-            { label: "Faculty of Humanities, Social Sciences & Law", value: "3" },
+            {
+              label: "Faculty of Humanities, Social Sciences & Law",
+              value: "3",
+            },
           ],
         },
-        { name: "chairman_id", label: "Chairman", type: "relation", relationTo: "teacher", options: [] },
-        { name: "title", label: "Hero Title", type: "text" },
-        { name: "subtitle", label: "Hero Subtitle", type: "text" },
+        {
+          name: "chairman_id",
+          label: "Chairman",
+          type: "relation",
+          relationTo: "teacher",
+          options: [],
+        },
+        { name: "title", label: "Title", type: "text" },
+        { name: "subtitle", label: "Subtitle", type: "text" },
       ],
     },
     {
       title: "Contact",
       fields: [
         { name: "phone", label: "Phone", type: "tel" },
-        { name: "email", label: "Email", type: "email" },
-        { name: "office_location", label: "Office Location", type: "text", colSpan: 2 },
+        { name: "email", label: "Email", type: "email", immutableOnEdit: true },
+        {
+          name: "office_location",
+          label: "Office Location",
+          type: "text",
+          colSpan: 2,
+        },
         { name: "image", label: "Cover Image URL", type: "image", colSpan: 2 },
       ],
     },
     {
       title: "Content",
       fields: [
-        { name: "description", label: "Description", type: "richtext", colSpan: 2 },
-        { name: "quick_link", label: "Quick Links", type: "json-list", colSpan: 2, placeholder: "Course Curriculum" },
+        {
+          name: "description",
+          label: "Description",
+          type: "richtext",
+          colSpan: 2,
+        },
+        {
+          name: "quick_link",
+          label: "Quick Links",
+          type: "link-list",
+          colSpan: 2,
+          placeholder: "Course Curriculum",
+        },
+      ],
+    },
+    {
+      title: "Statistics",
+      fields: [
+        { name: "graduate", label: "Graduates", type: "number" },
+        {
+          name: "number_of_research",
+          label: "Number of Research",
+          type: "number",
+        },
+        {
+          name: "number_of_partner",
+          label: "Number of Partners",
+          type: "number",
+        },
+        { name: "current_student", label: "Current Students", type: "number" },
       ],
     },
     {

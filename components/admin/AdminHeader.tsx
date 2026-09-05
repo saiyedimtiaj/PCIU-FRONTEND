@@ -15,6 +15,8 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/pages": "Pages",
   "/admin/faculty": "Faculty Directory",
   "/admin/settings": "Settings",
+  "/admin/system/permissions": "Permissions",
+  "/admin/system/popup": "Popup",
 };
 
 const FACULTY_SECTION_TITLES: Record<string, string> = {
@@ -30,11 +32,12 @@ const FACULTY_SECTION_TITLES: Record<string, string> = {
 function pageTitle(pathname: string) {
   if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname];
 
-  // "Add <Entity>" and entity listing routes are both derived from the
-  // entity registry — the single source of truth also used to generate the
-  // sidebar — so titles can't drift out of sync as entities are added. The
-  // two patterns are mutually exclusive by segment count (3 vs 2 segments
-  // after /admin), so order between them doesn't matter.
+  // "pages" is also reachable from this shorter top-level route
+  // (/admin/pages/...) alongside its regular /admin/content/pages one.
+  if (pathname === "/admin/pages/new") return "Add Page";
+  const topLevelEditMatch = pathname.match(/^\/admin\/pages\/([^/]+)\/edit$/);
+  if (topLevelEditMatch) return "Edit Page";
+
   const newMatch = pathname.match(/^\/admin\/[^/]+\/([^/]+)\/new$/)?.[1];
   if (newMatch && ENTITY_REGISTRY[newMatch]) {
     return `Add ${ENTITY_REGISTRY[newMatch].title}`;
@@ -46,10 +49,11 @@ function pageTitle(pathname: string) {
     return entity.pluralTitle ?? pluralize(entity.title);
   }
 
-  // /admin/faculty/<id> and its section sub-routes (/profile, /education,
-  // /publications, ...) — the per-teacher profile workspace. Resolved
-  // separately from the entity-registry routes above since "faculty" here
-  // is the directory listing, not an ENTITY_REGISTRY group/slug pair.
+  const editMatch = pathname.match(/^\/admin\/[^/]+\/([^/]+)\/[^/]+\/edit$/)?.[1];
+  if (editMatch && ENTITY_REGISTRY[editMatch]) {
+    return `Edit ${ENTITY_REGISTRY[editMatch].title}`;
+  }
+
   const facultyMatch = pathname.match(/^\/admin\/faculty\/([^/]+)(?:\/([^/]+))?$/);
   if (facultyMatch) {
     const [, id, section] = facultyMatch;

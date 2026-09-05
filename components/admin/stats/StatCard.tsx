@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import Sparkline from "./Sparkline";
 
 export interface StatCardProps {
@@ -12,6 +13,7 @@ export interface StatCardProps {
   delta?: { value: string; direction: "up" | "down" | "flat" };
   sparkline?: number[];
   className?: string;
+  loading?: boolean;
 }
 
 // Static Record, never a template literal — Tailwind's scanner can't see
@@ -41,8 +43,26 @@ export default function StatCard({
   delta,
   sparkline,
   className,
+  loading = false,
 }: StatCardProps) {
   const DeltaIcon = delta ? DELTA_ICON[delta.direction] : null;
+
+  if (loading) {
+    return (
+      <Card className={className} aria-busy="true">
+        <CardContent className="space-y-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-7 w-16" />
+            </div>
+            <Skeleton className="size-10 shrink-0 rounded-lg" />
+          </div>
+          <Skeleton className="h-8 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className={className}>

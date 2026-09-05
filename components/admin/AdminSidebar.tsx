@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { NAV_GROUPS, type NavGroup } from "./nav-groups";
+import { logoutAction } from "@/app/(auth)/actions";
 
 interface TopLevelItem {
   title: string;
@@ -67,28 +69,33 @@ function NavLink({
       href={href}
       onClick={onNavigate}
       className={cn(
-        "relative flex items-center gap-3 rounded-lg py-2.5 text-sm transition-colors",
-        nested ? "pl-6 pr-3 text-[0.8125rem]" : "px-3",
+        "group/link relative flex items-center gap-2.5 rounded-xl text-sm transition-all duration-150",
+        nested ? "py-2 pr-3 pl-8 text-[0.8125rem]" : "px-3 py-2.5",
         collapsed && "justify-center px-0",
         active
-          ? "bg-sidebar-primary/15 font-semibold text-sidebar-foreground"
-          : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+          ? nested
+            ? "font-medium text-sidebar-foreground"
+            : "bg-gradient-accent font-semibold text-white shadow-glow"
+          : "text-sidebar-foreground/55 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground"
       )}
     >
-      {nested && !collapsed && (
+      {nested && (
         <span
           aria-hidden
           className={cn(
-            "absolute left-3 top-1/2 size-1 -translate-y-1/2 rounded-full transition-colors",
-            active ? "bg-sidebar-primary" : "bg-sidebar-foreground/25"
+            "absolute left-4 top-1/2 size-1.5 -translate-y-1/2 rounded-full transition-colors",
+            active ? "bg-sidebar-primary shadow-[0_0_6px_var(--sidebar-primary)]" : "bg-sidebar-foreground/20 group-hover/link:bg-sidebar-foreground/40"
           )}
         />
       )}
-      {active && !collapsed && !nested && (
-        <span aria-hidden className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-sidebar-primary" />
-      )}
       {Icon && (
-        <Icon className={cn("size-4 shrink-0", active && "text-sidebar-primary")} />
+        <Icon
+          className={cn(
+            "size-4 shrink-0 transition-transform duration-150",
+            active && !nested && "text-white",
+            !active && "group-hover/link:scale-110"
+          )}
+        />
       )}
       {!collapsed && <span className="truncate">{title}</span>}
     </Link>
@@ -119,7 +126,6 @@ function NavGroupItem({
   const [open, setOpen] = useState(active);
   const Icon = group.icon;
 
-  // Collapsed rail: icon-only, jumps straight to the group's first entity.
   if (collapsed) {
     const firstHref = group.items[0]?.href ?? "/admin";
     return (
@@ -130,10 +136,10 @@ function NavGroupItem({
               href={firstHref}
               onClick={onNavigate}
               className={cn(
-                "flex items-center justify-center rounded-lg px-0 py-2.5 text-sm transition-colors",
+                "flex items-center justify-center rounded-xl px-0 py-2.5 text-sm transition-all",
                 active
-                  ? "bg-sidebar-primary/15 text-sidebar-primary"
-                  : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+                  ? "bg-sidebar-primary/20 text-sidebar-primary"
+                  : "text-sidebar-foreground/55 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground"
               )}
             />
           }
@@ -149,35 +155,42 @@ function NavGroupItem({
     <Collapsible.Root open={open} onOpenChange={setOpen}>
       <Collapsible.Trigger
         className={cn(
-          "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+          "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-sm transition-colors",
           active
-            ? "text-sidebar-foreground"
-            : "text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+            ? "bg-sidebar-accent/50 text-sidebar-foreground"
+            : "text-sidebar-foreground/45 hover:bg-sidebar-accent/40 hover:text-sidebar-foreground/80"
         )}
       >
-        <Icon className={cn("size-4 shrink-0", active && "text-sidebar-primary")} />
-        <span className="flex-1 truncate text-left text-xs font-semibold tracking-wide uppercase">
+        <span
+          className={cn(
+            "flex size-7 shrink-0 items-center justify-center rounded-lg transition-colors",
+            active ? "bg-sidebar-primary/20 text-sidebar-primary" : "bg-sidebar-foreground/6 text-sidebar-foreground/50"
+          )}
+        >
+          <Icon className="size-3.5" />
+        </span>
+        <span className="flex-1 truncate text-left text-[0.8125rem] font-medium">
           {group.title}
         </span>
         <span
           className={cn(
-            "flex size-4 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-medium tabular-nums transition-colors",
+            "flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full px-1 text-[0.625rem] font-semibold tabular-nums transition-colors",
             active
-              ? "bg-sidebar-primary/20 text-sidebar-primary"
-              : "bg-sidebar-foreground/10 text-sidebar-foreground/50"
+              ? "bg-sidebar-primary/25 text-sidebar-primary"
+              : "bg-sidebar-foreground/8 text-sidebar-foreground/40"
           )}
         >
           {group.items.length}
         </span>
         <ChevronDown
           className={cn(
-            "size-3.5 shrink-0 text-sidebar-foreground/40 transition-transform duration-200",
+            "size-3.5 shrink-0 text-sidebar-foreground/35 transition-transform duration-200",
             open && "rotate-180"
           )}
         />
       </Collapsible.Trigger>
       <Collapsible.Panel className="overflow-hidden data-ending-style:h-0 data-starting-style:h-0">
-        <div className="relative ml-[1.15rem] space-y-0.5 border-l border-sidebar-border py-1 pl-0">
+        <div className="space-y-0.5 pt-0.5 pb-1">
           {group.items.map((item) => (
             <NavLink
               key={item.href}
@@ -204,49 +217,73 @@ function SidebarBody({
   pathname: string;
   onNavigate?: () => void;
 }) {
+  const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    await logoutAction();
+    router.replace("/signin");
+    router.refresh();
+  }
+
   return (
-    <div className="flex h-full flex-col bg-sidebar">
-      {/* Logo */}
+    <div className="relative flex h-full flex-col bg-sidebar">
+      {/* Ambient glow behind the logo — purely decorative, echoes the
+          gradient-accent chips used throughout the header/cards. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-sidebar-primary/10 blur-3xl"
+      />
+
       <div
         className={cn(
-          "flex items-center gap-2.5 px-4 py-5",
+          "relative flex items-center gap-3 px-4 py-5",
           collapsed && "justify-center px-2"
         )}
       >
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-sidebar-accent ring-1 ring-sidebar-border">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-accent shadow-glow ring-1 ring-white/10">
           <Image
             src="/images/pciu-logo.png"
             alt="PCIU"
-            width={22}
-            height={22}
-            className="size-5.5 shrink-0 object-contain"
+            width={24}
+            height={24}
+            className="size-6 shrink-0 object-contain"
           />
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <p className="font-heading font-bold leading-tight text-sidebar-foreground">PCIU Admin</p>
-            <p className="text-[0.6875rem] leading-tight text-sidebar-foreground/45">Content Dashboard</p>
+            <p className="font-heading text-[0.9375rem] font-bold leading-tight text-sidebar-foreground">
+              PCIU Admin
+            </p>
+            <p className="text-[0.6875rem] font-medium leading-tight text-sidebar-foreground/40">
+              Content Dashboard
+            </p>
           </div>
         )}
       </div>
 
-      {/* Nav */}
-      <nav className="scrollbar-thin flex-1 space-y-1 overflow-y-auto px-2 pb-2">
-        {TOP_LEVEL_ITEMS.map((item) => (
-          <NavLink
-            key={item.href}
-            title={item.title}
-            href={item.href}
-            icon={item.icon}
-            active={isActive(pathname, item.href)}
-            collapsed={collapsed}
-            onNavigate={onNavigate}
-          />
-        ))}
-
-        <div className={cn("my-3 border-t border-sidebar-border", collapsed && "mx-1")} />
-
+      <nav className="scrollbar-thin relative flex-1 space-y-4 overflow-y-auto px-2.5 pb-2">
         <div className="space-y-0.5">
+          {TOP_LEVEL_ITEMS.map((item) => (
+            <NavLink
+              key={item.href}
+              title={item.title}
+              href={item.href}
+              icon={item.icon}
+              active={isActive(pathname, item.href)}
+              collapsed={collapsed}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </div>
+
+        <div className={cn("space-y-1", collapsed && "space-y-1.5")}>
+          {!collapsed && (
+            <p className="px-2.5 pb-1 text-[0.625rem] font-semibold tracking-widest text-sidebar-foreground/30 uppercase">
+              Content
+            </p>
+          )}
           {NAV_GROUPS.map((group) => (
             <NavGroupItem
               key={group.key}
@@ -259,17 +296,18 @@ function SidebarBody({
         </div>
       </nav>
 
-      {/* Footer */}
-      <div className="space-y-1 border-t border-sidebar-border px-2 py-3">
+      <div className="relative border-t border-sidebar-border/60 px-2.5 py-3">
         <button
           type="button"
+          onClick={handleSignOut}
+          disabled={signingOut}
           className={cn(
-            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+            "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/50 transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-60",
             collapsed && "justify-center px-0"
           )}
         >
           <LogOut className="size-4 shrink-0" />
-          {!collapsed && "Sign Out"}
+          {!collapsed && (signingOut ? "Signing out…" : "Sign Out")}
         </button>
       </div>
     </div>
@@ -287,7 +325,6 @@ export default function AdminSidebar({ collapsed, mobileOpen, onMobileClose }: A
 
   return (
     <TooltipProvider>
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={onMobileClose} />
@@ -310,11 +347,10 @@ export default function AdminSidebar({ collapsed, mobileOpen, onMobileClose }: A
         </div>
       )}
 
-      {/* Desktop sidebar */}
       <aside
         className={cn(
           "sticky top-0 hidden h-screen shrink-0 border-r border-sidebar-border transition-all duration-300 lg:block",
-          collapsed ? "w-[68px]" : "w-64"
+          collapsed ? "w-17" : "w-64"
         )}
       >
         <SidebarBody collapsed={collapsed} pathname={pathname} />

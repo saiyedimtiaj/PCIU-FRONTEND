@@ -22,6 +22,7 @@ export type FieldType =
   | "image"
   | "file"
   | "json-list"
+  | "link-list"
   | "relation";
 
 export interface FieldOption {
@@ -36,12 +37,10 @@ export interface FieldDescriptor {
   placeholder?: string;
   helper?: string;
   required?: boolean;
-  /** Grid span within a 2-column section. Defaults to 1. */
   colSpan?: 1 | 2;
-  /** Options for "select", "enum", and "radio" fields. */
   options?: FieldOption[];
-  /** Table name a "relation" field points to — rendered as a labelled placeholder select. */
   relationTo?: string;
+  immutableOnEdit?: boolean;
 }
 
 export interface FormSection {
@@ -51,20 +50,11 @@ export interface FormSection {
 }
 
 export interface EntitySchema<T extends z.ZodTypeAny = z.ZodTypeAny> {
-  /** URL-safe identifier, also the route segment, e.g. "teacher". */
   slug: string;
-  /** Human title, e.g. "Teacher". */
   title: string;
-  /**
-   * Plural form for listing headings, e.g. "Teachers". Falls back to
-   * naive `${title}s` when omitted — set this explicitly wherever that
-   * naive form would be wrong (title already plural, irregular plural, ...).
-   */
   pluralTitle?: string;
-  /** One-line description shown under the page heading. */
   description: string;
   icon: LucideIcon;
-  /** Sidebar/route group this entity belongs to, e.g. "People". */
   group: string;
   sections: FormSection[];
   zodSchema: T;

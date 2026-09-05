@@ -20,8 +20,6 @@ const QUICK_LINKS = [
 ];
 
 export default function AdminDashboardPage() {
-  // Server-computed so this page stays a static server component — only
-  // DashboardTabs (the interactive part) is "use client".
   const groupCounts = ENTITY_GROUP_ORDER.map((group) => ({
     group,
     segment: groupRouteSegment(group),
@@ -41,7 +39,12 @@ export default function AdminDashboardPage() {
         <div className="space-y-3 lg:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-semibold text-lg text-foreground">Recent Pages</h2>
-            <Button variant="ghostAccent" size="sm" render={<Link href="/admin/pages" />}>
+            <Button
+              variant="ghostAccent"
+              size="sm"
+              render={<Link href="/admin/pages" />}
+              nativeButton={false}
+            >
               View All
               <ArrowRight className="size-4" />
             </Button>

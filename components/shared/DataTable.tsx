@@ -100,13 +100,14 @@ function TableSkeleton<T>({
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-5 py-3.5 text-left ${col.headerClassName ?? ""} ${
+                  className={`px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground ${col.headerClassName ?? ""} ${
                     col.hideBelow ? breakpointHidden[col.hideBelow] : ""
                   }`}
                 >
-                  <Skeleton
-                    className={`h-3.5 rounded ${col.skeletonWidth ?? "w-16"}`}
-                  />
+                  {/* Headers are known before the rows arrive — showing the
+                      real labels keeps the table's shape readable while
+                      loading instead of flashing placeholder bars. */}
+                  {col.header}
                 </th>
               ))}
             </tr>
@@ -287,8 +288,8 @@ export default function DataTable<T>({
   if (!data || data.length === 0) {
     const fallback = (
       <EmptyState
-        title={`No ${entityLabel} found`}
-        description={`No ${entityLabel} have been added yet.`}
+        title={`Nothing here yet`}
+        description={`No ${entityLabel} have been added so far. Once they are, they'll appear right here.`}
         size="lg"
       />
     );

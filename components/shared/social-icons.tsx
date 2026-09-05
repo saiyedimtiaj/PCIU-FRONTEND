@@ -1,10 +1,5 @@
 import type { SVGProps } from "react";
 
-/**
- * lucide-react (this project pins ^1.31.0) no longer ships brand/social
- * logos, so the footer's social links use small inline SVGs styled to
- * match lucide's stroke icon look (24x24, currentColor, ~2px stroke).
- */
 type IconProps = SVGProps<SVGSVGElement>;
 
 const base = {
@@ -54,11 +49,6 @@ export function InstagramIcon(props: IconProps) {
   );
 }
 
-/**
- * Google's "G" mark is a filled multi-color glyph, not a stroke icon, so
- * it can't reuse `base` (which sets fill: "none"). Kept self-contained
- * with the standard four-color path data used for OAuth buttons.
- */
 export function GoogleIcon(props: IconProps) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>

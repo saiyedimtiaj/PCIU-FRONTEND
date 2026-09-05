@@ -2,7 +2,6 @@ import type { EntitySchema, FieldDescriptor } from "@/components/admin/form/form
 
 export type SampleRow = { __id: string } & Record<string, unknown>;
 
-// ---------------------------------------------------------------------------
 // Deterministic pseudo-random generation. This is design-only data — there is
 // no backend — but it must render identically on the server and the client,
 // or React throws a hydration mismatch on every one of the ~50 listing pages.
@@ -21,7 +20,6 @@ function hashString(input: string): number {
   return h >>> 0;
 }
 
-/** mulberry32 — small, fast, deterministic PRNG. */
 function mulberry32(seed: number) {
   let t = seed >>> 0;
   return function next() {
@@ -41,9 +39,6 @@ function pick<T>(items: readonly T[], ...seedParts: (string | number)[]): T {
   return items[Math.min(idx, items.length - 1)];
 }
 
-// Small curated name pools per entity group so `name`/`title` fields read as
-// plausible content instead of "Item 1", "Item 2". Not exhaustive — this is
-// sample/preview data, not a content generator.
 const GROUP_NAME_POOLS: Record<string, string[]> = {
   Academics: [
     "Computer Science and Engineering",
@@ -181,15 +176,50 @@ const FALLBACK_NAMES = [
   "Sample Record Five",
 ];
 
-// Pre-formatted date strings — never computed with toLocaleDateString() at
-// render time (that call can differ by runtime ICU data and has caused
-// hydration warnings elsewhere in this codebase before).
+// Stored as plain ISO strings (yyyy-MM-dd) — required so an edit page can
+// feed one straight into <input type="date">, and so date filtering/sorting
+// is a stable string comparison instead of the old locale-formatted
+// "03 Jan 2026" strings (alphabetical, not chronological, and rejected by
+// <input type="date">). Display formatting happens separately in
+// columns.tsx via formatSampleDate() — never toLocaleDateString() at render
+// time, since that call can differ by runtime ICU data and has caused
+// hydration warnings elsewhere in this codebase before.
 const SAMPLE_DATES = [
-  "03 Jan 2026", "11 Jan 2026", "22 Jan 2026", "05 Feb 2026", "14 Feb 2026",
-  "01 Mar 2026", "12 Mar 2026", "26 Mar 2026", "08 Apr 2026", "19 Apr 2026",
-  "02 May 2026", "15 May 2026", "27 May 2026", "09 Jun 2026", "20 Jun 2026",
-  "03 Jul 2026", "16 Jul 2026", "28 Jul 2026", "11 Aug 2026", "24 Aug 2026",
+  "2026-01-03", "2026-01-11", "2026-01-22", "2026-02-05", "2026-02-14",
+  "2026-03-01", "2026-03-12", "2026-03-26", "2026-04-08", "2026-04-19",
+  "2026-05-02", "2026-05-15", "2026-05-27", "2026-06-09", "2026-06-20",
+  "2026-07-03", "2026-07-16", "2026-07-28", "2026-08-11", "2026-08-24",
 ];
+
+const MONTH_ABBR = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+] as const;
+
+export function formatSampleDate(iso: string): string {
+  const [datePart] = iso.split("T");
+  const [year, month, day] = datePart.split("-");
+  const monthName = MONTH_ABBR[Number(month) - 1];
+  if (!year || !monthName || !day) return iso;
+  return `${day} ${monthName} ${year}`;
+}
+
+/**
+ * "1970-01-01T09:00:00.000Z" (the API's time-of-day-only storage, always
+ * anchored to the epoch date) or a plain "HH:MM" -> "9:00 AM". Pure string
+ * arithmetic — no `new Date()`/`toLocaleTimeString()` — for the same
+ * hydration-safety reason as `formatSampleDate` above.
+ */
+export function formatTimeOfDay(value: string): string {
+  const timePart = value.includes("T") ? value.split("T")[1] : value;
+  const match = timePart?.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return value;
+
+  const hour24 = Number(match[1]);
+  const minute = match[2];
+  const period = hour24 >= 12 ? "PM" : "AM";
+  const hour12 = hour24 % 12 || 12;
+  return `${hour12}:${minute} ${period}`;
+}
 
 function slugify(value: string): string {
   return value
@@ -233,8 +263,12 @@ function generateFieldValue(
     case "url":
       return `https://portcity.edu.bd/${slugify(generatedName)}`;
     case "date":
-    case "datetime":
       return pick(SAMPLE_DATES, ...seedBase);
+    case "datetime": {
+      const isoDate = pick(SAMPLE_DATES, ...seedBase);
+      const hour = String(9 + (hashString(seedBase.join("::")) % 9)).padStart(2, "0");
+      return `${isoDate}T${hour}:00`;
+    }
     case "time":
       return pick(["09:00 AM", "10:30 AM", "12:00 PM", "02:00 PM", "03:30 PM"], ...seedBase);
     case "enum":
@@ -242,8 +276,8 @@ function generateFieldValue(
     case "radio":
     case "relation":
       return field.options && field.options.length > 0
-        ? pick(field.options, ...seedBase).label
-        : "—";
+        ? pick(field.options, ...seedBase).value
+        : "";
     case "switch":
     case "checkbox":
       return seededRandom(...seedBase) > 0.3;
@@ -287,7 +321,6 @@ export function generateSampleRows(schema: EntitySchema, count?: number): Sample
   });
 }
 
-/** A short seeded number series, for dashboard sparklines. Deterministic. */
 export function generateSeries(seed: string, points = 12, min = 20, max = 100): number[] {
   return Array.from({ length: points }, (_, i) => Math.round(min + seededRandom(seed, i) * (max - min)));
 }

@@ -7,7 +7,7 @@ const iqacSchema = z.object({
   title: z.string().min(2, "Title is required").max(255),
   subtitle: z.string().max(255).optional().or(z.literal("")),
   description: z.string().optional().or(z.literal("")),
-  abount: z.string().optional().or(z.literal("")),
+  about: z.string().optional().or(z.literal("")),
   mission: z.string().optional().or(z.literal("")),
   vision: z.string().optional().or(z.literal("")),
   director_message: z.string().optional().or(z.literal("")),
@@ -35,7 +35,7 @@ export const iqacEntity: EntitySchema<typeof iqacSchema> = {
     {
       title: "Content",
       fields: [
-        { name: "abount", label: "About IQAC", type: "richtext", colSpan: 2 },
+        { name: "about", label: "About IQAC", type: "richtext", colSpan: 2 },
         { name: "mission", label: "Mission", type: "textarea", colSpan: 2 },
         { name: "vision", label: "Vision", type: "textarea", colSpan: 2 },
         { name: "director_message", label: "Director's Message", type: "richtext", colSpan: 2 },

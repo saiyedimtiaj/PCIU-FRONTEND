@@ -91,3 +91,37 @@ export interface DepartmentContent {
   achievements: DepartmentAchievement[];
   facultyQueryParam: string;
 }
+
+export interface ApiDepartmentResponse {
+  id: number;
+  facultyId: number;
+  chairmanId: number | null;
+  name: string;
+  shortName: string;
+  slug: string;
+  title: string;
+  subtitle: string;
+  phone: string;
+  email: string;
+  image: string;
+  officeLocation: string;
+  graduate: number;
+  numberOfResearch: number;
+  numberOfPartner: number;
+  currentStudent: number;
+  description: string;
+  quickLink: string[];
+  status: boolean;
+  deletedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  faculty: {
+    name: string;
+    id: number;
+  };
+  chairman: {
+    name: string;
+    designation: string;
+    message?: string[];
+  } | null;
+}

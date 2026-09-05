@@ -12,6 +12,7 @@ import type { FacultyProfile } from "@/types/faculty-directory";
 export default function FacultyTable({ profiles }: { profiles: FacultyProfile[] }) {
   const [deleteTarget, setDeleteTarget] = useState<FacultyProfile | null>(null);
   const [deleting, setDeleting] = useState(false);
+  
 
   const columns: DataTableColumn<FacultyProfile>[] = [
     {

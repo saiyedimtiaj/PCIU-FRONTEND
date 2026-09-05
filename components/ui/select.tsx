@@ -17,8 +17,8 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        "flex h-11 w-full items-center justify-between gap-2 rounded-lg border border-input bg-card px-4 py-3 text-sm text-foreground outline-none transition-colors data-popup-open:ring-2 data-popup-open:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:opacity-60",
-        className
+        "flex h-11 w-full items-center justify-between gap-2 rounded-lg border border-input bg-card px-4 py-3 text-sm text-foreground outline-none transition-colors data-popup-open:ring-2 data-popup-open:ring-ring disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:opacity-60",
+        className,
       )}
       {...props}
     >
@@ -37,12 +37,24 @@ function SelectContent({
 }: SelectPrimitive.Popup.Props) {
   return (
     <SelectPrimitive.Portal>
-      <SelectPrimitive.Positioner sideOffset={6} className="z-50">
+      <SelectPrimitive.Positioner
+        sideOffset={6}
+        className="z-50"
+        // Default collision boundary is the nearest clipping ancestor —
+        // inside a Modal that's the modal's own scrollable content div,
+        // not the viewport, so --available-height shrinks to whatever
+        // room is left in that small box and the list barely scrolls.
+        // The full document is always a safe superset of any narrower
+        // scroll container, so this is correct standalone too.
+        collisionBoundary={
+          typeof document !== "undefined" ? document.documentElement : undefined
+        }
+      >
         <SelectPrimitive.Popup
           data-slot="select-content"
           className={cn(
-            "max-h-[min(24rem,var(--available-height))] min-w-[var(--anchor-width)] overflow-y-auto rounded-lg border border-border bg-card p-1 text-foreground shadow-lg",
-            className
+            "max-h-[min(24rem,var(--available-height))] min-w-(--anchor-width) overflow-y-auto rounded-lg border border-border bg-card p-1 text-foreground shadow-lg",
+            className,
           )}
           {...props}
         >
@@ -53,13 +65,17 @@ function SelectContent({
   );
 }
 
-function SelectItem({ className, children, ...props }: SelectPrimitive.Item.Props) {
+function SelectItem({
+  className,
+  children,
+  ...props
+}: SelectPrimitive.Item.Props) {
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
         "relative flex cursor-default items-center justify-between gap-2 rounded-md px-3 py-2 text-sm outline-none select-none data-highlighted:bg-muted [&_svg]:size-4",
-        className
+        className,
       )}
       {...props}
     >

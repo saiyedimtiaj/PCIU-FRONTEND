@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { requiredUpload } from "./_upload";
 import { Image as ImageIcon } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const gallerySchema = z.object({
   title: z.string().min(2, "Title is required").max(255),
   subtitle: z.string().max(255).optional().or(z.literal("")),
-  image_url: z.string().url("Must be a valid URL"),
+  image_url: requiredUpload,
   department_id: z.string().optional().or(z.literal("")),
   event_id: z.string().optional().or(z.literal("")),
   page_id: z.string().optional().or(z.literal("")),
@@ -48,6 +49,7 @@ export const galleryEntity: EntitySchema<typeof gallerySchema> = {
           options: [{ label: "Computer Science and Engineering", value: "1" }],
         },
         { name: "event_id", label: "Related Event", type: "relation", relationTo: "events", options: [] },
+        { name: "page_id", label: "Related Page", type: "relation", relationTo: "pages", options: [{ label: "About Port City International University", value: "1" }] },
         { name: "status", label: "Active", type: "switch" },
       ],
     },
