@@ -22,6 +22,7 @@ export type FieldType =
   | "image"
   | "file"
   | "json-list"
+  | "link-list"
   | "relation";
 
 export interface FieldOption {
