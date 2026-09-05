@@ -1,6 +1,6 @@
 # PCIU Frontend
 
-Public website and design-only admin dashboard for Port City International University (PCIU), rebuilt from an older Vite + Supabase project (`PCIUWeb`, a sibling directory) as a static-first Next.js 16 site with **no backend** — no Supabase, no database, no auth provider. Content lives in JSON files; the admin dashboard is a schema-driven UI shell with no persistence.
+Public website, admin dashboard, and teacher self-service portal for Port City International University (PCIU), rebuilt from an older Vite + Supabase project (`PCIUWeb`, a sibling directory) as a Next.js 16 site. **There is no Supabase and no database client in this repo** — but there IS a live backend: a separate-origin REST API (`NEXT_PUBLIC_BACKEND_BASE_URL`, see `config/env.config.ts`) that the admin dashboard's connected entities and the `/faculty-portal/*` self-service pages both read and write through. Auth is cookie-based (`better-auth.session_token`, mirrored onto this app's own domain by `app/(auth)/actions.ts` — see "Auth & route protection" below), not a third-party auth SDK. Public-site content still lives in JSON files under `content/`.
 
 ## Stack
 
@@ -8,7 +8,8 @@ Public website and design-only admin dashboard for Port City International Unive
 - **Tailwind CSS v4** — CSS-first config, no `tailwind.config.*` file. Theme tokens live in `app/globals.css` (`:root`, `.dark`, `@theme inline`)
 - **shadcn "base-nova" style on `@base-ui/react`** — **not Radix**. Every `components/ui/*` primitive wraps a `@base-ui/react/*` module. When you need a primitive that doesn't exist yet, check `node_modules/@base-ui/react/` first — most things (dialog, alert-dialog, select, tabs, accordion, collapsible, tooltip, switch, checkbox, radio-group, toast, number-field, field, form) are already installed and just need a styled wrapper
 - **react-hook-form + zod v4 + @hookform/resolvers** — used in the admin forms only (see below). RHF owns validation state there; base-ui's own `Form`/`Field.Root` validation is deliberately *not* used in the same form to avoid two systems double-reporting errors
-- No data-fetching library, no state manager, no CMS, no auth library
+- **TanStack Query v5** for client-side cache/mutation state on the admin dashboard and the faculty portal — mounted by `components/providers/QueryProvider.tsx`, which those two route groups' layouts wrap themselves in (the public site stays static and never mounts it)
+- No CMS, no third-party auth SDK — auth is a session cookie mirrored server-side (see below)
 
 ### ⚠️ Next.js 16 breaking changes (read before assuming Next 15/14 behavior)
 
@@ -33,24 +34,45 @@ app/
     <route>/                  One folder per public page (about-the-university, admission, ...)
       page.tsx
       _ui/                    Route-local client components (colocated, not shared)
-  (auth)/                     Route group: signin, signup, forgot/reset password — visual only, no real auth
-  (admin)/                    Route group: admin dashboard, wraps children in AdminShell
+  (auth)/                     Route group: signin (real, wired to loginAction), signup/forgot/reset password — visual only
+    actions.ts                "use server": loginAction, logoutAction, getSession
+  (admin)/                    Route group: admin dashboard, gated by requireRole("admin"), wraps children in AdminShell
     layout.tsx
+    entity-actions.ts         "use server": listEntityAction/createEntityAction/... — see Admin dashboard below
     admin/
       page.tsx                 Dashboard overview
       pages/ faculty/ settings/ _ui/...
       <group>/<entity>/new/    49 generated "Add" form routes — see Admin dashboard below
+  (faculty)/                  Route group: teacher self-service portal, gated by requireRole("teacher") — see Faculty portal below
+    layout.tsx
+    profile-actions.ts         "use server": getMyProfileAction, listSectionAction, ...
+    profile-mapping.ts         Portal UI shape ↔ API shape bridge
+    faculty-portal/            page.tsx + profile/education/publications/experience/awards/memberships
 components/
   ui/                         shadcn-on-base-ui primitives (button, card, input, select, dialog analog "Modal", ...)
   shared/                     Cross-route components used by the public site (Navbar, footer, Breadcrumb, PageBanner, DataTable, Modal, Aleart, EmptyState, ...)
   admin/                      Admin-only shell (AdminShell, AdminSidebar, AdminHeader, nav-groups.ts) and the form/ engine
     form/                     EntityForm, FormField, FieldArray, EntityFormClient, form-types.ts
-content/                      One JSON file per page/section — the site's actual data source, no database
+  faculty/                    Faculty portal + admin per-teacher preview workspace components — see Faculty portal below
+    section-list/              SectionListView (shared table/modal/dialog), LiveSectionList, DemoSectionList
+  providers/                  QueryProvider (mounted by the admin and faculty layouts only)
+content/                      One JSON file per public page/section — static data source for pages with no live entity
 types/                        One .ts file per content domain, matching each content/ JSON file's shape
+services/                     API transport shared by the admin dashboard: http.ts (api/ApiError/envelope), endpoints.ts
+                               (ENTITY_ENDPOINTS registry), entity.ts (CRUD + snake/camel mapping), case.ts,
+                               form-data.ts, field-aliases.ts, teacher-profile.ts (the faculty portal's own transport)
+features/
+  entity/                     TanStack Query hooks for the admin dashboard (keys/queries/mutations/relation-options)
+  teacher-profile/            TanStack Query hooks for the faculty portal, same shape as features/entity/
 lib/
   icons.ts                    String-key → lucide-react component registry, for icon names stored in JSON
   utils.ts                    cn() helper
+  cookie.ts                   Session cookie read/write/clear
+  server-fetch.ts             serverFetch (authenticated) / publicFetch (unauthenticated) — see Auth below
+  auth-guards.ts              requireRole("admin" | "teacher") — the authoritative route gate
   admin/entities/             One schema file per DB table from the reference DBML — see Admin dashboard below
+config/
+  env.config.ts                Reads NEXT_PUBLIC_BACKEND_BASE_URL and any other env vars
 public/images/                All static image assets (local files + a few portcity.edu.bd remote patterns)
 ```
 
@@ -66,7 +88,7 @@ public/images/                All static image assets (local files + a few portc
 
 ## Admin dashboard (`app/(admin)/admin/`)
 
-Design-only — **nothing persists**. Forms validate fully with zod, simulate a brief save, show a success toast (`components/ui/toast.tsx`, base-ui `Toast` + `useToastManager`), and reset. There is no backend to connect one to; don't add Supabase or any other database client without being asked.
+Forms validate fully with zod, then save through the live API for any entity registered in `services/endpoints.ts` (`isConnected(slug)`) — see `app/(admin)/entity-actions.ts`, `services/entity.ts`, and `features/entity/`. Every entity schema in `lib/admin/entities/` renders its full form regardless, but one with a schema and no `ENTITY_ENDPOINTS` entry fails on save with an explicit "not connected to the backend yet" error toast (`components/ui/toast.tsx`, base-ui `Toast` + `useToastManager`) rather than persisting or faking success — `guard(slug)` in `entity-actions.ts` is what produces that message. Don't add Supabase or any other database client; the API is a separate origin reached through `services/http.ts`.
 
 - **Shell**: `AdminShell` (client, owns `collapsed`/`mobileOpen` state) renders `AdminSidebar` + `AdminHeader` + page content. `AdminSidebar` is a charcoal `--sidebar` themed rail (independent token family from the public site's `--primary`, defined in `globals.css`) with 4 top-level items (Dashboard, Faculty Directory, Pages, Settings) plus 9 collapsible entity groups.
 - **The sidebar groups are generated, not hand-maintained.** `components/admin/nav-groups.ts` builds `NAV_GROUPS` directly from `lib/admin/entities/index.ts`'s `ENTITY_REGISTRY` and `ENTITY_GROUP_ORDER`. Adding a new entity to the registry automatically adds its sidebar link — don't hand-edit nav items to add a route.
@@ -75,8 +97,27 @@ Design-only — **nothing persists**. Forms validate fully with zod, simulate a 
 - **Server/client boundary**: entity `page.tsx` files are server components and must pass only the slug **string** to `EntityFormClient` (a client component) — never the `EntitySchema` object itself. A zod schema and a `LucideIcon` component can't cross from a server component into a client one as props; this broke the build once already. `EntityFormClient` looks the schema up client-side via `getEntitySchema(slug)`.
 - **`FormField`** (`components/admin/form/FormField.tsx`) is the single field renderer — it switches on the descriptor's `type` and wires base-ui's controlled components (`Select`, `Switch`, `Checkbox`, `RadioGroup`) through RHF's `Controller`, since they aren't native `<input>` elements `register()` can bind to directly. Native-input types (`text`, `email`, `number`, `date`, `textarea`, ...) use plain `register()`.
 - **`json`-typed DB columns become `json-list` fields** — repeatable string rows via RHF's `useFieldArray`, rendered by `FieldArray.tsx`. Use this for any array-of-strings column (`teaching_areas`, `quick_link`, `objectives`, `tags`, `multiple_image`).
-- **`relation` fields (FK columns) render as a `select` with placeholder options** — there's no database to query real rows from. Options are hand-authored per schema file; keep them clearly labelled rather than empty, so the form reads as complete even without live data.
+- **`relation` fields (FK columns) render as a `select`.** `features/entity/relation-options.ts`'s `useRelationOptions` fetches live rows from `relationTo` when that slug is connected, and falls back to the schema's hand-authored placeholder `options` otherwise — keep those placeholders clearly labelled rather than empty, so the form still reads as complete for an entity whose FK target isn't wired up yet.
 - **Reusable components predate the entity-form engine and follow their own pattern** — `components/shared/DataTable.tsx`, `Modal.tsx`, `Aleart.tsx` (`Alert` + `AlertDialog`, note the filename typo is intentional/existing, don't "fix" it without checking every import), `EmptyState.tsx`. These are all base-ui under the hood (ported from an original Radix + framer-motion design) and are used together in `PagesTable.tsx` — read that file as the reference for wiring a table + edit modal + delete confirmation together outside the entity-form flow.
+
+## Auth & route protection
+
+Session auth is a cookie (`better-auth.session_token`) the API sets; `app/(auth)/actions.ts`'s `loginAction` mirrors it onto this app's own domain via `lib/cookie.ts` so `lib/server-fetch.ts`'s `serverFetch` can replay it server-side on every authenticated call. The API is a separate origin, so a browser `fetch` can never carry that cookie — **every authenticated request goes through a Server Action**, never a client-side fetch.
+
+Two layers enforce access, deliberately split by cost:
+
+- **`proxy.ts`** (Next 16's renamed middleware) is an optimistic, cookie-*presence* check only, on `/admin/:path*` and `/faculty-portal/:path*`. It runs on every matched request and makes no API call, so it can't tell an admin from a teacher.
+- **`lib/auth-guards.ts`'s `requireRole("admin" | "teacher")`** is the authoritative check, called from `app/(admin)/layout.tsx` and `app/(faculty)/layout.tsx`. It calls `getSession()` (`GET /auth/me`), redirects to `/signin` if there's no session, and redirects a mismatched role to `homeFor(role)` — a TEACHER hitting `/admin` lands on `/faculty-portal` and vice versa, silently.
+
+A layout redirect doesn't protect a Server Action, though — actions are independently addressable POST endpoints. `app/(faculty)/profile-actions.ts` re-checks the session role inside every action before touching the API, not just at the page level.
+
+## Faculty portal (`/faculty-portal/*`)
+
+Live against `/teachers/profile/*` — a **session-scoped** API (the server derives the teacher from the auth cookie, so there's no teacher id in any of these paths) covering the signed-in teacher's own profile plus education/experience/awards/memberships/publications sub-resources.
+
+Deliberately **not** built on the admin entity pipeline (`services/endpoints.ts` + `services/entity.ts` + `entity-actions.ts`): that machinery is keyed by `EntitySchema` and models `/{resource}/{id}` paths, neither of which these session-scoped resources have. Instead: `services/teacher-profile.ts` (transport + date/order-field conversion), `app/(faculty)/profile-mapping.ts` (the portal's UI shape ↔ API shape bridge), `app/(faculty)/profile-actions.ts` (Server Actions, same `ActionResult<T>` convention as `entity-actions.ts`), and `features/teacher-profile/` (TanStack Query hooks, same shape as `features/entity/`).
+
+`components/faculty/FacultySectionList.tsx` is a thin dispatcher over a `source` prop: `"live"` (the portal, via `features/teacher-profile/`) or `"demo"` (the admin's per-teacher preview workspace at `/admin/faculty/[id]/*`, via `FacultyProfileProvider`'s in-memory state). Both render the same `components/faculty/section-list/SectionListView.tsx`. The admin workspace stays on demo data on purpose — the teacher endpoints are scoped to "the signed-in teacher," not addressable by an admin for an arbitrary teacher id, so there's no live endpoint to wire that workspace to.
 
 ## Verification
 
@@ -88,7 +129,7 @@ npm run lint
 npm run build
 ```
 
-The build output lists every route with its render mode — confirm new routes are `○ (Static)` (or `● SSG` for `generateStaticParams` routes) unless they genuinely need to read `searchParams`/`cookies` (which makes them `ƒ Dynamic`, expected for `/academics`, `/admission`, `/research`, and nothing else). An unexpectedly dynamic route usually means client state leaked into a server component's render path.
+The build output lists every route with its render mode — confirm new public-site routes are `○ (Static)` (or `● SSG` for `generateStaticParams` routes) unless they genuinely need to read `searchParams`/`cookies` (which makes them `ƒ Dynamic`, expected for `/academics`, `/admission`, `/research`). Every route under `/admin/*` and `/faculty-portal/*` is also `ƒ Dynamic` — both layouts call `requireRole()`, which reads the session cookie — with one exception: `/admin/faculty/[id]/*` stays `● SSG` (`generateStaticParams` + `dynamicParams = false` against static JSON, mounted inside the already-dynamic admin layout). An unexpectedly dynamic *public* route usually means client state leaked into a server component's render path.
 
 For anything interactive, start the dev server and check the actual page — a clean build proves the code compiles, not that the feature works. Watch the browser console for hydration warnings, a common source of which in this codebase has been client-side `Date`/`toLocaleDateString()` formatting; prefer pre-formatted date strings in `content/*.json` over runtime formatting.
 

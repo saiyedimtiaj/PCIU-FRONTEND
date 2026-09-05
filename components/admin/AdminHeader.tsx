@@ -26,7 +26,6 @@ const FACULTY_SECTION_TITLES: Record<string, string> = {
   experience: "Experience",
   awards: "Awards",
   memberships: "Memberships",
-  conferences: "Conferences",
 };
 
 function pageTitle(pathname: string) {

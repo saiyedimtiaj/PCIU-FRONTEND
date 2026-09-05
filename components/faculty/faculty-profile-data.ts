@@ -4,7 +4,10 @@ import type { FacultyProfile as DirectoryProfile } from "@/types/faculty-directo
 // Deterministic expansion of the thin directory profile (name, designation,
 // department, faculty, one education entry, teaching areas) into the full
 // editable shape the faculty workspace needs (contact info, bio, social
-// links, publications, experience, awards, memberships, conferences).
+// links, publications, experience, awards, memberships). Backs ONLY the
+// admin's per-teacher preview workspace (/admin/faculty/[id]/*) — the
+// live /faculty-portal/* reads real data via features/teacher-profile
+// instead, see FacultyPortalDataProvider.
 // Seeded the same way as components/admin/list/sample-data.ts: no
 // Math.random()/Date.now() at render time, so server and client render
 // identically — this data backs a client form, but the Overview tab's
@@ -54,7 +57,7 @@ export interface EducationEntry {
 
 export interface PublicationEntry {
   title: string;
-  journal: string;
+  venue: string;
   year: string;
   authors: string;
 }
@@ -104,7 +107,6 @@ export interface FacultyWorkspaceProfile {
   experience: ExperienceEntry[];
   awards: AwardEntry[];
   memberships: MembershipEntry[];
-  conferences: string[];
 }
 
 const JOURNALS = [
@@ -137,12 +139,6 @@ const MEMBERSHIP_ORGS = [
   "Association of Commonwealth Universities",
 ];
 
-const CONFERENCES = [
-  "International Conference on Computer and Information Technology",
-  "Asia Pacific Conference on Higher Education",
-  "South Asian Symposium on Applied Research",
-];
-
 const YEARS = ["2019", "2020", "2021", "2022", "2023", "2024", "2025"];
 
 /**
@@ -171,7 +167,7 @@ export function buildWorkspaceProfile(directory: DirectoryProfile): FacultyWorks
   const publicationCount = Math.floor(seededRandom(id, "pub-count") * 4);
   const publications: PublicationEntry[] = Array.from({ length: publicationCount }, (_, i) => ({
     title: `${pick(directory.teachingAreas.length > 0 ? directory.teachingAreas : ["Applied Research"], id, "pub-title", i)}: A Study`,
-    journal: pick(JOURNALS, id, "pub-journal", i),
+    venue: pick(JOURNALS, id, "pub-journal", i),
     year: pick(YEARS, id, "pub-year", i),
     authors: directory.name,
   }));
@@ -195,11 +191,6 @@ export function buildWorkspaceProfile(directory: DirectoryProfile): FacultyWorks
     name: pick(MEMBERSHIP_ORGS, id, "membership-org", i),
     role: pick(["Member", "Senior Member", "Fellow"], id, "membership-role", i),
   }));
-
-  const conferenceCount = Math.floor(seededRandom(id, "conf-count") * 3);
-  const conferences: string[] = Array.from({ length: conferenceCount }, (_, i) =>
-    pick(CONFERENCES, id, "conf", i)
-  );
 
   return {
     id,
@@ -225,6 +216,5 @@ export function buildWorkspaceProfile(directory: DirectoryProfile): FacultyWorks
     experience,
     awards,
     memberships,
-    conferences,
   };
 }
