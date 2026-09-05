@@ -20,7 +20,14 @@ const departmentSchema = z.object({
   number_of_partner: z.coerce.number().int().nonnegative().optional(),
   current_student: z.coerce.number().int().nonnegative().optional(),
   description: z.string().optional().or(z.literal("")),
-  quick_link: z.array(z.string()).default([]),
+  quick_link: z
+    .array(
+      z.object({
+        title: z.string().min(1, "Title is required"),
+        url: z.url("Must be a valid URL"),
+      }),
+    )
+    .default([]),
   status: z.boolean().default(true),
 });
 
@@ -102,7 +109,7 @@ export const departmentEntity: EntitySchema<typeof departmentSchema> = {
         {
           name: "quick_link",
           label: "Quick Links",
-          type: "json-list",
+          type: "link-list",
           colSpan: 2,
           placeholder: "Course Curriculum",
         },

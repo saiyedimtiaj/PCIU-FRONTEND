@@ -81,17 +81,9 @@ export default function EntityListClient({ slug, basePath: basePathOverride }: E
   const hasMoreFilters = hiddenOptionFields.length > 0 || !!dateField;
 
   const connected = isConnected(slug);
-  // Singletons hold exactly one record: "Add" would POST a duplicate
-  // instead of editing it, so the row is edited directly.
   const isSingleton = !!getEndpoint(slug)?.singleton;
-  // Some resources (teachers) have no DELETE route in the API — verified
-  // live (404). Those instead expose a boolean field the API does accept
-  // a PATCH for, which the row action uses as a deactivate in its place.
   const deactivateField = getEndpoint(slug)?.deactivateField;
   const canDelete = !getEndpoint(slug)?.noDelete || !!deactivateField;
-  // Verified live for iqac: DELETE hits the bare collection path and the
-  // backend always keeps one row — a GET right after returns a fresh
-  // default row, not 404/empty. So this "delete" is really a reset.
   const resetsAtRoot = !!getEndpoint(slug)?.deleteAtRoot;
   const toast = useToastManager();
 

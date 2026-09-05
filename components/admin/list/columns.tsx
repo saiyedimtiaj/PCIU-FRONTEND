@@ -55,8 +55,13 @@ function PrimaryCell({ value, subtitle }: { value: string; subtitle?: string }) 
 }
 
 function optionLabel(field: FieldDescriptor, value: unknown): string {
-  const match = field.options?.find((o) => o.value === value);
-  return match?.label ?? (typeof value === "string" && value ? value : "—");
+  if (value === undefined || value === null || value === "") return "—";
+  // Relation/enum ids come back from the API as numbers while `options`
+  // values are always strings, so a strict === never matched and every
+  // such cell fell through to the raw value.
+  const key = String(value);
+  const match = field.options?.find((o) => o.value === key);
+  return match?.label ?? key;
 }
 
 /**
@@ -70,16 +75,29 @@ function optionLabel(field: FieldDescriptor, value: unknown): string {
  * first and is always accurate; the placeholder list is only a fallback
  * for rows the join hasn't populated (or for design-only sample data).
  */
+function joinedName(value: unknown): string | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const obj = value as Record<string, unknown>;
+  const label = obj.name ?? obj.title ?? obj.designation;
+  return typeof label === "string" && label ? label : undefined;
+}
+
 function relationLabel(field: FieldDescriptor, row: SampleRow): string {
   const joinedKey = field.name.replace(/_id$/, "");
-  const joined = row[joinedKey];
-  if (joined && typeof joined === "object") {
-    const label =
-      (joined as Record<string, unknown>).name ??
-      (joined as Record<string, unknown>).title ??
-      (joined as Record<string, unknown>).designation;
-    if (typeof label === "string" && label) return label;
+
+  const direct = joinedName(row[joinedKey]);
+  if (direct) return direct;
+
+  // Some rows only reach the related row through another join — a teacher
+  // has no top-level `faculty`, it hangs off `department.faculty`. Checking
+  // one level in keeps the column accurate without teaching the table about
+  // any specific entity.
+  for (const value of Object.values(row)) {
+    if (!value || typeof value !== "object") continue;
+    const nested = joinedName((value as Record<string, unknown>)[joinedKey]);
+    if (nested) return nested;
   }
+
   return optionLabel(field, row[field.name]);
 }
 
