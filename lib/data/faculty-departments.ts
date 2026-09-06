@@ -14,11 +14,11 @@ export const FACULTY_META: Record<number, FacultyMeta> = {
   5: {
     // Faculty of Science & Engineering
     departments: [
-      { name: "Computer Science and Engineering", href: "/department/cse" },
-      { name: "Electrical and Electronic Engineering", href: "/department/eee" },
-      { name: "Civil Engineering", href: "/department/civil" },
-      { name: "Textile Engineering", href: "/department/textile" },
-      { name: "Fashion Design and Technology", href: "/department/fashion" },
+      { name: "CSE"},
+      { name: "EEE" },
+      { name: "Civil" },
+      { name: "Textile"},
+      { name: "Fashion" },
     ],
     icon: "cpu",
   },
