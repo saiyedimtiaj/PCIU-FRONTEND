@@ -110,7 +110,10 @@ export interface ApiDepartmentResponse {
   numberOfPartner: number;
   currentStudent: number;
   description: string;
-  quickLink: string[];
+  quickLink: {
+    url: string;
+    title: string;
+  }[];
   status: boolean;
   deletedAt: string | null;
   createdAt: string;

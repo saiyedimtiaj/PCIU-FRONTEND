@@ -16,6 +16,7 @@ export async function getDepartmentBySlug(
 
     if (res.ok) {
       const data = await res.json();
+      console.log(data.data);
       if (data.success && data.data) {
         return mapApiDepartmentToContent(data.data);
       }
@@ -71,8 +72,8 @@ function mapApiDepartmentToContent(
       hours: "Sunday - Thursday: 9:00 AM - 5:00 PM",
     },
     quickLinks: (apiData.quickLink || []).map((link) => ({
-      label: link,
-      url: "#",
+      label: link.title,
+      url: link.url,
     })),
     facultyMembers: [], // Empty state
     researchAreas: [], // Empty state
