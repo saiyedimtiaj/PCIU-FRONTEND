@@ -26,6 +26,7 @@ export function SignInForm() {
       if (result?.error) {
         setError(result.error);
       } else if (result?.success) {
+        console.log("Login successful:", result);
         // TEACHER accounts get the faculty portal; every other role is an
         // admin of some kind. `from` is set by middleware.ts when it bounces
         // an unauthenticated request, so we land back where they were going.

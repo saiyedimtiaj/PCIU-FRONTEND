@@ -50,6 +50,10 @@ export interface DepartmentContact {
   hours: string;
 }
 
+export type DepartmentApiQuickLink =
+  | string
+  | { title?: string; label?: string; name?: string; url?: string };
+
 export interface DepartmentQuickLink {
   label: string;
   url: string;
