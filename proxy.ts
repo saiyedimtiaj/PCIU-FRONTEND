@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-
-const AUTH_COOKIE_NAME = "better-auth.session_token";
+import { isAuthCookieName } from "@/lib/auth-cookie";
 
 /**
  * Gate for the admin dashboard. (Next 16 renamed Middleware to Proxy; the
@@ -12,7 +11,11 @@ const AUTH_COOKIE_NAME = "better-auth.session_token";
  * `serverFetch` surfaces a 401 if the session has expired server-side.
  */
 export function proxy(request: NextRequest) {
-  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+  // Matched by name pattern rather than an exact string: the backend decides
+  // whether the cookie carries a `__Secure-` prefix. See lib/auth-cookie.ts.
+  const token = request.cookies
+    .getAll()
+    .find((cookie) => isAuthCookieName(cookie.name) && cookie.value)?.value;
 
   if (!token) {
     const signInUrl = new URL("/signin", request.url);
