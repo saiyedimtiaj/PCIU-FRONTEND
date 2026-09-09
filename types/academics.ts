@@ -39,6 +39,8 @@ export interface ExamRoutine {
   section: string;
   date: string;
   studentRange: string;
+  /** "DAY" / "EVENING" — omitted entirely when the API doesn't return one. */
+  shift?: string;
 }
 
 export interface ClassTimeSlot {

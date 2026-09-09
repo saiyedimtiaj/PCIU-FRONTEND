@@ -144,6 +144,7 @@ export async function getLiveExamRoutines(): Promise<ExamRoutine[]> {
       section: nameOf(r, "section"),
       date: isoDate(r.date),
       studentRange: str(r.studentRange),
+      shift: typeof r.shift === "string" && r.shift ? r.shift : undefined,
     }));
 }
 

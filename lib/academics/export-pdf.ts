@@ -1,5 +1,8 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import type { ExamRoutine } from "@/types/academics";
+import { courseLabel, formatIsoDate } from "./routine-grid";
+import { timeRangeSortKey } from "./time-sort";
 
 /**
  * jspdf-autotable v5 still writes `doc.lastAutoTable` at runtime (see
@@ -12,31 +15,24 @@ const LOGO_PATH = "/images/pciu-logo.png";
 /** Real pixel dimensions of public/images/pciu-logo.png — preserved exactly
  *  so the logo is never stretched/distorted in the PDF. */
 const LOGO_ASPECT = 93 / 65;
-const LOGO_WIDTH_MM = 16;
-const LOGO_HEIGHT_MM = LOGO_WIDTH_MM * LOGO_ASPECT;
 
 const PAGE_MARGIN = 12;
-/** Reserved top margin on every page so autoTable's own page breaks never
- *  draw a continuation row under the repeating header. Generous enough to
- *  fit the logo + title + exam name + filter badges without crowding. */
-const HEADER_RESERVED_HEIGHT = 58;
 
-const INK = { r: 17, g: 24, b: 39 };
 const MUTED = { r: 100, g: 108, b: 120 };
 const BADGE_BG = { r: 238, g: 242, b: 255 };
 const BADGE_BORDER = { r: 199, g: 210, b: 254 };
 const BADGE_TEXT = { r: 55, g: 48, b: 163 };
-const HEAD_FILL = { r: 30, g: 41, b: 90 };
 const DAY_OFF_FILL = { r: 241, g: 245, b: 249 };
 
-/** Grid-export palette — matches RoutineInfoBar / ClassScheduleGrid /
- *  ExamScheduleGrid's on-screen hex values exactly, so the downloaded PDF
- *  looks like the same document as what's on screen, not the older flat
- *  list's separate color scheme. */
+/** Shared palette for every routine PDF — matches RoutineInfoBar /
+ *  ClassScheduleGrid / ExamScheduleGrid's on-screen hex values exactly, so
+ *  a downloaded PDF (flat list or single-section grid) looks like the same
+ *  document family as the page it was downloaded from. */
 const GRID_INK = { r: 13, g: 43, b: 69 }; // #0D2B45
 const GRID_ACCENT = { r: 5, g: 150, b: 105 }; // #059669
 const GRID_BAND = { r: 246, g: 250, b: 255 }; // #F6FAFF
-const GRID_HEADER_HEIGHT = 40;
+const GRID_LOGO_WIDTH_MM = 13;
+const GRID_LOGO_HEIGHT_MM = GRID_LOGO_WIDTH_MM * LOGO_ASPECT;
 
 /** Loads the site's real logo (used already in Navbar/AdminSidebar/AuthShell)
  *  as a data URL for jsPDF.addImage — fetched client-side since PDF export
@@ -63,57 +59,51 @@ function extractBatchNumber(batch: string): string | null {
   return match ? match[0] : null;
 }
 
-/** Compact "Batch: 28" style value for the PDF header badge — the API's
- *  batch field is a full label ("CSE 28th Batch"); showing that verbatim
- *  next to a Department badge already reading "CSE" would repeat itself. */
-function batchDisplayValue(batch: string): string {
-  return extractBatchNumber(batch) ?? batch;
-}
-
 export interface RoutinePdfFilters {
   department?: string;
   batch?: string;
   section?: string;
 }
 
-function drawFilterBadges(
-  doc: jsPDF,
-  pageWidth: number,
-  y: number,
-  segments: { label: string; value: string }[],
-): number {
-  const paddingX = 3;
-  const gap = 4;
-  const pillHeight = 7;
+/** Rounded pill behind the exam-name subtitle — same visual language as the
+ *  Department/Batch/Section filter badges below it, so the exam name reads
+ *  as a designed header element instead of plain italic text. */
+function drawExamNameBadge(doc: jsPDF, pageWidth: number, y: number, examName: string): number {
+  const paddingX = 5;
+  const pillHeight = 7.5;
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
+  doc.setFont("helvetica", "bolditalic");
+  doc.setFontSize(11);
+  const textWidth = doc.getTextWidth(examName);
+  const pillWidth = textWidth + paddingX * 2;
+  const x = (pageWidth - pillWidth) / 2;
 
-  const pills = segments.map((s) => {
-    const text = `${s.label}: ${s.value}`;
-    return { text, width: doc.getTextWidth(text) + paddingX * 2 };
+  doc.setFillColor(BADGE_BG.r, BADGE_BG.g, BADGE_BG.b);
+  doc.setDrawColor(BADGE_BORDER.r, BADGE_BORDER.g, BADGE_BORDER.b);
+  doc.setLineWidth(0.35);
+  doc.roundedRect(x, y, pillWidth, pillHeight, 2, 2, "FD");
+  doc.setTextColor(BADGE_TEXT.r, BADGE_TEXT.g, BADGE_TEXT.b);
+  doc.text(examName, pageWidth / 2, y + pillHeight / 2 + 1, {
+    align: "center",
+    baseline: "middle",
   });
-  const totalWidth = pills.reduce((sum, p) => sum + p.width, 0) + gap * (pills.length - 1);
-
-  let x = (pageWidth - totalWidth) / 2;
-  for (const pill of pills) {
-    doc.setFillColor(BADGE_BG.r, BADGE_BG.g, BADGE_BG.b);
-    doc.setDrawColor(BADGE_BORDER.r, BADGE_BORDER.g, BADGE_BORDER.b);
-    doc.setLineWidth(0.3);
-    doc.roundedRect(x, y, pill.width, pillHeight, 1.5, 1.5, "FD");
-    doc.setTextColor(BADGE_TEXT.r, BADGE_TEXT.g, BADGE_TEXT.b);
-    doc.text(pill.text, x + pill.width / 2, y + pillHeight / 2 + 1.1, {
-      align: "center",
-      baseline: "middle",
-    });
-    x += pill.width + gap;
-  }
 
   doc.setTextColor(0, 0, 0);
   return y + pillHeight;
 }
 
-function drawHeader(
+/**
+ * Shared header for every routine PDF — flat list or single-section grid —
+ * a light-blue band with a centered logo, bold navy title, an optional
+ * exam-name badge, and a "Program: X   Section: Y   Batch: Z" line (or an
+ * "All Departments · All Batches · All Sections" fallback when nothing is
+ * filtered). Mirrors RoutineInfoBar's on-screen design exactly, so a full
+ * unfiltered download and a narrowed single-section download read as the
+ * same document family instead of two different-looking PDFs. Returns the
+ * band height actually used (it varies with which optional pieces are
+ * present) so the caller can start its table right below it.
+ */
+function drawRoutineHeader(
   doc: jsPDF,
   routineType: string,
   examName: string | undefined,
@@ -121,62 +111,57 @@ function drawHeader(
   logoDataUrl: string | null,
 ): number {
   const pageWidth = doc.internal.pageSize.getWidth();
-  let y = 10;
 
+  const segments = [
+    filters.department ? `Program: ${filters.department}` : null,
+    filters.section ? `Section: ${filters.section}` : null,
+    filters.batch ? `Batch: ${filters.batch}` : null,
+  ].filter((s): s is string => Boolean(s));
+  const segmentsLine = segments.length > 0 ? segments.join("      ") : "All Departments · All Batches · All Sections";
+
+  const topPad = 7;
+  const logoBlock = logoDataUrl ? GRID_LOGO_HEIGHT_MM + 5 : 0;
+  const titleBlock = 7;
+  const examBlock = examName ? 7.5 + 4 : 0;
+  const segmentsBlock = 6;
+  const bottomPad = 6;
+  const bandHeight = topPad + logoBlock + titleBlock + examBlock + segmentsBlock + bottomPad;
+
+  doc.setFillColor(GRID_BAND.r, GRID_BAND.g, GRID_BAND.b);
+  doc.rect(0, 0, pageWidth, bandHeight, "F");
+
+  let y = topPad;
   if (logoDataUrl) {
     doc.addImage(
       logoDataUrl,
       "PNG",
-      (pageWidth - LOGO_WIDTH_MM) / 2,
+      (pageWidth - GRID_LOGO_WIDTH_MM) / 2,
       y,
-      LOGO_WIDTH_MM,
-      LOGO_HEIGHT_MM,
+      GRID_LOGO_WIDTH_MM,
+      GRID_LOGO_HEIGHT_MM,
       undefined,
       "FAST",
     );
-    y += LOGO_HEIGHT_MM + 4;
+    y += GRID_LOGO_HEIGHT_MM + 5;
   }
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
-  doc.setTextColor(INK.r, INK.g, INK.b);
-  doc.text(routineType.toUpperCase(), pageWidth / 2, y, { align: "center" });
-  y += 4;
-
-  doc.setDrawColor(190, 190, 190);
-  doc.setLineWidth(0.4);
-  doc.line(pageWidth / 2 - 26, y, pageWidth / 2 + 26, y);
-  y += 6;
+  doc.setFontSize(15);
+  doc.setTextColor(GRID_INK.r, GRID_INK.g, GRID_INK.b);
+  doc.text(routineType, pageWidth / 2, y, { align: "center" });
+  y += titleBlock;
 
   if (examName) {
-    doc.setFont("helvetica", "italic");
-    doc.setFontSize(10.5);
-    doc.setTextColor(MUTED.r, MUTED.g, MUTED.b);
-    doc.text(examName, pageWidth / 2, y, { align: "center" });
-    y += 7;
+    y = drawExamNameBadge(doc, pageWidth, y, examName) + 4;
   }
 
-  const segments = [
-    filters.department ? { label: "Department", value: filters.department } : null,
-    filters.batch ? { label: "Batch", value: batchDisplayValue(filters.batch) } : null,
-    filters.section ? { label: "Section", value: filters.section } : null,
-  ].filter((s): s is { label: string; value: string } => s !== null);
-
-  let bottomY: number;
-  if (segments.length > 0) {
-    bottomY = drawFilterBadges(doc, pageWidth, y, segments);
-  } else {
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(MUTED.r, MUTED.g, MUTED.b);
-    doc.text("All Departments · All Batches · All Sections", pageWidth / 2, y + 5, {
-      align: "center",
-    });
-    bottomY = y + 8;
-  }
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(GRID_INK.r, GRID_INK.g, GRID_INK.b);
+  doc.text(segmentsLine, pageWidth / 2, y, { align: "center" });
 
   doc.setTextColor(0, 0, 0);
-  return bottomY;
+  return bandHeight;
 }
 
 export async function downloadRoutinePdf(options: {
@@ -197,13 +182,8 @@ export async function downloadRoutinePdf(options: {
     loadLogoDataUrl(),
   ]);
 
-  // Draws page 1's header and, since its layout is deterministic for a given
-  // routineType/examName/filters/logo, also tells us exactly how tall the
-  // header is — a fixed constant here previously overlapped the filter
-  // badges whenever examName pushed them lower than expected (Exam Routine
-  // with a long exam name).
-  const headerBottomY = drawHeader(doc, routineType, examName, filters, logoDataUrl);
-  const contentStartY = Math.max(HEADER_RESERVED_HEIGHT, headerBottomY + 6);
+  const headerHeight = drawRoutineHeader(doc, routineType, examName, filters, logoDataUrl);
+  const contentStartY = headerHeight + 6;
 
   if (rows.length === 0) {
     doc.setFont("helvetica", "normal");
@@ -225,71 +205,18 @@ export async function downloadRoutinePdf(options: {
     head: [columns],
     body: rows,
     styles: { fontSize: 8, cellPadding: 2.5 },
-    headStyles: { fillColor: [HEAD_FILL.r, HEAD_FILL.g, HEAD_FILL.b], textColor: 255 },
-    alternateRowStyles: { fillColor: [248, 249, 252] },
+    headStyles: { fillColor: [GRID_INK.r, GRID_INK.g, GRID_INK.b], textColor: 255 },
+    alternateRowStyles: { fillColor: [GRID_BAND.r, GRID_BAND.g, GRID_BAND.b] },
     margin: { top: contentStartY, left: PAGE_MARGIN, right: PAGE_MARGIN },
-    // Repeats the document header (logo/title/badges) on every page this
+    // Repeats the document header (logo/title/segments) on every page this
     // table spans, not just the first — autoTable repeats the table's own
     // column header row on each page by default (showHead: "everyPage").
     willDrawPage: () => {
-      drawHeader(doc, routineType, examName, filters, logoDataUrl);
+      drawRoutineHeader(doc, routineType, examName, filters, logoDataUrl);
     },
   });
 
   doc.save(filename);
-}
-
-/**
- * Header for the grid-style export — a light-blue band with a centered logo,
- * title, and a "Program: X   Section: Y   Batch: Z" line, mirroring
- * RoutineInfoBar's on-screen layout (and its exact hex colors) instead of
- * downloadRoutinePdf's older centered-title + filter-badge-pills header.
- */
-function drawGridHeader(
-  doc: jsPDF,
-  routineType: string,
-  filters: RoutinePdfFilters,
-  logoDataUrl: string | null,
-): void {
-  const pageWidth = doc.internal.pageSize.getWidth();
-
-  doc.setFillColor(GRID_BAND.r, GRID_BAND.g, GRID_BAND.b);
-  doc.rect(0, 0, pageWidth, GRID_HEADER_HEIGHT, "F");
-
-  let y = 8;
-  if (logoDataUrl) {
-    doc.addImage(
-      logoDataUrl,
-      "PNG",
-      (pageWidth - LOGO_WIDTH_MM) / 2,
-      y,
-      LOGO_WIDTH_MM,
-      LOGO_HEIGHT_MM,
-      undefined,
-      "FAST",
-    );
-    y += LOGO_HEIGHT_MM + 3;
-  }
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.setTextColor(GRID_INK.r, GRID_INK.g, GRID_INK.b);
-  doc.text(routineType, pageWidth / 2, y, { align: "center" });
-  y += 7;
-
-  const segments = [
-    filters.department ? `Program: ${filters.department}` : null,
-    filters.section ? `Section: ${filters.section}` : null,
-    filters.batch ? `Batch: ${filters.batch}` : null,
-  ].filter((s): s is string => Boolean(s));
-
-  if (segments.length > 0) {
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.text(segments.join("      "), pageWidth / 2, y, { align: "center" });
-  }
-
-  doc.setTextColor(0, 0, 0);
 }
 
 export interface RoutineGridRow {
@@ -323,7 +250,7 @@ export async function downloadRoutineGridPdf(options: {
   emptyMessage?: string;
   filename: string;
 }): Promise<void> {
-  const { routineType, filters, columns, rowLabelHeader, rows, emptyMessage, filename } = options;
+  const { routineType, examName, filters, columns, rowLabelHeader, rows, emptyMessage, filename } = options;
 
   const [doc, logoDataUrl] = await Promise.all([
     Promise.resolve(
@@ -332,8 +259,8 @@ export async function downloadRoutineGridPdf(options: {
     loadLogoDataUrl(),
   ]);
 
-  const contentStartY = GRID_HEADER_HEIGHT + 6;
-  drawGridHeader(doc, routineType, filters, logoDataUrl);
+  const headerHeight = drawRoutineHeader(doc, routineType, examName, filters, logoDataUrl);
+  const contentStartY = headerHeight + 6;
 
   if (rows.length === 0) {
     doc.setFont("helvetica", "normal");
@@ -389,7 +316,7 @@ export async function downloadRoutineGridPdf(options: {
     },
     // Repeats the light-blue header band on every page this table spans.
     willDrawPage: () => {
-      drawGridHeader(doc, routineType, filters, logoDataUrl);
+      drawRoutineHeader(doc, routineType, examName, filters, logoDataUrl);
     },
   });
 
@@ -418,4 +345,86 @@ export function batchFilenamePart(batch: string): string {
 
 export function sectionFilenamePart(section: string): string {
   return `Section-${filenameSegment(section)}`;
+}
+
+/** Mon/Tue/... label for a "YYYY-MM-DD" date string. Only ever called from
+ *  the click-triggered download path below (never during render), so using
+ *  `Date` here carries none of the server/client hydration mismatch risk
+ *  this codebase avoids for on-screen date formatting. */
+function dayOfWeekLabel(iso: string): string {
+  const match = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return "";
+  const [, year, month, day] = match;
+  const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+  return date.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" });
+}
+
+/** Sanitizes an exam name into a filename segment, preserving hyphens already
+ *  in the name (unlike filenameSegment, which collapses them to underscores
+ *  along with every other non-alphanumeric run) — keeps "Final-Term ..."
+ *  reading naturally in the saved file instead of becoming "Final_Term_...". */
+function examNameFilenamePart(examName: string): string {
+  return examName.trim().replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "") || "Exam";
+}
+
+/**
+ * Single reusable full-routine PDF download for one examination — called
+ * identically from an exam card's "View Routine" button and its Download
+ * icon (ExamCardActions) so the two can never drift into separate
+ * implementations. Always exports every routine row for `examId` (ignoring
+ * any on-screen department/batch/section filter elsewhere on the page), and
+ * renders through the same downloadRoutinePdf used by Class Routine so the
+ * branding/layout matches exactly.
+ */
+export async function downloadExamRoutinePdf(options: {
+  examId: number;
+  examName: string;
+  /** All exam routines across every exam — filtered to `examId` here so
+   *  callers can just pass the full list already loaded on the page. */
+  routines: ExamRoutine[];
+}): Promise<void> {
+  const { examId, examName, routines } = options;
+
+  const examRoutines = routines
+    .filter((r) => r.examId === examId)
+    .sort(
+      (a, b) => a.date.localeCompare(b.date) || timeRangeSortKey(a.timeSlot) - timeRangeSortKey(b.timeSlot),
+    );
+
+  // Condensed the same way Class Routine's own flat download reads —
+  // Course Name/Code into one "Course" cell, Department/Batch/Section into
+  // one "Dept / Batch / Section" cell, Room/Building into one "Room" cell —
+  // instead of a raw one-column-per-field list, so a routine covering many
+  // departments still reads as a clean, spacious table on A4 portrait.
+  const hasShift = examRoutines.some((r) => r.shift);
+  const columns = [
+    "Date",
+    "Day",
+    "Time",
+    "Course",
+    "Dept / Batch / Section",
+    "Room",
+    "Student Range",
+    ...(hasShift ? ["Shift"] : []),
+  ];
+  const rows = examRoutines.map((r) => [
+    formatIsoDate(r.date),
+    dayOfWeekLabel(r.date),
+    r.timeSlot,
+    courseLabel(r),
+    `${r.department} - ${r.batch} (${r.section})`,
+    [r.room, r.building].filter(Boolean).join(", "),
+    r.studentRange,
+    ...(hasShift ? [r.shift ?? ""] : []),
+  ]);
+
+  await downloadRoutinePdf({
+    routineType: "Exam Routine",
+    examName,
+    filters: {},
+    columns,
+    rows,
+    emptyMessage: "No routine available for this examination yet.",
+    filename: `${examNameFilenamePart(examName)}_Exam_Routine.pdf`,
+  });
 }

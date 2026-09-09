@@ -1,15 +1,8 @@
-import Link from "next/link";
-import {
-  AlertTriangle,
-  Calendar,
-  CheckCircle,
-  Download,
-  FileText,
-} from "lucide-react";
+import { AlertTriangle, Calendar, CheckCircle } from "lucide-react";
 import InfoCard from "@/components/shared/InfoCard";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import type { AcademicsPageContent } from "@/types/academics";
+import ExamCardActions from "./ExamCardActions";
 import ExamRoutineInteractive from "./ExamRoutineInteractive";
 
 export default async function ExamScheduleSection({
@@ -85,45 +78,11 @@ export default async function ExamScheduleSection({
                       {exam.startDate} to {exam.endDate}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 mt-auto pt-4 border-t border-border/50">
-                    <Button
-                      variant={isActive ? "default" : "outlineMuted"}
-                      size="sm"
-                      className="flex-1"
-                      render={
-                        <Link
-                          href={`/academics/exam-schedule?examId=${exam.id}`}
-                          scroll={false}
-                        />
-                      }
-                      nativeButton={false}
-                    >
-                      <FileText className="size-4 mr-1.5" />
-                      View Routine
-                    </Button>
-                    <Button
-                      variant="outlineSecondary"
-                      size="sm"
-                      className="flex-none px-3"
-                      disabled={!exam.routeFile}
-                      render={
-                        exam.routeFile ? (
-                          <Link
-                            href={exam.routeFile}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          />
-                        ) : undefined
-                      }
-                      nativeButton={exam.routeFile ? false : true}
-                      title={
-                        exam.routeFile ? "Download PDF" : "PDF not available"
-                      }
-                    >
-                      <Download className="size-4" />
-                      <span className="sr-only">Download</span>
-                    </Button>
-                  </div>
+                  <ExamCardActions
+                    exam={exam}
+                    isActive={isActive}
+                    routines={routines}
+                  />
                 </div>
               </InfoCard>
             );
