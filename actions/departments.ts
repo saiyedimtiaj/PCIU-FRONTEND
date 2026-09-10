@@ -70,10 +70,16 @@ function mapApiDepartmentToContent(
       email: apiData.email,
       hours: "Sunday - Thursday: 9:00 AM - 5:00 PM",
     },
-    quickLinks: (apiData.quickLink || []).map((link) => ({
-      label: link,
-      url: "#",
-    })),
+    quickLinks: (apiData.quickLink || []).flatMap((link) => {
+      // Older rows are bare strings with no destination; newer ones are
+      // `{ title, url }` objects. Rendering the object straight into `label`
+      // crashed the prerender of every department page.
+      if (typeof link === "string") {
+        return link ? [{ label: link, url: "#" }] : [];
+      }
+      const label = link?.title ?? link?.label ?? link?.name;
+      return label ? [{ label, url: link?.url || "#" }] : [];
+    }),
     facultyMembers: [], // Empty state
     researchAreas: [], // Empty state
     industryPartners: [], // Empty state

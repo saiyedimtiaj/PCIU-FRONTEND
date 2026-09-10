@@ -32,12 +32,22 @@ export interface EndpointConfig {
    * form warns about this rather than letting it look like ordinary create.
    */
   createOverwrites?: boolean;
+  /**
+   * Show the list page's "Add" button even when `singleton` is set. Use for
+   * a one-row backend that still has no per-id GET/PATCH/DELETE routes
+   * (verified: every `/popup/{id}` method 404s "Route not found", while
+   * GET/POST/PATCH/DELETE `/popup` all exist) — so it needs `singleton`'s
+   * id-less pathing, but the workflow still routes through /new. The Add
+   * form's `createOverwrites` warning makes the single-row nature explicit.
+   */
+  allowCreate?: boolean;
 }
 
 export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   department: { path: "/departments", multipart: true },
   faculty: { path: "/faculties" },
   course: { path: "/academic/courses" },
+  program: { path: "/programs", multipart: true },
 
   teacher: {
     path: "/teachers/admin",
@@ -60,6 +70,7 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   pages: { path: "/pages", multipart: true },
   "hero-slides": { path: "/heroslides", multipart: true },
   notices: { path: "/notices" },
+  "news-articles": { path: "/news-articles", multipart: true },
   gallery: { path: "/galleries", multipart: true },
   menus: { path: "/menus" },
 
@@ -102,7 +113,13 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
 
   contact: { path: "/contacts" },
   setting: { path: "/settings", multipart: true },
-  popup: { path: "/popup", singleton: true },
+  popup: {
+    path: "/popup",
+    singleton: true,
+    allowCreate: true,
+    deleteAtRoot: true,
+    createOverwrites: true,
+  },
 };
 
 /**

@@ -50,6 +50,10 @@ export interface DepartmentContact {
   hours: string;
 }
 
+export type DepartmentApiQuickLink =
+  | string
+  | { title?: string; label?: string; name?: string; url?: string };
+
 export interface DepartmentQuickLink {
   label: string;
   url: string;
@@ -110,7 +114,9 @@ export interface ApiDepartmentResponse {
   numberOfPartner: number;
   currentStudent: number;
   description: string;
-  quickLink: string[];
+  // The API's `quick_link` json column holds plain strings on some
+  // deployments and `{ title, url }` objects on others — accept both.
+  quickLink: DepartmentApiQuickLink[];
   status: boolean;
   deletedAt: string | null;
   createdAt: string;
