@@ -1,5 +1,5 @@
 import envConfig from "@/config/env.config";
-import { AUTH_COOKIE_NAME, getCookies } from "./cookie";
+import { getCookies } from "./cookie";
 
 const api_endpoint = envConfig.backend_base_url;
 
@@ -11,14 +11,16 @@ const serverFetchHelper = async (
   const finalHeaders = new Headers(headers);
   const method = rest.method?.toUpperCase();
 
-  const { betterAuthToken } = await getCookies();
+  const { betterAuthToken, betterAuthCookieName } = await getCookies();
 
   // Only send a Cookie header when there is an actual session. Building the
   // string unconditionally would always be truthy and ship a malformed
   // empty-valued cookie ("better-auth.session_token=") on every anonymous
-  // request, including the login POST itself.
+  // request, including the login POST itself. The name is whatever the
+  // backend used when it issued the cookie (it may carry a `__Secure-`
+  // prefix), since that is the name it looks for on the way back.
   if (betterAuthToken) {
-    finalHeaders.set("Cookie", `${AUTH_COOKIE_NAME}=${betterAuthToken}`);
+    finalHeaders.set("Cookie", `${betterAuthCookieName}=${betterAuthToken}`);
   }
 
   // FormData must set its own multipart boundary — forcing a Content-Type
