@@ -10,6 +10,7 @@ import { resolveUploadUrl } from "@/lib/upload-url";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -331,14 +332,34 @@ export function FormField({ field, control, register, error, mode = "create" }: 
     );
   }
 
-  if (field.type === "textarea" || field.type === "richtext") {
+  if (field.type === "richtext") {
+    return (
+      <Controller
+        control={control}
+        name={field.name}
+        render={({ field: rhf }) => (
+          <FieldShell field={field} error={error}>
+            <RichTextEditor
+              id={field.name}
+              value={typeof rhf.value === "string" ? rhf.value : ""}
+              onChange={rhf.onChange}
+              onBlur={rhf.onBlur}
+              placeholder={field.placeholder ?? "Write the article…"}
+              ariaInvalid={!!error}
+            />
+          </FieldShell>
+        )}
+      />
+    );
+  }
+
+  if (field.type === "textarea") {
     return (
       <FieldShell field={field} error={error}>
         <Textarea
           id={field.name}
           placeholder={field.placeholder}
           aria-invalid={!!error}
-          className={field.type === "richtext" ? "min-h-36" : undefined}
           {...register(field.name)}
         />
       </FieldShell>

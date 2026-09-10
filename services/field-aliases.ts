@@ -12,7 +12,7 @@ export const WRITE_ALIASES: Record<string, Record<string, string>> = {
 
 /** Keys the API ignores — dropped so they can't overwrite or bloat a payload. */
 export const WRITE_DROPS: Record<string, string[]> = {
-  teacher: ["facultyId", "leavePeriod"],
+  teacher: ["facultyId"],
   pages: ["publishedAt"],
   contact: ["displayOrder", "status"],
   notices: ["icon"],
