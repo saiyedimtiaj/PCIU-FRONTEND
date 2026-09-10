@@ -81,7 +81,9 @@ export default function EntityListClient({ slug, basePath: basePathOverride }: E
   const hasMoreFilters = hiddenOptionFields.length > 0 || !!dateField;
 
   const connected = isConnected(slug);
-  const isSingleton = !!getEndpoint(slug)?.singleton;
+  const endpointCfg = getEndpoint(slug);
+  const isSingleton = !!endpointCfg?.singleton;
+  const showAddButton = !isSingleton || !!endpointCfg?.allowCreate;
   const deactivateField = getEndpoint(slug)?.deactivateField;
   const canDelete = !getEndpoint(slug)?.noDelete || !!deactivateField;
   const resetsAtRoot = !!getEndpoint(slug)?.deleteAtRoot;
@@ -264,12 +266,12 @@ export default function EntityListClient({ slug, basePath: basePathOverride }: E
         description={schema.description}
         icon={schema.icon}
         actions={
-          isSingleton ? undefined : (
+          showAddButton ? (
             <Button variant="highlight" size="admin" render={<Link href={`${basePath}/new`} />} nativeButton={false}>
               <Plus className="size-4" />
               Add {schema.title}
             </Button>
-          )
+          ) : undefined
         }
       />
 
@@ -454,12 +456,12 @@ export default function EntityListClient({ slug, basePath: basePathOverride }: E
               title={`No ${pluralTitle.toLowerCase()} yet`}
               description={`Nothing has been added here so far. Create the first ${entityTitle.toLowerCase()} to get started.`}
               action={
-                isSingleton ? undefined : (
+                showAddButton ? (
                   <Button variant="highlight" size="admin" render={<Link href={`${basePath}/new`} />} nativeButton={false}>
                     <Plus className="size-4" />
                     Add {entityTitle}
                   </Button>
-                )
+                ) : undefined
               }
             />
           )
