@@ -1,4 +1,3 @@
-import React from "react";
 import NavbarClient from "./NavbarClient";
 import { getFaculties } from "@/actions/faculties";
 
