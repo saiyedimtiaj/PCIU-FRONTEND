@@ -4,8 +4,9 @@ import { useState, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 /**
- * Mounted by the admin layout only — the public site is static and must
- * stay that way, so the query client never reaches those routes.
+ * Mounted by the admin and faculty-portal layouts only — the public site
+ * is static and must stay that way, so the query client never reaches
+ * those routes.
  */
 export default function QueryProvider({ children }: { children: ReactNode }) {
   // useState keeps one client per browser session; creating it at module

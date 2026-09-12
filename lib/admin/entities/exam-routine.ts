@@ -12,6 +12,7 @@ const examRoutineSchema = z.object({
   batch_id: z.string().min(1, "Batch is required"),
   section_id: z.string().min(1, "Section is required"),
   date: z.string().min(1, "Date is required"),
+  shift: z.enum(["DAY", "EVENING"], { message: "Shift is required" }),
   student_range: z.string().max(100).optional().or(z.literal("")),
   status: z.boolean().default(true),
 });
@@ -49,6 +50,16 @@ export const examRoutineEntity: EntitySchema<typeof examRoutineSchema> = {
         { name: "room_id", label: "Room", type: "relation", required: true, relationTo: "room", options: [] },
         { name: "time_slot_id", label: "Time Slot", type: "relation", required: true, relationTo: "time-slot", options: [] },
         { name: "date", label: "Exam Date", type: "date", required: true },
+        {
+          name: "shift",
+          label: "Shift",
+          type: "select",
+          required: true,
+          options: [
+            { label: "Day", value: "DAY" },
+            { label: "Evening", value: "EVENING" },
+          ],
+        },
         { name: "student_range", label: "Student Range", type: "text", placeholder: "1–40" },
         { name: "status", label: "Active", type: "switch" },
       ],

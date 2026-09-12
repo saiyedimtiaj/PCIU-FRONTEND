@@ -1,4 +1,4 @@
-import { GraduationCap, BookOpen, Briefcase, Award, Users, CalendarDays, type LucideIcon } from "lucide-react";
+import { GraduationCap, BookOpen, Briefcase, Award, Users, type LucideIcon } from "lucide-react";
 import type { RowSectionKey } from "./FacultyProfileProvider";
 
 export interface SectionFieldDescriptor {
@@ -48,7 +48,7 @@ export const FACULTY_SECTION_CONFIG: Record<RowSectionKey, FacultySectionConfig>
     pluralLabel: "Publications",
     fields: [
       { name: "title", label: "Title", placeholder: "Research paper title", colSpan: 2 },
-      { name: "journal", label: "Journal / Publisher", placeholder: "Journal name" },
+      { name: "venue", label: "Journal / Publisher", placeholder: "Journal name" },
       { name: "year", label: "Year", placeholder: "2023" },
       { name: "authors", label: "Authors", placeholder: "Author 1, Author 2, ...", colSpan: 2 },
     ],
@@ -87,13 +87,5 @@ export const FACULTY_SECTION_CONFIG: Record<RowSectionKey, FacultySectionConfig>
       { name: "name", label: "Organization", placeholder: "IEEE", colSpan: 2 },
       { name: "role", label: "Role", placeholder: "Member" },
     ],
-  },
-  conferences: {
-    title: "Conferences",
-    description: "Conferences attended or presented at.",
-    icon: CalendarDays,
-    itemLabel: "Conference",
-    pluralLabel: "Conferences",
-    fields: [{ name: "name", label: "Conference Name", placeholder: "International Conference on...", colSpan: 2 }],
   },
 };

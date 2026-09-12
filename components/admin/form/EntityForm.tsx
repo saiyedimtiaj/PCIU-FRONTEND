@@ -112,14 +112,18 @@ export default function EntityForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className="flex min-h-[calc(100vh-3.5rem-3rem)] flex-col"
+    >
       <PageHeader
         title={isEdit ? `Edit ${schema.title}` : `Add ${schema.title}`}
         description={schema.description}
         icon={schema.icon}
       />
 
-      <div className="space-y-6">
+      <div className="flex-1 space-y-6">
         {sections.map((section, i) => (
           <Card key={section.title} className="overflow-hidden">
             <CardHeader className="gap-0 pb-4">

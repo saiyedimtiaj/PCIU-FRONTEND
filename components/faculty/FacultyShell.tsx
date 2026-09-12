@@ -4,7 +4,6 @@ import { useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import FacultySidebar from "./FacultySidebar";
 import FacultyHeader from "./FacultyHeader";
-import { useFacultyProfile } from "./FacultyProfileProvider";
 
 export interface FacultyShellProps {
   children: ReactNode;
@@ -12,19 +11,21 @@ export interface FacultyShellProps {
    * portal (fixed nav labels) and the admin per-teacher workspace (needs
    * the teacher's name + section label). */
   resolveTitle: (pathname: string) => string;
+  /** The sidebar's identity-block name. Passed explicitly rather than read
+   * from a shared context, since the portal (live query data) and the
+   * admin workspace (FacultyProfileProvider's in-memory demo data) get
+   * this from two different sources. */
+  teacherName: string;
 }
 
 /**
  * Mirrors AdminShell's structure (admin-theme wrapper, collapsed/mobileOpen
- * state, sidebar + header + main) but for the faculty-facing routes. Must
- * render inside a FacultyProfileProvider — it reads the teacher's name for
- * the sidebar's identity block.
+ * state, sidebar + header + main) but for the faculty-facing routes.
  */
-export default function FacultyShell({ children, resolveTitle }: FacultyShellProps) {
+export default function FacultyShell({ children, resolveTitle, teacherName }: FacultyShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  const { profile } = useFacultyProfile();
 
   return (
     <div className="flex min-h-screen w-full">
@@ -32,7 +33,7 @@ export default function FacultyShell({ children, resolveTitle }: FacultyShellPro
         collapsed={collapsed}
         mobileOpen={mobileOpen}
         onMobileClose={() => setMobileOpen(false)}
-        teacherName={profile.name}
+        teacherName={teacherName}
       />
       <div className="flex min-w-0 flex-1 flex-col">
         <FacultyHeader

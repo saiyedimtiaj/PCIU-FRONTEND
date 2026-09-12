@@ -13,6 +13,64 @@ type Dict = Record<string, unknown>;
 
 export type EntityRecord = Dict & { id?: number | string; __id: string };
 
+/**
+ * The teacher form models study leave as two `date` inputs, but the API
+ * stores `leavePeriod` as a single string. These join/split it on the way
+ * out/in. The separator is an en dash with spaces ("2026-01-01 – 2026-06-30")
+ * — matching the placeholder the field used to carry when it was free text,
+ * so values written by the old text input still round-trip.
+ *
+ * Either end may be blank: an open-ended leave saves as "2026-01-01 –".
+ */
+const LEAVE_PERIOD_SEPARATOR = " – ";
+
+function joinLeavePeriod(payload: Dict): void {
+  const start = payload.leavePeriodStart;
+  const end = payload.leavePeriodEnd;
+
+  // Only act when the form actually supplied the pair, so an unrelated
+  // caller can't have `leavePeriod` clobbered with an empty string.
+  if (start === undefined && end === undefined) return;
+
+  delete payload.leavePeriodStart;
+  delete payload.leavePeriodEnd;
+
+  const from = typeof start === "string" ? start.trim() : "";
+  const to = typeof end === "string" ? end.trim() : "";
+
+  payload.leavePeriod =
+    from || to ? `${from}${LEAVE_PERIOD_SEPARATOR}${to}`.trim() : "";
+}
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Keeps only a value a native `<input type="date">` can actually show. */
+function asInputDate(value: string): string {
+  const trimmed = value.trim();
+  if (ISO_DATE.test(trimmed)) return trimmed;
+  // Tolerate a full ISO datetime by keeping just the date half.
+  const datePart = trimmed.split("T")[0];
+  return ISO_DATE.test(datePart) ? datePart : "";
+}
+
+function splitLeavePeriod(mapped: Dict): void {
+  const raw = mapped.leave_period ?? mapped.leavePeriod;
+  if (typeof raw !== "string") return;
+
+  // Accept an en dash, em dash or hyphen between the two dates. A lone
+  // hyphen can't be the separator though — it also occurs inside every
+  // ISO date — so require surrounding whitespace for that case.
+  const [from = "", to = ""] = raw.split(/\s*[–—]\s*|\s+-\s+/, 2);
+
+  // The two inputs are `type="date"`, which renders blank on anything that
+  // isn't YYYY-MM-DD. Older rows hold free text ("Jan 2026 – Dec 2026")
+  // from when this was a single text field, so anything unparseable is
+  // dropped rather than handed to the input as a value it will silently
+  // discard — leaving the field genuinely empty and re-settable.
+  mapped.leave_period_start = asInputDate(from);
+  mapped.leave_period_end = asInputDate(to);
+}
+
 function encode(slug: string, values: Dict, omit: string[] = []): FormData | Dict {
   const cfg = getEndpoint(slug);
   const source = omit.length
@@ -26,10 +84,16 @@ function encode(slug: string, values: Dict, omit: string[] = []): FormData | Dic
     payload.teachingAreas = payload.teachingAreas.filter(Boolean).join(", ");
   }
 
+  joinLeavePeriod(payload);
+
   return cfg?.multipart ? buildFormData(payload) : buildJsonBody(payload);
 }
 
 function normalizeListValue(value: unknown): unknown {
+  // A `json-list` field is always an array in the form (useFieldArray),
+  // but the API may send `null` or omit it — coerce those to `[]` so the
+  // field renders empty instead of throwing on a non-iterable default.
+  if (value === null || value === undefined) return [];
   if (!Array.isArray(value)) return value;
 
   return value.map((item) => {
@@ -80,6 +144,8 @@ function decode(
     if (name in mapped) mapped[name] = toInputTime(mapped[name]);
   }
 
+  if (slug === "teacher") splitLeavePeriod(mapped);
+
   return {
     ...mapped,
     __id: String(mapped.id ?? mapped.__id ?? ""),
@@ -117,7 +183,20 @@ export async function listEntities(
           })),
       );
     } else {
-      rows = (data as Dict).data ?? (data as Dict).items ?? [data];
+      const obj = data as Dict;
+      // The API is inconsistent about the list wrapper key: some admin
+      // endpoints nest the array under `data.articles` / `data.teachers` /
+      // `data.departments`, others use `data` or `items`, and the public
+      // `home/*` routes return a bare array. Try the known keys first,
+      // then fall back to the object's sole array-valued property, and
+      // only treat the object itself as a single row if nothing matches.
+      const known = obj.data ?? obj.items;
+      if (Array.isArray(known)) {
+        rows = known;
+      } else {
+        const arrayValues = Object.values(obj).filter(Array.isArray);
+        rows = arrayValues.length === 1 ? arrayValues[0] : [data];
+      }
     }
   } else {
     rows = [];

@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   UserRound,
@@ -11,7 +12,6 @@ import {
   Briefcase,
   Award,
   Users,
-  CalendarDays,
   LogOut,
   X,
   type LucideIcon,
@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { logoutAction } from "@/app/(auth)/actions";
 
 export interface FacultyNavItem {
   title: string;
@@ -26,7 +27,7 @@ export interface FacultyNavItem {
   icon: LucideIcon;
 }
 
-// Mirrors AdminSidebar's flat NAV_ITEMS shape — a teacher's portal has 8
+// Mirrors AdminSidebar's flat NAV_ITEMS shape — a teacher's portal has 7
 // destinations total, so (unlike the admin sidebar) there's no need for the
 // collapsible-group layer that exists there to manage 50 entities.
 const NAV_ITEMS: FacultyNavItem[] = [
@@ -37,7 +38,6 @@ const NAV_ITEMS: FacultyNavItem[] = [
   { title: "Experience", href: "/faculty-portal/experience", icon: Briefcase },
   { title: "Awards", href: "/faculty-portal/awards", icon: Award },
   { title: "Memberships", href: "/faculty-portal/memberships", icon: Users },
-  { title: "Conferences", href: "/faculty-portal/conferences", icon: CalendarDays },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -101,6 +101,16 @@ function SidebarBody({
   teacherName: string;
   onNavigate?: () => void;
 }) {
+  const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    await logoutAction();
+    router.replace("/signin");
+    router.refresh();
+  }
+
   return (
     <div className="flex h-full flex-col bg-sidebar">
       {/* Logo */}
@@ -141,16 +151,18 @@ function SidebarBody({
 
       {/* Footer */}
       <div className="space-y-1 border-t border-sidebar-border px-2 py-3">
-        <Link
-          href="/signin"
+        <button
+          type="button"
+          onClick={handleSignOut}
+          disabled={signingOut}
           className={cn(
-            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground disabled:opacity-60",
             collapsed && "justify-center px-0"
           )}
         >
           <LogOut className="size-4 shrink-0" />
-          {!collapsed && "Sign Out"}
-        </Link>
+          {!collapsed && (signingOut ? "Signing out…" : "Sign Out")}
+        </button>
       </div>
     </div>
   );

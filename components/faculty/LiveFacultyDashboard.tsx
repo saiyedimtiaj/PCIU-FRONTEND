@@ -7,27 +7,25 @@ import { Badge } from "@/components/ui/badge";
 import { Meter, MeterTrack, MeterIndicator, MeterLabel } from "@/components/ui/meter";
 import PageHeader from "@/components/admin/PageHeader";
 import StatCard from "@/components/admin/stats/StatCard";
-import { generateSeries } from "@/components/admin/list/sample-data";
-import { useFacultyProfile } from "./FacultyProfileProvider";
-import type { FacultyWorkspaceProfile } from "./faculty-profile-data";
+import { Alert } from "@/components/shared/Aleart";
+import { useFacultyPortalData } from "./FacultyPortalDataProvider";
+import type { FacultyPortalProfile } from "@/app/(faculty)/profile-mapping";
 
 function initials(name: string): string {
   const cleaned = name.replace(/^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.)\s*/gi, "");
   return cleaned.charAt(0).toUpperCase() || "?";
 }
 
-function completeness(profile: FacultyWorkspaceProfile): number {
+function completeness(profile: FacultyPortalProfile): number {
   const checks = [
-    !!profile.email,
-    !!profile.phone,
     !!profile.office,
     !!profile.shortBio,
     !!profile.bio,
     profile.teachingAreas.length > 0,
-    profile.education.length > 0,
-    profile.publications.length > 0,
-    profile.experience.length > 0,
-    profile.awards.length > 0 || profile.memberships.length > 0,
+    profile.counts.education > 0,
+    profile.counts.publications > 0,
+    profile.counts.experience > 0,
+    profile.counts.awards > 0 || profile.counts.memberships > 0,
     !!profile.googleScholarUrl || !!profile.linkedinUrl || !!profile.websiteUrl,
   ];
   const done = checks.filter(Boolean).length;
@@ -43,39 +41,46 @@ const QUICK_LINKS = [
   { label: "Memberships", href: "/faculty-portal/memberships", icon: Users },
 ];
 
-export interface FacultyDashboardProps {
-  /** Prefix for quick-link hrefs — "/faculty-portal" for the portal, "/admin/faculty/<id>" for the admin workspace. */
-  basePath: string;
-  publicProfileHref?: string;
-  /** Shown only by the self-service portal, which has no auth and so displays
-   * a representative profile rather than a real signed-in teacher's. The
-   * admin workspace views a specific, real directory entry and doesn't need it. */
-  demoNotice?: string;
-}
+/**
+ * The teacher portal's live dashboard — reads the real signed-in teacher's
+ * profile via FacultyPortalDataProvider, rather than FacultyDashboard's
+ * FacultyProfileProvider (in-memory demo state, still used by the admin's
+ * per-teacher preview workspace). No sparklines here: the API has no
+ * time-series endpoint for these counts, and inventing fake trend lines
+ * next to genuinely live numbers would be actively misleading.
+ */
+export default function LiveFacultyDashboard() {
+  const { profile, isLoading, error } = useFacultyPortalData();
 
-export default function FacultyDashboard({ basePath, publicProfileHref, demoNotice }: FacultyDashboardProps) {
-  const { profile } = useFacultyProfile();
+  if (error) {
+    return (
+      <div className="w-full space-y-6">
+        <PageHeader title="Dashboard" description="Overview of your profile and recent activity." icon={LayoutDashboard} />
+        <Alert variant="error" message={error} />
+      </div>
+    );
+  }
+
+  if (isLoading || !profile) {
+    return (
+      <div className="w-full space-y-6">
+        <PageHeader title="Dashboard" description="Overview of your profile and recent activity." icon={LayoutDashboard} />
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StatCard label="Publications" value={0} icon={BookOpen} tone="primary" loading />
+          <StatCard label="Experience Entries" value={0} icon={Briefcase} tone="info" loading />
+          <StatCard label="Awards" value={0} icon={Award} tone="success" loading />
+          <StatCard label="Teaching Areas" value={0} icon={Sparkles} tone="violet" loading />
+        </div>
+      </div>
+    );
+  }
+
   const pct = completeness(profile);
-
-  // Deterministic sparklines, seeded off the profile id — stable across
-  // server/client render and rebuilds (no Math.random()/Date.now()).
-  const pubSeries = generateSeries(`faculty-${profile.id}-publications`, 12, 2, 10);
-  const expSeries = generateSeries(`faculty-${profile.id}-experience`, 12, 3, 12);
-  const awardSeries = generateSeries(`faculty-${profile.id}-awards`, 12, 1, 8);
-  const areaSeries = generateSeries(`faculty-${profile.id}-areas`, 12, 4, 14);
-
-  const links = QUICK_LINKS.map((l) => ({ ...l, href: l.href.replace("/faculty-portal", basePath) }));
 
   return (
     // No self-padding — the caller's page.tsx wraps this in "w-full p-6".
     <div className="w-full space-y-6">
       <PageHeader title="Dashboard" description="Overview of your profile and recent activity." icon={LayoutDashboard} />
-
-      {demoNotice && (
-        <div className="rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
-          {demoNotice}
-        </div>
-      )}
 
       <Card>
         <CardContent className="flex flex-wrap items-center gap-4">
@@ -86,26 +91,18 @@ export default function FacultyDashboard({ basePath, publicProfileHref, demoNoti
             <p className="font-heading text-lg font-semibold text-foreground">{profile.name}</p>
             <p className="text-sm text-muted-foreground">{profile.designation}</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              <Badge variant="secondary">{profile.faculty}</Badge>
-              <Badge variant="outline">{profile.department}</Badge>
+              {profile.faculty && <Badge variant="secondary">{profile.faculty}</Badge>}
+              {profile.department && <Badge variant="outline">{profile.department}</Badge>}
             </div>
           </div>
-          {publicProfileHref && (
-            <a
-              href={publicProfileHref}
-              className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-border px-3.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-            >
-              View public profile
-            </a>
-          )}
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Publications" value={profile.publications.length} icon={BookOpen} tone="primary" sparkline={pubSeries} />
-        <StatCard label="Experience Entries" value={profile.experience.length} icon={Briefcase} tone="info" sparkline={expSeries} />
-        <StatCard label="Awards" value={profile.awards.length} icon={Award} tone="success" sparkline={awardSeries} />
-        <StatCard label="Teaching Areas" value={profile.teachingAreas.length} icon={Sparkles} tone="violet" sparkline={areaSeries} />
+        <StatCard label="Publications" value={profile.counts.publications} icon={BookOpen} tone="primary" />
+        <StatCard label="Experience Entries" value={profile.counts.experience} icon={Briefcase} tone="info" />
+        <StatCard label="Awards" value={profile.counts.awards} icon={Award} tone="success" />
+        <StatCard label="Teaching Areas" value={profile.teachingAreas.length} icon={Sparkles} tone="violet" />
       </div>
 
       <div className="rounded-xl border border-border bg-card p-5">
@@ -127,7 +124,7 @@ export default function FacultyDashboard({ basePath, publicProfileHref, demoNoti
         <h2 className="font-heading font-semibold text-lg text-foreground">Manage Your Profile</h2>
         <Card>
           <CardContent className="grid gap-1 sm:grid-cols-2">
-            {links.map((link) => {
+            {QUICK_LINKS.map((link) => {
               const Icon = link.icon;
               return (
                 <Link
