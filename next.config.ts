@@ -2,9 +2,7 @@ import type { NextConfig } from "next";
 
 const backendHost = (() => {
   try {
-    return new URL(
-      process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "",
-    ).hostname;
+    return new URL(process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "").hostname;
   } catch {
     return undefined;
   }
@@ -20,6 +18,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
+    unoptimized: true,
     // Required starting with Next.js 16 — unrestricted access would let
     // callers request arbitrary optimization qualities.
     qualities: [75],
