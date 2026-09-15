@@ -1,5 +1,11 @@
 // import type { ApiResponse, HeroSliderItem } from "@/types/home";
-import type { ApiResponse, FacultyItem, HeroSliderItem, NoticeItem, VCInfo } from "@/types/home";
+import type {
+  ApiResponse,
+  FacultyItem,
+  HeroSliderItem,
+  NoticeItem,
+  VCInfo,
+} from "@/types/home";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
@@ -127,8 +133,52 @@ export async function getFaculties(): Promise<FacultyItem[]> {
   }
 }
 
-/** --------- VC info---------- */
+/** --------- Starts.tsx---------- */
+import type { PageSettingItem, StatItem } from "@/types/home";
 
+// Whitelist: only these known categories render as stats.
+// Prevents unrelated homepage settings (from this generic
+// /home/settings/page/home endpoint) from leaking in as fake stat cards.
+const STAT_KEY_PATTERNS = [/student/i, /program/i, /alumni/i, /faculty/i];
 
+export async function getStats(): Promise<StatItem[]> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return [];
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/home/settings/page/home`, {
+      next: { revalidate: 1800 },
+    });
+
+    if (!res.ok) {
+      console.error(`Home settings request failed: ${res.status}`);
+      return [];
+    }
+
+    const json: ApiResponse<PageSettingItem[]> = await res.json();
+
+    if (!json.success || !Array.isArray(json.data)) {
+      return [];
+    }
+
+    return json.data
+      .filter(
+        (item) =>
+          item.status &&
+          STAT_KEY_PATTERNS.some((pattern) => pattern.test(item.key)),
+      )
+      .map((item) => ({
+        id: item.id,
+        key: item.key,
+        label: item.key.replace(/^home\s+/i, "").trim(),
+        value: item.value,
+      }));
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    return [];
+  }
+}
 
 /** --------- VC info---------- */
