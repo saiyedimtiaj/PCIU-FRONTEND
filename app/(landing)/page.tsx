@@ -8,6 +8,7 @@ import Research from "./_ui/Research";
 import PhotoGallery from "./_ui/PhotoGallery";
 import CampusLife from "./_ui/CampusLife";
 import NewsEvents from "./_ui/NewsEvents";
+import Stats from "./_ui/Stats";
 
 export default function Page() {
   return (
@@ -20,6 +21,7 @@ export default function Page() {
       </a>
       <main id="main-content">
         <HeroSection />
+        <Stats />
         <NoticeMarquee />
         <VCMessage />
         <ProgramFinder />

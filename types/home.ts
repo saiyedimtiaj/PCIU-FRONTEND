@@ -41,15 +41,23 @@ export interface HeroSliderItem {
 
 /**--------------- Hero section ------------------ */
 
-/** Notice marquee */
-// export type NoticeColor = "destructive" | "accent" | "secondary";
+/**--------------- starts,ts-----------*/
+export interface PageSettingItem {
+  id: number;
+  pageId: number;
+  key: string;
+  value: string;
+  status: boolean;
+}
 
-// export interface Notice {
-//   type: string;
-//   icon: IconName;
-//   text: string;
-//   color: NoticeColor;
-// }
+export interface StatItem {
+  id: number;
+  key: string;
+  label: string;
+  value: string;
+}
+
+/**--------------- starts,ts-----------*/
 
 /** Home notices (from /home/notices API) */
 export interface NoticeItem {
@@ -67,9 +75,6 @@ export interface NoticeItem {
 
 /** Home notices (from /home/notices API) */
 
-
-
-
 /** VC message */
 // export interface VCMessageContent {
 //   name: string;
@@ -77,7 +82,6 @@ export interface NoticeItem {
 //   message: string;
 //   photo: string;
 // }
-
 
 /** Vice Chancellor (from /home/vc API) */
 export interface VCInfo {
@@ -96,9 +100,6 @@ export interface VCInfo {
   websiteUrl: string | null;
 }
 /** Vice Chancellor (from /home/vc API) */
-
-
-
 
 /** Program finder */
 export interface Program {
@@ -134,7 +135,6 @@ export interface FacultyItem {
   departments: FacultyDepartment[];
 }
 /** Faculty (from /home/faculties API) */
-
 
 /** Faculties */
 export interface Faculty {
@@ -226,6 +226,3 @@ export interface NewsEventsContent {
   news: NewsItem[];
   events: EventItem[];
 }
-
-
-
