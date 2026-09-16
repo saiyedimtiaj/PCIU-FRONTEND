@@ -216,6 +216,110 @@ function ImageUploadField({
   );
 }
 
+type ImageListItem = File | string;
+
+function multiImagePreviewSrc(item: ImageListItem): string {
+  return typeof item === "string" ? resolveUploadUrl(item) : URL.createObjectURL(item);
+}
+
+/**
+ * Several images picked one at a time — new `File`s from this session mixed
+ * with existing server paths already on the record. Each thumbnail can be
+ * removed individually; picking more files appends rather than replaces, so
+ * building a full gallery doesn't mean re-selecting everything each time.
+ */
+function MultiImageUploadField({
+  field,
+  error,
+  value,
+  onChange,
+  onBlur,
+}: {
+  field: FieldDescriptor;
+  error?: string;
+  value: ImageListItem[];
+  onChange: (value: ImageListItem[]) => void;
+  onBlur: () => void;
+}) {
+  const objectUrls = useMemo(
+    () => new Map(value.filter((item): item is File => item instanceof File).map((f) => [f, multiImagePreviewSrc(f)])),
+    [value],
+  );
+
+  useEffect(() => {
+    return () => {
+      for (const url of objectUrls.values()) URL.revokeObjectURL(url);
+    };
+  }, [objectUrls]);
+
+  function removeAt(index: number) {
+    onChange(value.filter((_, i) => i !== index));
+  }
+
+  return (
+    <FieldShell field={field} error={error}>
+      <label
+        htmlFor={field.name}
+        className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-input bg-muted/20 px-4 py-3 transition-colors hover:border-primary/50 hover:bg-accent/40"
+      >
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <ImageIcon className="size-4" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-medium text-foreground">
+            {value.length > 0 ? "Add more images" : "Choose images"}
+          </span>
+          <span className="block truncate text-xs text-muted-foreground">
+            {value.length > 0
+              ? `${value.length} image${value.length === 1 ? "" : "s"} selected`
+              : "No images selected yet"}
+          </span>
+        </span>
+      </label>
+      <input
+        id={field.name}
+        type="file"
+        accept="image/*"
+        multiple
+        className="sr-only"
+        onChange={(e) => {
+          const picked = Array.from(e.target.files ?? []);
+          if (picked.length === 0) return;
+          onChange([...value, ...picked]);
+          // Allows re-picking the same file after removing it — a file
+          // input otherwise treats an unchanged selection as no change.
+          e.target.value = "";
+        }}
+        onBlur={onBlur}
+      />
+      {value.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {value.map((item, index) => (
+            <div
+              key={item instanceof File ? `${item.name}-${item.lastModified}-${index}` : `${item}-${index}`}
+              className="group relative size-20 shrink-0 overflow-hidden rounded-lg border border-border bg-muted/30"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={item instanceof File ? objectUrls.get(item) : resolveUploadUrl(item)}
+                alt=""
+                className="size-full object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => removeAt(index)}
+                aria-label="Remove image"
+                className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <X className="size-3" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </FieldShell>
+  );
+}
 
 function RelationField({
   field,
@@ -376,6 +480,24 @@ export function FormField({ field, control, register, error, mode = "create" }: 
             field={field}
             error={error}
             value={rhf.value}
+            onChange={rhf.onChange}
+            onBlur={rhf.onBlur}
+          />
+        )}
+      />
+    );
+  }
+
+  if (field.type === "image-list") {
+    return (
+      <Controller
+        control={control}
+        name={field.name}
+        render={({ field: rhf }) => (
+          <MultiImageUploadField
+            field={field}
+            error={error}
+            value={Array.isArray(rhf.value) ? rhf.value : []}
             onChange={rhf.onChange}
             onBlur={rhf.onBlur}
           />

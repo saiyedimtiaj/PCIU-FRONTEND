@@ -4,13 +4,12 @@ import { useFacultyProfile, type RowSectionKey } from "@/components/faculty/Facu
 import SectionListView, { type Row } from "./SectionListView";
 
 /**
- * The admin's per-teacher preview workspace (/admin/faculty/[id]/*) has no
- * live API to write against — the teacher endpoints are session-scoped to
- * "the signed-in teacher", not addressable by an admin for an arbitrary
- * teacher id. This keeps that workspace on FacultyProfileProvider's
- * in-memory demo state, adapting its index-addressed rows to the
- * id-shaped interface SectionListView expects by synthesising
- * `id = String(index)`.
+ * The admin's per-teacher preview workspace (/admin/faculty/[id]/*) isn't
+ * wired to the live /teachers/admin/info/* endpoints (unlike /admin/people/*,
+ * which is) — see AGENTS.md's Faculty portal section. This keeps that
+ * workspace on FacultyProfileProvider's in-memory demo state, adapting its
+ * index-addressed rows to the id-shaped interface SectionListView expects
+ * by synthesising `id = String(index)`.
  */
 export default function DemoSectionList({ section }: { section: RowSectionKey }) {
   const { getRows, addRow, updateRow, removeRow } = useFacultyProfile();

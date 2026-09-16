@@ -3,9 +3,7 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { FacultyWorkspaceProfile } from "./faculty-profile-data";
 
-// Array-valued sections of the profile that behave as repeatable rows
-// (Add/Edit/Delete via FacultySectionList). Every section is an array of
-// objects.
+
 export type RowSectionKey = "education" | "publications" | "experience" | "awards" | "memberships";
 
 type RowOf<K extends RowSectionKey> = FacultyWorkspaceProfile[K][number];
@@ -22,22 +20,7 @@ export interface FacultyProfileContextValue {
 
 const FacultyProfileContext = createContext<FacultyProfileContextValue | null>(null);
 
-/**
- * Holds the faculty profile being edited across the admin's per-teacher
- * preview workspace (`/admin/faculty/[id]/*`) — an in-memory, non-persisted
- * store, since that workspace has no admin-side API to write these
- * sub-resources against (the live endpoints are session-scoped to "the
- * signed-in teacher", not addressable by an admin for an arbitrary
- * teacher id).
- *
- * The teacher-facing portal (`/faculty-portal/*`) does NOT use this
- * provider for row data any more — FacultySectionList reads/writes
- * through features/teacher-profile's query hooks instead, which are
- * backed by the real API and address rows by id rather than array
- * position. This provider still supplies FacultyShell with a `profile`
- * for the sidebar identity block on both mount points (see
- * FacultyPortalDataProvider for how the live path adapts that).
- */
+
 export function FacultyProfileProvider({
   initialProfile,
   children,

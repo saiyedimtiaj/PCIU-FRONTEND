@@ -11,6 +11,7 @@ import { educationEntity } from "./education";
 import { experienceEntity } from "./experience";
 import { membershipEntity } from "./membership";
 import { awardsEntity } from "./awards";
+import { teacherPublicationEntity } from "./teacher-publication";
 import { userEntity } from "./user";
 
 import { semesterEntity } from "./semester";
@@ -72,6 +73,7 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   experience: experienceEntity,
   membership: membershipEntity,
   awards: awardsEntity,
+  "teacher-publication": teacherPublicationEntity,
   user: userEntity,
 
   semester: semesterEntity,
