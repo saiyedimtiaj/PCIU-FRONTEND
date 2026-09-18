@@ -11,7 +11,13 @@ interface FacultyCardProps {
   icon: IconName;
 }
 
-export default function FacultyCard({ id, name, about, departments, icon }: FacultyCardProps) {
+export default function FacultyCard({
+  id,
+  name,
+  about,
+  departments,
+  icon,
+}: FacultyCardProps) {
   const Icon = iconMap[icon];
 
   return (
@@ -58,14 +64,14 @@ export default function FacultyCard({ id, name, about, departments, icon }: Facu
                 >
                   {dept.name}
                 </span>
-              )
+              ),
             )}
           </div>
         )}
 
         <div className="mt-auto pt-2">
           <Link
-            href={`/faculties?faculty=${id}`}
+            href={`/faculties?faculty=${encodeURIComponent(name)}`}
             className="group/btn relative inline-flex w-full items-center justify-center overflow-hidden rounded-lg border-2 border-primary/20 px-4 py-2.5 text-sm font-semibold text-primary transition-all duration-300 hover:border-accent hover:text-white"
           >
             <span
