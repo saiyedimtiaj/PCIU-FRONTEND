@@ -53,6 +53,34 @@ function asInputDate(value: string): string {
   return ISO_DATE.test(datePart) ? datePart : "";
 }
 
+const ISO_DATE_FIELDS: Partial<Record<string, string[]>> = {
+  education: ["educationYear"],
+  awards: ["awardDate"],
+};
+
+function toIsoDateTime(value: string): string {
+  const trimmed = value.trim();
+  return ISO_DATE.test(trimmed) ? `${trimmed}T00:00:00.000Z` : trimmed;
+}
+
+function encodeIsoDates(slug: string, payload: Dict): void {
+  const fields = ISO_DATE_FIELDS[slug];
+  if (!fields) return;
+  for (const name of fields) {
+    const value = payload[name];
+    if (typeof value === "string" && value) payload[name] = toIsoDateTime(value);
+  }
+}
+
+function decodeIsoDates(slug: string, mapped: Dict): void {
+  const fields = ISO_DATE_FIELDS[slug];
+  if (!fields) return;
+  for (const name of fields) {
+    const value = mapped[name];
+    if (typeof value === "string" && value) mapped[name] = asInputDate(value);
+  }
+}
+
 function splitLeavePeriod(mapped: Dict): void {
   const raw = mapped.leave_period ?? mapped.leavePeriod;
   if (typeof raw !== "string") return;
@@ -85,6 +113,7 @@ function encode(slug: string, values: Dict, omit: string[] = []): FormData | Dic
   }
 
   joinLeavePeriod(payload);
+  encodeIsoDates(slug, payload);
 
   return cfg?.multipart ? buildFormData(payload) : buildJsonBody(payload);
 }
@@ -124,6 +153,7 @@ function decode(
   listFields: string[] = [],
   relationFields: string[] = [],
   timeFields: string[] = [],
+  nullableStringFields: string[] = [],
 ): EntityRecord {
   let mapped = fromApi(record, fieldNames);
   mapped = applyReadNested(slug, mapped, record);
@@ -144,7 +174,19 @@ function decode(
     if (name in mapped) mapped[name] = toInputTime(mapped[name]);
   }
 
+  // An optional string-shaped field (text, relation, date, ...) the API has
+  // no value for comes back as JSON `null`, but every such field's zod
+  // validator only ever accepts a string or `""` — never `null` — because
+  // `""` already means "unset" in the form. Left as `null`, the field
+  // fails validation the instant existing data loads, before the user
+  // touches anything. Convert it to the empty string those validators
+  // already expect.
+  for (const name of nullableStringFields) {
+    if (mapped[name] === null) mapped[name] = "";
+  }
+
   if (slug === "teacher") splitLeavePeriod(mapped);
+  decodeIsoDates(slug, mapped);
 
   return {
     ...mapped,
@@ -159,6 +201,7 @@ export async function listEntities(
   listFields: string[] = [],
   relationFields: string[] = [],
   timeFields: string[] = [],
+  nullableStringFields: string[] = [],
 ): Promise<EntityRecord[]> {
   const query = new URLSearchParams();
   for (const [k, v] of Object.entries(params ?? {})) {
@@ -204,7 +247,9 @@ export async function listEntities(
 
   return (Array.isArray(rows) ? rows : [rows])
     .filter((r): r is Dict => !!r && typeof r === "object")
-    .map((r) => decode(slug, r, fieldNames, listFields, relationFields, timeFields));
+    .map((r) =>
+      decode(slug, r, fieldNames, listFields, relationFields, timeFields, nullableStringFields),
+    );
 }
 
 export async function getEntity(
@@ -214,6 +259,7 @@ export async function getEntity(
   listFields: string[] = [],
   relationFields: string[] = [],
   timeFields: string[] = [],
+  nullableStringFields: string[] = [],
 ): Promise<EntityRecord | null> {
   const cfg = getEndpoint(slug);
   const path = cfg?.singleton ? collectionPath(slug) : itemPath(slug, id);
@@ -226,7 +272,15 @@ export async function getEntity(
     : data;
 
   return record
-    ? decode(slug, record as Dict, fieldNames, listFields, relationFields, timeFields)
+    ? decode(
+        slug,
+        record as Dict,
+        fieldNames,
+        listFields,
+        relationFields,
+        timeFields,
+        nullableStringFields,
+      )
     : null;
 }
 

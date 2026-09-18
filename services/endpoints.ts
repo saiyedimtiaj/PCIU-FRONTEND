@@ -55,6 +55,14 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
     noDelete: true,
     deactivateField: "is_active",
   },
+  education: { path: "/teachers/admin/info/education" },
+  experience: { path: "/teachers/admin/info/experience" },
+  membership: { path: "/teachers/admin/info/membership" },
+  awards: { path: "/teachers/admin/info/award" },
+  "teacher-publication": {
+    path: "/teachers/admin/info/publication",
+    multipart: true,
+  },
   user: { path: "/users", multipart: true },
 
   semester: { path: "/academic/semesters" },

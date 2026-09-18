@@ -32,3 +32,17 @@ export const requiredUpload = z.custom<File | string>(
   (value) => isFile(value) || (typeof value === "string" && value.length > 0),
   { message: "A file is required" },
 );
+
+/**
+ * Validator for an `image-list` field — several images picked one at a
+ * time (see `MultiImageUploadField` in `FormField.tsx`), stored as a mix
+ * of new `File`s and existing server paths from a previous save.
+ */
+export const optionalUploadList = z
+  .array(
+    z.custom<File | string>(
+      (value) => isFile(value) || typeof value === "string",
+      { message: "Each item must be a file or an existing image path" },
+    ),
+  )
+  .default([]);

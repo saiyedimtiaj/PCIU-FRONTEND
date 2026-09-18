@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { optionalUpload } from "./_upload";
+import { optionalUpload, optionalUploadList } from "./_upload";
 import { Newspaper } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -14,7 +14,7 @@ const newsArticleSchema = z.object({
   locale: z.string().max(10).default("en"),
   author: z.string().max(255).optional().or(z.literal("")),
   cover_image_url: optionalUpload,
-  multiple_image: z.array(z.string()).default([]),
+  multiple_image: optionalUploadList,
   is_featured: z.boolean().default(false),
   status: z.boolean().default(true),
   published_at: z.string().optional().or(z.literal("")),
@@ -78,10 +78,9 @@ export const newsArticlesEntity: EntitySchema<typeof newsArticleSchema> = {
         {
           name: "multiple_image",
           label: "Gallery Images",
-          type: "json-list",
+          type: "image-list",
           colSpan: 2,
-          placeholder: "https://example.com/photo.jpg",
-          helper: "Additional image URLs shown in the article gallery.",
+          helper: "Additional images shown in the article gallery.",
         },
       ],
     },
