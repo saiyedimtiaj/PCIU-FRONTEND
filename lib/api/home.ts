@@ -5,6 +5,8 @@ import type {
   HeroSliderItem,
   NoticeItem,
   VCInfo,
+  PageSettingItem,
+  StatItem,
 } from "@/types/home";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
@@ -134,7 +136,6 @@ export async function getFaculties(): Promise<FacultyItem[]> {
 }
 
 /** --------- Starts.tsx---------- */
-import type { PageSettingItem, StatItem } from "@/types/home";
 
 // Whitelist: only these known categories render as stats.
 // Prevents unrelated homepage settings (from this generic
