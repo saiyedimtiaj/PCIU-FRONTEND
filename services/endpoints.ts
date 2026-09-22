@@ -46,7 +46,7 @@ export interface EndpointConfig {
 export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   department: { path: "/departments", multipart: true },
   faculty: { path: "/faculties" },
-  course: { path: "/academic/courses" },
+  course: { path: "/academic/admin/courses" },
   program: { path: "/programs", multipart: true },
 
   teacher: {
@@ -65,13 +65,13 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   },
   user: { path: "/users", multipart: true },
 
-  semester: { path: "/academic/semesters" },
-  exam: { path: "/academic/exams", multipart: true },
-  batch: { path: "/academic/batches" },
-  section: { path: "/academic/sections" },
-  building: { path: "/academic/buildings" },
-  room: { path: "/academic/rooms" },
-  "time-slot": { path: "/academic/time-slots" },
+  semester: { path: "/academic/admin/semesters" },
+  exam: { path: "/academic/admin/exams", multipart: true },
+  batch: { path: "/academic/admin/batches" },
+  section: { path: "/academic/admin/sections" },
+  building: { path: "/academic/admin/buildings" },
+  room: { path: "/academic/admin/rooms" },
+  "time-slot": { path: "/academic/admin/time-slots" },
   "class-routine": { path: "/routines/class" },
   "exam-routine": { path: "/routines/exam" },
 
