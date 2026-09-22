@@ -63,6 +63,7 @@ export interface RoutinePdfFilters {
   department?: string;
   batch?: string;
   section?: string;
+  shift?: string;
 }
 
 /** Rounded pill behind the exam-name subtitle — same visual language as the
@@ -116,6 +117,7 @@ function drawRoutineHeader(
     filters.department ? `Program: ${filters.department}` : null,
     filters.section ? `Section: ${filters.section}` : null,
     filters.batch ? `Batch: ${filters.batch}` : null,
+    filters.shift ? `Shift: ${filters.shift}` : null,
   ].filter((s): s is string => Boolean(s));
   const segmentsLine = segments.length > 0 ? segments.join("      ") : "All Departments · All Batches · All Sections";
 
@@ -345,6 +347,10 @@ export function batchFilenamePart(batch: string): string {
 
 export function sectionFilenamePart(section: string): string {
   return `Section-${filenameSegment(section)}`;
+}
+
+export function shiftFilenamePart(shift: string): string {
+  return filenameSegment(shift);
 }
 
 /** Mon/Tue/... label for a "YYYY-MM-DD" date string. Only ever called from

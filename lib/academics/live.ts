@@ -165,6 +165,7 @@ export async function getLiveClassRoutines(): Promise<ClassRoutineItem[]> {
       section: nameOf(r, "section"),
       day: str(r.day),
       studentRange: str(r.studentRange),
+      shift: typeof r.shift === "string" && r.shift ? r.shift : undefined,
     }));
 }
 

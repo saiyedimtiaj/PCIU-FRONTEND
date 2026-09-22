@@ -154,7 +154,12 @@ export async function getStats(): Promise<StatItem[]> {
     });
 
     if (!res.ok) {
-      console.error(`Home settings request failed: ${res.status}`);
+      // 404 means no "home" page/settings have been configured in the
+      // backend yet — an expected empty state, not a failure worth
+      // surfacing as a console error.
+      if (res.status !== 404) {
+        console.error(`Home settings request failed: ${res.status}`);
+      }
       return [];
     }
 

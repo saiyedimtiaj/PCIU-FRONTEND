@@ -8,12 +8,14 @@ export default function ClassScheduleGrid({
   department,
   batch,
   section,
+  shift,
 }: {
   routines: ClassRoutineItem[];
   timeSlots: ClassTimeSlot[];
   department: string;
   batch: string;
   section: string;
+  shift?: string;
 }) {
   const columns = buildClassGridColumns(routines, timeSlots);
 
@@ -24,6 +26,7 @@ export default function ClassScheduleGrid({
         department={department}
         batch={batch}
         section={section}
+        shift={shift}
       />
 
       <div className="overflow-x-auto">

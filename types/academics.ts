@@ -61,6 +61,8 @@ export interface ClassRoutineItem {
   section: string;
   day: string;
   studentRange: string;
+  /** "DAY" / "EVENING" — omitted entirely when the API doesn't return one. */
+  shift?: string;
 }
 
 export interface GradeRow {

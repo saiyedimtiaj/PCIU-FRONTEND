@@ -1,16 +1,18 @@
 import Image from "next/image";
-import { Calendar, GraduationCap, Users } from "lucide-react";
+import { Calendar, Clock, GraduationCap, Users } from "lucide-react";
 
 export default function RoutineInfoBar({
   title,
   department,
   batch,
   section,
+  shift,
 }: {
   title: string;
   department: string;
   batch: string;
   section: string;
+  shift?: string;
 }) {
   return (
     <div className="rounded-t-lg border-b border-[#0D2B45]/10 bg-[#F6FAFF] px-4 py-5 sm:px-6">
@@ -38,6 +40,12 @@ export default function RoutineInfoBar({
           <Calendar className="size-4 text-[#059669]" />
           Batch: {batch}
         </span>
+        {shift && (
+          <span className="flex items-center gap-1.5 font-medium text-[#0D2B45]">
+            <Clock className="size-4 text-[#059669]" />
+            Shift: {shift}
+          </span>
+        )}
       </div>
     </div>
   );
