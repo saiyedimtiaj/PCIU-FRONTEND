@@ -1,10 +1,8 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { FaLinkedinIn, FaFacebookF, FaXTwitter } from "react-icons/fa6";
 
-import { Button } from "@/components/ui/button";
 import { getVCInfo } from "@/lib/api/home";
 import { getMediaUrl } from "@/lib/utils/media";
 
@@ -12,7 +10,6 @@ export default async function VCMessage() {
   const vc = await getVCInfo();
 
   if (!vc) return null;
-
   const photoUrl = getMediaUrl(vc.imageUrl);
 
   const socialLinks = [
@@ -385,7 +382,7 @@ export default async function VCMessage() {
               />
 
               {/* Photo */}
-             <div className="group relative aspect-[5/4] overflow-hidden rounded-[21px] bg-[#EEF5FC]">
+              <div className="group relative aspect-[5/4] overflow-hidden rounded-[21px] bg-[#EEF5FC]">
                 {photoUrl ? (
                   <Image
                     src={photoUrl}
@@ -393,33 +390,11 @@ export default async function VCMessage() {
                     fill
                     priority
                     unoptimized
-                    sizes="
-                      (min-width: 1024px) 360px,
-                      (min-width: 768px) 330px,
-                      90vw
-                    "
-                    className="
-                      object-cover
-                      object-top
-                      transition-transform
-                      duration-700
-                      ease-out
-                      group-hover:scale-[1.035]
-                    "
+                    sizes="(min-width: 1024px) 360px, (min-width: 768px) 330px, 90vw"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.035]"
                   />
                 ) : (
-                  <div
-                    className="
-                      flex
-                      h-full
-                      items-center
-                      justify-center
-                      px-5
-                      text-center
-                      text-sm
-                      text-slate-400
-                    "
-                  >
+                  <div className="flex h-full items-center justify-center px-5 text-center text-sm text-slate-400">
                     Photo unavailable
                   </div>
                 )}
@@ -427,14 +402,14 @@ export default async function VCMessage() {
                 {/* Subtle image overlay */}
                 <div
                   className="
-                    pointer-events-none
-                    absolute
-                    inset-0
-                    bg-gradient-to-t
-                    from-[#082F67]/15
-                    via-transparent
-                    to-transparent
-                  "
+      pointer-events-none
+      absolute
+      inset-0
+      bg-gradient-to-t
+      from-[#082F67]/15
+      via-transparent
+      to-transparent
+    "
                 />
               </div>
 
@@ -444,29 +419,28 @@ export default async function VCMessage() {
 
               <div
                 className="
-                  relative
-                  z-30
-                  -mt-2
-                  mx-2
-                  rounded-2xl
-                  bg-white
-                  px-4
-                  py-4
-                  text-center
-                  shadow-[0_12px_35px_rgba(8,47,103,0.13)]
-                  sm:mx-4
-                  sm:px-5
-                "
+    relative
+    z-30
+    -mt-2
+    mx-2
+    rounded-2xl
+    bg-white
+    px-4
+    py-4
+    shadow-[0_12px_35px_rgba(8,47,103,0.13)]
+    sm:mx-4
+    sm:px-5
+  "
               >
                 <h3
                   className="
-                    font-heading
-                    text-base
-                    font-bold
-                    leading-snug
-                    text-[#082F67]
-                    sm:text-lg
-                  "
+      font-heading
+      text-base
+      font-bold
+      leading-snug
+      text-[#082F67]
+      sm:text-lg
+    "
                 >
                   {vc.name}
                 </h3>
@@ -474,13 +448,15 @@ export default async function VCMessage() {
                 {vc.designation && (
                   <p
                     className="
-                      mt-1
-                      text-xs
-                      font-medium
-                      tracking-wide
-                      text-[#D99A00]
-                      sm:text-sm
-                    "
+        mt-1
+        text-xs
+        font-xl
+        font-bold
+        leading-relaxed
+        tracking-wide
+        text-[#D99A00]
+        sm:text-sm
+      "
                   >
                     {vc.designation}
                   </p>

@@ -1,4 +1,11 @@
-import { GraduationCap, BookOpen, Briefcase, Award, Users, type LucideIcon } from "lucide-react";
+import {
+  GraduationCap,
+  BookOpen,
+  Briefcase,
+  Award,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import type { RowSectionKey } from "./FacultyProfileProvider";
 
 export interface SectionFieldDescriptor {
@@ -27,7 +34,10 @@ export interface FacultySectionConfig {
 // reference that way fails the Next.js build (confirmed: "Functions cannot
 // be passed directly to Client Components"), the same class of bug
 // AGENTS.md documents for EntitySchema/LucideIcon.
-export const FACULTY_SECTION_CONFIG: Record<RowSectionKey, FacultySectionConfig> = {
+export const FACULTY_SECTION_CONFIG: Record<
+  RowSectionKey,
+  FacultySectionConfig
+> = {
   education: {
     title: "Education",
     description: "Academic qualifications.",
@@ -36,7 +46,12 @@ export const FACULTY_SECTION_CONFIG: Record<RowSectionKey, FacultySectionConfig>
     pluralLabel: "Education Entries",
     fields: [
       { name: "degree", label: "Degree", placeholder: "Ph.D. in Management" },
-      { name: "institution", label: "Institution", placeholder: "University Name", colSpan: 2 },
+      {
+        name: "institution",
+        label: "Institution",
+        placeholder: "University Name",
+        colSpan: 2,
+      },
       { name: "year", label: "Year", placeholder: "2020" },
     ],
   },
@@ -47,10 +62,24 @@ export const FACULTY_SECTION_CONFIG: Record<RowSectionKey, FacultySectionConfig>
     itemLabel: "Publication",
     pluralLabel: "Publications",
     fields: [
-      { name: "title", label: "Title", placeholder: "Research paper title", colSpan: 2 },
-      { name: "venue", label: "Journal / Publisher", placeholder: "Journal name" },
+      {
+        name: "title",
+        label: "Title",
+        placeholder: "Research paper title",
+        colSpan: 2,
+      },
+      {
+        name: "venue",
+        label: "Journal / Publisher",
+        placeholder: "Journal name",
+      },
       { name: "year", label: "Year", placeholder: "2023" },
-      { name: "authors", label: "Authors", placeholder: "Author 1, Author 2, ...", colSpan: 2 },
+      {
+        name: "authors",
+        label: "Authors",
+        placeholder: "Author 1, Author 2, ...",
+        colSpan: 2,
+      },
     ],
   },
   experience: {
@@ -61,7 +90,12 @@ export const FACULTY_SECTION_CONFIG: Record<RowSectionKey, FacultySectionConfig>
     pluralLabel: "Experience Entries",
     fields: [
       { name: "title", label: "Title / Role", placeholder: "Professor" },
-      { name: "organization", label: "Organization", placeholder: "University Name", colSpan: 2 },
+      {
+        name: "organization",
+        label: "Organization",
+        placeholder: "University Name",
+        colSpan: 2,
+      },
       { name: "period", label: "Period", placeholder: "2018 – Present" },
     ],
   },
@@ -72,9 +106,20 @@ export const FACULTY_SECTION_CONFIG: Record<RowSectionKey, FacultySectionConfig>
     itemLabel: "Award",
     pluralLabel: "Awards",
     fields: [
-      { name: "title", label: "Award Title", placeholder: "Best Researcher Award", colSpan: 2 },
+      {
+        name: "title",
+        label: "Award Title",
+        placeholder: "Best Researcher Award",
+        colSpan: 2,
+      },
       { name: "year", label: "Year", placeholder: "2024" },
-      { name: "description", label: "Description", placeholder: "Brief description", colSpan: 2, multiline: true },
+      {
+        name: "description",
+        label: "Description",
+        placeholder: "Brief description",
+        colSpan: 2,
+        multiline: true,
+      },
     ],
   },
   memberships: {
