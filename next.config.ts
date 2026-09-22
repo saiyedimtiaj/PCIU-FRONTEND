@@ -2,9 +2,7 @@ import type { NextConfig } from "next";
 
 const backendHost = (() => {
   try {
-    return new URL(
-      process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "",
-    ).hostname;
+    return new URL(process.env.NEXT_PUBLIC_BACKEND_BASE_URL ?? "").hostname;
   } catch {
     return undefined;
   }
