@@ -12,16 +12,6 @@ import {
 import { isConnected } from "@/services/endpoints";
 import { getEntitySchema } from "@/lib/admin/entities";
 
-/**
- * Server Actions are the transport for the admin dashboard's TanStack
- * Query hooks.
- *
- * The session cookie is httpOnly and lives on our own domain while the API
- * is a separate origin, so a browser fetch can never authenticate against
- * it (a Bearer token is rejected with 401). Every authenticated call
- * therefore has to originate on the server; Query still owns caching,
- * invalidation and loading state on the client.
- */
 
 export type ActionResult<T> =
   | { ok: true; data: T }
@@ -45,17 +35,10 @@ function listFieldsFor(slug: string): string[] {
   const schema = getEntitySchema(slug);
   if (!schema) return [];
   return schema.sections.flatMap((s) =>
-    s.fields.filter((f) => f.type === "json-list").map((f) => f.name),
+    s.fields.filter((f) => f.type === "json-list" || f.type === "image-list").map((f) => f.name),
   );
 }
 
-/**
- * `relation` fields, so the API's numeric FK ids can be coerced to strings
- * on the way in — the combobox matches a selection against `option.value`
- * (always a string, from `useRelationOptions`), so a numeric id from the
- * API compares unequal to every option and the field shows the raw id
- * instead of resolving to its label.
- */
 function relationFieldsFor(slug: string): string[] {
   const schema = getEntitySchema(slug);
   if (!schema) return [];
@@ -64,12 +47,6 @@ function relationFieldsFor(slug: string): string[] {
   );
 }
 
-/**
- * `time` fields — the API stores these as a full ISO datetime anchored to
- * the epoch date ("1970-01-01T09:00:00.000Z"); a native
- * `<input type="time">` requires a plain "HH:MM" and silently renders
- * blank on anything else, so the value is trimmed down on the way in.
- */
 function timeFieldsFor(slug: string): string[] {
   const schema = getEntitySchema(slug);
   if (!schema) return [];
@@ -78,11 +55,22 @@ function timeFieldsFor(slug: string): string[] {
   );
 }
 
-/**
- * Errors must not escape a Server Action as exceptions — Next replaces
- * them with an opaque digest in production, which would hide the API's
- * message. Return them instead so the UI can show what went wrong.
- */
+
+const STRING_FIELD_TYPES = new Set([
+  "text", "email", "tel", "url", "password", "textarea", "richtext",
+  "select", "enum", "radio", "date", "datetime", "time", "image", "file",
+  "relation",
+]);
+
+function nullableStringFieldsFor(slug: string): string[] {
+  const schema = getEntitySchema(slug);
+  if (!schema) return [];
+  return schema.sections.flatMap((s) =>
+    s.fields.filter((f) => STRING_FIELD_TYPES.has(f.type)).map((f) => f.name),
+  );
+}
+
+
 async function run<T>(fn: () => Promise<T>): Promise<ActionResult<T>> {
   try {
     return { ok: true, data: await fn() };
@@ -117,6 +105,7 @@ export async function listEntityAction(
       listFieldsFor(slug),
       relationFieldsFor(slug),
       timeFieldsFor(slug),
+      nullableStringFieldsFor(slug),
     ),
   );
 }
@@ -135,6 +124,7 @@ export async function getEntityAction(
       listFieldsFor(slug),
       relationFieldsFor(slug),
       timeFieldsFor(slug),
+      nullableStringFieldsFor(slug),
     ),
   );
 }

@@ -20,6 +20,7 @@ export type FieldType =
   | "datetime"
   | "time"
   | "image"
+  | "image-list"
   | "file"
   | "json-list"
   | "link-list"
