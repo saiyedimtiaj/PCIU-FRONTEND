@@ -8,11 +8,13 @@ export default function ExamScheduleGrid({
   department,
   batch,
   section,
+  shift,
 }: {
   routines: ExamRoutine[];
   department: string;
   batch: string;
   section: string;
+  shift?: string;
 }) {
   const sorted = [...routines].sort(
     (a, b) => a.date.localeCompare(b.date) || timeRangeSortKey(a.timeSlot) - timeRangeSortKey(b.timeSlot),
@@ -20,7 +22,7 @@ export default function ExamScheduleGrid({
 
   return (
     <div className="bg-white">
-      <RoutineInfoBar title="Exam Routine" department={department} batch={batch} section={section} />
+      <RoutineInfoBar title="Exam Routine" department={department} batch={batch} section={section} shift={shift} />
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-max border-collapse text-sm">
