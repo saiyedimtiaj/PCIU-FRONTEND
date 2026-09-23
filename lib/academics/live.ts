@@ -1,5 +1,4 @@
 ﻿import { api } from "@/services/http";
-import { collectionPath } from "@/services/endpoints";
 import type {
   Exam,
   ExamRoutine,
@@ -25,6 +24,11 @@ function isActive(record: Dict): boolean {
 function relation(record: Dict, key: string): Dict {
   const value = record[key];
   return value && typeof value === "object" ? (value as Dict) : {};
+}
+
+/** A relation's id — from the flat `<key>Id` column, else the nested object. */
+function idOf(record: Dict, key: string): number | undefined {
+  return num(record[key + "Id"] ?? relation(record, key).id, NaN) || undefined;
 }
 
 function nameOf(record: Dict, key: string): string {
@@ -89,6 +93,10 @@ function toArray(data: unknown): Dict[] {
  */
 const PUBLIC_EXAM_ROUTINES_PATH = "/academic/exam-routines";
 const PUBLIC_CLASS_ROUTINES_PATH = "/academic/class-routines";
+// Same split for time slots and exams: /academic/admin/{time-slots,exams} reject any non-admin
+// session (403 "Permission not configured" for a teacher, 401 with no cookie).
+const PUBLIC_TIME_SLOTS_PATH = "/academic/time-slots";
+const PUBLIC_EXAMS_PATH = "/academic/exams";
 
 async function fetchList(path: string, label: string): Promise<Dict[]> {
   try {
@@ -109,7 +117,7 @@ function deriveExamStatus(startDate: string, endDate: string): string {
 }
 
 export async function getLiveExams(): Promise<Exam[]> {
-  const rows = await fetchList(collectionPath("exam"), "exam");
+  const rows = await fetchList(PUBLIC_EXAMS_PATH, "exam");
   return rows
     .filter(isActive)
     .map((r) => {
@@ -145,6 +153,10 @@ export async function getLiveExamRoutines(): Promise<ExamRoutine[]> {
       date: isoDate(r.date),
       studentRange: str(r.studentRange),
       shift: typeof r.shift === "string" && r.shift ? r.shift : undefined,
+      examName: nameOf(r, "exam") || undefined,
+      courseId: idOf(r, "course"),
+      batchId: idOf(r, "batch"),
+      sectionId: idOf(r, "section"),
     }));
 }
 
@@ -158,6 +170,10 @@ export async function getLiveClassRoutines(): Promise<ClassRoutineItem[]> {
       courseName: courseName(r),
       courseCode: courseCode(r),
       teacher: nameOf(r, "teacher"),
+      teacherId: idOf(r, "teacher"),
+      courseId: idOf(r, "course"),
+      batchId: idOf(r, "batch"),
+      sectionId: idOf(r, "section"),
       building: nameOf(r, "building"),
       room: nameOf(r, "room"),
       timeSlot: timeRangeOf(r, "timeSlot"),
@@ -172,7 +188,7 @@ export async function getLiveClassRoutines(): Promise<ClassRoutineItem[]> {
 const SLOT_LETTERS = "ABCDEFGHIJ";
 
 export async function getLiveClassTimeSlots(): Promise<ClassTimeSlot[]> {
-  const rows = await fetchList(collectionPath("time-slot"), "time-slot");
+  const rows = await fetchList(PUBLIC_TIME_SLOTS_PATH, "time-slot");
   const sorted = rows
     .filter((r) => isActive(r) && str(r.type) === "CLASS")
     .map((r) => ({ time: timeRange(r), startTime: str(r.startTime) }))

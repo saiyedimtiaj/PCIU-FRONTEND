@@ -64,6 +64,8 @@ export interface RoutinePdfFilters {
   batch?: string;
   section?: string;
   shift?: string;
+  /** Faculty portal only — a single teacher's own weekly routine. */
+  teacher?: string;
 }
 
 /** Rounded pill behind the exam-name subtitle — same visual language as the
@@ -114,6 +116,7 @@ function drawRoutineHeader(
   const pageWidth = doc.internal.pageSize.getWidth();
 
   const segments = [
+    filters.teacher ? `Teacher: ${filters.teacher}` : null,
     filters.department ? `Program: ${filters.department}` : null,
     filters.section ? `Section: ${filters.section}` : null,
     filters.batch ? `Batch: ${filters.batch}` : null,

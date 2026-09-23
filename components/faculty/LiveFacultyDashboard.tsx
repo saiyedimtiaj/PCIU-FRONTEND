@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, BookOpen, Briefcase, Award, Sparkles, GraduationCap, Users, UserRound } from "lucide-react";
+import { LayoutDashboard, CalendarDays, CalendarClock, BookOpen, Briefcase, Award, Sparkles, GraduationCap, Users, UserRound } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Meter, MeterTrack, MeterIndicator, MeterLabel } from "@/components/ui/meter";
@@ -34,6 +34,8 @@ function completeness(profile: FacultyPortalProfile): number {
 
 const QUICK_LINKS = [
   { label: "My Profile", href: "/faculty-portal/profile", icon: UserRound },
+  { label: "Class Routine", href: "/faculty-portal/class-routine", icon: CalendarDays },
+  { label: "Exam Routine", href: "/faculty-portal/exam-routine", icon: CalendarClock },
   { label: "Education", href: "/faculty-portal/education", icon: GraduationCap },
   { label: "Publications", href: "/faculty-portal/publications", icon: BookOpen },
   { label: "Experience", href: "/faculty-portal/experience", icon: Briefcase },
