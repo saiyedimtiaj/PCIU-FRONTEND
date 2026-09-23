@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { FileSearch } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -6,7 +7,7 @@ const examSchema = z
   .object({
     semester_id: z.string().min(1, "Semester is required"),
     name: z.string().min(2, "Name is required").max(100),
-    route_file: z.string().max(200).optional().or(z.literal("")),
+    route_file: optionalUpload,
     start_date: z.string().min(1, "Start date is required"),
     end_date: z.string().min(1, "End date is required"),
     status: z.boolean().default(true),
@@ -43,7 +44,7 @@ export const examEntity: EntitySchema<typeof examSchema> = {
         },
         { name: "start_date", label: "Start Date", type: "date", required: true },
         { name: "end_date", label: "End Date", type: "date", required: true },
-        { name: "route_file", label: "Routine File URL", type: "file", colSpan: 2 },
+        { name: "route_file", label: "Routine File (PDF)", type: "file", colSpan: 2 },
         { name: "status", label: "Active", type: "switch" },
       ],
     },
