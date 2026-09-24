@@ -103,17 +103,19 @@
 //   );
 // }
 
-
-
 import Image from "next/image";
 import { iconMap } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import campusLifeData from "@/content/home/campus-life.json";
 import type { CampusLifeContent } from "@/types/home";
+import { getCampusGallery } from "@/lib/api/home";
 
 const campusLife = campusLifeData as CampusLifeContent;
 
-export default function CampusLife() {
+export default async function CampusLife() {
+  const campusGallery = await getCampusGallery();
+  const galleryItems = campusGallery.slice(0, 2);
+
   return (
     <section
       className="relative overflow-hidden bg-white py-16 sm:py-20 md:py-24"
@@ -130,14 +132,62 @@ export default function CampusLife() {
           fill="none"
           preserveAspectRatio="none"
         >
-          <path d="M20 6 Q410 82 800 6" stroke="hsl(42 85% 58%)" strokeWidth="0.9" strokeLinecap="round" opacity="0.42" />
-          <path d="M10 18 Q410 94 810 18" stroke="hsl(230 70% 50%)" strokeWidth="0.9" strokeLinecap="round" opacity="0.24" />
-          <path d="M28 30 Q410 102 792 30" stroke="hsl(42 85% 72%)" strokeWidth="0.9" strokeLinecap="round" opacity="0.38" />
-          <path d="M45 42 Q410 108 775 42" stroke="hsl(231 77% 22%)" strokeWidth="0.9" strokeLinecap="round" opacity="0.16" />
-          <path d="M36 12 Q410 76 784 12" stroke="hsl(230 70% 50%)" strokeWidth="0.7" strokeLinecap="round" opacity="0.18" />
-          <path d="M18 26 Q410 100 802 26" stroke="hsl(42 85% 58%)" strokeWidth="0.7" strokeLinecap="round" opacity="0.25" />
-          <path d="M54 38 Q410 106 766 38" stroke="hsl(42 85% 72%)" strokeWidth="0.7" strokeLinecap="round" opacity="0.22" />
-          <path d="M68 50 Q410 110 752 50" stroke="hsl(231 77% 22%)" strokeWidth="0.7" strokeLinecap="round" opacity="0.12" />
+          <path
+            d="M20 6 Q410 82 800 6"
+            stroke="hsl(42 85% 58%)"
+            strokeWidth="0.9"
+            strokeLinecap="round"
+            opacity="0.42"
+          />
+          <path
+            d="M10 18 Q410 94 810 18"
+            stroke="hsl(230 70% 50%)"
+            strokeWidth="0.9"
+            strokeLinecap="round"
+            opacity="0.24"
+          />
+          <path
+            d="M28 30 Q410 102 792 30"
+            stroke="hsl(42 85% 72%)"
+            strokeWidth="0.9"
+            strokeLinecap="round"
+            opacity="0.38"
+          />
+          <path
+            d="M45 42 Q410 108 775 42"
+            stroke="hsl(231 77% 22%)"
+            strokeWidth="0.9"
+            strokeLinecap="round"
+            opacity="0.16"
+          />
+          <path
+            d="M36 12 Q410 76 784 12"
+            stroke="hsl(230 70% 50%)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.18"
+          />
+          <path
+            d="M18 26 Q410 100 802 26"
+            stroke="hsl(42 85% 58%)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.25"
+          />
+          <path
+            d="M54 38 Q410 106 766 38"
+            stroke="hsl(42 85% 72%)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.22"
+          />
+          <path
+            d="M68 50 Q410 110 752 50"
+            stroke="hsl(231 77% 22%)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.12"
+          />
         </svg>
       </div>
 
@@ -154,63 +204,55 @@ export default function CampusLife() {
 
         {/* Image Gallery */}
         <div className="mb-6 grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2">
-          <div className="group relative h-64 overflow-hidden rounded-2xl shadow-md transition-shadow duration-500 hover:shadow-2xl sm:h-72 md:h-80">
-            <Image
-              src={campusLife.libraryImage}
-              alt="Students collaborating in university library"
-              fill
-              sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/25 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 text-white sm:p-6">
-              <h3 className="font-heading text-lg font-bold sm:text-xl">Academic Excellence</h3>
-              <p className="text-sm text-white/85 sm:text-base">
-                World-class learning environments
-              </p>
+          {galleryItems.map((item) => (
+            <div
+              key={`${item.title}-${item.src}`}
+              className="group relative h-64 overflow-hidden rounded-2xl shadow-md transition-shadow duration-500 hover:shadow-2xl sm:h-72 md:h-80"
+            >
+              <Image
+                src={item.src}
+                alt={item.title}
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-primary/90 via-primary/25 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-5 text-white sm:p-6">
+                <h3 className="font-heading text-lg font-bold sm:text-xl">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-white/85 sm:text-base">
+                  {item.story}
+                </p>
+              </div>
             </div>
-          </div>
-
-          <div className="group relative h-64 overflow-hidden rounded-2xl shadow-md transition-shadow duration-500 hover:shadow-2xl sm:h-72 md:h-80">
-            <Image
-              src={campusLife.sportsImage}
-              alt="Students playing football on modern sports field"
-              fill
-              sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/25 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 text-white sm:p-6">
-              <h3 className="font-heading text-lg font-bold sm:text-xl">Athletic Excellence</h3>
-              <p className="text-sm text-white/85 sm:text-base">
-                State-of-the-art sports facilities
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
 
-         {/* Activities row — compact info cards */}
-    <div className="mb-10 grid grid-cols-1 gap-4 sm:mb-12 sm:grid-cols-2 lg:grid-cols-4">
-      {campusLife.activities.map((activity) => {
-        const Icon = iconMap[activity.icon];
-        return (
-          <div
-            key={activity.title}
-            className="group flex items-start gap-3 rounded-xl border-3  border-l-primary border-r-primary  border-primary/10 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-md"
-          >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
-              {Icon && <Icon className="h-4.5 w-4.5" />}
-            </div>
-            <div>
-              <h3 className="mb-1 text-sm font-bold text-primary">{activity.title}</h3>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {activity.description}
-              </p>
-            </div>
-          </div>
-        );
-      })}
-    </div> 
+        {/* Activities row — compact info cards */}
+        <div className="mb-10 grid grid-cols-1 gap-4 sm:mb-12 sm:grid-cols-2 lg:grid-cols-4">
+          {campusLife.activities.map((activity) => {
+            const Icon = iconMap[activity.icon];
+            return (
+              <div
+                key={activity.title}
+                className="group flex items-start gap-3 rounded-xl border-3  border-l-primary border-r-primary  border-primary/10 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-md"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
+                  {Icon && <Icon className="h-4.5 w-4.5" />}
+                </div>
+                <div>
+                  <h3 className="mb-1 text-sm font-bold text-primary">
+                    {activity.title}
+                  </h3>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    {activity.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
         {/* CTA block */}
         <div className="relative overflow-hidden rounded-2xl bg-primary p-8 text-center shadow-lg sm:p-10 md:p-12">
@@ -231,8 +273,8 @@ export default function CampusLife() {
               Experience PCIU Life
             </h3>
             <p className="mb-7 text-sm text-white/75 sm:text-base">
-              Watch our campus tour to see what makes Port City International University a
-              vibrant community
+              Watch our campus tour to see what makes Port City International
+              University a vibrant community
             </p>
             <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
               <Button variant="highlight" size="cta">

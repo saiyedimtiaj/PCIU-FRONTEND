@@ -184,6 +184,15 @@ export interface ResearchContent {
 }
 
 /** Photo gallery */
+export interface GalleryApiItem {
+  id: number;
+  title: string;
+  subtitle: string | null;
+  imageUrl: string | null;
+  status: boolean;
+  types: string | null;
+}
+
 export interface GalleryItem {
   src: string;
   title: string;
