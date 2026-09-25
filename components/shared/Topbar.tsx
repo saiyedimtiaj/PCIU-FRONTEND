@@ -1,8 +1,9 @@
-import { Shield, LayoutDashboard, LogOut } from "lucide-react";
+import { Shield, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
+import { LogoutButton } from "./LogoutButton";
 import { FaFacebook, FaLinkedin, FaInstagram } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
-import { getSession, logoutAction } from "@/app/(auth)/actions";
+import { getSession } from "@/app/(auth)/actions";
 
 const Topbar = async () => {
   const session = await getSession();
@@ -64,13 +65,7 @@ const Topbar = async () => {
                   <span>Dashboard</span>
                 </Link>
 
-                <button
-                  onClick={() => logoutAction()}
-                  className="flex items-center gap-1 hover:text-accent transition-colors font-medium cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
-                </button>
+                <LogoutButton />
               </>
             ) : (
               <Link
