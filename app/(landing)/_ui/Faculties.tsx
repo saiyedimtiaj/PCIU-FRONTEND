@@ -97,11 +97,19 @@ export default async function Faculties() {
               <FacultyCard
                 key={faculty.id}
                 id={faculty.id}
+                slug={faculty.slug}
                 name={faculty.name}
                 about={faculty.about}
                 departments={faculty.departments
-                  .filter((department) => department.shortName)
-                  .map((department) => ({ name: department.shortName! }))}
+                  .filter(
+                    (department) => department.shortName || department.slug,
+                  )
+                  .map((department) => ({
+                    name: department.shortName ?? department.name,
+                    href: department.slug
+                      ? `/department/${department.slug}`
+                      : undefined,
+                  }))}
               />
             );
           })}

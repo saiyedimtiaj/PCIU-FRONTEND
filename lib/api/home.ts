@@ -10,6 +10,7 @@ import type {
   PageSettingItem,
   StatItem,
 } from "@/types/home";
+import { cache } from "react";
 import { resolveUploadUrl } from "@/lib/upload-url";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
@@ -109,7 +110,9 @@ export async function getVCInfo(): Promise<VCInfo | null> {
 }
 
 /** --------- FacultyItem---------- */
-export async function getFaculties(): Promise<FacultyItem[]> {
+export const getFaculties = cache(async function getFaculties(): Promise<
+  FacultyItem[]
+> {
   if (!API_BASE_URL) {
     console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
     return [];
@@ -141,7 +144,7 @@ export async function getFaculties(): Promise<FacultyItem[]> {
     console.error("Error fetching faculties:", error);
     return [];
   }
-}
+});
 
 /** --------- Photo gallery ---------- */
 export async function getHomeGallery(): Promise<GalleryItem[]> {
