@@ -12,20 +12,45 @@ const Topbar = async () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-6">
-            <Link href="https://www.facebook.com/PortCityIntUniversity#" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">
+            <Link
+              href="https://www.facebook.com/PortCityIntUniversity#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent transition-colors"
+            >
               <FaFacebook className="text-base" />
             </Link>
-            <Link href="https://www.youtube.com/@portcityinternationalunive2828/videos" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">
+            <Link
+              href="https://www.youtube.com/@portcityinternationalunive2828/videos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent transition-colors"
+            >
               <FaYoutube className="text-base" />
             </Link>
-            <Link href="https://www.linkedin.com/school/port-city-international-university-bangladesh/posts/?feedView=all" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">
+            <Link
+              href="https://www.linkedin.com/school/port-city-international-university-bangladesh/posts/?feedView=all"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent transition-colors"
+            >
               <FaLinkedin className="text-base" />
             </Link>
-            <Link href="https://www.instagram.com/portcityintuniversity/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">
+            <Link
+              href="https://www.instagram.com/portcityintuniversity/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent transition-colors"
+            >
               <FaInstagram className="text-base" />
             </Link>
           </div>
-          <Link href="https://studentportal.portcity.edu.bd" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">
+          <Link
+            href="https://studentportal.portcity.edu.bd"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent transition-colors"
+          >
             Student Portal
           </Link>
           <div className="flex items-center gap-4">
@@ -38,12 +63,14 @@ const Topbar = async () => {
                   <LayoutDashboard className="w-4 h-4" />
                   <span>Dashboard</span>
                 </Link>
-                <form action={logoutAction}>
-                  <button type="submit" className="flex items-center gap-1 hover:text-accent transition-colors font-medium cursor-pointer">
-                    <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
-                  </button>
-                </form>
+
+                <button
+                  onClick={() => logoutAction()}
+                  className="flex items-center gap-1 hover:text-accent transition-colors font-medium cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
               </>
             ) : (
               <Link
