@@ -39,8 +39,13 @@
 //             {stats.map((stat) => {
 //               const Icon = iconMap[stat.icon];
 //               return (
-//                 <div key={stat.label} className="flex flex-col items-center gap-1">
-//                   {Icon && <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />}
+//                 <div
+//                   key={stat.label}
+//                   className="flex flex-col items-center gap-1"
+//                 >
+//                   {Icon && (
+//                     <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
+//                   )}
 //                   <span className="text-lg sm:text-2xl md:text-3xl font-bold">
 //                     {stat.value}
 //                   </span>

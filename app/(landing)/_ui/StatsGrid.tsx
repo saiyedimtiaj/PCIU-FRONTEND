@@ -10,7 +10,7 @@ export default function StatsGrid({ stats }: { stats: StatItem[] }) {
         return (
           <div
             key={stat.id}
-            className="group relative flex flex-col items-center text-center py-7 sm:py-8 md:py-9 px-2 transition-all duration-300 hover:-translate-y-1 active:scale-[0.97] active:duration-100"
+            className="group relative flex flex-col items-center text-center py-4  px-2 transition-all duration-300 hover:-translate-y-1 active:scale-[0.97] active:duration-100"
           >
             {/* Card background tint on hover */}
             <span className="pointer-events-none absolute inset-0 bg-white/[0.03] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />

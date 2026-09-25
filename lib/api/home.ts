@@ -2,12 +2,16 @@
 import type {
   ApiResponse,
   FacultyItem,
+  GalleryApiItem,
+  GalleryItem,
   HeroSliderItem,
   NoticeItem,
   VCInfo,
   PageSettingItem,
   StatItem,
 } from "@/types/home";
+import { cache } from "react";
+import { resolveUploadUrl } from "@/lib/upload-url";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
@@ -106,7 +110,9 @@ export async function getVCInfo(): Promise<VCInfo | null> {
 }
 
 /** --------- FacultyItem---------- */
-export async function getFaculties(): Promise<FacultyItem[]> {
+export const getFaculties = cache(async function getFaculties(): Promise<
+  FacultyItem[]
+> {
   if (!API_BASE_URL) {
     console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
     return [];
@@ -114,7 +120,7 @@ export async function getFaculties(): Promise<FacultyItem[]> {
 
   try {
     const res = await fetch(`${API_BASE_URL}/home/faculties`, {
-      next: { revalidate: 3600 }, // 1 hour — faculty structure rarely changes
+      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -122,15 +128,108 @@ export async function getFaculties(): Promise<FacultyItem[]> {
       return [];
     }
 
-    const json: ApiResponse<FacultyItem[]> = await res.json();
+    const payload: ApiResponse<FacultyItem[]> | FacultyItem[] =
+      await res.json();
 
-    if (!json.success || !Array.isArray(json.data)) {
+    if (Array.isArray(payload)) {
+      return payload;
+    }
+
+    if (!payload.success || !Array.isArray(payload.data)) {
       return [];
     }
 
-    return json.data;
+    return payload.data;
   } catch (error) {
     console.error("Error fetching faculties:", error);
+    return [];
+  }
+});
+
+/** --------- Photo gallery ---------- */
+export async function getHomeGallery(): Promise<GalleryItem[]> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return [];
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/home/gallery/life-at-pciu`, {
+      next: { revalidate: 300 },
+    });
+
+    if (!res.ok) {
+      console.error(`Home gallery request failed: ${res.status}`);
+      return [];
+    }
+
+    const payload: unknown = await res.json();
+    const records = Array.isArray(payload)
+      ? payload
+      : payload && typeof payload === "object" && "data" in payload
+        ? Array.isArray(payload.data)
+          ? payload.data
+          : payload.data
+            ? [payload.data]
+            : []
+        : payload
+          ? [payload]
+          : [];
+
+    return (records as GalleryApiItem[])
+      .filter((item) => item.status && item.imageUrl)
+      .map((item) => ({
+        src: resolveUploadUrl(item.imageUrl),
+        title: item.title,
+        category: item.types ?? "Campus",
+        story: item.subtitle ?? "",
+      }));
+  } catch (error) {
+    console.error("Error fetching home gallery:", error);
+    return [];
+  }
+}
+
+/** --------- Campus life gallery ---------- */
+export async function getCampusGallery(): Promise<GalleryItem[]> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return [];
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/home/gallery/campus`, {
+      next: { revalidate: 300 },
+    });
+
+    if (!res.ok) {
+      console.error(`Campus gallery request failed: ${res.status}`);
+      return [];
+    }
+
+    const payload: unknown = await res.json();
+    const records = Array.isArray(payload)
+      ? payload
+      : payload && typeof payload === "object" && "data" in payload
+        ? Array.isArray(payload.data)
+          ? payload.data
+          : payload.data
+            ? [payload.data]
+            : []
+        : payload
+          ? [payload]
+          : [];
+
+    return (records as GalleryApiItem[])
+      .filter((item) => item.status && item.imageUrl)
+      .map((item) => ({
+        src: resolveUploadUrl(item.imageUrl),
+        title: item.title,
+        category: item.types ?? "Campus",
+        story: item.subtitle ?? "",
+      }));
+  } catch (error) {
+    console.error("Error fetching campus gallery:", error);
     return [];
   }
 }

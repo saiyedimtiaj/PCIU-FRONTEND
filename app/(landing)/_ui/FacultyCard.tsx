@@ -5,18 +5,20 @@ import type { DepartmentLink } from "@/lib/data/faculty-departments";
 
 interface FacultyCardProps {
   id: number;
+  slug: string;
   name: string;
   about: string | null;
   departments: DepartmentLink[];
-  icon: IconName;
+  icon?: IconName;
 }
 
 export default function FacultyCard({
   id,
+  slug,
   name,
   about,
   departments,
-  icon,
+  icon = "graduation-cap",
 }: FacultyCardProps) {
   const Icon = iconMap[icon];
 
@@ -71,11 +73,11 @@ export default function FacultyCard({
 
         <div className="mt-auto pt-2">
           <Link
-            href={`/faculties?faculty=${encodeURIComponent(name)}`}
+            href={`/faculties?faculty=${encodeURIComponent(slug)}`}
             className="group/btn relative inline-flex w-full items-center justify-center overflow-hidden rounded-lg border-2 border-primary/20 px-4 py-2.5 text-sm font-semibold text-primary transition-all duration-300 hover:border-accent hover:text-white"
           >
             <span
-              className="absolute inset-0 -translate-x-full bg-gradient-to-r from-primary to-primary/90 transition-transform duration-300 group-hover/btn:translate-x-0"
+              className="absolute inset-0 -translate-x-full bg-linear-to-r from-primary to-primary/90 transition-transform duration-300 group-hover/btn:translate-x-0"
               aria-hidden
             />
             <span className="relative">Explore Faculty</span>
@@ -104,8 +106,8 @@ export default function FacultyCard({
           y="0.6"
           width="98.8"
           height="98.8"
-          rx="8"
-          ry="8"
+          rx="4"
+          ry="4"
           fill="none"
           stroke={`url(#chase-${id})`}
           strokeWidth="1.4"
