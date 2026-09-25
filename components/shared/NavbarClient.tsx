@@ -3,8 +3,19 @@
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X, ChevronDown } from "lucide-react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  Shield,
+  LayoutDashboard,
+  LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FaFacebook, FaLinkedin, FaInstagram } from "react-icons/fa6";
+import { FaYoutube } from "react-icons/fa";
+import { logoutAction } from "@/app/(auth)/actions";
+import type { SessionUser } from "@/types/auth";
 
 const aboutMenu = [
   { name: "About the University", href: "/about-the-university" },
@@ -132,8 +143,10 @@ import type { AcademicFaculty } from "@/types/academics";
 
 export default function NavbarClient({
   fetchedFaculties,
+  session,
 }: {
   fetchedFaculties?: AcademicFaculty[];
+  session?: SessionUser | null;
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -451,9 +464,93 @@ export default function NavbarClient({
                 Contact
               </Link>
 
-              <Button variant="accent" className="w-full mt-4">
+              <Button variant="accent" className="w-full mt-4 mb-4">
                 Apply Now
               </Button>
+
+              {/* Mobile Topbar Content */}
+              <div className="mt-4 pt-4 border-t border-border flex flex-col gap-4">
+                <Link
+                  href="https://studentportal.portcity.edu.bd"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground hover:text-primary font-medium px-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Student Portal
+                </Link>
+                <div className="px-2">
+                  {session ? (
+                    <div className="flex flex-col gap-3">
+                      <Link
+                        href={
+                          session.role === "admin"
+                            ? "/admin"
+                            : "/faculty-portal"
+                        }
+                        className="flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <LayoutDashboard className="w-5 h-5" />
+                        <span>Dashboard</span>
+                      </Link>
+                      <button
+                        onClick={async () => {
+                          await logoutAction();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium cursor-pointer w-full text-left"
+                      >
+                        <LogOut className="w-5 h-5" />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      href="/signin"
+                      className="flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Shield className="w-5 h-5" />
+                      <span>Admin Login</span>
+                    </Link>
+                  )}
+                </div>
+                <div className="flex items-center gap-6 px-2 mt-2 pb-6">
+                  <Link
+                    href="https://www.facebook.com/PortCityIntUniversity#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground hover:text-primary transition-colors"
+                  >
+                    <FaFacebook className="text-xl" />
+                  </Link>
+                  <Link
+                    href="https://www.youtube.com/@portcityinternationalunive2828/videos"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground hover:text-primary transition-colors"
+                  >
+                    <FaYoutube className="text-xl" />
+                  </Link>
+                  <Link
+                    href="https://www.linkedin.com/school/port-city-international-university-bangladesh/posts/?feedView=all"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground hover:text-primary transition-colors"
+                  >
+                    <FaLinkedin className="text-xl" />
+                  </Link>
+                  <Link
+                    href="https://www.instagram.com/portcityintuniversity/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground hover:text-primary transition-colors"
+                  >
+                    <FaInstagram className="text-xl" />
+                  </Link>
+                </div>
+              </div>
             </nav>
           </div>
         </div>
