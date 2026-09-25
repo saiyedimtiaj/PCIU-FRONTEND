@@ -101,7 +101,11 @@ export default function DepartmentTemplate({
                 { id: "overview", label: "Overview" },
                 { id: "chairman", label: content.chairmanHeading || "Chairman's Message" },
                 { id: "programs", label: "Programs Offered" },
+                { id: "tuition", label: "Tuition Fee" },
+                { id: "courses", label: "Course Details" },
                 { id: "faculty", label: "Faculty Members" },
+                { id: "research", label: "Research Activities" },
+                { id: "events", label: "Events & Notices" },
               ]}
             />
           </aside>
@@ -175,6 +179,26 @@ export default function DepartmentTemplate({
             </div>
           </section>
 
+          {/* Tuition Fee */}
+          <section id="tuition" className="scroll-mt-24">
+            <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+              Tuition Fee
+            </h2>
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <p className="text-muted-foreground italic text-sm">Tuition fee information will be updated soon from the backend.</p>
+            </div>
+          </section>
+
+          {/* Course Details */}
+          <section id="courses" className="scroll-mt-24">
+            <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+              Course Details
+            </h2>
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <p className="text-muted-foreground italic text-sm">Course details are currently unavailable.</p>
+            </div>
+          </section>
+
           {/* Faculty members */}
           <section id="faculty" className="scroll-mt-24">
             <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
@@ -215,6 +239,56 @@ export default function DepartmentTemplate({
                 <div className="sm:col-span-2 bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 italic">
                   No faculty members currently available.
                 </div>
+              )}
+            </div>
+          </section>
+
+          {/* Research Activities */}
+          <section id="research" className="scroll-mt-24">
+            <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+              Research Activities
+            </h2>
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              {content.researchAreas && content.researchAreas.length > 0 ? (
+                <div className="grid gap-4">
+                  {content.researchAreas.map((area, idx) => (
+                    <div key={idx} className="p-4 border border-slate-100 bg-slate-50 rounded-lg">
+                      <h3 className="font-bold text-[#1e3a8a] mb-1">{area.title}</h3>
+                      <p className="text-sm font-medium text-slate-600 mb-2">By: {area.author}</p>
+                      <p className="text-sm text-muted-foreground">{area.description}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground italic text-sm">No research activities found.</p>
+              )}
+            </div>
+          </section>
+
+          {/* Events & Notices */}
+          <section id="events" className="scroll-mt-24">
+            <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+              Events & Notices
+            </h2>
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              {content.notices && content.notices.length > 0 ? (
+                <div className="grid gap-4">
+                  {content.notices.map((notice, idx) => (
+                    <div key={idx} className="p-4 border border-slate-100 bg-slate-50 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div>
+                        <span className="inline-block px-2 py-1 bg-[#0ea5e9]/10 text-[#0ea5e9] text-xs font-semibold rounded-md mb-2">
+                          {notice.type}
+                        </span>
+                        <h3 className="font-bold text-[#1e3a8a]">{notice.title}</h3>
+                      </div>
+                      <div className="text-sm font-medium text-slate-500 shrink-0">
+                        {notice.date}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground italic text-sm">No upcoming events or notices.</p>
               )}
             </div>
           </section>
