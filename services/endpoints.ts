@@ -77,7 +77,7 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
 
   pages: { path: "/pages", multipart: true },
   "hero-slides": { path: "/heroslides", multipart: true },
-  notices: { path: "/notices" },
+  notices: { path: "/notices", multipart: true },
   "news-articles": { path: "/news-articles", multipart: true },
   gallery: { path: "/galleries", multipart: true },
   menus: { path: "/menus" },
