@@ -8,7 +8,7 @@ interface FacultyCardProps {
   name: string;
   about: string | null;
   departments: DepartmentLink[];
-  icon: IconName;
+  icon?: IconName;
 }
 
 export default function FacultyCard({
@@ -16,7 +16,7 @@ export default function FacultyCard({
   name,
   about,
   departments,
-  icon,
+  icon = "graduation-cap",
 }: FacultyCardProps) {
   const Icon = iconMap[icon];
 

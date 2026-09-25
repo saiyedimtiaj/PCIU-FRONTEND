@@ -321,8 +321,8 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
         return (
           <div
             key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              index === current ? "opacity-100 z-10" : "opacity-0 z-0"
+            className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+              index === current ? "opacity-100 z-10" : "opacity-0 -z-10"
             }`}
           >
             {imageUrl ? (
@@ -334,23 +334,24 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
                 priority={index === 0}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
-                className="object-cover"
+                className="h-full w-full object-cover"
+                style={{ objectPosition: "center 30%" }}
               />
             ) : (
               <div className="absolute inset-0 bg-primary" />
             )}
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/20 to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(13,26,99,0.08)_30%,rgba(13,26,99,0.25)_100%)]" />
+            <div className="absolute inset-0 bg-linear-to-r from-primary/45 via-primary/15 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-primary/45 via-primary/15 to-transparent" />
 
-            {/* Text overlay */}
             {(slide.heading || slide.subheading) && (
-              <div className="absolute inset-0 z-10 flex items-end pb-36 sm:pb-32 md:pb-40">
+              <div className="absolute inset-0 z-10 flex items-end pb-20 sm:pb-24 md:pb-28">
                 <div className="container mx-auto px-4 sm:px-6 md:px-12">
-                  <div className="max-w-xl md:max-w-2xl lg:max-w-3xl">
+                  <div className="max-w-[92%] sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
                     {slide.heading && (
                       <h2
-                        className={`font-heading font-bold text-xl sm:text-3xl md:text-5xl lg:text-6xl text-white mb-2 sm:mb-4 drop-shadow-lg transition-all duration-700 ${
+                        className={`font-heading font-extrabold tracking-[-0.04em] text-[clamp(1rem,3.6vw,2.6rem)] leading-[0.95] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.12)] transition-all duration-700 ${
                           index === current
                             ? "translate-y-0 opacity-100"
                             : "translate-y-8 opacity-0"
@@ -359,9 +360,10 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
                         {slide.heading}
                       </h2>
                     )}
+
                     {slide.subheading && (
                       <p
-                        className={`text-xs sm:text-base md:text-xl text-white/90 max-w-[280px] sm:max-w-xl md:max-w-2xl line-clamp-2 sm:line-clamp-none drop-shadow-md transition-all duration-700 delay-150 ${
+                        className={`mt-3 max-w-[92%] text-[11px] sm:text-xs md:text-sm text-white/90 drop-shadow-[0_2px_5px_rgba(0,0,0,0.12)] transition-all duration-700 delay-150 ${
                           index === current
                             ? "translate-y-0 opacity-100"
                             : "translate-y-8 opacity-0"
@@ -370,9 +372,10 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
                         {slide.subheading}
                       </p>
                     )}
+
                     {slide.ctaLabel && slide.ctaUrl && (
                       <div
-                        className={`mt-3 sm:mt-8 transition-all duration-700 delay-300 ${
+                        className={`mt-5 sm:mt-8 transition-all duration-700 delay-300 ${
                           index === current
                             ? "translate-y-0 opacity-100"
                             : "translate-y-8 opacity-0"
@@ -380,7 +383,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
                       >
                         <Link
                           href={slide.ctaUrl}
-                          className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-base font-semibold text-primary shadow-sm transition-colors hover:bg-accent/90"
+                          className="inline-flex items-center justify-center rounded-xl bg-accent px-4 py-2.5 sm:px-5 sm:py-2.5 text-sm sm:text-base font-bold text-primary shadow-[0_4px_10px_rgba(245,183,29,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent/90 hover:shadow-[0_6px_12px_rgba(245,183,29,0.14)]"
                         >
                           {slide.ctaLabel}
                         </Link>
@@ -394,38 +397,37 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
         );
       })}
 
-      {/* Navigation Arrows */}
       {slides.length > 1 && (
         <>
-          <div className="absolute right-4 sm:right-6 md:right-10 top-1/2 -translate-y-1/2 z-20 hidden sm:flex flex-col gap-3">
+          <div className="absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-2 sm:right-5 sm:gap-3 md:right-8">
             <button
               onClick={prev}
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/40 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 sm:h-11 sm:w-11"
               aria-label="Previous slide"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
             <button
               onClick={next}
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/40 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 sm:h-11 sm:w-11"
               aria-label="Next slide"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
 
-          {/* Dots */}
-          <div className="absolute bottom-24 sm:bottom-24 md:bottom-28 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/15 bg-black/15 px-3 py-2 shadow-sm shadow-black/5 backdrop-blur-sm sm:bottom-6 md:bottom-8">
             {slides.map((slide, index) => (
               <button
                 key={slide.id}
                 onClick={() => goTo(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index === current
-                    ? "w-8 bg-accent"
-                    : "w-2 bg-white/50 hover:bg-white/80"
-                }`}
                 aria-label={`Go to slide ${index + 1}`}
+                aria-current={index === current ? "true" : undefined}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  index === current
+                    ? "w-8 bg-accent shadow-[0_0_3px_rgba(245,183,29,0.18)]"
+                    : "w-2.5 bg-white/60 hover:bg-white/90"
+                }`}
               />
             ))}
           </div>

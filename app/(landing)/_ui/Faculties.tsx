@@ -1,5 +1,4 @@
 import { getFaculties } from "@/lib/api/home";
-import { getFacultyMeta } from "@/lib/data/faculty-departments";
 import FacultyCard from "./FacultyCard";
 
 export default async function Faculties() {
@@ -94,16 +93,15 @@ export default async function Faculties() {
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-9 lg:grid-cols-3">
           {faculties.map((faculty) => {
-            const meta = getFacultyMeta(faculty.id);
-
             return (
               <FacultyCard
                 key={faculty.id}
                 id={faculty.id}
                 name={faculty.name}
                 about={faculty.about}
-                departments={meta.departments}
-                icon={meta.icon}
+                departments={faculty.departments
+                  .filter((department) => department.shortName)
+                  .map((department) => ({ name: department.shortName! }))}
               />
             );
           })}

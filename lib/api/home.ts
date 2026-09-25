@@ -117,7 +117,7 @@ export async function getFaculties(): Promise<FacultyItem[]> {
 
   try {
     const res = await fetch(`${API_BASE_URL}/home/faculties`, {
-      next: { revalidate: 3600 }, // 1 hour — faculty structure rarely changes
+      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -125,13 +125,18 @@ export async function getFaculties(): Promise<FacultyItem[]> {
       return [];
     }
 
-    const json: ApiResponse<FacultyItem[]> = await res.json();
+    const payload: ApiResponse<FacultyItem[]> | FacultyItem[] =
+      await res.json();
 
-    if (!json.success || !Array.isArray(json.data)) {
+    if (Array.isArray(payload)) {
+      return payload;
+    }
+
+    if (!payload.success || !Array.isArray(payload.data)) {
       return [];
     }
 
-    return json.data;
+    return payload.data;
   } catch (error) {
     console.error("Error fetching faculties:", error);
     return [];

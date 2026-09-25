@@ -27,6 +27,23 @@ export interface ApiResponse<T> {
   data: T;
 }
 
+export interface NewsArticle {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  body: string | null;
+  coverImageUrl?: string | null;
+  imageUrl?: string | null;
+  multipleImage?: string[] | null;
+  category: string | null;
+  author: string | null;
+  status: boolean;
+  deletedAt?: string | null;
+  createdAt: string;
+  publishedAt?: string | null;
+}
+
 /** Hero slider (from /home/sliders API) */
 export interface HeroSliderItem {
   id: number;
