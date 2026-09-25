@@ -60,9 +60,11 @@ export interface DepartmentQuickLink {
 }
 
 export interface DepartmentFacultyMember {
+  slug: string;
   name: string;
   designation: string;
   specialization: string;
+  imageUrl?: string;
 }
 
 export interface DepartmentResearchArea {
@@ -76,6 +78,19 @@ export interface DepartmentAchievement {
   label: string;
 }
 
+export interface DepartmentCourse {
+  courseName: string;
+  courseCode: string;
+  credit?: string;
+}
+
+export interface DepartmentTuitionFee {
+  program: string;
+  credit: string;
+  perCreditAmount: string;
+  totalFees: number;
+}
+
 export interface DepartmentContent {
   slug: string;
   chairmanHeading: string;
@@ -86,6 +101,8 @@ export interface DepartmentContent {
   overview: DepartmentOverview;
   facilities: DepartmentFacility[];
   programs: DepartmentProgram[];
+  tuitionFees: DepartmentTuitionFee[];
+  courses: DepartmentCourse[];
   notices: DepartmentNotice[];
   contact: DepartmentContact;
   quickLinks: DepartmentQuickLink[];
@@ -131,4 +148,46 @@ export interface ApiDepartmentResponse {
     designation: string;
     message?: string[];
   } | null;
+}
+
+export interface ApiTeacher {
+  id: number;
+  slug?: string;
+  name: string;
+  designation?: string;
+  teachingAreas?: string;
+  imageUrl?: string;
+}
+
+export interface ApiEvent {
+  name?: string;
+  title?: string;
+  date?: string;
+  createdAt?: string;
+  type?: string;
+}
+
+export interface ApiResearch {
+  title?: string;
+  name?: string;
+  author?: string;
+  researcher?: string;
+  description?: string;
+}
+
+export interface ApiCourse {
+  courseName?: string;
+  name?: string;
+  title?: string;
+  courseCode?: string;
+  code?: string;
+  credit?: string | number;
+}
+
+export interface ApiTuitionFee {
+  program?: string;
+  departmentName?: string;
+  credit?: string | number;
+  perCreditAmount?: string | number;
+  totalFees?: number;
 }
