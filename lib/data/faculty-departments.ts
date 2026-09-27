@@ -14,10 +14,10 @@ export const FACULTY_META: Record<number, FacultyMeta> = {
   5: {
     // Faculty of Science & Engineering
     departments: [
-      { name: "CSE"},
+      { name: "CSE" },
       { name: "EEE" },
       { name: "Civil" },
-      { name: "Textile"},
+      { name: "Textile" },
       { name: "Fashion" },
     ],
     icon: "cpu",
