@@ -280,5 +280,3 @@ export async function getStats(): Promise<StatItem[]> {
     return [];
   }
 }
-
-/** --------- VC info---------- */
