@@ -95,8 +95,12 @@ export default function EntityForm({
       });
 
       if (cancelHref) {
+        // No router.refresh() here: the list page reads through TanStack
+        // Query, which the mutation has already invalidated. A refresh fired
+        // while this push is still in flight re-renders the old /new or /edit
+        // route's server output under the list URL, so AdminHeader's title
+        // ("Add Time Slot") disagrees with usePathname() ("Time Slots").
         router.push(cancelHref);
-        router.refresh();
       } else {
         reset(schema.defaultValues as FieldValues);
       }

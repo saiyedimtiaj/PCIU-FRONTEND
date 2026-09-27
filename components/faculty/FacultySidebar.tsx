@@ -7,6 +7,8 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   UserRound,
+  CalendarDays,
+  CalendarClock,
   GraduationCap,
   BookOpen,
   Briefcase,
@@ -38,6 +40,8 @@ export interface FacultyNavItem {
 const NAV_ITEMS: FacultyNavItem[] = [
   { title: "Dashboard", href: "/faculty-portal", icon: LayoutDashboard },
   { title: "My Profile", href: "/faculty-portal/profile", icon: UserRound },
+  { title: "Class Routine", href: "/faculty-portal/class-routine", icon: CalendarDays },
+  { title: "Exam Routine", href: "/faculty-portal/exam-routine", icon: CalendarClock },
   {
     title: "Education",
     href: "/faculty-portal/education",
@@ -163,7 +167,7 @@ function SidebarBody({
       <nav className="scrollbar-thin flex-1 space-y-1 overflow-y-auto px-2 pb-2">
         {NAV_ITEMS.map((item, i) => (
           <div key={item.href}>
-            {i === 2 && (
+            {i === 4 && (
               <div
                 className={cn(
                   "my-3 border-t border-sidebar-border",

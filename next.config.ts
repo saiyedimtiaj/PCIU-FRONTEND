@@ -14,10 +14,11 @@ const nextConfig: NextConfig = {
       // Admin uploads (department covers, hero slides, article PDFs) travel
       // to the API through Server Actions, and the 1MB default rejects most
       // real images. The limit covers multipart boundary overhead too.
-      bodySizeLimit: "8mb",
+      bodySizeLimit: "32mb",
     },
   },
   images: {
+    unoptimized: true,
     // Required starting with Next.js 16 — unrestricted access would let
     // callers request arbitrary optimization qualities.
     qualities: [75],
