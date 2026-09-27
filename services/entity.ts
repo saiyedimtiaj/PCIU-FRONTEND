@@ -72,9 +72,19 @@ function encodeIsoDates(slug: string, payload: Dict): void {
   }
 }
 
+/**
+ * Date fields the API returns as a full ISO datetime but accepts back as a
+ * plain `YYYY-MM-DD` — trimmed on read only, so the save payload is unchanged.
+ */
+const DECODE_ONLY_DATE_FIELDS: Partial<Record<string, string[]>> = {
+  exam: ["start_date", "end_date"],
+};
+
 function decodeIsoDates(slug: string, mapped: Dict): void {
-  const fields = ISO_DATE_FIELDS[slug];
-  if (!fields) return;
+  const fields = [
+    ...(ISO_DATE_FIELDS[slug] ?? []),
+    ...(DECODE_ONLY_DATE_FIELDS[slug] ?? []),
+  ];
   for (const name of fields) {
     const value = mapped[name];
     if (typeof value === "string" && value) mapped[name] = asInputDate(value);
