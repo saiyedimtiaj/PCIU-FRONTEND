@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { resolveUploadUrl } from "@/lib/upload-url";
 import type { ProgramFinderItem } from "@/actions/programs";
+import { ArrowRight } from "lucide-react";
 
 const ALL_LEVELS = "All Levels";
 const ALL_FACULTIES = "All Faculties";
@@ -72,6 +73,7 @@ export default function ProgramFinder({
       className="relative overflow-hidden bg-white py-16 sm:py-20 md:py-24"
       id="academics"
     >
+      {/* Layered thin arcs behind the heading with a gentle 180-degree turn */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 z-0 h-24 w-[min(820px,90vw)] -translate-x-1/2"
@@ -110,8 +112,37 @@ export default function ProgramFinder({
             strokeLinecap="round"
             opacity="0.16"
           />
+          <path
+            d="M36 12 Q410 76 784 12"
+            stroke="hsl(230 70% 50%)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.18"
+          />
+          <path
+            d="M18 26 Q410 100 802 26"
+            stroke="hsl(42 85% 58%)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.25"
+          />
+          <path
+            d="M54 38 Q410 106 766 38"
+            stroke="hsl(42 85% 72%)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.22"
+          />
+          <path
+            d="M68 50 Q410 110 752 50"
+            stroke="hsl(231 77% 22%)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.12"
+          />
         </svg>
       </div>
+
       <div className="container relative z-10 mx-auto px-4 sm:px-6 md:px-12">
         <div className="mb-10 text-center sm:mb-14">
           <h2 className="font-heading mb-3 text-3xl font-bold text-primary sm:mb-4 sm:text-4xl md:text-5xl">
@@ -171,12 +202,9 @@ export default function ProgramFinder({
             {visiblePrograms.map((program) => (
               <div
                 key={program.id}
-                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border-3 border-primary/10 border-l-primary border-r-primary bg-linear-to-br from-white via-white to-secondary/5 p-6 shadow-[0_10px_30px_-18px_hsl(231_77%_22%/0.45)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-l-accent hover:border-r-accent hover:shadow-[0_18px_40px_-18px_hsl(230_70%_50%/0.45)] sm:p-7"
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border-l-4 border-r-4  border-primary/10 border-l-primary border-r-primary bg-linear-to-br from-white via-white to-secondary/5 p-6 shadow-[0_10px_30px_-18px_hsl(231_77%_22%/0.45)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-l-accent hover:border-r-accent hover:shadow-[0_18px_40px_-18px_hsl(230_70%_50%/0.45)] sm:p-7"
               >
-                <div className="mb-4 flex items-start justify-between gap-3">
-                  <span className="inline-flex w-fit items-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
-                    {getLevelLabel(program.programType)}
-                  </span>
+                <div className="mb-4 flex items-center">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white shadow-sm transition-transform duration-500 group-hover:scale-110">
                     {program.icon ? (
                       <Image
@@ -191,23 +219,34 @@ export default function ProgramFinder({
                       <GraduationCap className="h-6 w-6" aria-hidden />
                     )}
                   </div>
+
+                  <span className="inline-flex w-fit items-center rounded-r-4xl bg-primary px-3 py-1 text-xs font-semibold text-white">
+                    {getLevelLabel(program.programType)}
+                  </span>
                 </div>
-                <h3 className="font-heading mb-2 text-lg font-bold text-primary sm:text-xl">
+
+                <h3 className="font-heading mb-2 text-lg font-extrabold text-primary sm:text-2xl">
                   {program.title}
                 </h3>
-                <div className="mb-4 flex flex-wrap items-start gap-x-3 gap-y-2 text-xs text-muted-foreground sm:text-sm">
-                  <span>{formatDuration(program.duration)}</span>
-                  <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-secondary" />
-                  <span className="inline-flex min-w-0 flex-1 items-start gap-1.5 font-medium text-primary/80">
+
+                <div className="mb-4 flex flex-wrap items-start gap-x-3 gap-y-2 text-xs text-muted-foreground sm:text-sm ">
+                  <span className="inline-flex min-w-0 flex-1 items-start gap-1.5 font-bold text-primary">
                     <Building2
                       className="mt-0.5 h-4 w-4 shrink-0 text-secondary"
                       aria-hidden
                     />
+
                     <span className="line-clamp-2">
                       {program.departmentName}
                     </span>
                   </span>
+
+                  <span className="flex  gap-1.5 font-bold text-primary ">
+                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
+                    <span> {formatDuration(program.duration)} </span>
+                  </span>
                 </div>
+
                 <p className="mb-6 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                   {program.departmentSubtitle || ""}
                 </p>
@@ -232,13 +271,18 @@ export default function ProgramFinder({
           </div>
         )}
         {!error && filteredPrograms.length > 6 && !showAll && (
-          <div className="mt-10 text-center">
+          //  Read more btn //
+
+          <div className="mt-10 flex justify-center">
             <Button
-              variant="outlinePrimary"
               size="cta"
               onClick={() => setShowAll(true)}
+              className="group inline-flex items-center gap-5 rounded-full border border-[#D99A00] bg-white  px-4 py-2.5 text-sm font-semibold text-[#082F67] shadow-[0_6px_18px_rgba(8,47,103,0.08)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#082F67] hover:bg-[#082F67] hover:text-white hover:shadow-[0_10px_24px_rgba(8,47,103,0.14)] sm:px-4 sm:py-3 sm:text-base"
             >
-              Read More
+              <span className="font-extrabold ">Read More</span>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D99A00] text-white transition-all duration-300 ease-out group-hover:bg-white group-hover:text-[#082F67] ">
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-0.5" />
+              </span>
             </Button>
           </div>
         )}
