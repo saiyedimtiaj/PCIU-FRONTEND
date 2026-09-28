@@ -151,6 +151,7 @@ function mapApiDepartmentToContent(
       url: link.url,
     })),
     facultyMembers: teachers.map((t) => ({
+      id: t.id,
       slug: t.slug || t.id?.toString() || "",
       name: t.name,
       designation: t.designation || "",
