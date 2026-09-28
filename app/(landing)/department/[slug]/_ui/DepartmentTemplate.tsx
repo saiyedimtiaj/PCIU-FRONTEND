@@ -1,9 +1,12 @@
 import Link from "next/link";
-import { GraduationCap, User, ExternalLink } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DepartmentContent } from "@/types/department";
 import { DepartmentNav } from "./DepartmentNav";
+import { FacultyCarousel } from "./FacultyCarousel";
 import Image from "next/image";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 
 export default function DepartmentTemplate({
   content,
@@ -51,6 +54,12 @@ export default function DepartmentTemplate({
             </div>
           </div>
         </div>
+        <Image
+          src={"/images/hero-campus.jpg"}
+          alt="hero background"
+          fill
+          className="object-cover opacity-20"
+        />
       </section>
 
       {/* Stats Bar */}
@@ -115,10 +124,10 @@ export default function DepartmentTemplate({
           </aside>
 
           {/* Main content */}
-          <div className="flex-1 min-w-0 space-y-12">
+          <div className="flex-1 min-w-0 space-y-12 container mx-auto">
             {/* Overview */}
-            <section id="overview" className="scroll-mt-24">
-              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+            <section id="overview" className="scroll-mt-24 text-wrap">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 border-b-4 border-[#0ea5e9]">
                 Welcome to {content.hero.title}
               </h2>
               <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
@@ -134,10 +143,12 @@ export default function DepartmentTemplate({
                 {content.chairmanHeading}
               </h2>
               <div className="flex flex-col md:flex-row gap-8">
-                <div className="shrink-0 text-center w-full md:w-48">
-                  <div className="w-full aspect-square rounded-xl bg-slate-100 border text-[#1e3a8a] font-heading font-bold flex items-center justify-center mb-4 overflow-hidden relative">
-                    <User className="w-20 h-20 text-slate-300" />
-                  </div>
+                <div className="shrink-0 text-center w-full md:w-48 flex flex-col items-center">
+                  <Avatar className="w-full h-auto aspect-square rounded-xl bg-slate-200 border text-slate-500 font-heading flex items-center justify-center mb-4">
+                    <AvatarFallback className="text-5xl font-bold bg-transparent rounded-xl">
+                      {getInitials(content.chairman.name)}
+                    </AvatarFallback>
+                  </Avatar>
                   <p className="font-bold text-[#1e3a8a]">
                     {content.chairman.name}
                   </p>
@@ -278,52 +289,21 @@ export default function DepartmentTemplate({
 
             {/* Faculty members */}
             <section id="faculty" className="scroll-mt-24">
-              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
-                Faculty Members
-              </h2>
-              <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 pt-2 scrollbar-thin">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase pb-2 border-b-4 border-[#0ea5e9] inline-block m-0">
+                  Faculty Members
+                </h2>
+                {content.facultyMembers.length > 0 && (
+                  <Link href={`/department/${content.slug}/teachers`}>
+                    <Button variant="outlineAccent" className="rounded-full shrink-0">
+                      View All Faculty
+                    </Button>
+                  </Link>
+                )}
+              </div>
+              <div className="w-full">
                 {content.facultyMembers.length > 0 ? (
-                  content.facultyMembers.map((member) => (
-                    <Link
-                      key={member.slug || member.name}
-                      href={`/faculty/${member.slug}`}
-                      className="shrink-0 w-70 snap-start bg-white border border-slate-200 rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col items-center text-center relative overflow-hidden"
-                    >
-                      <div className="absolute top-0 left-0 w-full h-1 bg-[#0ea5e9] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-
-                      <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mb-5 group-hover:bg-[#0ea5e9]/10 transition-colors overflow-hidden border-4 border-white shadow-sm shrink-0">
-                        {member.imageUrl ? (
-                          <Image
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_ASSET_URL || "https://mehedihasantuhen.com"}${member.imageUrl}`}
-                            alt={member.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <User className="w-10 h-10 text-slate-400 group-hover:text-[#0ea5e9] transition-colors" />
-                        )}
-                      </div>
-
-                      <h3 className="font-bold text-[#1e3a8a] text-[17px] leading-tight mb-2 group-hover:text-[#0ea5e9] transition-colors line-clamp-2">
-                        {member.name}
-                      </h3>
-
-                      <p className="text-[13px] font-semibold text-slate-600 mb-3 line-clamp-2 px-2">
-                        {member.designation}
-                      </p>
-
-                      <div className="mt-auto w-full flex flex-col items-center">
-                        {member.specialization && (
-                          <p className="text-xs text-muted-foreground line-clamp-2 pt-4 border-t border-slate-100 w-full">
-                            {member.specialization}
-                          </p>
-                        )}
-
-                        <div className="mt-4 flex items-center justify-center gap-1 text-xs font-semibold text-[#0ea5e9] opacity-0 group-hover:opacity-100 transition-opacity">
-                          View Profile <ExternalLink className="w-3 h-3" />
-                        </div>
-                      </div>
-                    </Link>
-                  ))
+                  <FacultyCarousel members={content.facultyMembers} />
                 ) : (
                   <div className="w-full bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 italic">
                     No faculty members currently available.

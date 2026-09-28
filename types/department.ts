@@ -60,6 +60,7 @@ export interface DepartmentQuickLink {
 }
 
 export interface DepartmentFacultyMember {
+  id: number;
   slug: string;
   name: string;
   designation: string;
