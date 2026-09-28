@@ -2,9 +2,17 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 import { setCookies, clearAuthCookie } from "@/lib/cookie";
+import { SessionCheckError } from "@/lib/session-check-error";
 import type { SessionUser } from "@/types/auth";
 
-export const loginAction = async (formData: FormData) => {
+interface LoginResult {
+  error?: string;
+  success?: boolean;
+  message?: string;
+  data?: { role?: string } & Record<string, unknown>;
+}
+
+export const loginAction = async (formData: FormData): Promise<LoginResult> => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
   const rememberMe = formData.get("rememberMe") === "on";
@@ -18,10 +26,18 @@ export const loginAction = async (formData: FormData) => {
       body: JSON.stringify({ email, password, rememberMe }),
     });
 
-    const response = await res.json();
+    const raw = await res.text();
+    let response: LoginResult | undefined;
+    try {
+      response = raw ? JSON.parse(raw) : undefined;
+    } catch {
+      const trimmed = raw.trim();
+      const looksLikeMessage = trimmed.length > 0 && trimmed.length < 200 && !trimmed.startsWith("<");
+      throw new Error(looksLikeMessage ? trimmed : "The server returned an unexpected response. Please try again.");
+    }
 
     if (!res.ok) {
-      throw new Error(response.message);
+      throw new Error(response?.message || "Unable to sign in. Please try again.");
     }
 
     const setCookieHeader = res.headers.getSetCookie();
@@ -29,7 +45,7 @@ export const loginAction = async (formData: FormData) => {
       await setCookies(setCookieHeader);
     }
 
-    return response;
+    return response ?? {};
   } catch (error) {
     return {
       error:
@@ -38,11 +54,8 @@ export const loginAction = async (formData: FormData) => {
   }
 };
 
-/**
- * Ends the session. The cookie is cleared locally even if the API call
- * fails — otherwise a backend hiccup would strand the user in a state
- * where the UI thinks they're signed in but every request 401s.
- */
+
+
 export const logoutAction = async () => {
   try {
     await serverFetch.post("/auth/logout", { body: JSON.stringify({}) });
@@ -54,15 +67,51 @@ export const logoutAction = async () => {
   return { success: true };
 };
 
-/** Current user, or null when signed out. Never throws. */
+
+function isFrameworkControlFlowError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    typeof (error as { digest: unknown }).digest === "string"
+  );
+}
+
 export const getSession = async (): Promise<SessionUser | null> => {
   try {
-    const res = await serverFetch.get("/auth/me", { cache: "no-store" });
-    if (!res.ok) return null;
-
-    const response = await res.json();
-    return response?.success ? (response.data as SessionUser) : null;
-  } catch {
+    return await getSessionOrThrow();
+  } catch (error) {
+    if (isFrameworkControlFlowError(error)) throw error;
     return null;
   }
+};
+
+export const getSessionOrThrow = async (): Promise<SessionUser | null> => {
+  let res: Response;
+  try {
+    res = await serverFetch.get("/auth/me", { cache: "no-store" });
+  } catch (error) {
+    if (isFrameworkControlFlowError(error)) throw error;
+    throw new SessionCheckError(
+      error instanceof Error ? error.message : "Could not reach the server",
+    );
+  }
+
+  if (res.status === 401) return null;
+
+  const raw = await res.text();
+  let response: { success?: boolean; message?: string; data?: unknown } | undefined;
+  try {
+    response = raw ? JSON.parse(raw) : undefined;
+  } catch {
+    const trimmed = raw.trim();
+    const looksLikeMessage = trimmed.length > 0 && trimmed.length < 200 && !trimmed.startsWith("<");
+    throw new SessionCheckError(looksLikeMessage ? trimmed : "The server returned an unexpected response");
+  }
+
+  if (!res.ok) {
+    throw new SessionCheckError(response?.message || `Session check failed (${res.status})`);
+  }
+
+  return response?.success ? (response.data as SessionUser) : null;
 };

@@ -59,7 +59,7 @@ function timeFieldsFor(slug: string): string[] {
 const STRING_FIELD_TYPES = new Set([
   "text", "email", "tel", "url", "password", "textarea", "richtext",
   "select", "enum", "radio", "date", "datetime", "time", "image", "file",
-  "relation",
+  "text-or-image", "relation",
 ]);
 
 function nullableStringFieldsFor(slug: string): string[] {

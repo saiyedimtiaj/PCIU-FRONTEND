@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { Users } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -11,7 +12,7 @@ const seminarSchema = z.object({
   description: z.string().optional().or(z.literal("")),
   venue: z.string().max(255).optional().or(z.literal("")),
   types: z.enum(["Seminar", "Workshops", "Conference", "training", "meeting"]),
-  image: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  image: optionalUpload,
   multiple_image: z.array(z.string()).default([]),
   date_time: z.string().min(1, "Date & time is required"),
   status: z.boolean().default(true),

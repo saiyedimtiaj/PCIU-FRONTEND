@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { Handshake } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const partnersSchema = z.object({
   department_id: z.string().optional().or(z.literal("")),
   name: z.string().min(2, "Name is required").max(255),
-  logo: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  logo: optionalUpload,
   country: z.string().max(255).optional().or(z.literal("")),
   category: z.string().min(1, "Category is required"),
   website_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { Layers } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -6,7 +7,7 @@ const iqacSectionsSchema = z.object({
   section_key: z.enum(["hero", "about", "vision", "mission", "quality_policy", "director_message"]),
   title: z.string().min(2, "Title is required").max(255),
   content: z.string().min(2, "Content is required"),
-  background_image: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  background_image: optionalUpload,
   status: z.boolean().default(true),
 });
 

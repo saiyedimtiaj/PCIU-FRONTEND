@@ -9,11 +9,17 @@ import { type FormEvent, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { loginAction } from "@/app/(auth)/actions";
 
+
 export function SignInForm() {
-  const [error, setError] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const [error, setError] = useState<string | null>(
+    searchParams.get("reason")
+      ? `You were signed out because: ${searchParams.get("reason")}. Please sign in again.`
+      : null,
+  );
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const from = useSearchParams().get("from");
+  const from = searchParams.get("from");
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,12 +30,10 @@ export function SignInForm() {
       setError(null);
       const result = await loginAction(formData);
       if (result?.error) {
+        console.error("Login failed:", result);
         setError(result.error);
       } else if (result?.success) {
         console.log("Login successful:", result);
-        // TEACHER accounts get the faculty portal; every other role is an
-        // admin of some kind. `from` is set by middleware.ts when it bounces
-        // an unauthenticated request, so we land back where they were going.
         const role = result?.data?.role as string | undefined;
         const fallback = role === "TEACHER" ? "/faculty-portal" : "/admin";
         router.push(from || fallback);
