@@ -14,7 +14,10 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden bg-[rgb(8,32,63)] pt-16 pb-8 text-primary-foreground sm:pt-20" id="contact">
+    <footer
+      className="relative overflow-hidden bg-[rgb(8,32,63)] pt-16 pb-8 text-primary-foreground sm:pt-20"
+      id="contact"
+    >
       {/* Decorative background layers */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 -right-24 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
@@ -41,7 +44,9 @@ export default function Footer() {
                 <div className="font-heading text-lg font-bold leading-tight">
                   Port City International
                 </div>
-                <div className="text-xs text-primary-foreground/70">University</div>
+                <div className="text-xs text-primary-foreground/70">
+                  University
+                </div>
               </div>
             </div>
             <p className="mb-6 text-sm leading-relaxed text-primary-foreground/70 sm:text-base">
@@ -92,22 +97,34 @@ export default function Footer() {
             </Link>
             <ul className="space-y-3">
               <li>
-                <Link href="/faculty" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/faculty"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Faculties
                 </Link>
               </li>
               <li>
-                <Link href="/department" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/department"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Departments
                 </Link>
               </li>
               <li>
-                <Link href="/academics" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/academics"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Programs
                 </Link>
               </li>
               <li>
-                <Link href="/research" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/research"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Research
                 </Link>
               </li>
@@ -125,27 +142,42 @@ export default function Footer() {
             </Link>
             <ul className="space-y-3">
               <li>
-                <Link href="/admission" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/admission"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Apply Now
                 </Link>
               </li>
               <li>
-                <Link href="/admission" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/admission"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Scholarships
                 </Link>
               </li>
               <li>
-                <Link href="/admission" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/admission"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Tuition &amp; Fees
                 </Link>
               </li>
               <li>
-                <Link href="/library" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/library"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Library
                 </Link>
               </li>
               <li>
-                <Link href="/management" className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base">
+                <Link
+                  href="/management"
+                  className="text-sm text-primary-foreground/70 transition-colors hover:text-[rgb(245,183,29)] sm:text-base"
+                >
                   Registrar Office
                 </Link>
               </li>
@@ -189,55 +221,64 @@ export default function Footer() {
           </div>
         </div>
 
-       {/* Newsletter */}
-<div className="mb-6 rounded-2xl border-t border-white/10 bg-[rgb(13,42,79)] px-4 py-6 sm:px-8 sm:py-4">
-  <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
-    {/* Text */}
-    <div className="lg:max-w-sm">
-      <h3 className="font-heading my-1 text-xl font-bold">Stay Connected</h3>
-      <p className="my-2 text-sm text-primary-foreground/70 sm:text-base">
-        Subscribe to our newsletter for the latest updates and announcements
-      </p>
-    </div>
+        {/* Newsletter */}
+        <div className="mb-6 rounded-2xl border-t border-white/10 bg-[rgb(13,42,79)] px-4 py-6 sm:px-8 sm:py-4">
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
+            {/* Text */}
+            <div className="lg:max-w-sm">
+              <h3 className="font-heading my-1 text-xl font-bold">
+                Stay Connected
+              </h3>
+              <p className="my-2 text-sm text-primary-foreground/70 sm:text-base">
+                Subscribe to our newsletter for the latest updates and
+                announcements
+              </p>
+            </div>
 
-    {/* Form */}
-    <div className="flex w-full max-w-md flex-col items-center gap-3 lg:w-auto lg:shrink-0 lg:items-end">
-      <div className="flex w-full flex-col gap-3 sm:flex-row sm:gap-4">
-        <Input
-          type="email"
-          placeholder="Your email address"
-          className="flex-1 border-white/15 bg-white/5 text-white placeholder:text-white/40 focus-visible:ring-accent sm:min-w-[220px]"
-          aria-label="Email address"
-        />
-        <Button
-          variant="highlight"
-          className="bg-[rgb(245,183,29)] px-8 py-5 text-[rgb(8,32,63)] hover:bg-[rgb(245,183,29)]/90"
-        >
-          Subscribe
-        </Button>
-      </div>
-      <p className="text-xs text-primary-foreground/50">
-        We respect your privacy. Unsubscribe anytime.
-      </p>
-    </div>
-  </div>
-</div>
-
+            {/* Form */}
+            <div className="flex w-full max-w-md flex-col items-center gap-3 lg:w-auto lg:shrink-0 lg:items-end">
+              <div className="flex w-full flex-col gap-3 sm:flex-row sm:gap-4">
+                <Input
+                  type="email"
+                  placeholder="Your email address"
+                  className="flex-1 border-white/15 bg-white/5 text-white placeholder:text-white/40 focus-visible:ring-accent sm:min-w-[220px]"
+                  aria-label="Email address"
+                />
+                <Button
+                  variant="highlight"
+                  className="bg-[rgb(245,183,29)] px-8 py-5 text-[rgb(8,32,63)] hover:bg-[rgb(245,183,29)]/90"
+                >
+                  Subscribe
+                </Button>
+              </div>
+              <p className="text-xs text-primary-foreground/50">
+                We respect your privacy. Unsubscribe anytime.
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 text-xs text-primary-foreground/50 sm:text-sm md:flex-row">
             <p className="text-center md:text-left">
-              © {currentYear} Port City International University. All rights reserved.
+              © {currentYear} Port City International University. All rights
+              reserved.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              <a href="#privacy" className="transition-colors hover:text-accent">
+              <a
+                href="#privacy"
+                className="transition-colors hover:text-accent"
+              >
                 Privacy Policy
               </a>
               <a href="#terms" className="transition-colors hover:text-accent">
                 Terms of Service
               </a>
-              <a href="#accessibility" className="transition-colors hover:text-accent">
+              <a
+                href="#accessibility"
+                className="transition-colors hover:text-accent"
+              >
                 Accessibility
               </a>
             </div>

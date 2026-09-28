@@ -27,6 +27,23 @@ export interface ApiResponse<T> {
   data: T;
 }
 
+export interface NewsArticle {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  body: string | null;
+  coverImageUrl?: string | null;
+  imageUrl?: string | null;
+  multipleImage?: string[] | null;
+  category: string | null;
+  author: string | null;
+  status: boolean;
+  deletedAt?: string | null;
+  createdAt: string;
+  publishedAt?: string | null;
+}
+
 /** Hero slider (from /home/sliders API) */
 export interface HeroSliderItem {
   id: number;
@@ -41,15 +58,23 @@ export interface HeroSliderItem {
 
 /**--------------- Hero section ------------------ */
 
-/** Notice marquee */
-// export type NoticeColor = "destructive" | "accent" | "secondary";
+/**--------------- starts,ts-----------*/
+export interface PageSettingItem {
+  id: number;
+  pageId: number;
+  key: string;
+  value: string;
+  status: boolean;
+}
 
-// export interface Notice {
-//   type: string;
-//   icon: IconName;
-//   text: string;
-//   color: NoticeColor;
-// }
+export interface StatItem {
+  id: number;
+  key: string;
+  label: string;
+  value: string;
+}
+
+/**--------------- starts,ts-----------*/
 
 /** Home notices (from /home/notices API) */
 export interface NoticeItem {
@@ -67,9 +92,6 @@ export interface NoticeItem {
 
 /** Home notices (from /home/notices API) */
 
-
-
-
 /** VC message */
 // export interface VCMessageContent {
 //   name: string;
@@ -77,7 +99,6 @@ export interface NoticeItem {
 //   message: string;
 //   photo: string;
 // }
-
 
 /** Vice Chancellor (from /home/vc API) */
 export interface VCInfo {
@@ -96,9 +117,6 @@ export interface VCInfo {
   websiteUrl: string | null;
 }
 /** Vice Chancellor (from /home/vc API) */
-
-
-
 
 /** Program finder */
 export interface Program {
@@ -134,7 +152,6 @@ export interface FacultyItem {
   departments: FacultyDepartment[];
 }
 /** Faculty (from /home/faculties API) */
-
 
 /** Faculties */
 export interface Faculty {
@@ -184,6 +201,15 @@ export interface ResearchContent {
 }
 
 /** Photo gallery */
+export interface GalleryApiItem {
+  id: number;
+  title: string;
+  subtitle: string | null;
+  imageUrl: string | null;
+  status: boolean;
+  types: string | null;
+}
+
 export interface GalleryItem {
   src: string;
   title: string;
@@ -226,6 +252,3 @@ export interface NewsEventsContent {
   news: NewsItem[];
   events: EventItem[];
 }
-
-
-

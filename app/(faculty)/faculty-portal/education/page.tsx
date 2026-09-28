@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function FacultyPortalEducationPage() {
   return (
     <div className="w-full p-6">
-      <FacultySectionList section="education" />
+      <FacultySectionList section="education" source="live" />
     </div>
   );
 }

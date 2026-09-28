@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import FacultyDashboard from "@/components/faculty/FacultyDashboard";
+import LiveFacultyDashboard from "@/components/faculty/LiveFacultyDashboard";
 
 export const metadata: Metadata = {
   title: "Faculty Portal | Port City International University",
@@ -8,10 +8,7 @@ export const metadata: Metadata = {
 export default function FacultyPortalDashboardPage() {
   return (
     <div className="w-full p-6">
-      <FacultyDashboard
-        basePath="/faculty-portal"
-        demoNotice="This is a design preview — there is no sign-in yet, so this shows a representative profile rather than your own."
-      />
+      <LiveFacultyDashboard />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { CalendarPlus } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -13,7 +14,7 @@ const eventsSchema = z.object({
   end_datetime: z.string().optional().or(z.literal("")),
   all_day: z.boolean().default(false),
   location: z.string().max(255).optional().or(z.literal("")),
-  cover_image_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  cover_image_url: optionalUpload,
   multiple_image: z.array(z.string()).default([]),
   url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   is_active: z.boolean().default(true),

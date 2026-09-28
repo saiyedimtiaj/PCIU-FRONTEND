@@ -1,12 +1,15 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { BookOpen } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const programSchema = z.object({
   title: z.string().min(2, "Title is required").max(255),
   department_id: z.string().min(1, "Department is required"),
-  icon: z.string().max(255).optional().or(z.literal("")),
-  program_type: z.enum(["undergraduate", "graduate"]),
+  // The API stores this as an uploaded image path
+  // ("/uploads/programs/….webp"), not an icon-registry key.
+  icon: optionalUpload,
+  program_type: z.enum(["UNDERGRADUATE", "GRADUATE"]),
   duration: z.coerce.number().positive("Duration must be greater than 0"),
   credit: z.coerce.number().positive("Credits must be greater than 0"),
   per_credit_amount: z.coerce.number().nonnegative("Amount can't be negative"),
@@ -21,14 +24,14 @@ export const programEntity: EntitySchema<typeof programSchema> = {
   group: "Academics",
   zodSchema: programSchema,
   defaultValues: {
-    program_type: "undergraduate",
+    program_type: "UNDERGRADUATE",
     status: true,
   },
   sections: [
     {
       title: "Program Details",
       fields: [
-        { name: "title", label: "Program Title", type: "text", required: true, colSpan: 2, placeholder: "BSc in Computer Science & Engineering" },
+        { name: "title", label: "Program Title", type: "text", required: true, colSpan: 2, placeholder: "B.Sc in Computer Science & Engineering" },
         {
           name: "department_id",
           label: "Department",
@@ -50,11 +53,11 @@ export const programEntity: EntitySchema<typeof programSchema> = {
           type: "enum",
           required: true,
           options: [
-            { label: "Undergraduate", value: "undergraduate" },
-            { label: "Graduate", value: "graduate" },
+            { label: "Undergraduate", value: "UNDERGRADUATE" },
+            { label: "Graduate", value: "GRADUATE" },
           ],
         },
-        { name: "icon", label: "Icon Key", type: "text", placeholder: "graduation-cap", helper: "Matches a key in the icon registry." },
+        { name: "icon", label: "Program Image", type: "image", colSpan: 2, helper: "Shown on the public program card." },
       ],
     },
     {

@@ -32,12 +32,22 @@ export interface EndpointConfig {
    * form warns about this rather than letting it look like ordinary create.
    */
   createOverwrites?: boolean;
+  /**
+   * Show the list page's "Add" button even when `singleton` is set. Use for
+   * a one-row backend that still has no per-id GET/PATCH/DELETE routes
+   * (verified: every `/popup/{id}` method 404s "Route not found", while
+   * GET/POST/PATCH/DELETE `/popup` all exist) — so it needs `singleton`'s
+   * id-less pathing, but the workflow still routes through /new. The Add
+   * form's `createOverwrites` warning makes the single-row nature explicit.
+   */
+  allowCreate?: boolean;
 }
 
 export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   department: { path: "/departments", multipart: true },
   faculty: { path: "/faculties" },
-  course: { path: "/academic/courses" },
+  course: { path: "/academic/admin/courses" },
+  program: { path: "/programs", multipart: true },
 
   teacher: {
     path: "/teachers/admin",
@@ -45,21 +55,30 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
     noDelete: true,
     deactivateField: "is_active",
   },
+  education: { path: "/teachers/admin/info/education" },
+  experience: { path: "/teachers/admin/info/experience" },
+  membership: { path: "/teachers/admin/info/membership" },
+  awards: { path: "/teachers/admin/info/award" },
+  "teacher-publication": {
+    path: "/teachers/admin/info/publication",
+    multipart: true,
+  },
   user: { path: "/users", multipart: true },
 
-  semester: { path: "/academic/semesters" },
-  exam: { path: "/academic/exams", multipart: true },
-  batch: { path: "/academic/batches" },
-  section: { path: "/academic/sections" },
-  building: { path: "/academic/buildings" },
-  room: { path: "/academic/rooms" },
-  "time-slot": { path: "/academic/time-slots" },
+  semester: { path: "/academic/admin/semesters" },
+  exam: { path: "/academic/admin/exams", multipart: true },
+  batch: { path: "/academic/admin/batches" },
+  section: { path: "/academic/admin/sections" },
+  building: { path: "/academic/admin/buildings" },
+  room: { path: "/academic/admin/rooms" },
+  "time-slot": { path: "/academic/admin/time-slots" },
   "class-routine": { path: "/routines/class" },
   "exam-routine": { path: "/routines/exam" },
 
   pages: { path: "/pages", multipart: true },
   "hero-slides": { path: "/heroslides", multipart: true },
-  notices: { path: "/notices" },
+  notices: { path: "/notices", multipart: true },
+  "news-articles": { path: "/news-articles", multipart: true },
   gallery: { path: "/galleries", multipart: true },
   menus: { path: "/menus" },
 
@@ -102,7 +121,13 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
 
   contact: { path: "/contacts" },
   setting: { path: "/settings", multipart: true },
-  popup: { path: "/popup", singleton: true },
+  popup: {
+    path: "/popup",
+    singleton: true,
+    allowCreate: true,
+    deleteAtRoot: true,
+    createOverwrites: true,
+  },
 };
 
 /**

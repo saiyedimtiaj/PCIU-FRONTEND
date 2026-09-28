@@ -1,27 +1,26 @@
 import type { ReactNode } from "react";
 import { ToastProvider, Toaster } from "@/components/ui/toast";
-import { FacultyProfileProvider } from "@/components/faculty/FacultyProfileProvider";
+import QueryProvider from "@/components/providers/QueryProvider";
+import { FacultyPortalDataProvider } from "@/components/faculty/FacultyPortalDataProvider";
 import FacultyPortalShell from "./_ui/FacultyPortalShell";
-import profiles from "@/content/faculty-directory/profiles.json";
-import type { FacultyProfile as DirectoryProfile } from "@/types/faculty-directory";
-import { buildWorkspaceProfile } from "@/components/faculty/faculty-profile-data";
+import { requireRole } from "@/lib/auth-guards";
 
-// Design-only: this project has no auth provider, so there is no real
-// "logged-in teacher" to load — every /faculty-portal/* route shows the
-// same representative profile. See the notice banner in the dashboard.
-const DEMO_PROFILE = profiles[1] as DirectoryProfile;
-
-export default function FacultyRouteLayout({ children }: { children: ReactNode }) {
-  const profile = buildWorkspaceProfile(DEMO_PROFILE);
+export default async function FacultyRouteLayout({ children }: { children: ReactNode }) {
+  // Authoritative role gate. proxy.ts only confirms a session cookie
+  // exists — it can't tell an admin from a teacher, since that requires
+  // an API call it deliberately avoids making on every request.
+  const session = await requireRole("teacher");
 
   return (
-    <ToastProvider timeout={5000} limit={3}>
-      <div className="admin-theme text-foreground">
-        <FacultyProfileProvider initialProfile={profile}>
-          <FacultyPortalShell>{children}</FacultyPortalShell>
-        </FacultyProfileProvider>
-        <Toaster />
-      </div>
-    </ToastProvider>
+    <QueryProvider>
+      <ToastProvider timeout={5000} limit={3}>
+        <div className="admin-theme text-foreground">
+          <FacultyPortalDataProvider fallbackName={session.name}>
+            <FacultyPortalShell>{children}</FacultyPortalShell>
+          </FacultyPortalDataProvider>
+          <Toaster />
+        </div>
+      </ToastProvider>
+    </QueryProvider>
   );
 }

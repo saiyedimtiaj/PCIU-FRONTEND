@@ -39,6 +39,15 @@ export interface ExamRoutine {
   section: string;
   date: string;
   studentRange: string;
+  /** "DAY" / "EVENING" — omitted entirely when the API doesn't return one. */
+  shift?: string;
+  /** The parent exam's name, e.g. "Mid-Term Exam". */
+  examName?: string;
+  /** Relation ids — used by the faculty portal to match a teacher's exams
+   *  to the course/batch/section they teach (exam routines carry no teacher). */
+  courseId?: number;
+  batchId?: number;
+  sectionId?: number;
 }
 
 export interface ClassTimeSlot {
@@ -59,6 +68,16 @@ export interface ClassRoutineItem {
   section: string;
   day: string;
   studentRange: string;
+  /** "DAY" / "EVENING" — omitted entirely when the API doesn't return one. */
+  shift?: string;
+  /** The assigned teacher's id — lets the faculty portal pick out the
+   *  signed-in teacher's own classes without matching on display names. */
+  teacherId?: number;
+  /** Relation ids — used by the faculty portal to match a teacher's exams
+   *  to the course/batch/section they teach (exam routines carry no teacher). */
+  courseId?: number;
+  batchId?: number;
+  sectionId?: number;
 }
 
 export interface GradeRow {

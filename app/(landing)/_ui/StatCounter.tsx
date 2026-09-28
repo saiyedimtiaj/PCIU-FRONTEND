@@ -50,12 +50,11 @@ export default function StatCounter({ value, className }: StatCounterProps) {
         if (entry.isIntersecting) {
           runAnimation();
         } else {
-          // Reset to 0 when it leaves view, so it counts up again on re-entry
           if (frameRef.current) cancelAnimationFrame(frameRef.current);
           setDisplay(`${prefix}0${suffix}`);
         }
       },
-      { threshold: 0.4 }
+      { threshold: 0.4 },
     );
 
     observer.observe(ref.current);

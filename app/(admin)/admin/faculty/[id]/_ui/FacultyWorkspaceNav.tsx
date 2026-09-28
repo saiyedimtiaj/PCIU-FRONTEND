@@ -10,7 +10,6 @@ import {
   Briefcase,
   Award,
   Users,
-  CalendarDays,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -29,7 +28,6 @@ const NAV_ITEMS: WorkspaceNavItem[] = [
   { label: "Experience", segment: "/experience", icon: Briefcase },
   { label: "Awards", segment: "/awards", icon: Award },
   { label: "Memberships", segment: "/memberships", icon: Users },
-  { label: "Conferences", segment: "/conferences", icon: CalendarDays },
 ];
 
 export default function FacultyWorkspaceNav({ teacherId }: { teacherId: string }) {

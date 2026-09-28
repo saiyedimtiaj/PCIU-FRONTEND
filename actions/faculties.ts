@@ -8,16 +8,19 @@ export async function getFaculties(): Promise<AcademicFaculty[] | undefined> {
     const res = await publicFetch.get("/home/faculties", {
       next: { tags: ["faculties"] },
     });
+    if (!res.ok) {
+      console.error(
+        `[Actions: getFaculties] API returned status ${res.status}`,
+      );
+      return undefined;
+    }
 
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && Array.isArray(data.data)) {
-        return data.data;
-      }
+    const data = await res.json();
+    if (data.success && Array.isArray(data.data)) {
+      return data.data;
     }
   } catch (error) {
     console.error("[Actions: getFaculties] Failed to fetch faculties:", error);
+    return undefined;
   }
-
-  return undefined;
 }

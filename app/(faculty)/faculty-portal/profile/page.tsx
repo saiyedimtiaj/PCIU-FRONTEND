@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import FacultyProfileForm from "@/components/faculty/FacultyProfileForm";
+import LiveFacultyProfileForm from "@/components/faculty/LiveFacultyProfileForm";
 
 export const metadata: Metadata = {
   title: "My Profile | Faculty Portal | Port City International University",
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function FacultyPortalProfilePage() {
   return (
     <div className="w-full p-6">
-      <FacultyProfileForm />
+      <LiveFacultyProfileForm />
     </div>
   );
 }

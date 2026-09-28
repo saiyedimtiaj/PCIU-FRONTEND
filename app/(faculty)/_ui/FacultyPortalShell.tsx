@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import FacultyShell from "@/components/faculty/FacultyShell";
+import { useFacultyPortalData } from "@/components/faculty/FacultyPortalDataProvider";
 
 const PAGE_TITLES: Record<string, string> = {
   "/faculty-portal": "Dashboard",
@@ -11,7 +12,6 @@ const PAGE_TITLES: Record<string, string> = {
   "/faculty-portal/experience": "Experience",
   "/faculty-portal/awards": "Awards",
   "/faculty-portal/memberships": "Memberships",
-  "/faculty-portal/conferences": "Conferences",
 };
 
 function resolveTitle(pathname: string): string {
@@ -19,5 +19,10 @@ function resolveTitle(pathname: string): string {
 }
 
 export default function FacultyPortalShell({ children }: { children: ReactNode }) {
-  return <FacultyShell resolveTitle={resolveTitle}>{children}</FacultyShell>;
+  const { displayName } = useFacultyPortalData();
+  return (
+    <FacultyShell resolveTitle={resolveTitle} teacherName={displayName}>
+      {children}
+    </FacultyShell>
+  );
 }

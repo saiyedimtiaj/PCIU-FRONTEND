@@ -19,11 +19,8 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
-
-        // PCIU brand variants — replace ad-hoc className color overrides
-        // used throughout the marketing sections.
         highlight:
-          "bg-highlight text-black shadow-sm hover:-translate-y-0.5 hover:bg-highlight-hover hover:shadow-md",
+          "bg-highlight text-black hover:-translate-y-0.5 hover:bg-highlight-hover",
         accent:
           "bg-accent text-black shadow-sm hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-md",
         outlineAccent:
@@ -33,10 +30,6 @@ const buttonVariants = cva(
         outlineMuted:
           "border-primary/20 bg-background text-foreground hover:bg-muted",
         ghostAccent: "text-accent hover:text-accent hover:bg-accent/10",
-
-        // Admin-dashboard variants — built on the tokens .admin-theme
-        // redeclares in app/globals.css, so these render correctly there
-        // and are simply unused (never referenced) on the public site.
         soft: "bg-accent text-accent-foreground hover:bg-accent/70",
         softPrimary: "bg-primary/10 text-primary hover:bg-primary/15",
         success: "bg-success text-success-foreground hover:bg-success/90",
@@ -47,7 +40,7 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+          "h-10 gap-1.5 px-3.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
         xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
         lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
@@ -57,13 +50,7 @@ const buttonVariants = cva(
         "icon-sm":
           "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
         "icon-lg": "size-9",
-        // Larger marketing CTA size — source hero/section CTAs use h-11,
-        // taller than this scaffold's stock `lg` (h-9).
         cta: "h-10 gap-1.5 rounded-lg px-6 text-sm font-semibold has-data-[icon=inline-end]:pr-5 has-data-[icon=inline-start]:pl-5",
-        // Admin dashboard's default button size (36px). Used explicitly by
-        // admin components rather than changing the shared `default` —
-        // the public site has 30+ unsized <Button> call sites that would
-        // regress if h-8 changed globally.
         admin: "h-9 gap-2 px-3.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
         "icon-admin": "size-9",
       },

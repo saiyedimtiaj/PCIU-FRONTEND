@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Pencil, Trash2, UserX } from "lucide-react";
 import type { EntitySchema, FieldDescriptor, FieldType } from "@/components/admin/form/form-types";
@@ -5,9 +8,19 @@ import type { DataTableColumn } from "@/components/shared/DataTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { groupRouteSegment } from "@/components/admin/nav-groups";
+import { resolveUploadUrl } from "@/lib/upload-url";
 import { formatSampleDate, formatTimeOfDay, type SampleRow } from "./sample-data";
 
-const EXCLUDED_TYPES: readonly FieldType[] = ["textarea", "richtext", "password", "file", "json-list"];
+const EXCLUDED_TYPES: readonly FieldType[] = [
+  "textarea",
+  "richtext",
+  "password",
+  "file",
+  "json-list",
+  "image",
+  "image-list",
+  "text-or-image",
+];
 
 const PRIMARY_NAME_PATTERN = /^(name|title|slug|label|heading)$/i;
 
@@ -41,15 +54,54 @@ function initials(value: string): string {
   return value.trim().charAt(0).toUpperCase() || "?";
 }
 
-function PrimaryCell({ value, subtitle }: { value: string; subtitle?: string }) {
+function findThumbnailField(fields: FieldDescriptor[]): FieldDescriptor | undefined {
+  return fields.find((f) => f.type === "image" || f.type === "text-or-image");
+}
+
+function Thumbnail({ value, label }: { value: unknown; label: string }) {
+  const [failed, setFailed] = useState(false);
+  const path = typeof value === "string" ? value : "";
+  const src = path ? resolveUploadUrl(path) : "";
+
+  if (!src || failed) {
+    return (
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 font-heading text-xs font-bold text-primary">
+        {initials(label)}
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <p className="font-medium text-foreground">{value}</p>
-      {subtitle && (
-        <p className="max-w-xs truncate text-xs text-muted-foreground" title={subtitle}>
-          {subtitle}
-        </p>
-      )}
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      className="size-9 shrink-0 rounded-lg border border-border object-cover"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
+function PrimaryCell({
+  value,
+  subtitle,
+  thumbnail,
+}: {
+  value: string;
+  subtitle?: string;
+  thumbnail?: unknown;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      {thumbnail !== undefined && <Thumbnail value={thumbnail} label={value} />}
+      <div>
+        <p className="font-medium text-foreground">{value}</p>
+        {subtitle && (
+          <p className="max-w-xs truncate text-xs text-muted-foreground" title={subtitle}>
+            {subtitle}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
@@ -130,12 +182,6 @@ function FieldCell({ field, value, row }: { field: FieldDescriptor; value: unkno
     case "number":
     case "decimal":
       return <span className="text-sm tabular-nums text-foreground">{String(value ?? "—")}</span>;
-    case "image":
-      return (
-        <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 font-heading text-xs font-bold text-primary">
-          {initials(String(value || "?"))}
-        </div>
-      );
     case "url":
     case "email":
       return (
@@ -192,6 +238,8 @@ export function deriveColumns(
     .sort((a, b) => rankOf(a) - rankOf(b))
     .slice(0, MAX_DATA_COLUMNS - 1);
 
+  const thumbnailField = findThumbnailField(allFields);
+
   const columns: DataTableColumn<SampleRow>[] = [
     {
       key: primary.name,
@@ -201,6 +249,7 @@ export function deriveColumns(
         <PrimaryCell
           value={String(row[primary.name] ?? "—")}
           subtitle={subtitleField ? String(row[subtitleField.name] ?? "") : undefined}
+          thumbnail={thumbnailField ? row[thumbnailField.name] : undefined}
         />
       ),
       skeletonWidth: "w-40",

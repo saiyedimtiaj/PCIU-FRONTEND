@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalUpload } from "./_upload";
 import { PartyPopper } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -9,7 +10,7 @@ const activitiesSchema = z.object({
   description: z.string().max(255).optional().or(z.literal("")),
   location: z.string().max(255).optional().or(z.literal("")),
   activity_date: z.string().min(1, "Date is required"),
-  cover_image_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  cover_image_url: optionalUpload,
   url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   is_active: z.boolean().default(true),
   sort_order: z.coerce.number().int().nonnegative().default(0),

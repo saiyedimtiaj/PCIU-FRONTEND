@@ -16,19 +16,27 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { FacultyProfile } from "@/types/faculty-directory";
 
-export default function FacultyDirectory({ profiles }: { profiles: FacultyProfile[] }) {
+export default function FacultyDirectory({
+  profiles,
+  initialFaculty = "all",
+}: {
+  profiles: FacultyProfile[];
+  initialFaculty?: string;
+}) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFaculty, setSelectedFaculty] = useState("all");
+  const [selectedFaculty, setSelectedFaculty] = useState(initialFaculty);
   const [selectedDepartment, setSelectedDepartment] = useState("all");
 
   const uniqueFaculties = useMemo(
     () => Array.from(new Set(profiles.map((p) => p.faculty).filter(Boolean))),
-    [profiles]
+    [profiles],
   );
 
   const uniqueDepartments = useMemo(() => {
     const scoped =
-      selectedFaculty === "all" ? profiles : profiles.filter((p) => p.faculty === selectedFaculty);
+      selectedFaculty === "all"
+        ? profiles
+        : profiles.filter((p) => p.faculty === selectedFaculty);
     return Array.from(new Set(scoped.map((p) => p.department).filter(Boolean)));
   }, [profiles, selectedFaculty]);
 
@@ -40,8 +48,10 @@ export default function FacultyDirectory({ profiles }: { profiles: FacultyProfil
         p.name.toLowerCase().includes(q) ||
         p.department.toLowerCase().includes(q) ||
         p.teachingAreas.some((area) => area.toLowerCase().includes(q));
-      const matchesFaculty = selectedFaculty === "all" || p.faculty === selectedFaculty;
-      const matchesDepartment = selectedDepartment === "all" || p.department === selectedDepartment;
+      const matchesFaculty =
+        selectedFaculty === "all" || p.faculty === selectedFaculty;
+      const matchesDepartment =
+        selectedDepartment === "all" || p.department === selectedDepartment;
       return matchesSearch && matchesFaculty && matchesDepartment;
     });
   }, [profiles, searchQuery, selectedFaculty, selectedDepartment]);
@@ -59,9 +69,12 @@ export default function FacultyDirectory({ profiles }: { profiles: FacultyProfil
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto animate-fade-in">
             <GraduationCap className="w-16 h-16 mx-auto mb-6" />
-            <h1 className="font-heading font-bold text-4xl md:text-5xl mb-4">Our Faculty</h1>
+            <h1 className="font-heading font-bold text-4xl md:text-5xl mb-4">
+              Our Faculty
+            </h1>
             <p className="text-lg md:text-xl text-white/90">
-              Meet our distinguished faculty members driving excellence in teaching and research.
+              Meet our distinguished faculty members driving excellence in
+              teaching and research.
             </p>
           </div>
         </div>
@@ -113,7 +126,8 @@ export default function FacultyDirectory({ profiles }: { profiles: FacultyProfil
           </Select>
         </div>
         <div className="container mx-auto px-4 pb-3 text-sm text-muted-foreground">
-          Showing {filtered.length} faculty member{filtered.length === 1 ? "" : "s"}
+          Showing {filtered.length} faculty member
+          {filtered.length === 1 ? "" : "s"}
         </div>
       </div>
 
@@ -134,17 +148,28 @@ export default function FacultyDirectory({ profiles }: { profiles: FacultyProfil
               <Card key={faculty.id} className="group overflow-hidden">
                 <div className="h-40 bg-primary/10 flex items-center justify-center">
                   <span className="text-3xl font-heading font-bold text-primary">
-                    {faculty.name
-                      .replace(/^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.)\s*/g, "")[0]}
+                    {
+                      faculty.name.replace(
+                        /^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.)\s*/g,
+                        "",
+                      )[0]
+                    }
                   </span>
                 </div>
                 <CardContent>
-                  <h3 className="font-semibold text-foreground">{faculty.name}</h3>
-                  <p className="text-sm text-muted-foreground">{faculty.designation}</p>
-                  <p className="text-sm text-muted-foreground">{faculty.department}</p>
+                  <h3 className="font-semibold text-foreground">
+                    {faculty.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {faculty.designation}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {faculty.department}
+                  </p>
                   {faculty.education[0] && (
                     <p className="text-xs text-muted-foreground mt-2">
-                      {faculty.education[0].degree} from {faculty.education[0].institution}
+                      {faculty.education[0].degree} from{" "}
+                      {faculty.education[0].institution}
                     </p>
                   )}
                   {faculty.teachingAreas.length > 0 && (

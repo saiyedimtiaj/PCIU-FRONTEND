@@ -16,7 +16,6 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/faculty": "Faculty Directory",
   "/admin/settings": "Settings",
   "/admin/system/permissions": "Permissions",
-  "/admin/system/popup": "Popup",
 };
 
 const FACULTY_SECTION_TITLES: Record<string, string> = {
@@ -26,7 +25,6 @@ const FACULTY_SECTION_TITLES: Record<string, string> = {
   experience: "Experience",
   awards: "Awards",
   memberships: "Memberships",
-  conferences: "Conferences",
 };
 
 function pageTitle(pathname: string) {

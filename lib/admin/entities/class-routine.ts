@@ -12,6 +12,7 @@ const classRoutineSchema = z.object({
   batch_id: z.string().min(1, "Batch is required"),
   section_id: z.string().min(1, "Section is required"),
   day: z.string().min(1, "Day is required"),
+  shift: z.enum(["DAY", "EVENING"], { message: "Shift is required" }),
   student_range: z.string().max(100).optional().or(z.literal("")),
   status: z.boolean().default(true),
 });
@@ -60,6 +61,16 @@ export const classRoutineEntity: EntitySchema<typeof classRoutineSchema> = {
             { label: "Tuesday", value: "TUESDAY" },
             { label: "Wednesday", value: "WEDNESDAY" },
             { label: "Thursday", value: "THURSDAY" },
+          ],
+        },
+        {
+          name: "shift",
+          label: "Shift",
+          type: "select",
+          required: true,
+          options: [
+            { label: "Day", value: "DAY" },
+            { label: "Evening", value: "EVENING" },
           ],
         },
         { name: "student_range", label: "Student Range", type: "text", placeholder: "1–40" },

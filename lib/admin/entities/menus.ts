@@ -6,7 +6,7 @@ const menusSchema = z.object({
   name: z.string().min(2, "Name is required").max(255),
   slug: z.string().min(2, "Slug is required").max(255),
   parent_id: z.string().optional().or(z.literal("")),
-  location: z.enum(["HEADER", "TOP_HEADER", "FOOTER"]),
+  location: z.enum(["HEADER", "TOP_HEADER", "FOOTER_ADMISSION", "FOOTER_ACADEMICS"]),
   type: z.enum(["ACADEMICS", "ADMISSIONS"]).optional().or(z.literal("")),
   is_active: z.boolean().default(true),
 });
@@ -34,7 +34,8 @@ export const menusEntity: EntitySchema<typeof menusSchema> = {
           options: [
             { label: "Header", value: "HEADER" },
             { label: "Top Header", value: "TOP_HEADER" },
-            { label: "Footer", value: "FOOTER" },
+            { label: "Footer - Admission", value: "FOOTER_ADMISSION" },
+            { label: "Footer - Academics", value: "FOOTER_ACADEMICS" },
           ],
         },
         {

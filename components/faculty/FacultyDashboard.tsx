@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, BookOpen, Briefcase, Award, Sparkles, GraduationCap, Users, CalendarDays, UserRound } from "lucide-react";
+import { LayoutDashboard, BookOpen, Briefcase, Award, Sparkles, GraduationCap, Users, UserRound } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Meter, MeterTrack, MeterIndicator, MeterLabel } from "@/components/ui/meter";
@@ -41,7 +41,6 @@ const QUICK_LINKS = [
   { label: "Experience", href: "/faculty-portal/experience", icon: Briefcase },
   { label: "Awards", href: "/faculty-portal/awards", icon: Award },
   { label: "Memberships", href: "/faculty-portal/memberships", icon: Users },
-  { label: "Conferences", href: "/faculty-portal/conferences", icon: CalendarDays },
 ];
 
 export interface FacultyDashboardProps {

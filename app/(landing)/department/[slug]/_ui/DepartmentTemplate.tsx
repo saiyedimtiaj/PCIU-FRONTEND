@@ -1,19 +1,12 @@
 import Link from "next/link";
-import {
-  GraduationCap,
-  Mail,
-  Phone,
-  MapPin,
-  User,
-  ChevronRight,
-  FileText,
-  Download,
-  BookOpen,
-  Award,
-  ExternalLink,
-} from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { DepartmentContent } from "@/types/department";
+import { DepartmentNav } from "./DepartmentNav";
+import { FacultyCarousel } from "./FacultyCarousel";
+import Image from "next/image";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 
 export default function DepartmentTemplate({
   content,
@@ -41,7 +34,7 @@ export default function DepartmentTemplate({
       <section className="relative bg-[#2B355A] py-16 md:py-24 overflow-hidden">
         <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-3xl">
-            <span className="inline-block bg-[#0ea5e9] text-white text-xs font-bold px-3 py-1 rounded-full mb-6">
+            <span className="inline-block bg-accent text-black text-xs font-bold px-3 py-1 rounded-full mb-6">
               {content.hero.badge}
             </span>
             <h1 className="font-heading font-bold text-3xl md:text-5xl text-white mb-4 leading-tight">
@@ -52,7 +45,7 @@ export default function DepartmentTemplate({
             </p>
             <div className="flex flex-wrap items-center gap-4">
               <Button
-                className="bg-[#0ea5e9] hover:bg-[#0284c7] text-white border-0 h-12 px-8 rounded-md font-semibold text-base"
+                className="bg-accent text-black hover:bg-accent-hover border-0 h-12 px-8 rounded-md font-semibold text-base"
                 render={<Link href={content.hero.buttonLink || "#"} />}
                 nativeButton={false}
               >
@@ -61,6 +54,12 @@ export default function DepartmentTemplate({
             </div>
           </div>
         </div>
+        <Image
+          src={"/images/hero-campus.jpg"}
+          alt="hero background"
+          fill
+          className="object-cover opacity-20"
+        />
       </section>
 
       {/* Stats Bar */}
@@ -104,12 +103,31 @@ export default function DepartmentTemplate({
       </div>
 
       <div className="container mx-auto px-4 py-12 md:py-16">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main column */}
-          <div className="lg:col-span-2 space-y-16">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* Sidebar Nav */}
+          <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-24 z-10">
+            <DepartmentNav
+              sections={[
+                { id: "overview", label: "Overview" },
+                {
+                  id: "chairman",
+                  label: content.chairmanHeading || "Chairman's Message",
+                },
+                { id: "programs", label: "Programs Offered" },
+                { id: "tuition", label: "Tuition Fee" },
+                { id: "courses", label: "Course Details" },
+                { id: "faculty", label: "Faculty Members" },
+                { id: "research", label: "Research Activities" },
+                { id: "events", label: "Events & Notices" },
+              ]}
+            />
+          </aside>
+
+          {/* Main content */}
+          <div className="flex-1 min-w-0 space-y-12 container mx-auto">
             {/* Overview */}
-            <section>
-              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+            <section id="overview" className="scroll-mt-24 text-wrap">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 border-b-4 border-[#0ea5e9]">
                 Welcome to {content.hero.title}
               </h2>
               <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
@@ -120,15 +138,17 @@ export default function DepartmentTemplate({
             </section>
 
             {/* Chairman message */}
-            <section>
+            <section id="chairman" className="scroll-mt-24">
               <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
                 {content.chairmanHeading}
               </h2>
               <div className="flex flex-col md:flex-row gap-8">
-                <div className="shrink-0 text-center w-full md:w-48">
-                  <div className="w-full aspect-square rounded-xl bg-slate-100 border text-[#1e3a8a] font-heading font-bold flex items-center justify-center mb-4 overflow-hidden relative">
-                    <User className="w-20 h-20 text-slate-300" />
-                  </div>
+                <div className="shrink-0 text-center w-full md:w-48 flex flex-col items-center">
+                  <Avatar className="w-full h-auto aspect-square rounded-xl bg-slate-200 border text-slate-500 font-heading flex items-center justify-center mb-4">
+                    <AvatarFallback className="text-5xl font-bold bg-transparent rounded-xl">
+                      {getInitials(content.chairman.name)}
+                    </AvatarFallback>
+                  </Avatar>
                   <p className="font-bold text-[#1e3a8a]">
                     {content.chairman.name}
                   </p>
@@ -145,7 +165,7 @@ export default function DepartmentTemplate({
             </section>
 
             {/* Programs */}
-            <section>
+            <section id="programs" className="scroll-mt-24">
               <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
                 Programs Offered
               </h2>
@@ -174,168 +194,192 @@ export default function DepartmentTemplate({
               </div>
             </section>
 
-            {/* Faculty members */}
-            <section>
+            {/* Tuition Fee */}
+            <section id="tuition" className="scroll-mt-24">
               <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
-                Faculty Members
+                Tuition Fee
               </h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {content.facultyMembers.length > 0 ? (
-                  content.facultyMembers.map((member) => (
-                    <div
-                      key={member.name}
-                      className="flex gap-4 bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition-shadow"
-                    >
-                      <div className="shrink-0 w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
-                        <User className="w-6 h-6 text-slate-400" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-[#1e3a8a] text-[15px] leading-tight mb-1">
-                          {member.name}
-                        </h3>
-                        <p className="text-sm text-slate-600 mb-1">
-                          {member.designation}
-                        </p>
-                        {member.specialization && (
-                          <p className="text-xs text-[#0ea5e9] mb-2">
-                            {member.specialization}
-                          </p>
-                        )}
-                        <Link
-                          href={`/faculty?department=${encodeURIComponent(content.facultyQueryParam)}`}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#0ea5e9] hover:text-[#0284c7] transition-colors"
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm overflow-x-auto">
+                {content.tuitionFees && content.tuitionFees.length > 0 ? (
+                  <table className="w-full text-sm text-left whitespace-nowrap">
+                    <thead className="bg-slate-50 text-[#1e3a8a] font-semibold border-b border-slate-200">
+                      <tr>
+                        <th className="px-4 py-3 rounded-tl-lg">Program</th>
+                        <th className="px-4 py-3">Total Credits</th>
+                        <th className="px-4 py-3">Per Credit (BDT)</th>
+                        <th className="px-4 py-3 rounded-tr-lg">
+                          Total Fees (BDT)
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {content.tuitionFees.map((fee, idx) => (
+                        <tr
+                          key={idx}
+                          className="hover:bg-slate-50 transition-colors"
                         >
-                          View Profile <ExternalLink className="w-3 h-3" />
-                        </Link>
-                      </div>
-                    </div>
-                  ))
+                          <td className="px-4 py-3 font-medium text-slate-800">
+                            {fee.program}
+                          </td>
+                          <td className="px-4 py-3 text-slate-600">
+                            {fee.credit}
+                          </td>
+                          <td className="px-4 py-3 text-slate-600">
+                            ৳ {fee.perCreditAmount}
+                          </td>
+                          <td className="px-4 py-3 font-semibold text-[#0ea5e9]">
+                            ৳ {fee.totalFees.toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 ) : (
-                  <div className="sm:col-span-2 bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 italic">
+                  <p className="text-muted-foreground italic text-sm">
+                    Tuition fee information will be updated soon from the
+                    backend.
+                  </p>
+                )}
+              </div>
+            </section>
+
+            {/* Course Details */}
+            <section id="courses" className="scroll-mt-24">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+                Course Details
+              </h2>
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                {content.courses && content.courses.length > 0 ? (
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {content.courses.map((course, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 border border-slate-100 bg-slate-50 rounded-lg flex items-start gap-3"
+                      >
+                        <div className="shrink-0 mt-0.5">
+                          <div className="w-8 h-8 rounded bg-[#0ea5e9]/10 flex items-center justify-center text-[#0ea5e9] font-bold text-xs">
+                            {course.courseCode.split(" ")[0] ||
+                              course.courseCode.substring(0, 3)}
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-[#1e3a8a] text-[15px] mb-1">
+                            {course.courseName}
+                          </h3>
+                          <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                            <span>{course.courseCode}</span>
+                            {course.credit && (
+                              <>
+                                <span className="w-1 h-1 rounded-full bg-slate-300" />
+                                <span>{course.credit} Credits</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground italic text-sm">
+                    Course details are currently unavailable.
+                  </p>
+                )}
+              </div>
+            </section>
+
+            {/* Faculty members */}
+            <section id="faculty" className="scroll-mt-24">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase pb-2 border-b-4 border-[#0ea5e9] inline-block m-0">
+                  Faculty Members
+                </h2>
+                {content.facultyMembers.length > 0 && (
+                  <Link href={`/department/${content.slug}/teachers`}>
+                    <Button variant="outlineAccent" className="rounded-full shrink-0">
+                      View All Faculty
+                    </Button>
+                  </Link>
+                )}
+              </div>
+              <div className="w-full">
+                {content.facultyMembers.length > 0 ? (
+                  <FacultyCarousel members={content.facultyMembers} />
+                ) : (
+                  <div className="w-full bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 italic">
                     No faculty members currently available.
                   </div>
                 )}
               </div>
             </section>
-          </div>
 
-          {/* Sidebar */}
-          <aside className="space-y-6">
-            {/* Notices */}
-            <div className="bg-[#1e293b] rounded-xl overflow-hidden shadow-sm">
-              <div className="p-5 border-b border-slate-700/50 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-white" />
-                <h3 className="font-bold text-white uppercase tracking-wide">
-                  Latest Notices
-                </h3>
-              </div>
-              <div className="p-0">
-                {content.notices.length > 0 ? (
-                  <div className="divide-y divide-slate-700/50">
-                    {content.notices.map((notice) => (
+            {/* Research Activities */}
+            <section id="research" className="scroll-mt-24">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+                Research Activities
+              </h2>
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                {content.researchAreas && content.researchAreas.length > 0 ? (
+                  <div className="grid gap-4">
+                    {content.researchAreas.map((area, idx) => (
                       <div
-                        key={notice.title}
-                        className="p-5 hover:bg-slate-800/50 transition-colors"
+                        key={idx}
+                        className="p-4 border border-slate-100 bg-slate-50 rounded-lg"
                       >
-                        <p className="text-sm font-medium text-white mb-2 leading-snug">
-                          {notice.title}
+                        <h3 className="font-bold text-[#1e3a8a] mb-1">
+                          {area.title}
+                        </h3>
+                        <p className="text-sm font-medium text-slate-600 mb-2">
+                          By: {area.author}
                         </p>
-                        <p className="text-xs text-slate-400 mb-3">
-                          {notice.date}
+                        <p className="text-sm text-muted-foreground">
+                          {area.description}
                         </p>
-                        <button className="inline-flex items-center gap-1 text-xs font-semibold text-[#0ea5e9] hover:text-white transition-colors">
-                          <Download className="w-3 h-3" /> Download
-                        </button>
                       </div>
                     ))}
-                    <div className="p-5">
-                      <Link
-                        href="#"
-                        className="text-sm text-slate-300 hover:text-white flex items-center gap-1"
-                      >
-                        View all notices <ChevronRight className="w-4 h-4" />
-                      </Link>
-                    </div>
                   </div>
                 ) : (
-                  <div className="p-8 text-center text-slate-400 italic text-sm">
-                    No recent notices.
-                  </div>
+                  <p className="text-muted-foreground italic text-sm">
+                    No research activities found.
+                  </p>
                 )}
               </div>
-            </div>
+            </section>
 
-            {/* Quick Links */}
-            <div className="bg-[#0ea5e9] rounded-xl overflow-hidden shadow-sm text-white">
-              <div className="p-5 flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
-                <h3 className="font-bold text-lg">Quick Links</h3>
-              </div>
-              <div className="px-5 pb-5">
-                <ul className="space-y-3">
-                  {content.quickLinks.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.url}
-                        className="text-sm text-white/90 hover:text-white hover:pl-1 transition-all flex items-center gap-2"
+            {/* Events & Notices */}
+            <section id="events" className="scroll-mt-24">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+                Events & Notices
+              </h2>
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                {content.notices && content.notices.length > 0 ? (
+                  <div className="grid gap-4">
+                    {content.notices.map((notice, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 border border-slate-100 bg-slate-50 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Contact Us */}
-            <div className="bg-[#1e40af] rounded-xl p-6 shadow-sm text-white">
-              <h3 className="font-bold text-xl mb-6">Contact Us</h3>
-              <div className="space-y-5 text-sm">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 shrink-0 text-blue-200" />
-                  <div>
-                    <p className="font-medium text-blue-100 mb-1">
-                      {content.hero.title}
-                    </p>
-                    <p className="text-blue-200 leading-relaxed whitespace-pre-line">
-                      {content.contact.address}
-                    </p>
+                        <div>
+                          <span className="inline-block px-2 py-1 bg-[#0ea5e9]/10 text-[#0ea5e9] text-xs font-semibold rounded-md mb-2">
+                            {notice.type}
+                          </span>
+                          <h3 className="font-bold text-[#1e3a8a]">
+                            {notice.title}
+                          </h3>
+                        </div>
+                        <div className="text-sm font-medium text-slate-500 shrink-0">
+                          {notice.date}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 shrink-0 text-blue-200" />
-                  <p className="text-blue-200">{content.contact.phone}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 shrink-0 text-blue-200" />
-                  <p className="text-blue-200">{content.contact.email}</p>
-                </div>
+                ) : (
+                  <p className="text-muted-foreground italic text-sm">
+                    No upcoming events or notices.
+                  </p>
+                )}
               </div>
-            </div>
-
-            {/* Achievements */}
-            <div className="bg-white border rounded-xl p-6 shadow-sm">
-              <h3 className="font-bold text-lg text-[#1e3a8a] mb-5 flex items-center gap-2">
-                <Award className="w-5 h-5 text-[#0ea5e9]" /> Achievements
-              </h3>
-              <div className="space-y-4">
-                {content.achievements.map((achievement) => (
-                  <div
-                    key={achievement.label}
-                    className="bg-slate-50 rounded-xl p-5 text-center border border-slate-100"
-                  >
-                    <p className="text-3xl font-bold text-[#0ea5e9] mb-1">
-                      {achievement.value}
-                    </p>
-                    <p className="text-sm font-medium text-slate-600">
-                      {achievement.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </aside>
+            </section>
+          </div>
         </div>
       </div>
     </div>

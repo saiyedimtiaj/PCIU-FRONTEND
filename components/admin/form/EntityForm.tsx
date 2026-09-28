@@ -95,8 +95,12 @@ export default function EntityForm({
       });
 
       if (cancelHref) {
+        // No router.refresh() here: the list page reads through TanStack
+        // Query, which the mutation has already invalidated. A refresh fired
+        // while this push is still in flight re-renders the old /new or /edit
+        // route's server output under the list URL, so AdminHeader's title
+        // ("Add Time Slot") disagrees with usePathname() ("Time Slots").
         router.push(cancelHref);
-        router.refresh();
       } else {
         reset(schema.defaultValues as FieldValues);
       }
@@ -112,14 +116,18 @@ export default function EntityForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className="flex min-h-[calc(100vh-3.5rem-3rem)] flex-col"
+    >
       <PageHeader
         title={isEdit ? `Edit ${schema.title}` : `Add ${schema.title}`}
         description={schema.description}
         icon={schema.icon}
       />
 
-      <div className="space-y-6">
+      <div className="flex-1 space-y-6">
         {sections.map((section, i) => (
           <Card key={section.title} className="overflow-hidden">
             <CardHeader className="gap-0 pb-4">
