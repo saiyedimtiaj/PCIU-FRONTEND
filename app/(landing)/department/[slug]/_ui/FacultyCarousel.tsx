@@ -14,17 +14,8 @@ import {
 } from "@/components/ui/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getMediaUrl } from "@/lib/utils/media";
+import { getInitials } from "@/lib/utils";
 import type { DepartmentContent } from "@/types/department";
-
-const getInitials = (name?: string) => {
-  if (!name) return "";
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .substring(0, 2)
-    .toUpperCase();
-};
 
 export function FacultyCarousel({
   members,

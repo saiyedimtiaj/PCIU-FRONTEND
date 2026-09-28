@@ -6,16 +6,7 @@ import { DepartmentNav } from "./DepartmentNav";
 import { FacultyCarousel } from "./FacultyCarousel";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
-const getInitials = (name?: string) => {
-  if (!name) return "";
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .substring(0, 2)
-    .toUpperCase();
-};
+import { getInitials } from "@/lib/utils";
 
 export default function DepartmentTemplate({
   content,
