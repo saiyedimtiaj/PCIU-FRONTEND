@@ -289,9 +289,18 @@ export default function DepartmentTemplate({
 
             {/* Faculty members */}
             <section id="faculty" className="scroll-mt-24">
-              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
-                Faculty Members
-              </h2>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase pb-2 border-b-4 border-[#0ea5e9] inline-block m-0">
+                  Faculty Members
+                </h2>
+                {content.facultyMembers.length > 0 && (
+                  <Link href={`/department/${content.slug}/teachers`}>
+                    <Button variant="outlineAccent" className="rounded-full shrink-0">
+                      View All Faculty
+                    </Button>
+                  </Link>
+                )}
+              </div>
               <div className="w-full">
                 {content.facultyMembers.length > 0 ? (
                   <FacultyCarousel members={content.facultyMembers} />

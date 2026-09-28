@@ -1,10 +1,7 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import {
-  Mail,
   MapPin,
   BookOpen,
   GraduationCap,
@@ -15,7 +12,13 @@ import {
   User,
   ExternalLink,
 } from "lucide-react";
-import { FaGoogleScholar, FaResearchgate, FaLinkedin, FaFacebook, FaXTwitter } from "react-icons/fa6";
+import {
+  FaGoogleScholar,
+  FaResearchgate,
+  FaLinkedin,
+  FaFacebook,
+  FaXTwitter,
+} from "react-icons/fa6";
 import type { TeacherDetails } from "@/types/teacher";
 import { getMediaUrl } from "@/lib/utils/media";
 import { getInitials } from "@/lib/utils";
@@ -29,7 +32,8 @@ export default function TeacherTemplate({
 }) {
   const hasEducation = teacher.education && teacher.education.length > 0;
   const hasExperience = teacher.experiences && teacher.experiences.length > 0;
-  const hasPublications = teacher.publications && teacher.publications.length > 0;
+  const hasPublications =
+    teacher.publications && teacher.publications.length > 0;
   const hasAwards = teacher.awards && teacher.awards.length > 0;
   const hasMemberships = teacher.memberships && teacher.memberships.length > 0;
 
@@ -193,7 +197,10 @@ export default function TeacherTemplate({
             )}
           </TabsList>
 
-          <TabsContent value="about" className="animate-in fade-in duration-500">
+          <TabsContent
+            value="about"
+            className="animate-in fade-in duration-500"
+          >
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-8">
               {teacher.bio && (
                 <section>
@@ -226,7 +233,10 @@ export default function TeacherTemplate({
           </TabsContent>
 
           {hasEducation && (
-            <TabsContent value="education" className="animate-in fade-in duration-500">
+            <TabsContent
+              value="education"
+              className="animate-in fade-in duration-500"
+            >
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
                 <div className="space-y-6 relative before:absolute before:inset-0 before:ml-4 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
                   {teacher.education.map((edu, idx) => (
@@ -258,7 +268,10 @@ export default function TeacherTemplate({
           )}
 
           {hasExperience && (
-            <TabsContent value="experience" className="animate-in fade-in duration-500">
+            <TabsContent
+              value="experience"
+              className="animate-in fade-in duration-500"
+            >
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-6">
                 {teacher.experiences.map((exp, idx) => (
                   <div
@@ -284,7 +297,10 @@ export default function TeacherTemplate({
           )}
 
           {hasPublications && (
-            <TabsContent value="publications" className="animate-in fade-in duration-500">
+            <TabsContent
+              value="publications"
+              className="animate-in fade-in duration-500"
+            >
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-6">
                 {teacher.publications.map((pub, idx) => (
                   <div
@@ -317,7 +333,8 @@ export default function TeacherTemplate({
                             target="_blank"
                             className="inline-flex items-center text-[#0ea5e9] hover:text-[#1e3a8a] text-sm font-semibold transition-colors gap-1"
                           >
-                            View Publication <ExternalLink className="w-4 h-4" />
+                            View Publication{" "}
+                            <ExternalLink className="w-4 h-4" />
                           </Link>
                         </div>
                       )}
@@ -329,7 +346,10 @@ export default function TeacherTemplate({
           )}
 
           {hasAwards && (
-            <TabsContent value="awards" className="animate-in fade-in duration-500">
+            <TabsContent
+              value="awards"
+              className="animate-in fade-in duration-500"
+            >
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                 {teacher.awards.map((award, idx) => (
                   <div
@@ -359,7 +379,10 @@ export default function TeacherTemplate({
           )}
 
           {hasMemberships && (
-            <TabsContent value="memberships" className="animate-in fade-in duration-500">
+            <TabsContent
+              value="memberships"
+              className="animate-in fade-in duration-500"
+            >
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                 {teacher.memberships.map((mem, idx) => (
                   <div
