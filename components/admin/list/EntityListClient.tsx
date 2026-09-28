@@ -18,8 +18,9 @@ import type { FieldDescriptor } from "@/components/admin/form/form-types";
 import { generateSampleRows, type SampleRow } from "./sample-data";
 import { deriveColumns } from "./columns";
 import { isConnected, getEndpoint } from "@/services/endpoints";
-import { useEntityList, useDeleteEntity, useUpdateEntity } from "@/features/entity";
+import { useEntityList, useDeleteEntity, useUpdateEntity, useRelationOptions } from "@/features/entity";
 import { useToastManager } from "@/components/ui/toast";
+import type { FieldOption } from "@/components/admin/form/form-types";
 
 export interface EntityListClientProps {
   slug: string;
@@ -52,8 +53,54 @@ function isOptionField(field: FieldDescriptor): boolean {
   );
 }
 
-function selectItems(field: FieldDescriptor, allLabel: string) {
-  return [{ label: allLabel, value: "all" }, ...(field.options ?? [])];
+function selectItems(options: FieldOption[], allLabel: string) {
+  return [{ label: allLabel, value: "all" }, ...options];
+}
+
+function useOptionFieldChoices(field: FieldDescriptor): FieldOption[] {
+  const { options } = useRelationOptions(
+    field.type === "relation" ? field.relationTo : undefined,
+    field.options,
+  );
+  return options;
+}
+
+function OptionFilterSelect({
+  field,
+  value,
+  onValueChange,
+  label,
+}: {
+  field: FieldDescriptor;
+  value: string;
+  onValueChange: (value: string) => void;
+  label?: boolean;
+}) {
+  const options = useOptionFieldChoices(field);
+  const allLabel = `All ${field.label}`;
+
+  return (
+    <div className={label ? "space-y-1.5" : undefined}>
+      {label && <Label className="text-xs">{field.label}</Label>}
+      <Select
+        items={selectItems(options, allLabel)}
+        value={value}
+        onValueChange={(next) => onValueChange(next ?? "all")}
+      >
+        <SelectTrigger className="w-auto min-w-40">
+          <SelectValue placeholder={field.label} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">{allLabel}</SelectItem>
+          {options.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value}>
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
 }
 
 export default function EntityListClient({ slug, basePath: basePathOverride }: EntityListClientProps) {
@@ -310,24 +357,12 @@ export default function EntityListClient({ slug, basePath: basePathOverride }: E
           </div>
 
           {visibleOptionFields.map((field) => (
-            <Select
+            <OptionFilterSelect
               key={field.name}
-              items={selectItems(field, `All ${field.label}`)}
+              field={field}
               value={optionFilters[field.name] ?? "all"}
-              onValueChange={(value) => updateOptionFilter(field.name, value ?? "all")}
-            >
-              <SelectTrigger className="w-auto min-w-40">
-                <SelectValue placeholder={field.label} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All {field.label}</SelectItem>
-                {field.options!.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onValueChange={(value) => updateOptionFilter(field.name, value)}
+            />
           ))}
 
           {hasMoreFilters && (
@@ -369,26 +404,13 @@ export default function EntityListClient({ slug, basePath: basePathOverride }: E
         {showMoreFilters && hasMoreFilters && (
           <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-muted/20 p-3">
             {hiddenOptionFields.map((field) => (
-              <div key={field.name} className="space-y-1.5">
-                <Label className="text-xs">{field.label}</Label>
-                <Select
-                  items={selectItems(field, `All ${field.label}`)}
-                  value={optionFilters[field.name] ?? "all"}
-                  onValueChange={(value) => updateOptionFilter(field.name, value ?? "all")}
-                >
-                  <SelectTrigger className="w-auto min-w-40">
-                    <SelectValue placeholder={field.label} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All {field.label}</SelectItem>
-                    {field.options!.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <OptionFilterSelect
+                key={field.name}
+                field={field}
+                value={optionFilters[field.name] ?? "all"}
+                onValueChange={(value) => updateOptionFilter(field.name, value)}
+                label
+              />
             ))}
 
             {dateField && (

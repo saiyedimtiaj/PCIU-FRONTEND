@@ -15,7 +15,6 @@ export const WRITE_DROPS: Record<string, string[]> = {
   teacher: ["facultyId"],
   pages: ["publishedAt"],
   contact: ["displayOrder", "status"],
-  notices: ["icon"],
   iqac: ["description"],
   management: ["iqacOrder"],
   "admission-advertisements": ["isActive"],
