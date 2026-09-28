@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import type { DepartmentContent } from "@/types/department";
 import { DepartmentNav } from "./DepartmentNav";
 import Image from "next/image";
+import { getMediaUrl } from "@/lib/utils/media";
 
 export default function DepartmentTemplate({
   content,
@@ -24,7 +25,7 @@ export default function DepartmentTemplate({
     content.researchAreas.length > 0
       ? content.researchAreas.length.toString() + "+"
       : "20+";
-
+  console.log({ content });
   return (
     <div className="min-h-screen bg-slate-50/50">
       {/* Hero */}
@@ -51,6 +52,12 @@ export default function DepartmentTemplate({
             </div>
           </div>
         </div>
+        <Image
+          src={"/images/hero-campus.jpg"}
+          alt="hero background"
+          fill
+          className="object-cover opacity-20"
+        />
       </section>
 
       {/* Stats Bar */}
@@ -115,10 +122,10 @@ export default function DepartmentTemplate({
           </aside>
 
           {/* Main content */}
-          <div className="flex-1 min-w-0 space-y-12">
+          <div className="flex-1 min-w-0 space-y-12 container mx-auto">
             {/* Overview */}
-            <section id="overview" className="scroll-mt-24">
-              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+            <section id="overview" className="scroll-mt-24 text-wrap">
+              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 border-b-4 border-[#0ea5e9]">
                 Welcome to {content.hero.title}
               </h2>
               <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
@@ -294,9 +301,11 @@ export default function DepartmentTemplate({
                       <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mb-5 group-hover:bg-[#0ea5e9]/10 transition-colors overflow-hidden border-4 border-white shadow-sm shrink-0">
                         {member.imageUrl ? (
                           <Image
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_ASSET_URL || "https://mehedihasantuhen.com"}${member.imageUrl}`}
+                            src={getMediaUrl(member.imageUrl) || ""}
                             alt={member.name}
                             className="w-full h-full object-cover"
+                            width={100}
+                            height={100}
                           />
                         ) : (
                           <User className="w-10 h-10 text-slate-400 group-hover:text-[#0ea5e9] transition-colors" />
