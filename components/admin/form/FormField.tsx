@@ -130,15 +130,13 @@ function IconInput({
   );
 }
 
-function ImageUploadField({
-  field,
-  error,
+function ImagePicker({
+  fieldName,
   value,
   onChange,
   onBlur,
 }: {
-  field: FieldDescriptor;
-  error?: string;
+  fieldName: string;
   value: unknown;
   onChange: (value: File | string) => void;
   onBlur: () => void;
@@ -156,9 +154,9 @@ function ImageUploadField({
   const hasPreview = !!src && failedSrc !== src;
 
   return (
-    <FieldShell field={field} error={error}>
+    <>
       <label
-        htmlFor={field.name}
+        htmlFor={fieldName}
         className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-input bg-muted/20 px-4 py-3 transition-colors hover:border-primary/50 hover:bg-accent/40"
       >
         <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -176,7 +174,7 @@ function ImageUploadField({
         </span>
       </label>
       <input
-        id={field.name}
+        id={fieldName}
         type="file"
         accept="image/*"
         className="sr-only"
@@ -212,7 +210,100 @@ function ImageUploadField({
           </button>
         </div>
       )}
+    </>
+  );
+}
+
+function ImageUploadField({
+  field,
+  error,
+  value,
+  onChange,
+  onBlur,
+}: {
+  field: FieldDescriptor;
+  error?: string;
+  value: unknown;
+  onChange: (value: File | string) => void;
+  onBlur: () => void;
+}) {
+  return (
+    <FieldShell field={field} error={error}>
+      <ImagePicker fieldName={field.name} value={value} onChange={onChange} onBlur={onBlur} />
     </FieldShell>
+  );
+}
+
+function TextOrImageField({
+  field,
+  error,
+  value,
+  onChange,
+  onBlur,
+}: {
+  field: FieldDescriptor;
+  error?: string;
+  value: unknown;
+  onChange: (value: File | string) => void;
+  onBlur: () => void;
+}) {
+  const currentIsFile = value instanceof File;
+  const [mode, setMode] = useState<"text" | "image">(currentIsFile ? "image" : "text");
+  const textValue = typeof value === "string" ? value : "";
+
+  return (
+    <div className={cn("group/field space-y-2", field.colSpan === 2 && "sm:col-span-2")}>
+      <div className="flex items-center justify-between gap-2">
+        <Label htmlFor={field.name} className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+          {field.label}
+          {field.required && <span className="text-destructive">*</span>}
+        </Label>
+        <div className="flex items-center gap-1 rounded-md border border-input bg-muted/20 p-0.5">
+          <button
+            type="button"
+            onClick={() => setMode("text")}
+            className={cn(
+              "rounded px-2 py-0.5 text-xs font-medium transition-colors",
+              mode === "text" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Text
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("image")}
+            className={cn(
+              "rounded px-2 py-0.5 text-xs font-medium transition-colors",
+              mode === "image" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Image
+          </button>
+        </div>
+      </div>
+
+      {mode === "text" ? (
+        <Textarea
+          id={field.name}
+          placeholder={field.placeholder}
+          aria-invalid={!!error}
+          value={textValue}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+        />
+      ) : (
+        <ImagePicker fieldName={field.name} value={value} onChange={onChange} onBlur={onBlur} />
+      )}
+
+      {field.helper && !error && (
+        <p className="text-xs leading-relaxed text-muted-foreground">{field.helper}</p>
+      )}
+      {error && (
+        <p className="text-xs font-medium text-destructive" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -477,6 +568,24 @@ export function FormField({ field, control, register, error, mode = "create" }: 
         name={field.name}
         render={({ field: rhf }) => (
           <ImageUploadField
+            field={field}
+            error={error}
+            value={rhf.value}
+            onChange={rhf.onChange}
+            onBlur={rhf.onBlur}
+          />
+        )}
+      />
+    );
+  }
+
+  if (field.type === "text-or-image") {
+    return (
+      <Controller
+        control={control}
+        name={field.name}
+        render={({ field: rhf }) => (
+          <TextOrImageField
             field={field}
             error={error}
             value={rhf.value}
