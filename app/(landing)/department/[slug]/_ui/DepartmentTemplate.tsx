@@ -25,7 +25,7 @@ export default function DepartmentTemplate({
     content.researchAreas.length > 0
       ? content.researchAreas.length.toString() + "+"
       : "20+";
-  console.log({ content });
+
   return (
     <div className="min-h-screen bg-slate-50/50">
       {/* Hero */}
