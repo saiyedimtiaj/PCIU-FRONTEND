@@ -204,7 +204,7 @@ export default function ProgramFinder({
                 key={program.id}
                 className="group relative flex h-full flex-col overflow-hidden rounded-2xl border-l-4 border-r-4  border-primary/10 border-l-primary border-r-primary bg-linear-to-br from-white via-white to-secondary/5 p-6 shadow-[0_10px_30px_-18px_hsl(231_77%_22%/0.45)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-l-accent hover:border-r-accent hover:shadow-[0_18px_40px_-18px_hsl(230_70%_50%/0.45)] sm:p-7"
               >
-                <div className="mb-4 flex items-center">
+                <div className="mb-4 flex items-center ">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white shadow-sm transition-transform duration-500 group-hover:scale-110">
                     {program.icon ? (
                       <Image

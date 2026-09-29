@@ -389,7 +389,6 @@ export default async function VCMessage() {
                     alt={`${vc.name} - ${vc.designation ?? "Vice Chancellor"}`}
                     fill
                     priority
-                    unoptimized
                     sizes="(min-width: 1024px) 360px, (min-width: 768px) 330px, 90vw"
                     className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.035]"
                   />
