@@ -2,8 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { ExternalLink, User2 } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
@@ -12,10 +11,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getMediaUrl } from "@/lib/utils/media";
 import { getInitials } from "@/lib/utils";
+import { getMediaUrl } from "@/lib/utils/media";
 import type { DepartmentContent } from "@/types/department";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function FacultyCarousel({
   members,
@@ -45,38 +44,37 @@ export function FacultyCarousel({
           >
             <Link
               href={`/faculty/${member.id}`}
-              className="h-full bg-white border border-slate-200 rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col items-center text-center relative overflow-hidden"
+              className="group relative block aspect-3/4 w-full rounded-lg overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500"
             >
-              <div className="absolute top-0 left-0 w-full h-1 bg-[#0ea5e9] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-
-              <Avatar className="w-24 h-24 mb-5 border-4 border-white shadow-sm shrink-0 font-heading text-slate-500 bg-slate-100 flex items-center justify-center group-hover:bg-[#0ea5e9]/10 transition-colors">
+              <Avatar className="size-full rounded-none after:rounded-none after:hidden">
                 <AvatarImage
                   src={getMediaUrl(member.imageUrl) || ""}
-                  alt={member.name}
-                  className="object-cover"
+                  className="rounded-none object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <AvatarFallback className="bg-transparent text-3xl font-bold group-hover:text-[#0ea5e9] transition-colors">
+                <AvatarFallback className="rounded-none bg-slate-100 text-5xl font-bold font-heading text-slate-300">
                   {getInitials(member.name)}
                 </AvatarFallback>
               </Avatar>
 
-              <h3 className="font-bold text-[#1e3a8a] text-[17px] leading-tight mb-2 group-hover:text-[#0ea5e9] transition-colors line-clamp-2">
-                {member.name}
-              </h3>
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-linear-to-t from-[#0f172a] via-[#0f172a]/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
 
-              <p className="text-[13px] font-semibold text-slate-600 mb-3 line-clamp-2 px-2">
-                {member.designation}
-              </p>
-
-              <div className="mt-auto w-full flex flex-col items-center">
+              {/* Content */}
+              <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col justify-end text-left z-10">
+                <h3 className="font-bold font-heading text-white text-xl leading-tight mb-1.5 group-hover:text-[#0ea5e9] transition-colors line-clamp-2">
+                  {member.name}
+                </h3>
+                <p className="text-sm font-semibold text-white/90 mb-2 line-clamp-1">
+                  {member.designation}
+                </p>
                 {member.specialization && (
-                  <p className="text-xs text-muted-foreground line-clamp-2 pt-4 border-t border-slate-100 w-full">
+                  <p className="text-xs font-medium text-white/60 line-clamp-2 mb-4">
                     {member.specialization}
                   </p>
                 )}
 
-                <div className="mt-4 flex items-center justify-center gap-1 text-xs font-semibold text-[#0ea5e9] opacity-0 group-hover:opacity-100 transition-opacity">
-                  View Profile <ExternalLink className="w-3 h-3" />
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#0ea5e9] opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                  View Profile <ExternalLink className="w-3.5 h-3.5" />
                 </div>
               </div>
             </Link>
