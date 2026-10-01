@@ -1,5 +1,5 @@
+import { getFaculties } from "@/app/(landing)/department/_actions/faculties";
 import NavbarClient from "./NavbarClient";
-import { getFaculties } from "@/actions/faculties";
 import { getSession } from "@/app/(auth)/actions";
 
 export default async function Navbar() {

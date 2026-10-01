@@ -93,6 +93,7 @@ export interface DepartmentTuitionFee {
 }
 
 export interface DepartmentContent {
+  id: number;
   slug: string;
   chairmanHeading: string;
   facilitiesHeading: string | null;

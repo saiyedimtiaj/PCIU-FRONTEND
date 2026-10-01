@@ -95,6 +95,7 @@ function mapApiDepartmentToContent(
   tuitionFees: ApiTuitionFee[],
 ): DepartmentContent {
   return {
+    id: apiData.id,
     slug: apiData.slug,
     chairmanHeading: "Message from the Chairman",
     facilitiesHeading: "Department Facilities",
@@ -182,4 +183,19 @@ function mapApiDepartmentToContent(
     ],
     facultyQueryParam: apiData.slug,
   };
+}
+
+export async function getDepartmentTeachers(deptId: number, slug: string): Promise<ApiTeacher[]> {
+  try {
+    const teachersRes = await publicFetch.get(`/teachers/department/${deptId}`, { next: { tags: ["department-teachers", slug] } });
+    if (teachersRes.ok) {
+      const tData = await teachersRes.json();
+      if (tData.success && tData.data?.teachers) {
+        return tData.data.teachers;
+      }
+    }
+  } catch (error) {
+    console.error(`[Actions: getDepartmentTeachers] Failed to fetch teachers for dept ${deptId}:`, error);
+  }
+  return [];
 }

@@ -7,7 +7,7 @@ import { Building2, GraduationCap, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { resolveUploadUrl } from "@/lib/upload-url";
-import type { ProgramFinderItem } from "@/actions/programs";
+import type { ProgramFinderItem } from "@/app/(landing)/_actions/programs";
 
 const ALL_LEVELS = "All Levels";
 const ALL_FACULTIES = "All Faculties";

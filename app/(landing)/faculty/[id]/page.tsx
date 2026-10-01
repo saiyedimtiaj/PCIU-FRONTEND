@@ -1,7 +1,7 @@
-import { getTeacherById } from "@/actions/teachers";
-import { notFound } from "next/navigation";
+import { getTeacherById } from "@/app/(landing)/faculty/_actions/teachers";
 import TeacherTemplate from "./_ui/TeacherTemplate";
 import { Metadata } from "next";
+import EmptyState from "@/components/shared/EmptyState";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -26,7 +26,12 @@ export default async function FacultyDetailsPage({ params }: Props) {
   const teacher = await getTeacherById(id);
 
   if (!teacher) {
-    notFound();
+    return (
+      <EmptyState
+        title="No teacher found!"
+        description="The teacher you are looking for does not exist or has been removed."
+      />
+    );
   }
 
   return <TeacherTemplate teacher={teacher} />;
