@@ -7,6 +7,7 @@ import { FacultyCarousel } from "./FacultyCarousel";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
+import { getMediaUrl } from "@/lib/utils/media";
 
 export default function DepartmentTemplate({
   content,
@@ -55,7 +56,7 @@ export default function DepartmentTemplate({
           </div>
         </div>
         <Image
-          src={"/images/hero-campus.jpg"}
+          src={getMediaUrl(content.image) || "/images/hero-campus.jpg"}
           alt="hero background"
           fill
           className="object-cover opacity-20"
@@ -115,11 +116,19 @@ export default function DepartmentTemplate({
                   label: content.chairmanHeading || "Chairman's Message",
                   icon: "users",
                 },
-                { id: "programs", label: "Programs Offered", icon: "graduation-cap" },
+                {
+                  id: "programs",
+                  label: "Programs Offered",
+                  icon: "graduation-cap",
+                },
                 { id: "tuition", label: "Tuition Fee", icon: "file-text" },
                 { id: "courses", label: "Course Details", icon: "book-open" },
                 { id: "faculty", label: "Faculty Members", icon: "users" },
-                { id: "research", label: "Research Activities", icon: "microscope" },
+                {
+                  id: "research",
+                  label: "Research Activities",
+                  icon: "microscope",
+                },
                 { id: "events", label: "Events & Notices", icon: "calendar" },
               ]}
             />
@@ -134,7 +143,7 @@ export default function DepartmentTemplate({
               </h2>
               <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
                 {content.overview.content.map((p, i) => (
-                  <p key={i}>{p}</p>
+                  <p dangerouslySetInnerHTML={{ __html: p }} key={i}></p>
                 ))}
               </div>
             </section>
@@ -297,7 +306,10 @@ export default function DepartmentTemplate({
                 </h2>
                 {content.facultyMembers.length > 0 && (
                   <Link href={`/department/${content.slug}/teachers`}>
-                    <Button variant="outlineAccent" className="rounded-full shrink-0">
+                    <Button
+                      variant="outlineAccent"
+                      className="rounded-full shrink-0"
+                    >
                       View All Faculty
                     </Button>
                   </Link>

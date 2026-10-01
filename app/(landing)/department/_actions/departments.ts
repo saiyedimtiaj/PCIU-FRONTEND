@@ -97,6 +97,7 @@ function mapApiDepartmentToContent(
   return {
     id: apiData.id,
     slug: apiData.slug,
+    image: apiData.image,
     chairmanHeading: "Message from the Chairman",
     facilitiesHeading: "Department Facilities",
     hero: {
