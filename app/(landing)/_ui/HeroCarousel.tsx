@@ -181,14 +181,14 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
           <div className="absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-1 sm:right-5 sm:gap-2 md:right-8">
             <button
               onClick={prev}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 sm:h-11 sm:w-11"
+              className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 "
               aria-label="Previous slide"
             >
               <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
             <button
               onClick={next}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 sm:h-11 sm:w-11"
+              className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 "
               aria-label="Next slide"
             >
               <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
