@@ -2,14 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { iconMap, type IconName } from "@/lib/icons";
 
 interface Section {
   id: string;
   label: string;
+  icon?: IconName;
 }
 
-export function DepartmentNav({ sections }: { sections: Section[] }) {
-  const [activeSection, setActiveSection] = useState<string>(sections[0]?.id || "");
+export function DepartmentNav({
+  sections,
+  title = "On this page",
+}: {
+  sections: Section[];
+  title?: string;
+}) {
+  const [activeSection, setActiveSection] = useState<string>(
+    sections[0]?.id || "",
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -24,7 +34,7 @@ export function DepartmentNav({ sections }: { sections: Section[] }) {
       {
         // Adjust these margins so it triggers when the section header reaches the upper part of the viewport
         rootMargin: "-20% 0px -60% 0px",
-      }
+      },
     );
 
     sections.forEach(({ id }) => {
@@ -46,28 +56,31 @@ export function DepartmentNav({ sections }: { sections: Section[] }) {
   };
 
   return (
-    <nav className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-      <h3 className="font-heading font-bold text-[#1e3a8a] mb-4 px-2 uppercase text-sm tracking-wider">
-        On this page
-      </h3>
-      <ul className="space-y-1">
-        {sections.map(({ id, label }) => (
-          <li key={id}>
+    <div className="lg:sticky lg:top-24 rounded-xl border border-border bg-card overflow-hidden shadow-sm">
+      <div className="bg-primary text-primary-foreground px-4 py-3">
+        <h3 className="font-heading font-semibold text-sm">{title}</h3>
+      </div>
+      <nav className="flex flex-col p-2">
+        {sections.map(({ id, label, icon }) => {
+          const Icon = icon ? iconMap[icon] : null;
+          return (
             <a
+              key={id}
               href={`#${id}`}
               onClick={(e) => handleClick(e, id)}
               className={cn(
-                "block px-3 py-2 text-sm rounded-lg transition-colors",
+                "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm transition-colors",
                 activeSection === id
-                  ? "bg-accent text-black font-semibold shadow-sm"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-accent/40 text-black border-l-4 border-accent font-medium"
+                  : "text-muted-foreground hover:bg-muted",
               )}
             >
+              {Icon && <Icon className="size-4 shrink-0" />}
               {label}
             </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+          );
+        })}
+      </nav>
+    </div>
   );
 }

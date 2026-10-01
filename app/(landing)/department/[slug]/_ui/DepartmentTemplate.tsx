@@ -107,18 +107,20 @@ export default function DepartmentTemplate({
           {/* Sidebar Nav */}
           <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-24 z-10">
             <DepartmentNav
+              title="Department Menu"
               sections={[
-                { id: "overview", label: "Overview" },
+                { id: "overview", label: "Overview", icon: "home" },
                 {
                   id: "chairman",
                   label: content.chairmanHeading || "Chairman's Message",
+                  icon: "users",
                 },
-                { id: "programs", label: "Programs Offered" },
-                { id: "tuition", label: "Tuition Fee" },
-                { id: "courses", label: "Course Details" },
-                { id: "faculty", label: "Faculty Members" },
-                { id: "research", label: "Research Activities" },
-                { id: "events", label: "Events & Notices" },
+                { id: "programs", label: "Programs Offered", icon: "graduation-cap" },
+                { id: "tuition", label: "Tuition Fee", icon: "file-text" },
+                { id: "courses", label: "Course Details", icon: "book-open" },
+                { id: "faculty", label: "Faculty Members", icon: "users" },
+                { id: "research", label: "Research Activities", icon: "microscope" },
+                { id: "events", label: "Events & Notices", icon: "calendar" },
               ]}
             />
           </aside>
