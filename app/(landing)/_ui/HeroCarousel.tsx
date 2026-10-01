@@ -103,8 +103,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
                 priority={index === 0}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
-                className="h-full w-full object-cover"
-                style={{ objectPosition: "center 30%" }}
+                className=" h-full w-full object-cover object-[center_30%] sm:object-[center_30%] md:object-[center_35%] lg:object-center "
               />
             ) : (
               <div className="absolute inset-0 bg-primary" />
@@ -113,10 +112,21 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(13,26,99,0.08)_30%,rgba(13,26,99,0.25)_100%)]" />
             <div className="absolute inset-0 bg-linear-to-r from-primary/45 via-primary/15 to-transparent" />
             <div className="absolute inset-0 bg-linear-to-t from-primary/45 via-primary/15 to-transparent" />
-
+            {/* Text content */}
             {(slide.heading || slide.subheading) && (
-              <div className="absolute inset-0 z-10 flex items-end pb-20 sm:pb-24 md:pb-28">
+              <div className="absolute inset-0 z-10 flex items-end pb-14 sm:pb-14 md:pb-14">
                 <div className="container mx-auto px-4 sm:px-6 md:px-12">
+                  <div className="group inline-flex items-center gap-2 pb-2">
+                    {/* Accent Line */}
+                    <span className="relative h-1.5 w-9 overflow-hidden rounded-full bg-gradient-to-r from-[#0d1a63] to-[#f5b71d] shadow-[0_2px_10px_rgba(245,183,29,0.3)] transition-all duration-500 group-hover:w-14">
+                      <span className="absolute inset-y-0 left-0 w-1/2 rounded-full bg-white/30 blur-[1px]" />
+                    </span>
+
+                    {/* Brand Text */}
+                    <h1 className="bg-gradient-to-r from-[#f5b71d] via-[#f5b71d] to-white bg-clip-text text-xs md:text-2xl font-extrabold italic leading-none tracking-wide text-transparent drop-shadow-[0_2px_10px_rgba(245,183,29,0.28)] transition-all duration-500">
+                      PCIU...
+                    </h1>
+                  </div>
                   <div className="max-w-[92%] sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
                     {slide.heading && (
                       <h2
@@ -132,7 +142,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
 
                     {slide.subheading && (
                       <p
-                        className={`mt-3 max-w-[92%] text-[11px] sm:text-xs md:text-sm text-white/90 drop-shadow-[0_2px_5px_rgba(0,0,0,0.12)] transition-all duration-700 delay-150 ${
+                        className={`mt-1 md:mt-1.5 max-w-[92%] text-[11px] sm:text-xs md:text-sm text-white/90 font-medium drop-shadow-[0_2px_5px_rgba(0,0,0,0.12)] transition-all duration-700 delay-150 ${
                           index === current
                             ? "translate-y-0 opacity-100"
                             : "translate-y-8 opacity-0"
@@ -144,7 +154,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
 
                     {slide.ctaLabel && slide.ctaUrl && (
                       <div
-                        className={`mt-5 sm:mt-8 transition-all duration-700 delay-300 ${
+                        className={`mt-4 sm:mt-4 transition-all duration-700 delay-300 ${
                           index === current
                             ? "translate-y-0 opacity-100"
                             : "translate-y-8 opacity-0"
@@ -168,7 +178,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
 
       {slides.length > 1 && (
         <>
-          <div className="absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-2 sm:right-5 sm:gap-3 md:right-8">
+          <div className="absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-1 sm:right-5 sm:gap-2 md:right-8">
             <button
               onClick={prev}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 sm:h-11 sm:w-11"
@@ -184,8 +194,8 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
               <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
-
-          <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/15 bg-black/15 px-3 py-2 shadow-sm shadow-black/5 backdrop-blur-sm sm:bottom-6 md:bottom-8">
+          {/* DOTS POINT */}
+          <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full  px-3 py-2 shadow-sm shadow-black/5 backdrop-blur-sm ">
             {slides.map((slide, index) => (
               <button
                 key={slide.id}
@@ -194,7 +204,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
                 aria-current={index === current ? "true" : undefined}
                 className={`h-2.5 rounded-full transition-all duration-300 ${
                   index === current
-                    ? "w-8 bg-accent shadow-[0_0_3px_rgba(245,183,29,0.18)]"
+                    ? "w-2.5 bg-accent shadow-[0_0_3px_rgba(245,183,29,0.18)]"
                     : "w-2.5 bg-white/60 hover:bg-white/90"
                 }`}
               />

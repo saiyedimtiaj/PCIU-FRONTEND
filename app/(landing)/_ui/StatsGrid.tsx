@@ -10,7 +10,7 @@ export default function StatsGrid({ stats }: { stats: StatItem[] }) {
         return (
           <div
             key={stat.id}
-            className="group relative flex flex-col items-center text-center py-7 sm:py-8 md:py-9 px-2 transition-all duration-300 hover:-translate-y-1 active:scale-[0.97] active:duration-100"
+            className="group relative flex flex-col items-center text-center pt-3 px-2 transition-all duration-300 hover:-translate-y-1 active:scale-[0.97] active:duration-100"
           >
             {/* Card background tint on hover */}
             <span className="pointer-events-none absolute inset-0 bg-white/[0.03] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -29,18 +29,18 @@ export default function StatsGrid({ stats }: { stats: StatItem[] }) {
 
             <StatCounter
               value={`${stat.value}+`}
-              className="relative font-heading font-extrabold text-2xl sm:text-3xl text-white tabular-nums tracking-tight leading-none transition-colors duration-300 group-hover:text-accent"
+              className="relative font-heading font-extrabold text-xl sm:text-2xl text-white tabular-nums tracking-tight leading-none transition-colors duration-300 group-hover:text-accent"
             />
 
             <span className="sr-only">
               {stat.value}+ {stat.label}
             </span>
 
-            <span className="relative mt-2.5 text-[11px] sm:text-xs md:text-sm font-extrabold text-white/90 uppercase tracking-[0.08em] transition-colors duration-300 group-hover:text-white">
+            <span className="relative mt-1 text-[11px] sm:text-xs md:text-sm font-extrabold text-white/90 uppercase tracking-[0.08em] transition-colors duration-300 group-hover:text-white">
               {stat.label}
             </span>
 
-            <span className="relative bottom-0 mt-2 h-px w-0 bg-accent transition-all duration-300 group-hover:w-8" />
+            <span className="relative bottom-0 mt-2 h-px w-0 bg-accent transition-all duration-300 group-hover:w-14" />
           </div>
         );
       })}
