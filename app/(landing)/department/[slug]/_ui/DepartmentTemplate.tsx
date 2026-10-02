@@ -5,7 +5,7 @@ import type { DepartmentContent } from "@/types/department";
 import { DepartmentNav } from "./DepartmentNav";
 import { FacultyCarousel } from "./FacultyCarousel";
 import Image from "next/image";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { getMediaUrl } from "@/lib/utils/media";
 
@@ -149,31 +149,39 @@ export default function DepartmentTemplate({
             </section>
 
             {/* Chairman message */}
-            <section id="chairman" className="scroll-mt-24">
-              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
-                {content.chairmanHeading}
-              </h2>
-              <div className="flex flex-col md:flex-row gap-8">
-                <div className="shrink-0 text-center w-full md:w-48 flex flex-col items-center">
-                  <Avatar className="w-full h-auto aspect-square rounded-xl bg-slate-200 border text-slate-500 font-heading flex items-center justify-center mb-4">
-                    <AvatarFallback className="text-5xl font-bold bg-transparent rounded-xl">
-                      {getInitials(content.chairman.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <p className="font-bold text-[#1e3a8a]">
-                    {content.chairman.name}
-                  </p>
-                  <p className="text-sm text-[#475569]">
-                    {content.chairman.designation}
-                  </p>
+            {content.chairman && (
+              <section id="chairman" className="scroll-mt-24">
+                <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+                  {content.chairmanHeading}
+                </h2>
+                <div className="flex flex-col md:flex-row gap-8">
+                  <div className="shrink-0 text-center w-full md:w-48 flex flex-col items-center">
+                    <Avatar className="w-full h-auto aspect-square rounded-xl bg-slate-200 border text-slate-500 font-heading flex items-center justify-center mb-4">
+                      <AvatarImage
+                        className={"rounded-none"}
+                        src={
+                          getMediaUrl(content.chairman.imageUrl) || undefined
+                        }
+                      />
+                      <AvatarFallback className="text-5xl font-bold bg-transparent rounded-none">
+                        {getInitials(content.chairman.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className="font-bold text-[#1e3a8a]">
+                      {content.chairman.name}
+                    </p>
+                    <p className="text-sm text-[#475569]">
+                      {content.chairman.designation}
+                    </p>
+                  </div>
+                  <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
+                    {content.chairman.message.map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
-                  {content.chairman.message.map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
-                </div>
-              </div>
-            </section>
+              </section>
+            )}
 
             {/* Programs */}
             <section id="programs" className="scroll-mt-24">
