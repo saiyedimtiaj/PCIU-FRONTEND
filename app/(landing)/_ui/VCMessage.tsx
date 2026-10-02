@@ -80,7 +80,7 @@ export default async function VCMessage() {
             </defs>
 
             {/* =================================================
-                MAIN BLUE FLOW
+                MAIN BLUE FLOW  sections 
             ================================================== */}
 
             <path
