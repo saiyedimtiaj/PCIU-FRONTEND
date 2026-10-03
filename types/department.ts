@@ -17,6 +17,7 @@ export interface DepartmentChairman {
   name: string;
   designation: string;
   message: string[];
+  imageUrl?: string;
 }
 
 export interface DepartmentOverview {
@@ -93,12 +94,14 @@ export interface DepartmentTuitionFee {
 }
 
 export interface DepartmentContent {
+  id: number;
   slug: string;
+  image?: string;
   chairmanHeading: string;
   facilitiesHeading: string | null;
   hero: DepartmentHero;
   stats?: DepartmentStat[];
-  chairman: DepartmentChairman;
+  chairman: DepartmentChairman | null;
   overview: DepartmentOverview;
   facilities: DepartmentFacility[];
   programs: DepartmentProgram[];
@@ -147,6 +150,7 @@ export interface ApiDepartmentResponse {
     name: string;
     designation: string;
     message?: string[];
+    imageUrl?: string;
   } | null;
 }
 

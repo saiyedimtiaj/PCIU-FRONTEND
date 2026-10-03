@@ -9,7 +9,7 @@ import PhotoGallery from "./_ui/PhotoGallery";
 import CampusLife from "./_ui/CampusLife";
 import NewsEvents from "./_ui/NewsEvents";
 import Stats from "./_ui/Stats";
-import { getProgramFinderData } from "@/actions/programs";
+import { getProgramFinderData } from "@/app/(landing)/_actions/programs";
 import { getHomeGallery } from "@/lib/api/home";
 
 export default async function Page() {
