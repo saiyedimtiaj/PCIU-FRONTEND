@@ -195,7 +195,8 @@ export default async function VCMessage() {
       ========================================================== */}
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl items-center grid-cols-1 gap-12 md:grid-cols-[minmax(280px,360px)_1fr] md:gap-14 lg:grid-cols-[390px_1fr] lg:gap-20">
+        {/* <div className="mx-auto grid max-w-6xl items-center grid-cols-1 gap-12  md:grid-cols-[minmax(280px,360px)_1fr] md:gap-14 lg:grid-cols-[390px_1fr] lg:gap-20"> */}
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-[390px_1fr] lg:gap-20">
           {/* =====================================================
               VC PROFILE
           ====================================================== */}
