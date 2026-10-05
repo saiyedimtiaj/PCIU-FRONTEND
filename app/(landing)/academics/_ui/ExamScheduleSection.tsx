@@ -91,7 +91,10 @@ export default async function ExamScheduleSection({
       </div>
 
       {activeExam && (
-        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div
+          id="exam-routine"
+          className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500"
+        >
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-lg">
               {activeExam.name} - Routine

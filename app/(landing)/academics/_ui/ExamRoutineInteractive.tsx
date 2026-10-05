@@ -377,7 +377,7 @@ export default function ExamRoutineInteractive({
         />
       ) : (
         <div className="overflow-x-auto">
-          <Table>
+          <Table className="min-w-[800px]">
             <TableHeader>
               <TableRow className="bg-muted/30 hover:bg-muted/30">
                 <TableHead className="w-30">Date</TableHead>

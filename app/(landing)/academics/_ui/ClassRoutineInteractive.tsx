@@ -367,7 +367,7 @@ export default function ClassRoutineInteractive({
         />
       ) : (
         <div className="overflow-x-auto">
-          <Table>
+          <Table className="min-w-[950px]">
             <TableHeader>
               <TableRow className="bg-muted/30 hover:bg-muted/30">
                 <TableHead className="w-25">Day</TableHead>

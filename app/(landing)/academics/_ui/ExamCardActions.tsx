@@ -7,12 +7,10 @@ import type { Exam, ExamRoutine } from "@/types/academics";
 import { downloadExamRoutinePdf } from "@/lib/academics/export-pdf";
 
 /**
- * Both actions on an exam card — "View Routine" and the Download icon —
- * trigger the exact same full-routine PDF download via downloadExamRoutinePdf,
- * so the two buttons can never drift into separate implementations. "View
- * Routine" also keeps its existing `?examId=` navigation (switches which
- * exam's live filterable table shows below), since that's an unrelated,
- * pre-existing feature this change isn't meant to remove.
+ * "View Routine" navigates to this exam's live filterable table below
+ * (via ?examId= + #exam-routine scroll anchor). The Download icon
+ * triggers the full-routine PDF download via downloadExamRoutinePdf.
+ * The two are now separate actions, not the same handler.
  */
 export default function ExamCardActions({
   exam,
@@ -34,8 +32,7 @@ export default function ExamCardActions({
         variant={isActive ? "default" : "outlineMuted"}
         size="sm"
         className="flex-1"
-        onClick={handleDownload}
-        render={<Link href={`/academics/exam-schedule?examId=${exam.id}`} scroll={false} />}
+        render={<Link href={`/academics/exam-schedule?examId=${exam.id}#exam-routine`} />}
         nativeButton={false}
       >
         <FileText className="size-4 mr-1.5" />
