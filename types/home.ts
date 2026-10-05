@@ -44,6 +44,28 @@ export interface NewsArticle {
   publishedAt?: string | null;
 }
 
+export interface HomeEvent {
+  id?: number;
+  departmentId?: number | null;
+  title: string;
+  slug: string;
+  description?: string | null;
+  category?: string | null;
+  badgeLabel?: string | null;
+  startDateTime: string;
+  endDateTime?: string | null;
+  allDay?: boolean;
+  location?: string | null;
+  coverImageUrl?: string | null;
+  multipleImage?: string[] | null;
+  url?: string | null;
+  isActive: boolean;
+  deletedAt?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  sortOrder?: number;
+}
+
 /** Hero slider (from /home/sliders API) */
 export interface HeroSliderItem {
   id: number;

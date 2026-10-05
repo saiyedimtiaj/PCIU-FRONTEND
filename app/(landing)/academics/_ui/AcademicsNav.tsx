@@ -32,7 +32,7 @@ export default function AcademicsNav({ items }: { items: SectionNavItem[] }) {
                 className={cn(
                   "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm transition-colors",
                   isActive
-                    ? "bg-accent/10 text-accent border-l-4 border-accent font-medium"
+                    ? "bg-accent/20 text-black border-l-4 border-accent font-medium"
                     : "text-muted-foreground hover:bg-muted",
                 )}
               >

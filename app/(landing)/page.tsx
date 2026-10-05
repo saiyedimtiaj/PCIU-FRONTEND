@@ -9,7 +9,7 @@ import PhotoGallery from "./_ui/PhotoGallery";
 import CampusLife from "./_ui/CampusLife";
 import NewsEvents from "./_ui/NewsEvents";
 import Stats from "./_ui/Stats";
-import { getProgramFinderData } from "@/actions/programs";
+import { getProgramFinderData } from "@/app/(landing)/_actions/programs";
 import { getHomeGallery } from "@/lib/api/home";
 
 export default async function Page() {
@@ -22,7 +22,7 @@ export default async function Page() {
     <>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 text-highlight-foreground px-4 py-2 rounded-lg z-50 bg-white"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 text-highlight-foreground  px-4 py-2 rounded-lg z-50 bg-white"
       >
         Skip to main content
       </a>

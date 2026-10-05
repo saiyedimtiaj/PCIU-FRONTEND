@@ -5,8 +5,9 @@ import type { DepartmentContent } from "@/types/department";
 import { DepartmentNav } from "./DepartmentNav";
 import { FacultyCarousel } from "./FacultyCarousel";
 import Image from "next/image";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
+import { getMediaUrl } from "@/lib/utils/media";
 
 export default function DepartmentTemplate({
   content,
@@ -55,7 +56,7 @@ export default function DepartmentTemplate({
           </div>
         </div>
         <Image
-          src={"/images/hero-campus.jpg"}
+          src={getMediaUrl(content.image) || "/images/hero-campus.jpg"}
           alt="hero background"
           fill
           className="object-cover opacity-20"
@@ -107,18 +108,28 @@ export default function DepartmentTemplate({
           {/* Sidebar Nav */}
           <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-24 z-10">
             <DepartmentNav
+              title="Department Menu"
               sections={[
-                { id: "overview", label: "Overview" },
+                { id: "overview", label: "Overview", icon: "home" },
                 {
                   id: "chairman",
                   label: content.chairmanHeading || "Chairman's Message",
+                  icon: "users",
                 },
-                { id: "programs", label: "Programs Offered" },
-                { id: "tuition", label: "Tuition Fee" },
-                { id: "courses", label: "Course Details" },
-                { id: "faculty", label: "Faculty Members" },
-                { id: "research", label: "Research Activities" },
-                { id: "events", label: "Events & Notices" },
+                {
+                  id: "programs",
+                  label: "Programs Offered",
+                  icon: "graduation-cap",
+                },
+                { id: "tuition", label: "Tuition Fee", icon: "file-text" },
+                { id: "courses", label: "Course Details", icon: "book-open" },
+                { id: "faculty", label: "Faculty Members", icon: "users" },
+                {
+                  id: "research",
+                  label: "Research Activities",
+                  icon: "microscope",
+                },
+                { id: "events", label: "Events & Notices", icon: "calendar" },
               ]}
             />
           </aside>
@@ -132,37 +143,45 @@ export default function DepartmentTemplate({
               </h2>
               <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
                 {content.overview.content.map((p, i) => (
-                  <p key={i}>{p}</p>
+                  <p dangerouslySetInnerHTML={{ __html: p }} key={i}></p>
                 ))}
               </div>
             </section>
 
             {/* Chairman message */}
-            <section id="chairman" className="scroll-mt-24">
-              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
-                {content.chairmanHeading}
-              </h2>
-              <div className="flex flex-col md:flex-row gap-8">
-                <div className="shrink-0 text-center w-full md:w-48 flex flex-col items-center">
-                  <Avatar className="w-full h-auto aspect-square rounded-xl bg-slate-200 border text-slate-500 font-heading flex items-center justify-center mb-4">
-                    <AvatarFallback className="text-5xl font-bold bg-transparent rounded-xl">
-                      {getInitials(content.chairman.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <p className="font-bold text-[#1e3a8a]">
-                    {content.chairman.name}
-                  </p>
-                  <p className="text-sm text-[#475569]">
-                    {content.chairman.designation}
-                  </p>
+            {content.chairman && (
+              <section id="chairman" className="scroll-mt-24">
+                <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
+                  {content.chairmanHeading}
+                </h2>
+                <div className="flex flex-col md:flex-row gap-8">
+                  <div className="shrink-0 text-center w-full md:w-48 flex flex-col items-center">
+                    <Avatar className="w-full h-auto aspect-square rounded-xl bg-slate-200 border text-slate-500 font-heading flex items-center justify-center mb-4">
+                      <AvatarImage
+                        className={"rounded-none"}
+                        src={
+                          getMediaUrl(content.chairman.imageUrl) || undefined
+                        }
+                      />
+                      <AvatarFallback className="text-5xl font-bold bg-transparent rounded-none">
+                        {getInitials(content.chairman.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className="font-bold text-[#1e3a8a]">
+                      {content.chairman.name}
+                    </p>
+                    <p className="text-sm text-[#475569]">
+                      {content.chairman.designation}
+                    </p>
+                  </div>
+                  <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
+                    {content.chairman.message.map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
-                  {content.chairman.message.map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
-                </div>
-              </div>
-            </section>
+              </section>
+            )}
 
             {/* Programs */}
             <section id="programs" className="scroll-mt-24">
@@ -295,7 +314,10 @@ export default function DepartmentTemplate({
                 </h2>
                 {content.facultyMembers.length > 0 && (
                   <Link href={`/department/${content.slug}/teachers`}>
-                    <Button variant="outlineAccent" className="rounded-full shrink-0">
+                    <Button
+                      variant="outlineAccent"
+                      className="rounded-full shrink-0"
+                    >
                       View All Faculty
                     </Button>
                   </Link>
