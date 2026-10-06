@@ -29,12 +29,12 @@ export default function AcademicsNav({ items }: { items: SectionNavItem[] }) {
                 key={item.id}
                 href={`/academics/${item.id}`}
                 scroll={false}
-                className={cn(
-                  "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm transition-colors",
-                  isActive
-                    ? "bg-accent/20 text-black border-l-4 border-accent font-medium"
-                    : "text-muted-foreground hover:bg-muted",
-                )}
+               className={cn(
+  "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm transition-colors",
+  isActive
+    ? "bg-primary/20 text-primary border-l-4 border-primary font-medium"
+    : "text-muted-foreground hover:bg-muted",
+)}
               >
                 <Icon className="size-4 shrink-0" />
                 {item.label}

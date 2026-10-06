@@ -4,6 +4,8 @@ import type {
   ExamRoutine,
   ClassRoutineItem,
   ClassTimeSlot,
+  FreeRoom,
+  TimeSlotOption,
 } from "@/types/academics";
 
 type Dict = Record<string, unknown>;
@@ -97,6 +99,10 @@ const PUBLIC_CLASS_ROUTINES_PATH = "/academic/class-routines";
 // session (403 "Permission not configured" for a teacher, 401 with no cookie).
 const PUBLIC_TIME_SLOTS_PATH = "/academic/time-slots";
 const PUBLIC_EXAMS_PATH = "/academic/exams";
+// Public free-room lookup — takes ?day=&timeSlotId= and returns rooms with no
+// class routine scheduled in that slot. Lives under /home, not /academic,
+// per the live API (verified: 200 with no auth header).
+const PUBLIC_FREE_ROOMS_PATH = "/home/free-rooms";
 
 async function fetchList(path: string, label: string): Promise<Dict[]> {
   try {
@@ -196,4 +202,44 @@ export async function getLiveClassTimeSlots(): Promise<ClassTimeSlot[]> {
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   return sorted.map((s, i) => ({ time: s.time, slot: SLOT_LETTERS[i] ?? String(i + 1) }));
+}
+
+/**
+ * Same CLASS time slots as getLiveClassTimeSlots, but keeps each slot's real
+ * numeric id (instead of replacing it with a display letter like A/B/C) —
+ * the Free Rooms search needs the actual timeSlotId to send as a query param.
+ */
+export async function getClassTimeSlotOptions(): Promise<TimeSlotOption[]> {
+  const rows = await fetchList(PUBLIC_TIME_SLOTS_PATH, "time-slot");
+  return rows
+    .filter((r) => isActive(r) && str(r.type) === "CLASS")
+    .map((r) => ({ id: num(r.id), time: timeRange(r), startTime: str(r.startTime) }))
+    .filter((s) => s.time)
+    .sort((a, b) => a.startTime.localeCompare(b.startTime))
+    .map(({ id, time }) => ({ id, time }));
+}
+
+export interface FreeRoomQuery {
+  day: string;
+  timeSlotId: number;
+}
+
+export async function getFreeRooms(query: FreeRoomQuery): Promise<FreeRoom[]> {
+  const params = new URLSearchParams({
+    day: query.day,
+    timeSlotId: String(query.timeSlotId),
+  });
+  try {
+    const data = await api.get<unknown>(`${PUBLIC_FREE_ROOMS_PATH}?${params.toString()}`);
+    const rows = toArray(data);
+    return rows.map((r) => ({
+      id: num(r.id),
+      name: str(r.name),
+      buildingId: num(r.buildingId),
+      buildingName: nameOf(r, "building"),
+    }));
+  } catch (error) {
+    console.error("[academics] failed to load free rooms", error);
+    return [];
+  }
 }
