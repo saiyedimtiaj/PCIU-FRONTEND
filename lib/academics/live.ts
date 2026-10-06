@@ -1,4 +1,4 @@
-﻿import { api } from "@/services/http";
+﻿import { publicFetch } from "@/lib/server-fetch";
 import type {
   Exam,
   ExamRoutine,
@@ -104,9 +104,42 @@ const PUBLIC_EXAMS_PATH = "/academic/exams";
 // per the live API (verified: 200 with no auth header).
 const PUBLIC_FREE_ROOMS_PATH = "/home/free-rooms";
 
+// All of these endpoints are public, so they're fetched without the session
+// cookie and kept in Next's data cache. Every visitor (and the 42-call free-room
+// week fan-out) is then served from cache instead of waiting on the API —
+// which matters because the Render free-tier backend cold-starts after idling.
+const PUBLIC_REVALIDATE_SECONDS = 60;
+const NETWORK_RETRY_ATTEMPTS = 2;
+const NETWORK_RETRY_DELAY_MS = 1000;
+
+async function publicGet(path: string): Promise<unknown> {
+  let res: Response | undefined;
+  let networkError: unknown;
+  for (let attempt = 0; attempt <= NETWORK_RETRY_ATTEMPTS; attempt++) {
+    try {
+      res = await publicFetch.get(path, {
+        next: { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: ["academics"] },
+      });
+      break;
+    } catch (error) {
+      networkError = error;
+      if (attempt < NETWORK_RETRY_ATTEMPTS) {
+        await new Promise((resolve) => setTimeout(resolve, NETWORK_RETRY_DELAY_MS));
+      }
+    }
+  }
+  if (!res) throw networkError;
+
+  const parsed = (await res.json()) as { success?: boolean; message?: string; data?: unknown };
+  if (!res.ok || parsed?.success === false) {
+    throw new Error(parsed?.message || `Request failed (${res.status})`);
+  }
+  return parsed?.data ?? parsed;
+}
+
 async function fetchList(path: string, label: string): Promise<Dict[]> {
   try {
-    const data = await api.get<unknown>(path);
+    const data = await publicGet(path);
     return toArray(data);
   } catch (error) {
     console.error("[academics] failed to load \"" + label + "\" from the API", error);
@@ -230,7 +263,7 @@ export async function getFreeRooms(query: FreeRoomQuery): Promise<FreeRoom[]> {
     timeSlotId: String(query.timeSlotId),
   });
   try {
-    const data = await api.get<unknown>(`${PUBLIC_FREE_ROOMS_PATH}?${params.toString()}`);
+    const data = await publicGet(`${PUBLIC_FREE_ROOMS_PATH}?${params.toString()}`);
     const rows = toArray(data);
     return rows.map((r) => ({
       id: num(r.id),
@@ -242,4 +275,21 @@ export async function getFreeRooms(query: FreeRoomQuery): Promise<FreeRoom[]> {
     console.error("[academics] failed to load free rooms", error);
     return [];
   }
+}
+
+/**
+ * Free rooms for every (day, time slot) pair, fetched in parallel on the
+ * server. `rooms[dayIndex][slotIndex]`, in the order of `days` and `timeSlots`.
+ * Done server-side in one pass because client-invoked Server Actions run one
+ * at a time — a per-cell action fan-out from the browser is fully serialized.
+ */
+export async function getFreeRoomsWeek(
+  days: string[],
+  timeSlots: TimeSlotOption[],
+): Promise<FreeRoom[][][]> {
+  return Promise.all(
+    days.map((day) =>
+      Promise.all(timeSlots.map((s) => getFreeRooms({ day, timeSlotId: s.id }))),
+    ),
+  );
 }

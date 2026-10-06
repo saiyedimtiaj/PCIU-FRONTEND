@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
-import { Search, Building2, Loader2 } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Search, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -10,10 +10,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { FreeRoom, TimeSlotOption } from "@/types/academics";
 import { CLASS_DAYS } from "@/lib/academics/routine-grid";
-import { searchFreeRooms } from "../_actions/free-rooms";
 
 const ALL_BUILDINGS = "All Buildings";
 
@@ -21,250 +28,211 @@ function uniqueBuildings(rooms: FreeRoom[]): string[] {
   return Array.from(new Set(rooms.map((r) => r.buildingName).filter(Boolean))).sort();
 }
 
-interface WeekRow {
-  dayKey: string;
-  dayLabel: string;
-  cells: FreeRoom[][];
+/** API names are inconsistent ("A Building", "C") — normalize to "Building A". */
+function buildingLabel(name: string): string {
+  const code = name.replace(/building/i, "").trim();
+  return code ? `Building ${code}` : "Other";
 }
 
+/** Rooms grouped under their building, buildings sorted by name. */
+function groupByBuilding(rooms: FreeRoom[]): [string, FreeRoom[]][] {
+  const groups = new Map<string, FreeRoom[]>();
+  for (const room of rooms) {
+    const key = buildingLabel(room.buildingName);
+    groups.set(key, [...(groups.get(key) ?? []), room]);
+  }
+  return Array.from(groups).sort(([a], [b]) => a.localeCompare(b));
+}
+
+/**
+ * `rooms[dayIndex][slotIndex]` is the whole week, fetched once on the server
+ * (see `getFreeRoomsWeek`) — the day overview and the search result are just
+ * slices of it, so nothing here hits the network.
+ */
 export default function FreeRoomsSection({
   timeSlots,
+  rooms,
 }: {
   timeSlots: TimeSlotOption[];
+  rooms: FreeRoom[][][];
 }) {
   const [day, setDay] = useState("");
   const [timeSlotId, setTimeSlotId] = useState("");
   const [buildingFilter, setBuildingFilter] = useState(ALL_BUILDINGS);
 
-  const [rooms, setRooms] = useState<FreeRoom[] | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const week = useMemo(
+    () => CLASS_DAYS.map((d, i) => ({ dayKey: d.key, dayLabel: d.label, cells: rooms[i] ?? [] })),
+    [rooms],
+  );
 
-  const [week, setWeek] = useState<WeekRow[] | null>(null);
-  const [weekLoading, setWeekLoading] = useState(true);
+  const dayIndex = CLASS_DAYS.findIndex((d) => d.key.toUpperCase() === day);
 
-  useEffect(() => {
-    if (timeSlots.length === 0) {
-      setWeekLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setWeekLoading(true);
+  const selectedSlot = timeSlots.find((s) => String(s.id) === timeSlotId);
 
-    Promise.all(
-      CLASS_DAYS.map(async (d) => {
-        const cells = await Promise.all(
-          timeSlots.map((s) => searchFreeRooms({ day: d.key.toUpperCase(), timeSlotId: s.id })),
-        );
-        return { dayKey: d.key, dayLabel: d.label, cells };
-      }),
-    ).then((rowsResult) => {
-      if (!cancelled) {
-        setWeek(rowsResult);
-        setWeekLoading(false);
-      }
-    });
+  // The selected day's slots — narrowed to just the chosen slot once one is picked.
+  const dayOverview = useMemo(
+    () =>
+      dayIndex === -1
+        ? null
+        : timeSlots
+            .map((slot, i) => ({ slot, rooms: week[dayIndex].cells[i] ?? [] }))
+            .filter(({ slot }) => !timeSlotId || String(slot.id) === timeSlotId),
+    [dayIndex, timeSlots, week, timeSlotId],
+  );
 
-    return () => {
-      cancelled = true;
-    };
-  }, [timeSlots]);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
-  const [dayOverview, setDayOverview] = useState<{ slot: TimeSlotOption; rooms: FreeRoom[] }[] | null>(null);
-  const [dayOverviewLoading, setDayOverviewLoading] = useState(false);
-
-  useEffect(() => {
-    if (!day || timeSlots.length === 0) {
-      setDayOverview(null);
-      return;
-    }
-    let cancelled = false;
-    setDayOverviewLoading(true);
-    setDayOverview(null);
-
-    Promise.all(
-      timeSlots.map(async (slot) => ({
-        slot,
-        rooms: await searchFreeRooms({ day, timeSlotId: slot.id }),
-      })),
-    ).then((result) => {
-      if (!cancelled) {
-        setDayOverview(result);
-        setDayOverviewLoading(false);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [day, timeSlots]);
-
+  // Filtering is already live; Search just brings the result into view
+  // (useful on mobile, where the filters stack above it).
   const handleSearch = () => {
-    if (!day || !timeSlotId) return;
-    startTransition(async () => {
-      const result = await searchFreeRooms({ day, timeSlotId: Number(timeSlotId) });
-      setRooms(result);
-    });
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const dayItems = CLASS_DAYS.map((d) => ({ value: d.key.toUpperCase(), label: d.label }));
   const timeSlotItems = timeSlots.map((s) => ({ value: String(s.id), label: s.time }));
 
-  const buildingOptions = useMemo(() => {
-    const pool =
-      rooms ??
-      dayOverview?.flatMap((row) => row.rooms) ??
-      week?.flatMap((row) => row.cells.flat()) ??
-      [];
-    return uniqueBuildings(pool);
-  }, [rooms, dayOverview, week]);
+  const buildingOptions = useMemo(
+    () => uniqueBuildings(week.flatMap((row) => row.cells.flat())),
+    [week],
+  );
 
-  const filteredRooms = useMemo(() => {
-    if (!rooms) return null;
-    if (buildingFilter === ALL_BUILDINGS) return rooms;
-    return rooms.filter((r) => r.buildingName === buildingFilter);
-  }, [rooms, buildingFilter]);
+  const byBuilding = (list: FreeRoom[]) =>
+    buildingFilter === ALL_BUILDINGS ? list : list.filter((r) => r.buildingName === buildingFilter);
 
-  const filteredDayOverview = useMemo(() => {
-    if (!dayOverview) return null;
-    if (buildingFilter === ALL_BUILDINGS) return dayOverview;
-    return dayOverview.map((row) => ({
-      slot: row.slot,
-      rooms: row.rooms.filter((r) => r.buildingName === buildingFilter),
-    }));
-  }, [dayOverview, buildingFilter]);
-
-  const filteredWeek = useMemo(() => {
-    if (!week) return null;
-    if (buildingFilter === ALL_BUILDINGS) return week;
-    return week.map((row) => ({
-      ...row,
-      cells: row.cells.map((cell) => cell.filter((r) => r.buildingName === buildingFilter)),
-    }));
-  }, [week, buildingFilter]);
+  const filteredDayOverview = dayOverview?.map((row) => ({ ...row, rooms: byBuilding(row.rooms) }));
+  const filteredWeek = week.map((row) => ({ ...row, cells: row.cells.map(byBuilding) }));
 
   return (
-    <Card className="shadow-none border border-border/50 bg-card">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">Check Free Rooms</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <Select
-            items={dayItems}
-            value={day}
-            onValueChange={(val) => {
-              setDay(val);
-              setTimeSlotId("");
-              setRooms(null);
-            }}
-          >
-            <SelectTrigger className="w-40 bg-background">
-              <SelectValue placeholder="Day" />
-            </SelectTrigger>
-            <SelectContent>
-              {CLASS_DAYS.map((d) => (
-                <SelectItem key={d.key} value={d.key.toUpperCase()}>
-                  {d.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-heading font-bold text-2xl text-foreground mb-1">Check Free Rooms</h2>
+        <p className="text-sm text-muted-foreground">
+          Find available classrooms by day and time slot.
+        </p>
+      </div>
 
-          <Select items={timeSlotItems} value={timeSlotId} onValueChange={setTimeSlotId}>
-            <SelectTrigger className="w-48 bg-background">
-              <SelectValue placeholder="Time Slot" />
-            </SelectTrigger>
-            <SelectContent>
-              {timeSlots.map((s) => (
-                <SelectItem key={s.id} value={String(s.id)}>
-                  {s.time}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <Card className="shadow-none border border-border/50 bg-card overflow-hidden">
+        <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3 sm:px-6">
+          <div className="flex flex-col gap-4">
+            <CardTitle className="text-lg font-semibold">Room Availability</CardTitle>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <Select
+                items={dayItems}
+                value={day}
+                onValueChange={(val) => {
+                  setDay(val ?? "");
+                  setTimeSlotId("");
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-30 h-9 bg-background whitespace-nowrap">
+                  <SelectValue placeholder="Day" className="truncate" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CLASS_DAYS.map((d) => (
+                    <SelectItem key={d.key} value={d.key.toUpperCase()}>
+                      {d.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-          {buildingOptions.length > 0 && (
-            <Select
-              items={[
-                { value: ALL_BUILDINGS, label: ALL_BUILDINGS },
-                ...buildingOptions.map((b) => ({ value: b, label: b })),
-              ]}
-              value={buildingFilter}
-              onValueChange={setBuildingFilter}
-            >
-              <SelectTrigger className="w-44 bg-background">
-                <SelectValue placeholder="Building" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ALL_BUILDINGS}>{ALL_BUILDINGS}</SelectItem>
-                {buildingOptions.map((b) => (
-                  <SelectItem key={b} value={b}>
-                    {b}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
+              <Select
+                items={timeSlotItems}
+                value={timeSlotId}
+                onValueChange={(val) => setTimeSlotId(val ?? "")}
+              >
+                <SelectTrigger className="w-full sm:w-48 h-9 bg-background whitespace-nowrap">
+                  <SelectValue placeholder="Time Slot" className="truncate" />
+                </SelectTrigger>
+                <SelectContent>
+                  {timeSlots.map((s) => (
+                    <SelectItem key={s.id} value={String(s.id)}>
+                      {s.time}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-          <Button onClick={handleSearch} disabled={!day || !timeSlotId || isPending}>
-            <Search className="size-4 mr-1.5" />
-            {isPending ? "Searching..." : "Search"}
-          </Button>
-        </div>
-
-        {filteredRooms !== null &&
-          (filteredRooms.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-4 text-center">
-              No free rooms found for the selected filters.
-            </p>
-          ) : (
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {filteredRooms.map((room) => (
-                <div
-                  key={room.id}
-                  className="flex items-center gap-2 rounded-lg border border-border/50 bg-muted/20 px-4 py-3"
+              {buildingOptions.length > 0 && (
+                <Select
+                  items={[
+                    { value: ALL_BUILDINGS, label: ALL_BUILDINGS },
+                    ...buildingOptions.map((b) => ({ value: b, label: b })),
+                  ]}
+                  value={buildingFilter}
+                  onValueChange={(val) => setBuildingFilter(val ?? ALL_BUILDINGS)}
                 >
-                  <Building2 className="size-4 text-primary/70 shrink-0" />
-                  <div>
-                    <p className="font-medium text-sm">{room.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Building {room.buildingName}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))}
+                  <SelectTrigger className="w-full sm:w-40 h-9 bg-background whitespace-nowrap">
+                    <SelectValue placeholder="Building" className="truncate" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={ALL_BUILDINGS}>{ALL_BUILDINGS}</SelectItem>
+                    {buildingOptions.map((b) => (
+                      <SelectItem key={b} value={b}>
+                        {b}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
 
-        {day ? (
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-foreground">
-              {CLASS_DAYS.find((d) => d.key.toUpperCase() === day)?.label} — All Time Slots
-            </h4>
-            {dayOverviewLoading ? (
-              <div className="flex items-center justify-center gap-2 py-8 text-muted-foreground">
-                <Loader2 className="size-5 animate-spin" />
-                <span className="text-sm">Loading...</span>
-              </div>
+              <Button
+                className="h-9 w-full sm:w-auto"
+                onClick={handleSearch}
+                disabled={!day || !timeSlotId}
+              >
+                <Search className="size-4 mr-1.5" />
+                Search
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+
+        {day && (
+          <CardContent ref={resultsRef} className="scroll-mt-24 space-y-3 p-4 sm:p-6">
+            <h3 className="text-base font-semibold text-foreground">
+              {CLASS_DAYS[dayIndex]?.label} — {selectedSlot ? selectedSlot.time : "All Time Slots"}
+            </h3>
+
+            {selectedSlot ? (
+              (filteredDayOverview?.[0]?.rooms ?? []).length === 0 ? (
+                <p className="text-sm text-muted-foreground py-4 text-center">
+                  No free rooms found for the selected filters.
+                </p>
+              ) : (
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {filteredDayOverview?.[0]?.rooms.map((room) => (
+                    <div
+                      key={room.id}
+                      className="flex items-center gap-2 rounded-lg border border-border/50 bg-muted/20 px-4 py-3"
+                    >
+                      <Building2 className="size-4 text-primary/70 shrink-0" />
+                      <div>
+                        <p className="font-medium text-sm">{room.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {buildingLabel(room.buildingName)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
             ) : (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {filteredDayOverview?.map(({ slot, rooms: slotRooms }) => (
-                  <div
-                    key={slot.id}
-                    className="rounded-lg border border-border/50 bg-muted/10 p-3"
-                  >
+                  <div key={slot.id} className="rounded-lg border border-border/50 bg-muted/10 p-3">
                     <p className="text-sm font-medium text-foreground mb-2">{slot.time}</p>
                     {slotRooms.length === 0 ? (
-                      <p className="text-xs text-muted-foreground">No free rooms</p>
+                      <p className="text-sm text-muted-foreground">No free rooms</p>
                     ) : (
                       <div className="flex flex-wrap gap-1.5">
                         {slotRooms.map((room) => (
                           <span
                             key={room.id}
-                            className="inline-flex items-center gap-1 rounded-md bg-background border border-border/50 px-2 py-1 text-xs"
+                            className="inline-flex items-center gap-1 rounded-md bg-background border border-border/50 px-2 py-1 text-sm"
                           >
-                            <Building2 className="size-3 text-primary/70" />
-                            {room.name} ({room.buildingName})
+                            <Building2 className="size-3.5 text-primary/70" />
+                            {room.name} ({buildingLabel(room.buildingName)})
                           </span>
                         ))}
                       </div>
@@ -273,60 +241,52 @@ export default function FreeRoomsSection({
                 ))}
               </div>
             )}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-foreground">Full Week Overview</h4>
-            {weekLoading ? (
-              <div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
-                <Loader2 className="size-5 animate-spin" />
-                <span className="text-sm">Loading...</span>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-max border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-muted/30">
-                      <th className="whitespace-nowrap border border-border/50 px-3 py-2 text-left font-semibold">
-                        Day
-                      </th>
-                      {timeSlots.map((s) => (
-                        <th
-                          key={s.id}
-                          className="whitespace-nowrap border border-border/50 px-3 py-2 text-left font-semibold"
-                        >
-                          {s.time}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredWeek?.map((row) => (
-                      <tr key={row.dayKey}>
-                        <td className="whitespace-nowrap border border-border/50 px-3 py-2 font-medium">
-                          {row.dayLabel}
-                        </td>
-                        {row.cells.map((cell, i) => (
-                          <td
-                            key={i}
-                            className="border border-border/50 px-3 py-2 text-muted-foreground"
-                          >
-                            {cell.length === 0 ? (
-                              <span className="text-xs">None</span>
-                            ) : (
-                              cell.map((r) => r.name).join(", ")
-                            )}
-                          </td>
-                        ))}
-                      </tr>
+          </CardContent>
+        )}
+
+        {!day && (
+          <div className="overflow-x-auto">
+            <Table className="min-w-max">
+              <TableHeader>
+                <TableRow className="bg-muted/30 hover:bg-muted/30">
+                  <TableHead className="w-25">Day</TableHead>
+                  {timeSlots.map((s) => (
+                    <TableHead key={s.id} className="whitespace-nowrap">
+                      {s.time}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredWeek?.map((row) => (
+                  <TableRow key={row.dayKey}>
+                    <TableCell className="font-medium whitespace-nowrap">{row.dayLabel}</TableCell>
+                    {row.cells.map((cell, i) => (
+                      <TableCell
+                        key={i}
+                        className="min-w-48 align-top text-muted-foreground whitespace-normal"
+                      >
+                        {cell.length === 0 ? (
+                          "None"
+                        ) : (
+                          <div className="space-y-1.5">
+                            {groupByBuilding(cell).map(([building, list]) => (
+                              <p key={building}>
+                                <span className="font-medium text-foreground">{building}:</span>{" "}
+                                {list.map((r) => r.name).join(", ")}
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                      </TableCell>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </Card>
+    </div>
   );
 }

@@ -247,15 +247,15 @@ export default function ClassRoutineInteractive({
     <Card className="shadow-none border border-border/50 bg-card overflow-hidden">
       <CardHeader className="border-b border-border/50 bg-muted/20 px-4 py-3 sm:px-6 print:hidden">
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-lg font-semibold">Routine Details</CardTitle>
-            <Button variant="outlineSecondary" size="sm" onClick={handleDownload}>
+            <Button variant="outlineSecondary" size="sm" className="w-full sm:w-auto" onClick={handleDownload}>
               <Download className="size-4 mr-1.5" />
               Download Routine
             </Button>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="relative flex-1 min-w-50">
+          <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
+            <div className="relative col-span-2 sm:flex-1 sm:min-w-50">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
@@ -276,8 +276,8 @@ export default function ClassRoutineInteractive({
                   setSectionFilter(DEFAULT_FILTER.section);
                 }}
               >
-                <SelectTrigger className="w-30 h-9 bg-background">
-                  <SelectValue placeholder="Shift" />
+                <SelectTrigger className="w-full min-w-0 px-3 sm:w-30 h-9 bg-background whitespace-nowrap">
+                  <SelectValue placeholder="Shift" className="truncate" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={DEFAULT_FILTER.shift}>Shift</SelectItem>
@@ -299,8 +299,8 @@ export default function ClassRoutineInteractive({
                   setSectionFilter(DEFAULT_FILTER.section);
                 }}
               >
-                <SelectTrigger className="w-30 h-9 bg-background">
-                  <SelectValue placeholder="Dept" />
+                <SelectTrigger className="w-full min-w-0 px-3 sm:w-30 h-9 bg-background whitespace-nowrap">
+                  <SelectValue placeholder="Dept" className="truncate" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={DEFAULT_FILTER.department}>Department</SelectItem>
@@ -321,8 +321,8 @@ export default function ClassRoutineInteractive({
                   setSectionFilter(DEFAULT_FILTER.section);
                 }}
               >
-                <SelectTrigger className="w-30 h-9 bg-background">
-                  <SelectValue placeholder="Batch" />
+                <SelectTrigger className="w-full min-w-0 px-3 sm:w-30 h-9 bg-background whitespace-nowrap">
+                  <SelectValue placeholder="Batch" className="truncate" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={DEFAULT_FILTER.batch}>Batch</SelectItem>
@@ -340,8 +340,8 @@ export default function ClassRoutineInteractive({
                 value={sectionFilter}
                 onValueChange={(val) => setSectionFilter(val || DEFAULT_FILTER.section)}
               >
-                <SelectTrigger className="w-30 h-9 bg-background">
-                  <SelectValue placeholder="Section" />
+                <SelectTrigger className="w-full min-w-0 px-3 sm:w-30 h-9 bg-background whitespace-nowrap">
+                  <SelectValue placeholder="Section" className="truncate" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={DEFAULT_FILTER.section}>Section</SelectItem>
