@@ -69,12 +69,6 @@ export default function TeacherTemplate({
               <p className="text-slate-600 mt-1">{teacher.department.name}</p>
             </div>
 
-            {teacher.shortBio && (
-              <p className="text-slate-500 italic max-w-2xl text-sm leading-relaxed">
-                {teacher.shortBio}
-              </p>
-            )}
-
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm text-slate-600 font-medium pt-2">
               {teacher.office && (
                 <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full">
@@ -143,6 +137,14 @@ export default function TeacherTemplate({
             </div>
           </div>
         </div>
+
+        {teacher.shortBio && (
+          <div className="mt-10 max-w-4xl mx-auto text-center px-4">
+            <p className="text-slate-600 text-lg md:text-xl italic leading-relaxed">
+              &quot;{teacher.shortBio}&quot;
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Tabs Section */}
