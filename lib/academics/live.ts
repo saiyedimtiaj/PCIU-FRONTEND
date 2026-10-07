@@ -1,9 +1,11 @@
-﻿import { api } from "@/services/http";
+﻿import { publicFetch } from "@/lib/server-fetch";
 import type {
   Exam,
   ExamRoutine,
   ClassRoutineItem,
   ClassTimeSlot,
+  FreeRoom,
+  TimeSlotOption,
 } from "@/types/academics";
 
 type Dict = Record<string, unknown>;
@@ -97,10 +99,47 @@ const PUBLIC_CLASS_ROUTINES_PATH = "/academic/class-routines";
 // session (403 "Permission not configured" for a teacher, 401 with no cookie).
 const PUBLIC_TIME_SLOTS_PATH = "/academic/time-slots";
 const PUBLIC_EXAMS_PATH = "/academic/exams";
+// Public free-room lookup — takes ?day=&timeSlotId= and returns rooms with no
+// class routine scheduled in that slot. Lives under /home, not /academic,
+// per the live API (verified: 200 with no auth header).
+const PUBLIC_FREE_ROOMS_PATH = "/home/free-rooms";
+
+// All of these endpoints are public, so they're fetched without the session
+// cookie and kept in Next's data cache. Every visitor (and the 42-call free-room
+// week fan-out) is then served from cache instead of waiting on the API —
+// which matters because the Render free-tier backend cold-starts after idling.
+const PUBLIC_REVALIDATE_SECONDS = 60;
+const NETWORK_RETRY_ATTEMPTS = 2;
+const NETWORK_RETRY_DELAY_MS = 1000;
+
+async function publicGet(path: string): Promise<unknown> {
+  let res: Response | undefined;
+  let networkError: unknown;
+  for (let attempt = 0; attempt <= NETWORK_RETRY_ATTEMPTS; attempt++) {
+    try {
+      res = await publicFetch.get(path, {
+        next: { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: ["academics"] },
+      });
+      break;
+    } catch (error) {
+      networkError = error;
+      if (attempt < NETWORK_RETRY_ATTEMPTS) {
+        await new Promise((resolve) => setTimeout(resolve, NETWORK_RETRY_DELAY_MS));
+      }
+    }
+  }
+  if (!res) throw networkError;
+
+  const parsed = (await res.json()) as { success?: boolean; message?: string; data?: unknown };
+  if (!res.ok || parsed?.success === false) {
+    throw new Error(parsed?.message || `Request failed (${res.status})`);
+  }
+  return parsed?.data ?? parsed;
+}
 
 async function fetchList(path: string, label: string): Promise<Dict[]> {
   try {
-    const data = await api.get<unknown>(path);
+    const data = await publicGet(path);
     return toArray(data);
   } catch (error) {
     console.error("[academics] failed to load \"" + label + "\" from the API", error);
@@ -196,4 +235,61 @@ export async function getLiveClassTimeSlots(): Promise<ClassTimeSlot[]> {
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   return sorted.map((s, i) => ({ time: s.time, slot: SLOT_LETTERS[i] ?? String(i + 1) }));
+}
+
+/**
+ * Same CLASS time slots as getLiveClassTimeSlots, but keeps each slot's real
+ * numeric id (instead of replacing it with a display letter like A/B/C) —
+ * the Free Rooms search needs the actual timeSlotId to send as a query param.
+ */
+export async function getClassTimeSlotOptions(): Promise<TimeSlotOption[]> {
+  const rows = await fetchList(PUBLIC_TIME_SLOTS_PATH, "time-slot");
+  return rows
+    .filter((r) => isActive(r) && str(r.type) === "CLASS")
+    .map((r) => ({ id: num(r.id), time: timeRange(r), startTime: str(r.startTime) }))
+    .filter((s) => s.time)
+    .sort((a, b) => a.startTime.localeCompare(b.startTime))
+    .map(({ id, time }) => ({ id, time }));
+}
+
+export interface FreeRoomQuery {
+  day: string;
+  timeSlotId: number;
+}
+
+export async function getFreeRooms(query: FreeRoomQuery): Promise<FreeRoom[]> {
+  const params = new URLSearchParams({
+    day: query.day,
+    timeSlotId: String(query.timeSlotId),
+  });
+  try {
+    const data = await publicGet(`${PUBLIC_FREE_ROOMS_PATH}?${params.toString()}`);
+    const rows = toArray(data);
+    return rows.map((r) => ({
+      id: num(r.id),
+      name: str(r.name),
+      buildingId: num(r.buildingId),
+      buildingName: nameOf(r, "building"),
+    }));
+  } catch (error) {
+    console.error("[academics] failed to load free rooms", error);
+    return [];
+  }
+}
+
+/**
+ * Free rooms for every (day, time slot) pair, fetched in parallel on the
+ * server. `rooms[dayIndex][slotIndex]`, in the order of `days` and `timeSlots`.
+ * Done server-side in one pass because client-invoked Server Actions run one
+ * at a time — a per-cell action fan-out from the browser is fully serialized.
+ */
+export async function getFreeRoomsWeek(
+  days: string[],
+  timeSlots: TimeSlotOption[],
+): Promise<FreeRoom[][][]> {
+  return Promise.all(
+    days.map((day) =>
+      Promise.all(timeSlots.map((s) => getFreeRooms({ day, timeSlotId: s.id }))),
+    ),
+  );
 }

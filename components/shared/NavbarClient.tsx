@@ -44,6 +44,7 @@ const academicsMenu = {
   quickLinks: [
     { name: "Exam Schedule", href: "/academics/exam-schedule" },
     { name: "Class Schedule", href: "/academics/class-schedule" },
+    { name: "Check Free Rooms", href: "/academics/free-rooms" },
     {
       name: "Rules & Grading System",
       href: "/academics/result-grading",

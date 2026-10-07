@@ -16,6 +16,17 @@ export interface AcademicFaculty {
     slug: string;
   }[];
 }
+export interface FreeRoom {
+  id: number;
+  name: string;
+  buildingId: number;
+  buildingName: string;
+}
+
+export interface TimeSlotOption {
+  id: number;
+  time: string;
+}
 
 export interface Exam {
   id: number;

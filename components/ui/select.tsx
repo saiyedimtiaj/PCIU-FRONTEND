@@ -46,9 +46,9 @@ function SelectContent({
         // room is left in that small box and the list barely scrolls.
         // The full document is always a safe superset of any narrower
         // scroll container, so this is correct standalone too.
-        collisionBoundary={
-          typeof document !== "undefined" ? document.documentElement : undefined
-        }
+        // collisionBoundary={
+        //   typeof document !== "undefined" ? document.documentElement : undefined
+        // }
       >
         <SelectPrimitive.Popup
           data-slot="select-content"
