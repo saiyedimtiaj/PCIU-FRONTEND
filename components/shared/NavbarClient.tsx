@@ -262,7 +262,7 @@ export default function NavbarClient({
               </DropdownNavItem>
 
               <NavItem href="/iqac" label="IQAC" />
-              <NavItem href="#contact" label="Contact" />
+              <NavItem href="/contacts" label="Contact" />
             </nav>
 
             {/* CTA & Mobile Menu */}
@@ -458,7 +458,7 @@ export default function NavbarClient({
                 IQAC
               </Link>
               <Link
-                href="#contact"
+                href="/contacts"
                 className="text-foreground hover:text-primary font-medium py-3 px-2 border-b border-border"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
