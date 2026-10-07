@@ -22,6 +22,7 @@ import {
 import type { TeacherDetails } from "@/types/teacher";
 import { getMediaUrl } from "@/lib/utils/media";
 import { getInitials } from "@/lib/utils";
+import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -40,8 +41,16 @@ export default function TeacherTemplate({
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
       {/* Hero Header */}
-      <section className="relative w-full h-62.5 md:h-87.5 overflow-hidden bg-linear-to-r from-[#1e3a8a] via-[#2B355A] to-[#0ea5e9]">
-        <div className="absolute inset-0 bg-[url('/images/pattern-light.svg')] opacity-10 mix-blend-overlay" />
+      <section className="relative w-full h-62.5 md:h-87.5 overflow-hidden bg-[#1e3a8a]">
+        <Image
+          src="/images/faculty-hero-bg.jpg"
+          alt="Academic Background"
+          fill
+          priority
+          className="object-cover"
+        />
+        {/* Dark elegant gradient overlay for readability and polish */}
+        <div className="absolute inset-0 bg-linear-to-b from-[#1e3a8a]/40 via-[#1e3a8a]/20 to-[#1e3a8a]/90 mix-blend-multiply" />
       </section>
 
       {/* Main Profile Info */}
@@ -68,6 +77,12 @@ export default function TeacherTemplate({
               </p>
               <p className="text-slate-600 mt-1">{teacher.department.name}</p>
             </div>
+
+            {teacher.shortBio && (
+              <p className="text-slate-500 italic max-w-2xl text-sm leading-relaxed">
+                {teacher.shortBio}
+              </p>
+            )}
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm text-slate-600 font-medium pt-2">
               {teacher.office && (
@@ -137,14 +152,6 @@ export default function TeacherTemplate({
             </div>
           </div>
         </div>
-
-        {teacher.shortBio && (
-          <div className="mt-10 max-w-4xl mx-auto text-center px-4">
-            <p className="text-slate-600 text-lg md:text-xl italic leading-relaxed">
-              &quot;{teacher.shortBio}&quot;
-            </p>
-          </div>
-        )}
       </div>
 
       {/* Tabs Section */}
