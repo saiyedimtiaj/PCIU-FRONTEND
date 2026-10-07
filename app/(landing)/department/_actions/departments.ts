@@ -9,6 +9,7 @@ import type {
   ApiResearch,
   ApiCourse,
   ApiTuitionFee,
+  ApiProgram,
 } from "@/types/department";
 
 export async function getDepartmentBySlug(
@@ -24,7 +25,7 @@ export async function getDepartmentBySlug(
       if (data.success && data.data) {
         const deptId = data.data.id;
 
-        const [teachersRes, eventsRes, researchRes, coursesRes, tuitionRes] =
+        const [teachersRes, eventsRes, researchRes, coursesRes, tuitionRes, programsRes] =
           await Promise.all([
             publicFetch.get(`/teachers/department/${deptId}`, {
               next: { tags: ["department-teachers", slug] },
@@ -40,6 +41,9 @@ export async function getDepartmentBySlug(
             }),
             publicFetch.get(`/admission/tuitionfees`, {
               next: { tags: ["tuitionfees"] },
+            }),
+            publicFetch.get(`/department/programs/${slug}`, {
+              next: { tags: ["department-programs", slug] },
             }),
           ]);
 
@@ -86,6 +90,14 @@ export async function getDepartmentBySlug(
           }
         }
 
+        let programs: ApiProgram[] = [];
+        if (programsRes.ok) {
+          const pData = await programsRes.json();
+          if (pData.success && Array.isArray(pData.data)) {
+            programs = pData.data;
+          }
+        }
+
         return mapApiDepartmentToContent(
           data.data,
           teachers,
@@ -93,6 +105,7 @@ export async function getDepartmentBySlug(
           research,
           courses,
           tuitionFees,
+          programs,
         );
       }
     }
@@ -113,6 +126,7 @@ function mapApiDepartmentToContent(
   research: ApiResearch[],
   courses: ApiCourse[],
   tuitionFees: ApiTuitionFee[],
+  programs: ApiProgram[],
 ): DepartmentContent {
   return {
     id: apiData.id,
@@ -142,7 +156,13 @@ function mapApiDepartmentToContent(
       hasImage: !!apiData.image,
     },
     facilities: [], // Empty state
-    programs: [], // Empty state
+    programs: programs.map((p) => ({
+      name: p.title || "Program",
+      duration: p.duration ? `${p.duration} Years` : "",
+      credits: p.credit?.toString() || "",
+      description: p.programType || "",
+      concentrations: [],
+    })),
     tuitionFees: tuitionFees.map((tf) => ({
       program: tf.program || "Program",
       credit: tf.credit?.toString() || "0",

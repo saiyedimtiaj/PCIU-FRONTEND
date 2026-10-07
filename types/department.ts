@@ -195,3 +195,11 @@ export interface ApiTuitionFee {
   perCreditAmount?: string | number;
   totalFees?: number;
 }
+
+export interface ApiProgram {
+  title?: string;
+  duration?: string | number;
+  credit?: string | number;
+  perCreditAmount?: string | number;
+  programType?: string;
+}

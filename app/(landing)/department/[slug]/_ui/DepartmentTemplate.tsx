@@ -236,15 +236,34 @@ export default function DepartmentTemplate({
                   content.programs.map((program) => (
                     <div
                       key={program.name}
-                      className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow"
+                      className="group bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md hover:border-[#0ea5e9]/30 transition-all duration-300 relative overflow-hidden"
                     >
-                      <GraduationCap className="w-8 h-8 text-[#0ea5e9] mb-4" />
-                      <h3 className="font-bold text-[#1e3a8a] text-lg mb-4">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-linear-to-bl from-[#0ea5e9]/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
+                      
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="w-12 h-12 rounded-lg bg-[#1e3a8a]/5 flex items-center justify-center text-[#0ea5e9]">
+                          <GraduationCap className="w-7 h-7" />
+                        </div>
+                        {program.description && (
+                          <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wider">
+                            {program.description}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <h3 className="font-heading font-bold text-[#1e3a8a] text-lg mb-4 line-clamp-2">
                         {program.name}
                       </h3>
-                      <div className="space-y-1 text-sm text-slate-500">
-                        <p>Duration: {program.duration}</p>
-                        <p>Credit Hours: {program.credits}</p>
+                      
+                      <div className="grid grid-cols-2 gap-3 text-sm text-slate-600">
+                        <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                          <span className="text-xs text-slate-400 font-medium uppercase">Duration</span>
+                          <span className="font-semibold text-slate-700">{program.duration}</span>
+                        </div>
+                        <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                          <span className="text-xs text-slate-400 font-medium uppercase">Credit Hours</span>
+                          <span className="font-semibold text-slate-700">{program.credits}</span>
+                        </div>
                       </div>
                     </div>
                   ))
