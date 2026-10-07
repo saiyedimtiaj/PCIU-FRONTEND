@@ -234,9 +234,10 @@ export default function DepartmentTemplate({
               <div className="grid sm:grid-cols-2 gap-4">
                 {content.programs.length > 0 ? (
                   content.programs.map((program) => (
-                    <div
+                    <Link
+                      href={`/programs/${program.id}`}
                       key={program.name}
-                      className="group bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md hover:border-[#0ea5e9]/30 transition-all duration-300 relative overflow-hidden"
+                      className="group bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md hover:border-[#0ea5e9]/30 transition-all duration-300 relative overflow-hidden block"
                     >
                       <div className="absolute top-0 right-0 w-24 h-24 bg-linear-to-bl from-[#0ea5e9]/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
                       
@@ -265,7 +266,7 @@ export default function DepartmentTemplate({
                           <span className="font-semibold text-slate-700">{program.credits}</span>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))
                 ) : (
                   <div className="sm:col-span-2 bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 italic">

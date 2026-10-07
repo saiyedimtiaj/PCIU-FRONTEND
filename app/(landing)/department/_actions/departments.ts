@@ -157,6 +157,7 @@ function mapApiDepartmentToContent(
     },
     facilities: [], // Empty state
     programs: programs.map((p) => ({
+      id: p.id,
       name: p.title || "Program",
       duration: p.duration ? `${p.duration} Years` : "",
       credits: p.credit?.toString() || "",
