@@ -6,11 +6,11 @@ import { FacultySidebar } from "./_ui/FacultySidebar";
 
 const FACULTY_CONFIG: Record<string, { icon: string; shortName: string }> = {
   "faculty-of-science-and-engineering": {
-    icon: "flask-conical",
+    icon: "microscope",
     shortName: "Science & Eng.",
   },
   "faculty-of-business-studies": {
-    icon: "briefcase",
+    icon: "building",
     shortName: "Business Studies",
   },
   "faculty-of-humanities-social-sciences-and-law": {
