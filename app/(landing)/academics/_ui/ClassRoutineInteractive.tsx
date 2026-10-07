@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { ClassRoutineItem, ClassTimeSlot } from "@/types/academics";
+import type { ClassRoutineItem, ClassTimeSlot, Semester } from "@/types/academics";
 import {
   downloadRoutinePdf,
   downloadRoutineGridPdf,
@@ -39,6 +39,7 @@ import {
   courseLabel,
 } from "@/lib/academics/routine-grid";
 import ClassScheduleGrid from "./ClassScheduleGrid";
+import SemesterSelect, { ALL_SEMESTERS } from "./SemesterSelect";
 
 const DEFAULT_FILTER = {
   department: "Department",
@@ -67,17 +68,41 @@ function dayOrderKey(day: string): number {
 }
 
 export default function ClassRoutineInteractive({
-  routines,
+  routines: allRoutines,
   timeSlots,
+  semesters,
+  currentSemesterId,
 }: {
   routines: ClassRoutineItem[];
   timeSlots: ClassTimeSlot[];
+  semesters: Semester[];
+  /** Today's semester — selected by default, and where routines with no semester land. */
+  currentSemesterId?: number;
 }) {
+  const [semesterFilter, setSemesterFilter] = useState(
+    currentSemesterId ? String(currentSemesterId) : ALL_SEMESTERS,
+  );
   const [shiftFilter, setShiftFilter] = useState(DEFAULT_FILTER.shift);
   const [departmentFilter, setDepartmentFilter] = useState(DEFAULT_FILTER.department);
   const [batchFilter, setBatchFilter] = useState(DEFAULT_FILTER.batch);
   const [sectionFilter, setSectionFilter] = useState(DEFAULT_FILTER.section);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Semester wraps every other filter. The class-routine API doesn't return a
+  // semester yet, so a routine without one is treated as part of the current
+  // semester (a published class routine is, by nature, the running one). Once
+  // the API sends semesterId, each routine lands in its real semester instead.
+  const hasSemesters = semesters.length > 0;
+  const activeSemester = semesters.find((s) => String(s.id) === semesterFilter);
+  const routines = useMemo(
+    () =>
+      activeSemester
+        ? allRoutines.filter(
+            (r) => (r.semesterId ?? currentSemesterId) === activeSemester.id,
+          )
+        : allRoutines,
+    [allRoutines, activeSemester, currentSemesterId],
+  );
 
   // Shift (Day/Evening) is the outermost split — the same department/batch/
   // section combo can exist under both shifts, so it narrows every pool below
@@ -159,7 +184,7 @@ export default function ClassRoutineInteractive({
     sectionFilter !== DEFAULT_FILTER.section &&
     searchQuery.trim() === "";
 
-  if (routines.length === 0) {
+  if (allRoutines.length === 0) {
     return (
       <Card className="shadow-none border border-border/50">
         <CardContent className="py-12 text-center text-muted-foreground">
@@ -171,6 +196,7 @@ export default function ClassRoutineInteractive({
 
   const handleDownload = async () => {
     const filenameParts = [
+      activeSemester ? filenameSegment(activeSemester.title) : null,
       shiftFilter !== DEFAULT_FILTER.shift ? shiftFilenamePart(shiftFilter) : null,
       departmentFilter !== DEFAULT_FILTER.department ? filenameSegment(departmentFilter) : null,
       batchFilter !== DEFAULT_FILTER.batch ? batchFilenamePart(batchFilter) : null,
@@ -265,6 +291,21 @@ export default function ClassRoutineInteractive({
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+
+            {hasSemesters && (
+              <SemesterSelect
+                semesters={semesters}
+                value={semesterFilter}
+                className="w-full min-w-0 px-3 sm:w-40"
+                onValueChange={(val) => {
+                  setSemesterFilter(val);
+                  setShiftFilter(DEFAULT_FILTER.shift);
+                  setDepartmentFilter(DEFAULT_FILTER.department);
+                  setBatchFilter(DEFAULT_FILTER.batch);
+                  setSectionFilter(DEFAULT_FILTER.section);
+                }}
+              />
+            )}
 
             {shifts.length > 0 && (
               <Select
@@ -365,6 +406,13 @@ export default function ClassRoutineInteractive({
           section={sectionFilter}
           shift={shiftFilter !== DEFAULT_FILTER.shift ? shiftLabel(shiftFilter) : undefined}
         />
+      ) : filteredRoutines.length === 0 ? (
+        // Outside the 950px-wide table, so the message stays on-screen on phones.
+        <p className="px-4 py-10 text-center text-sm text-muted-foreground">
+          {activeSemester && routines.length === 0
+            ? `Class routine for ${activeSemester.title} has not been published yet.`
+            : "No classes scheduled matching your filters."}
+        </p>
       ) : (
         <div className="overflow-x-auto">
           <Table className="min-w-[950px]">
@@ -381,8 +429,7 @@ export default function ClassRoutineInteractive({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredRoutines.length > 0 ? (
-                filteredRoutines.map((row) => (
+              {filteredRoutines.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell className="font-medium whitespace-nowrap">{row.day}</TableCell>
                     <TableCell className="text-muted-foreground whitespace-nowrap">
@@ -407,17 +454,7 @@ export default function ClassRoutineInteractive({
                     <TableCell>{[row.room, row.building].filter(Boolean).join(", ")}</TableCell>
                     <TableCell className="text-muted-foreground">{row.studentRange}</TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={shifts.length > 0 ? 8 : 7}
-                    className="h-24 text-center text-muted-foreground"
-                  >
-                    No classes scheduled matching your filters.
-                  </TableCell>
-                </TableRow>
-              )}
+                ))}
             </TableBody>
           </Table>
         </div>

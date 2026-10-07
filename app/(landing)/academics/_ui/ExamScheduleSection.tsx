@@ -1,25 +1,56 @@
 import { AlertTriangle, Calendar, CheckCircle } from "lucide-react";
 import InfoCard from "@/components/shared/InfoCard";
 import { Badge } from "@/components/ui/badge";
-import type { AcademicsPageContent } from "@/types/academics";
+import type { AcademicsPageContent, Semester } from "@/types/academics";
 import ExamCardActions from "./ExamCardActions";
 import ExamRoutineInteractive from "./ExamRoutineInteractive";
+import ExamSemesterFilter from "./ExamSemesterFilter";
+import { ALL_SEMESTERS } from "./SemesterSelect";
+import {
+  ALL_EXAM_TYPES,
+  examTypeLabel,
+  examTypeOf,
+  parseExamType,
+} from "@/lib/academics/exam-type";
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "2026-11-01" -> "1 Nov 2026". Spelling out the month makes a day/month
+ *  mix-up in the admin entry obvious; pure string parsing, no timezone shift. */
+function formatExamDate(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number);
+  if (!year || !month || !day) return iso;
+  return `${day} ${MONTHS[month - 1]} ${year}`;
+}
 
 export default async function ExamScheduleSection({
   content,
+  semesters,
   searchParams,
 }: {
   content: AcademicsPageContent["examSchedule"];
-  searchParams: Promise<{ examId?: string }>;
+  semesters: Semester[];
+  searchParams: Promise<{ examId?: string; semesterId?: string; type?: string }>;
 }) {
-  const { exams, routines, guidelines } = content;
-  const { examId } = await searchParams;
+  const { routines, guidelines } = content;
+  const { examId, semesterId, type } = await searchParams;
 
-  // Determine active exam
+  // An unknown/stale ?semesterId= or ?type= falls back to "all" rather than an empty page.
+  const activeSemester = semesters.find((s) => String(s.id) === semesterId);
+  const examType = parseExamType(type);
+  const exams = content.exams.filter(
+    (e) =>
+      (!activeSemester || e.semesterId === activeSemester.id) &&
+      (!examType || examTypeOf(e.name) === examType),
+  );
+  const emptyLabel = [examType && examTypeLabel(examType), activeSemester?.title]
+    .filter(Boolean)
+    .join(" — ");
+
+  // Determine active exam: the one in the URL, else the first card — getLiveExams
+  // already orders them Ongoing → Upcoming → most recently Completed.
   const parsedExamId = examId ? parseInt(examId, 10) : NaN;
-  const activeExam =
-    exams.find((e) => e.id === parsedExamId) ||
-    (exams.length > 0 ? exams[0] : null);
+  const activeExam = exams.find((e) => e.id === parsedExamId) ?? exams[0] ?? null;
 
   return (
     <div className="space-y-8">
@@ -45,7 +76,23 @@ export default async function ExamScheduleSection({
       </InfoCard>
 
       <div className="space-y-4">
-        <h3 className="font-semibold text-lg">Examinations</h3>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h3 className="font-semibold text-lg">Examinations</h3>
+          <ExamSemesterFilter
+            semesters={semesters}
+            semester={activeSemester ? String(activeSemester.id) : ALL_SEMESTERS}
+            examType={examType ?? ALL_EXAM_TYPES}
+          />
+        </div>
+        {exams.length === 0 && (
+          <InfoCard className="shadow-none">
+            <p className="py-6 text-center text-sm text-muted-foreground">
+              {emptyLabel
+                ? `${emptyLabel} routine has not been published yet.`
+                : "No examinations scheduled yet."}
+            </p>
+          </InfoCard>
+        )}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {exams.map((exam) => {
             const isActive = activeExam?.id === exam.id;
@@ -75,13 +122,15 @@ export default async function ExamScheduleSection({
                   <div className="space-y-2 mb-6 flex-1">
                     <p className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="size-4 shrink-0 text-primary/70" />
-                      {exam.startDate} to {exam.endDate}
+                      {formatExamDate(exam.startDate)} – {formatExamDate(exam.endDate)}
                     </p>
                   </div>
                   <ExamCardActions
                     exam={exam}
                     isActive={isActive}
                     routines={routines}
+                    semesterId={activeSemester?.id}
+                    examType={examType}
                   />
                 </div>
               </InfoCard>

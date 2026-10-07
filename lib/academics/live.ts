@@ -5,6 +5,7 @@ import type {
   ClassRoutineItem,
   ClassTimeSlot,
   FreeRoom,
+  Semester,
   TimeSlotOption,
 } from "@/types/academics";
 
@@ -81,8 +82,22 @@ function toArray(data: unknown): Dict[] {
   if (data && typeof data === "object") {
     const rows = (data as Dict).data ?? (data as Dict).items;
     if (Array.isArray(rows)) return rows as Dict[];
+    // Paginated lists nest the rows under a resource-named key next to the
+    // page info — e.g. { routines: [...], pagination: {...} }.
+    const arrays = Object.values(data as Dict).filter(Array.isArray);
+    if (arrays.length === 1) return arrays[0] as Dict[];
   }
   return [];
+}
+
+function hasNextPage(data: unknown): boolean {
+  if (!data || typeof data !== "object") return false;
+  const pagination = (data as Dict).pagination;
+  return !!pagination && typeof pagination === "object" && (pagination as Dict).hasNextPage === true;
+}
+
+function withPage(path: string, page: number): string {
+  return `${path}${path.includes("?") ? "&" : "?"}page=${page}`;
 }
 
 /**
@@ -99,6 +114,7 @@ const PUBLIC_CLASS_ROUTINES_PATH = "/academic/class-routines";
 // session (403 "Permission not configured" for a teacher, 401 with no cookie).
 const PUBLIC_TIME_SLOTS_PATH = "/academic/time-slots";
 const PUBLIC_EXAMS_PATH = "/academic/exams";
+const PUBLIC_SEMESTERS_PATH = "/academic/semesters";
 // Public free-room lookup — takes ?day=&timeSlotId= and returns rooms with no
 // class routine scheduled in that slot. Lives under /home, not /academic,
 // per the live API (verified: 200 with no auth header).
@@ -137,22 +153,69 @@ async function publicGet(path: string): Promise<unknown> {
   return parsed?.data ?? parsed;
 }
 
+// The routine lists are paginated at a fixed 30 rows (a `limit` param is
+// ignored), so every page is walked. Capped so a misbehaving API can't loop forever.
+const MAX_PAGES = 50;
+
 async function fetchList(path: string, label: string): Promise<Dict[]> {
   try {
-    const data = await publicGet(path);
-    return toArray(data);
+    const rows: Dict[] = [];
+    for (let page = 1; page <= MAX_PAGES; page++) {
+      const data = await publicGet(page === 1 ? path : withPage(path, page));
+      rows.push(...toArray(data));
+      if (!hasNextPage(data)) break;
+    }
+    return rows;
   } catch (error) {
     console.error("[academics] failed to load \"" + label + "\" from the API", error);
     return [];
   }
 }
 
+/** Today's date in Bangladesh (UTC+6) as YYYY-MM-DD. A plain UTC date
+ *  lags behind until 6 AM local, so an exam would flip status 6 hours late. */
+function todayInDhaka(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dhaka" }).format(new Date());
+}
+
 function deriveExamStatus(startDate: string, endDate: string): string {
   if (!startDate || !endDate) return "Scheduled";
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayInDhaka();
   if (today < startDate) return "Upcoming";
   if (today > endDate) return "Completed";
   return "Ongoing";
+}
+
+const SEASON_ORDER: Record<string, number> = { spring: 1, summer: 2, fall: 3, autumn: 3 };
+
+/** Orders "Spring 2026" < "Summer 2026" < "Fall 2026"; unparseable titles sort last. */
+function semesterSortKey(title: string): number {
+  const match = title.match(/(spring|summer|fall|autumn)\s*-?\s*(\d{4})/i);
+  if (!match) return -1;
+  return Number(match[2]) * 10 + SEASON_ORDER[match[1].toLowerCase()];
+}
+
+/** Active semesters, newest first — whatever the admin has created, nothing hardcoded. */
+export async function getLiveSemesters(): Promise<Semester[]> {
+  const rows = await fetchList(PUBLIC_SEMESTERS_PATH, "semester");
+  return rows
+    .filter(isActive)
+    .map((r) => ({ id: num(r.id), title: str(r.title).trim() }))
+    .filter((s) => s.id && s.title)
+    .sort((a, b) => semesterSortKey(b.title) - semesterSortKey(a.title) || b.id - a.id);
+}
+
+/**
+ * The semester running today, by PCIU's trimester calendar (Spring Jan–Apr,
+ * Summer May–Aug, Fall Sep–Dec) in Bangladesh time. Falls back to the newest
+ * semester when none is titled for the current term. Computed on the server so
+ * the client's first render matches (no hydration mismatch on the default).
+ */
+export function getCurrentSemesterId(semesters: Semester[]): number | undefined {
+  const [year, month] = todayInDhaka().split("-").map(Number);
+  const season = month <= 4 ? "spring" : month <= 8 ? "summer" : "fall";
+  const currentKey = year * 10 + SEASON_ORDER[season];
+  return (semesters.find((s) => semesterSortKey(s.title) === currentKey) ?? semesters[0])?.id;
 }
 
 export async function getLiveExams(): Promise<Exam[]> {
@@ -164,6 +227,7 @@ export async function getLiveExams(): Promise<Exam[]> {
       const endDate = isoDate(r.endDate);
       return {
         id: num(r.id),
+        semesterId: idOf(r, "semester"),
         name: str(r.name),
         routeFile: typeof r.routeFile === "string" && r.routeFile ? r.routeFile : null,
         startDate,
@@ -171,7 +235,22 @@ export async function getLiveExams(): Promise<Exam[]> {
         status: deriveExamStatus(startDate, endDate),
       };
     })
-    .sort((a, b) => a.startDate.localeCompare(b.startDate));
+    .sort(
+      (a, b) =>
+        statusRank(a.status) - statusRank(b.status) ||
+        // Completed exams: most recent first. Everything else: soonest first.
+        (a.status === "Completed"
+          ? b.endDate.localeCompare(a.endDate)
+          : a.startDate.localeCompare(b.startDate)),
+    );
+}
+
+/** Card order on the exam schedule: what's running, then what's next, then past exams. */
+const STATUS_ORDER = ["Ongoing", "Upcoming", "Scheduled", "Completed"];
+
+function statusRank(status: string): number {
+  const idx = STATUS_ORDER.indexOf(status);
+  return idx === -1 ? STATUS_ORDER.length : idx;
 }
 
 export async function getLiveExamRoutines(): Promise<ExamRoutine[]> {
@@ -210,6 +289,7 @@ export async function getLiveClassRoutines(): Promise<ClassRoutineItem[]> {
       courseCode: courseCode(r),
       teacher: nameOf(r, "teacher"),
       teacherId: idOf(r, "teacher"),
+      semesterId: idOf(r, "semester"),
       courseId: idOf(r, "course"),
       batchId: idOf(r, "batch"),
       sectionId: idOf(r, "section"),

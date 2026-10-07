@@ -204,6 +204,35 @@ function decode(
   } as EntityRecord;
 }
 
+const MAX_LIST_PAGES = 50;
+
+/**
+ * Some list endpoints (the class/exam routines) paginate at a fixed page size
+ * and ignore `limit`, returning `{ <rows>: [...], pagination: { hasNextPage } }`.
+ * The admin list pages client-side over the full set, so walk every page and
+ * merge the rows back into that same shape. Unpaginated responses pass through.
+ */
+async function fetchAllPages(path: string): Promise<unknown> {
+  const first = await api.get<unknown>(path);
+  if (!first || typeof first !== "object" || Array.isArray(first)) return first;
+
+  const pageInfo = (d: unknown) => (d as Dict)?.pagination as Dict | undefined;
+  if (pageInfo(first)?.hasNextPage !== true) return first;
+
+  const rowsKey = Object.keys(first as Dict).find((k) => Array.isArray((first as Dict)[k]));
+  if (!rowsKey) return first;
+
+  const rows = [...((first as Dict)[rowsKey] as unknown[])];
+  let current: unknown = first;
+  for (let page = 2; page <= MAX_LIST_PAGES && pageInfo(current)?.hasNextPage === true; page++) {
+    current = await api.get<unknown>(`${path}${path.includes("?") ? "&" : "?"}page=${page}`);
+    const more = (current as Dict)?.[rowsKey];
+    if (!Array.isArray(more) || more.length === 0) break;
+    rows.push(...more);
+  }
+  return { ...(first as Dict), [rowsKey]: rows };
+}
+
 export async function listEntities(
   slug: string,
   fieldNames: string[],
@@ -220,7 +249,7 @@ export async function listEntities(
   const qs = query.toString();
   const path = `${collectionPath(slug)}${qs ? `?${qs}` : ""}`;
 
-  const data = await api.get<unknown>(path);
+  const data = await fetchAllPages(path);
   const cfg = getEndpoint(slug);
 
   let rows: unknown;

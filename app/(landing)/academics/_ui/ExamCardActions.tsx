@@ -17,11 +17,22 @@ export default function ExamCardActions({
   isActive,
   /** All exam routines across every exam — downloadExamRoutinePdf filters to `exam.id` itself. */
   routines,
+  /** The currently selected semester filter, kept in the link so it survives navigation. */
+  semesterId,
+  examType,
 }: {
   exam: Exam;
   isActive: boolean;
   routines: ExamRoutine[];
+  semesterId?: number;
+  examType?: string;
 }) {
+  const params = new URLSearchParams();
+  if (semesterId) params.set("semesterId", String(semesterId));
+  if (examType) params.set("type", examType);
+  params.set("examId", String(exam.id));
+  const query = params.toString();
+
   const handleDownload = () => {
     void downloadExamRoutinePdf({ examId: exam.id, examName: exam.name, routines });
   };
@@ -32,7 +43,7 @@ export default function ExamCardActions({
         variant={isActive ? "default" : "outlineMuted"}
         size="sm"
         className="flex-1"
-        render={<Link href={`/academics/exam-schedule?examId=${exam.id}#exam-routine`} />}
+        render={<Link href={`/academics/exam-schedule?${query}#exam-routine`} />}
         nativeButton={false}
       >
         <FileText className="size-4 mr-1.5" />

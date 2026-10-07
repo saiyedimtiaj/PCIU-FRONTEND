@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Plus, Search, X, SlidersHorizontal } from "lucide-react";
 import { getEntitySchema } from "@/lib/admin/entities";
@@ -33,6 +33,8 @@ export interface EntityListClientProps {
    * the first.
    */
   basePath?: string;
+  /** Extra header buttons rendered before "Add" (e.g. a routine's "Bulk Add"). */
+  extraActions?: ReactNode;
 }
 
 const PAGE_SIZE = 10;
@@ -103,7 +105,11 @@ function OptionFilterSelect({
   );
 }
 
-export default function EntityListClient({ slug, basePath: basePathOverride }: EntityListClientProps) {
+export default function EntityListClient({
+  slug,
+  basePath: basePathOverride,
+  extraActions,
+}: EntityListClientProps) {
   const schema = getEntitySchema(slug);
 
   const [query, setQuery] = useState("");
@@ -313,11 +319,16 @@ export default function EntityListClient({ slug, basePath: basePathOverride }: E
         description={schema.description}
         icon={schema.icon}
         actions={
-          showAddButton ? (
-            <Button variant="highlight" size="admin" render={<Link href={`${basePath}/new`} />} nativeButton={false}>
-              <Plus className="size-4" />
-              Add {schema.title}
-            </Button>
+          showAddButton || extraActions ? (
+            <>
+              {extraActions}
+              {showAddButton && (
+                <Button variant="highlight" size="admin" render={<Link href={`${basePath}/new`} />} nativeButton={false}>
+                  <Plus className="size-4" />
+                  Add {schema.title}
+                </Button>
+              )}
+            </>
           ) : undefined
         }
       />
