@@ -26,10 +26,25 @@ export default async function FacultyDetailPage({
   return (
     <div className="space-y-8">
       {/* Faculty Header & Dean Info */}
-      <div className="mb-6 rounded-xl bg-linear-to-r from-primary/10 via-secondary-light/20 to-accent/5 p-5 sm:mb-8 sm:p-6 md:p-8">
-        <h2 className="font-heading text-2xl font-bold text-primary sm:text-3xl md:text-4xl mb-6">
-          {faculty.name}
-        </h2>
+      <div 
+        className="mb-6 rounded-2xl relative overflow-hidden p-6 sm:mb-8 sm:p-8 md:p-10 shadow-lg border border-slate-200/50"
+      >
+        {/* Background Image & Overlay */}
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: "url('/images/banners/faculty-banner.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-primary/40 z-0" />
+        <div className="absolute inset-0 bg-linear-to-t from-primary/90 via-primary/30 to-transparent z-0" />
+
+        <div className="relative z-10">
+          <h2 className="font-heading text-3xl font-bold text-white sm:text-4xl md:text-5xl mb-8 drop-shadow-md">
+            {faculty.name}
+          </h2>
 
         {faculty.dean && (
           <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center bg-white p-5 rounded-xl border border-slate-100 shadow-md">
@@ -62,6 +77,7 @@ export default async function FacultyDetailPage({
             </div>
           </div>
         )}
+        </div>
       </div>
 
       {faculty.about && (

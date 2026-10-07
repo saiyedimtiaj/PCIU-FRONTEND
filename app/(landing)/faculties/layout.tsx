@@ -52,16 +52,28 @@ export default async function FacultiesLayout({
   return (
     <div className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="bg-primary py-14 text-white sm:py-16 md:py-20">
-        <div className="container mx-auto px-4 text-center sm:px-6">
+      <section className="relative py-14 text-white sm:py-16 md:py-20 overflow-hidden">
+        {/* Background Image & Overlay */}
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: "url('/images/banners/faculties-layout-banner.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-primary/70 z-0" />
+        <div className="absolute inset-0 bg-linear-to-b from-transparent to-primary/90 z-0" />
+
+        <div className="container relative z-10 mx-auto px-4 text-center sm:px-6">
           <GraduationCap
-            className="mx-auto mb-4 h-12 w-12 sm:h-14 sm:w-14"
+            className="mx-auto mb-4 h-12 w-12 sm:h-14 sm:w-14 drop-shadow-md"
             aria-hidden
           />
-          <h1 className="font-heading text-3xl font-bold sm:text-4xl md:text-5xl">
+          <h1 className="font-heading text-3xl font-bold sm:text-4xl md:text-5xl drop-shadow-lg">
             Our Faculties
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-white/85 sm:text-base md:text-lg">
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-white/90 sm:text-base md:text-lg drop-shadow">
             Explore academic excellence across diverse disciplines at Port City
             International University
           </p>
