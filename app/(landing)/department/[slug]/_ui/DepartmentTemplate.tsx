@@ -6,7 +6,6 @@ import type { DepartmentContent } from "@/types/department";
 import { DepartmentNav } from "./DepartmentNav";
 import { FacultyCarousel } from "./FacultyCarousel";
 import Image from "next/image";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { getMediaUrl } from "@/lib/utils/media";
 import StatCounter from "@/app/(landing)/_ui/StatCounter";
@@ -211,13 +210,15 @@ export default function DepartmentTemplate({
                     </h2>
                     {/* Accent line */}
                     <div className="mb-6 h-1 w-24 rounded-full bg-linear-to-r from-[#1e3a8a] to-[#0ea5e9]" />
-                    
+
                     <div className="space-y-4 text-base text-muted-foreground leading-relaxed relative">
                       <span className="absolute -top-6 -left-4 font-serif text-7xl text-[#0ea5e9]/15 font-bold leading-none select-none">
                         “
                       </span>
                       {content.chairman.message.map((p, i) => (
-                        <p key={i} className="relative z-10">{p}</p>
+                        <p key={i} className="relative z-10">
+                          {p}
+                        </p>
                       ))}
                     </div>
                   </div>

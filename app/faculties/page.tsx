@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { iconMap } from "@/lib/icons";
 import { getFacultyOverview } from "@/lib/data/faculty-overview";
+import EmptyState from "@/components/shared/EmptyState";
 
 export const metadata: Metadata = {
   title: "Our Faculties | Port City International University",
@@ -27,11 +28,11 @@ export default async function FacultiesOverviewPage({
 
   if (faculties.length === 0) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center bg-background px-4 py-20 text-center">
-        <p className="text-muted-foreground">
-          Faculty information is currently unavailable. Please check back soon.
-        </p>
-      </div>
+      <EmptyState
+        icon={<GraduationCap className="h-16 w-16" />}
+        title="No faculty information found"
+        description="Faculty information is currently unavailable. Please check back soon."
+      />
     );
   }
 
