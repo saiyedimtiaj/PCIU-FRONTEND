@@ -67,11 +67,6 @@ export function FacultyCarousel({
                 <p className="text-sm font-semibold text-white/90 mb-2 line-clamp-1">
                   {member.designation}
                 </p>
-                {member.specialization && (
-                  <p className="text-xs font-medium text-white/60 line-clamp-2 mb-4">
-                    {member.specialization}
-                  </p>
-                )}
 
                 <div className="flex items-center gap-1.5 text-xs font-bold text-[#0ea5e9] opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
                   View Profile <ExternalLink className="w-3.5 h-3.5" />
