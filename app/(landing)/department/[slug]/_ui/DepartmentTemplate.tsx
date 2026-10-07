@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import type { DepartmentContent } from "@/types/department";
 import { DepartmentNav } from "./DepartmentNav";
 import { FacultyCarousel } from "./FacultyCarousel";
@@ -8,12 +9,14 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { getMediaUrl } from "@/lib/utils/media";
+import StatCounter from "@/app/(landing)/_ui/StatCounter";
 
 export default function DepartmentTemplate({
   content,
 }: {
   content: DepartmentContent;
 }) {
+  console.log(content);
   // Derive stat numbers for the stats bar
   const graduatesCount =
     content.stats?.find((s) => s.label.toLowerCase().includes("graduate"))
@@ -32,7 +35,7 @@ export default function DepartmentTemplate({
   return (
     <div className="min-h-screen bg-slate-50/50">
       {/* Hero */}
-      <section className="relative bg-[#2B355A] py-16 md:py-24 overflow-hidden">
+      <section className="relative bg-[#2B355A] pt-16 md:pt-24 pb-28 md:pb-36 overflow-hidden">
         <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-3xl">
             <span className="inline-block bg-accent text-black text-xs font-bold px-3 py-1 rounded-full mb-6">
@@ -63,43 +66,49 @@ export default function DepartmentTemplate({
         />
       </section>
 
-      {/* Stats Bar */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-100">
-            <div className="text-center px-4">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
-                {graduatesCount}
+      {/* Stats Cards - Overlapping Hero */}
+      <div className="container relative z-20 mx-auto px-4 -mt-16 md:-mt-20 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <p className="text-4xl font-bold text-[#1e3a8a] mb-2">
+                <StatCounter value={graduatesCount} />
               </p>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Graduates
               </p>
-            </div>
-            <div className="text-center px-4">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
-                {facultyCount}
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <p className="text-4xl font-bold text-[#1e3a8a] mb-2">
+                <StatCounter value={facultyCount} />
               </p>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Faculty Members
               </p>
-            </div>
-            <div className="text-center px-4">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
-                {programsCount}
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <p className="text-4xl font-bold text-[#1e3a8a] mb-2">
+                <StatCounter value={programsCount} />
               </p>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Programs Offered
               </p>
-            </div>
-            <div className="text-center px-4">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
-                {publicationsCount}
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <p className="text-4xl font-bold text-[#1e3a8a] mb-2">
+                <StatCounter value={publicationsCount} />
               </p>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Publications
               </p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -151,33 +160,66 @@ export default function DepartmentTemplate({
             {/* Chairman message */}
             {content.chairman && (
               <section id="chairman" className="scroll-mt-24">
-                <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
-                  {content.chairmanHeading}
-                </h2>
-                <div className="flex flex-col md:flex-row gap-8">
-                  <div className="shrink-0 text-center w-full md:w-48 flex flex-col items-center">
-                    <Avatar className="w-full h-auto aspect-square rounded-xl bg-slate-200 border text-slate-500 font-heading flex items-center justify-center mb-4">
-                      <AvatarImage
-                        className={"rounded-none"}
-                        src={
-                          getMediaUrl(content.chairman.imageUrl) || undefined
-                        }
-                      />
-                      <AvatarFallback className="text-5xl font-bold bg-transparent rounded-none">
-                        {getInitials(content.chairman.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="font-bold text-[#1e3a8a]">
-                      {content.chairman.name}
-                    </p>
-                    <p className="text-sm text-[#475569]">
-                      {content.chairman.designation}
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-10 md:gap-14 items-start pt-6">
+                  {/* Photo Card styled like VC */}
+                  <div className="relative mx-auto w-full max-w-[320px] md:mx-0">
+                    {/* Decorative back panel */}
+                    <div className="absolute -left-3 -top-3 h-[calc(100%-24px)] w-[calc(100%-16px)] rounded-[24px] bg-[#1e3a8a] sm:-left-4 sm:-top-4" />
+
+                    {/* Main card */}
+                    <div className="relative rounded-[24px] bg-white p-3 shadow-xl sm:p-4 border border-slate-100">
+                      {/* Accent corner - top right */}
+                      <div className="absolute right-4 top-4 z-20 h-16 w-16 rounded-tr-xl border-r-[3px] border-t-[3px] border-[#0ea5e9]" />
+
+                      {/* Accent corner - bottom left */}
+                      <div className="absolute bottom-20 left-4 z-20 h-12 w-12 rounded-bl-xl border-b-[3px] border-l-[3px] border-[#0ea5e9]" />
+
+                      {/* Photo */}
+                      <div className="group relative aspect-[4/5] overflow-hidden rounded-[18px] bg-slate-100">
+                        {content.chairman.imageUrl ? (
+                          <Image
+                            src={getMediaUrl(content.chairman.imageUrl) || ""}
+                            alt={content.chairman.name}
+                            fill
+                            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center bg-slate-200 text-5xl font-bold text-slate-400 font-heading">
+                            {getInitials(content.chairman.name)}
+                          </div>
+                        )}
+                        {/* Subtle image overlay */}
+                        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#1e3a8a]/20 via-transparent to-transparent" />
+                      </div>
+
+                      {/* Name / Designation Tag */}
+                      <div className="relative z-30 -mt-6 ml-3 mr-3 rounded-xl bg-[#1e3a8a] px-4 py-3 shadow-lg">
+                        <h3 className="font-heading text-sm font-bold leading-snug text-white">
+                          {content.chairman.name}
+                        </h3>
+                        <p className="mt-0.5 text-xs font-semibold tracking-wide text-[#0ea5e9]">
+                          {content.chairman.designation}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
-                    {content.chairman.message.map((p, i) => (
-                      <p key={i}>{p}</p>
-                    ))}
+
+                  {/* Message Content */}
+                  <div className="relative">
+                    <h2 className="font-heading font-bold text-2xl md:text-3xl text-[#1e3a8a] mb-2">
+                      {content.chairmanHeading}
+                    </h2>
+                    {/* Accent line */}
+                    <div className="mb-6 h-1 w-24 rounded-full bg-linear-to-r from-[#1e3a8a] to-[#0ea5e9]" />
+                    
+                    <div className="space-y-4 text-base text-muted-foreground leading-relaxed relative">
+                      <span className="absolute -top-6 -left-4 font-serif text-7xl text-[#0ea5e9]/15 font-bold leading-none select-none">
+                        “
+                      </span>
+                      {content.chairman.message.map((p, i) => (
+                        <p key={i} className="relative z-10">{p}</p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </section>
