@@ -16,6 +16,33 @@ export interface AcademicFaculty {
     slug: string;
   }[];
 }
+
+export interface FacultyDepartment {
+  id: number;
+  name: string;
+  subtitle?: string;
+  slug?: string;
+}
+
+export interface FacultyDean {
+  id: number;
+  name: string;
+  designation: string;
+  imageUrl?: string;
+  bio?: string;
+  shortBio?: string;
+}
+
+export interface FacultyDetail {
+  id: number;
+  name: string;
+  about?: string;
+  vision?: string;
+  mission?: string;
+  keyPoint?: string[];
+  dean?: FacultyDean;
+  departments: FacultyDepartment[];
+}
 export interface FreeRoom {
   id: number;
   name: string;
