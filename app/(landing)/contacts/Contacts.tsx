@@ -341,12 +341,13 @@ export default function Contacts({
   error: boolean;
 }) {
   return (
-    <main className="min-h-screen bg-background">
-      <Breadcrumb items={[{ label: "Contacts" }]} />
-
+    <main className="min-h-screen ">
+      <section className="px-4 md:px-10">
+        <Breadcrumb items={[{ label: "Contacts" }]} />
+      </section>
       <section
         aria-labelledby="administration-contacts-heading"
-        className="container mx-auto px-4 pt-5 pb-16"
+        className="container mx-auto px-5 md:px-16 pt-5 pb-16"
       >
         <header className="mx-auto mb-10 max-w-3xl text-center lg:mb-12">
           <span className="inline-flex rounded-full bg-accent/15 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-primary">
