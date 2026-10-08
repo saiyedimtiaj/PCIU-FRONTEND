@@ -18,10 +18,10 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    unoptimized: true,
     // Required starting with Next.js 16 — unrestricted access would let
     // callers request arbitrary optimization qualities.
     qualities: [75],
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",

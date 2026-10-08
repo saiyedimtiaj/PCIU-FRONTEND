@@ -68,6 +68,7 @@ export default async function Research() {
                 src={image}
                 alt={researchCell?.key.trim() || "Research"}
                 fill
+                loading="lazy"
                 sizes="(min-width: 1024px) 55vw, 100vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
