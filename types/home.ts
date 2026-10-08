@@ -101,15 +101,16 @@ export interface StatItem {
 /** Home notices (from /home/notices API) */
 export interface NoticeItem {
   id: number;
-  title: string;
-  badgeLabel: string | null;
-  badgeColor: string | null;
-  icon: IconName | null;
-  category: string | null;
-  noticeDate: string;
+  title?: string | null;
+  badgeLabel?: string | null;
+  badgeColor?: string | null;
+  icon?: IconName | null;
+  category?: string | null;
+  pdfUrl?: string | null;
+  noticeDate?: string | null;
   isActive: boolean;
   isHome: boolean;
-  sortOrder: number;
+  sortOrder?: number;
 }
 
 /** Home notices (from /home/notices API) */
@@ -123,6 +124,15 @@ export interface NoticeItem {
 // }
 
 /** Vice Chancellor (from /home/vc API) */
+export interface VCEducationEntry {
+  id?: number;
+  teacherId?: number;
+  degree: string;
+  institution?: string | null;
+  educationYear?: string | null;
+  eduOrder?: number | null;
+}
+
 export interface VCInfo {
   id: number;
   name: string;
@@ -131,12 +141,14 @@ export interface VCInfo {
   office: string | null;
   designation: string | null;
   shortBio: string | null;
+  bio?: string | null;
+  education?: VCEducationEntry[] | null;
   googleScholarUrl: string | null;
   researchgateUrl: string | null;
   linkedinUrl: string | null;
   facebookUrl: string | null;
   twitterUrl: string | null;
-  websiteUrl: string | null;
+  websiteUrl: string | string[] | null;
 }
 /** Vice Chancellor (from /home/vc API) */
 

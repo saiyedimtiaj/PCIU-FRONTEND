@@ -1,41 +1,48 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { FaLinkedinIn, FaFacebookF, FaXTwitter } from "react-icons/fa6";
+import { ArrowRight, Globe } from "lucide-react";
+import { FaLinkedinIn } from "react-icons/fa6";
+import { SiGooglescholar, SiResearchgate } from "react-icons/si";
 
 import { getVCInfo } from "@/lib/api/home";
 import { getMediaUrl } from "@/lib/utils/media";
+
+type ProfileLink = {
+  href: string | null;
+  label: string;
+  icon:
+    | typeof Globe
+    | typeof SiGooglescholar
+    | typeof SiResearchgate
+    | typeof FaLinkedinIn;
+};
 
 export default async function VCMessage() {
   const vc = await getVCInfo();
 
   if (!vc) return null;
   const photoUrl = getMediaUrl(vc.imageUrl);
+  const bioPreview = getBioPreview(vc.bio);
 
-  const socialLinks = [
+  const profileLinks: (ProfileLink & { href: string })[] = [
+    { href: normalizeUrl(vc.websiteUrl), label: "Website", icon: Globe },
     {
-      url: vc.linkedinUrl,
-      icon: FaLinkedinIn,
+      href: normalizeUrl(vc.googleScholarUrl),
+      label: "Google Scholar",
+      icon: SiGooglescholar,
+    },
+    {
+      href: normalizeUrl(vc.researchgateUrl),
+      label: "ResearchGate",
+      icon: SiResearchgate,
+    },
+    {
+      href: normalizeUrl(vc.linkedinUrl),
       label: "LinkedIn",
-    },
-    {
-      url: vc.facebookUrl,
-      icon: FaFacebookF,
-      label: "Facebook",
-    },
-    {
-      url: vc.twitterUrl,
-      icon: FaXTwitter,
-      label: "X",
+      icon: FaLinkedinIn,
     },
   ].filter(
-    (
-      link,
-    ): link is {
-      url: string;
-      icon: typeof FaLinkedinIn;
-      label: string;
-    } => Boolean(link.url),
+    (link): link is ProfileLink & { href: string } => Boolean(link.href),
   );
 
   return (
@@ -49,13 +56,13 @@ export default async function VCMessage() {
         <div className="absolute -left-40 top-20 h-80 w-80 rounded-full bg-blue-50 blur-3xl opacity-70" />
 
         {/* Soft gold glow - bottom right */}
-        <div className="absolute -right-40 bottom-[-120px] h-[420px] w-[420px] rounded-full bg-amber-50 blur-3xl opacity-60" />
+        <div className="absolute -right-40 -bottom-30 h-105 w-105 rounded-full bg-amber-50 opacity-60 blur-3xl" />
 
         {/* =====================================================
             FLOWING CURVED LINES
         ====================================================== */}
 
-        <div className="absolute bottom-[-15px] right-[-120px] h-[360px] w-[760px] sm:h-[430px] sm:w-[850px] lg:h-[500px] lg:w-[950px]">
+        <div className="absolute -bottom-3.75 -right-30 h-90 w-190 sm:h-107.5 sm:w-212.5 lg:h-125 lg:w-237.5">
           <svg
             viewBox="0 0 950 500"
             className="h-full w-full"
@@ -187,7 +194,7 @@ export default async function VCMessage() {
             VERY SUBTLE BOTTOM GRID / LIGHT CURVE
         ====================================================== */}
 
-        <div className="absolute bottom-0 right-0 h-40 w-[55%] bg-gradient-to-t from-blue-50/20 to-transparent" />
+        <div className="absolute bottom-0 right-0 h-40 w-[55%] bg-linear-to-t from-blue-50/20 to-transparent" />
       </div>
 
       {/* =========================================================
@@ -195,12 +202,13 @@ export default async function VCMessage() {
       ========================================================== */}
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl items-center grid-cols-1 gap-12 md:grid-cols-[minmax(280px,360px)_1fr] md:gap-14 lg:grid-cols-[390px_1fr] lg:gap-20">
+        {/* <div className="mx-auto grid max-w-6xl items-center grid-cols-1 gap-12  md:grid-cols-[minmax(280px,360px)_1fr] md:gap-14 lg:grid-cols-[390px_1fr] lg:gap-20"> */}
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-[390px_1fr] lg:gap-20">
           {/* =====================================================
               VC PROFILE
           ====================================================== */}
 
-          <div className="relative mx-auto w-full max-w-[350px] ">
+          <div className="relative mx-auto w-full max-w-87.5">
             {/* Decorative back panel */}
             <div className="absolute -left-4 -top-4 h-[calc(100%-25px)] w-[calc(100%-20px)] rounded-[28px] bg-primary sm:-left-5 sm:-top-5" />
 
@@ -210,10 +218,10 @@ export default async function VCMessage() {
               <div className="absolute right-5 top-5 z-20 h-20 w-20 rounded-tr-2xl border-r-4 border-t-4 border-accent" />
 
               {/* Gold corner - bottom left */}
-              <div className="absolute bottom-[115px] left-5 z-20 h-16 w-16 rounded-bl-2xl border-b-4 border-l-4 border-accent md:bottom-[125px]" />
+              <div className="absolute bottom-28.75 left-5 z-20 h-16 w-16 rounded-bl-2xl border-b-4 border-l-4 border-accent md:bottom-31.25" />
 
               {/* Photo */}
-              <div className="group relative aspect-[5/4] overflow-hidden rounded-[21px] bg-[#EEF5FC]">
+              <div className="group relative aspect-5/4 overflow-hidden rounded-[21px] bg-[#EEF5FC]">
                 {photoUrl ? (
                   <Image
                     src={photoUrl}
@@ -230,7 +238,7 @@ export default async function VCMessage() {
                 )}
 
                 {/* Subtle image overlay */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#082F67]/15 via-transparent to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#082F67]/15 via-transparent to-transparent" />
               </div>
 
               {/* =================================================
@@ -243,31 +251,30 @@ export default async function VCMessage() {
                 </h3>
 
                 {vc.designation && (
-                  <p className="mt-1 text-xs text-accent font-bold leading-relaxed tracking-wide text-accent ">
+                  <p className="mt-1 text-xs font-bold leading-relaxed tracking-wide text-accent">
                     {vc.designation}
                   </p>
                 )}
               </div>
 
-              {/* =================================================
-                  SOCIAL LINKS
-              ================================================== */}
-
-              {socialLinks.length > 0 && (
-                <div className="relative z-30 flex justify-center gap-3 pt-3 sm:gap-4 sm:pt-3">
-                  {socialLinks.map(({ url, icon: Icon, label }) => (
+                {profileLinks.length > 0 && (
+                <nav
+                  aria-label={`${vc.name} profile links`}
+                  className="relative z-30 flex justify-center gap-3 pt-3 sm:gap-4 sm:pt-3"
+                >
+                  {profileLinks.map(({ href, label, icon: Icon }) => (
                     <a
                       key={label}
-                      href={url}
+                      href={href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${vc.name} on ${label}`}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-[#0A4A94] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0A4A94] hover:bg-[#0A4A94] hover:text-white hover:shadow-lg sm:h-11 sm:w-11"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-[#0A4A94] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0A4A94] hover:bg-[#0A4A94] hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0A4A94] focus-visible:ring-offset-2 motion-reduce:transition-none sm:h-11 sm:w-11"
                     >
-                      <Icon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
+                      <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                     </a>
                   ))}
-                </div>
+                </nav>
               )}
             </div>
           </div>
@@ -283,15 +290,15 @@ export default async function VCMessage() {
             </h2>
 
             {/* Accent */}
-            <div className="mx-auto mt-3 mb-6 h-1 w-34 rounded-full bg-gradient-to-r from-[#082F67] via-accent to-accent shadow-[0_3px_10px_rgba(217,154,0,0.18)] md:mx-0" />
+            <div className="mx-auto mt-3 mb-6 h-1 w-34 rounded-full bg-linear-to-r from-[#082F67] via-accent to-accent shadow-[0_3px_10px_rgba(217,154,0,0.18)] md:mx-0" />
 
             {/* Dynamic VC message */}
-            {vc.shortBio && (
+            {bioPreview && (
               <p className="relative mx-auto max-w-2xl text-sm leading-7 text-slate-900 sm:text-base sm:leading-8 md:mx-0 md:text-lg md:leading-9">
                 <span className="mr-1 font-serif text-4xl font-bold leading-none text-accent align-[-0.3em]">
                   “
                 </span>
-                {vc.shortBio}
+                {bioPreview}
                 <span className="ml-1 font-serif text-4xl font-bold leading-none text-accent align-[-0.3em]">
                   ”
                 </span>
@@ -321,4 +328,30 @@ export default async function VCMessage() {
       </div>
     </section>
   );
+}
+function normalizeUrl(value: string | string[] | null | undefined): string | null {
+  const values = Array.isArray(value) ? value : [value];
+  return (
+    values.find(
+      (candidate): candidate is string =>
+        typeof candidate === "string" && candidate.trim().length > 0,
+    )?.trim() ?? null
+  );
+}
+
+function getBioPreview(bio: string | null | undefined): string {
+  const text = (bio ?? "")
+    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (text.length <= 360) return text;
+  return `${text.slice(0, 357).trimEnd()}...`;
 }

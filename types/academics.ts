@@ -16,9 +16,27 @@ export interface AcademicFaculty {
     slug: string;
   }[];
 }
+export interface FreeRoom {
+  id: number;
+  name: string;
+  buildingId: number;
+  buildingName: string;
+}
+
+export interface TimeSlotOption {
+  id: number;
+  time: string;
+}
+
+export interface Semester {
+  id: number;
+  title: string;
+}
 
 export interface Exam {
   id: number;
+  /** The semester this exam belongs to — drives the exam schedule's semester filter. */
+  semesterId?: number;
   name: string;
   routeFile: string | null;
   startDate: string;
@@ -78,6 +96,9 @@ export interface ClassRoutineItem {
   courseId?: number;
   batchId?: number;
   sectionId?: number;
+  /** Only set once the API returns a semester on class routines — the class
+   *  schedule's semester filter stays hidden until then. */
+  semesterId?: number;
 }
 
 export interface GradeRow {
