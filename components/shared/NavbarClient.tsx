@@ -180,7 +180,7 @@ export default function NavbarClient({
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-17.5">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 shrink-0">
+            <Link href="/" className="flex items-center  shrink-0">
               <Image
                 src="/images/pciu-logo.png"
                 alt="Port City International University Logo"
@@ -189,10 +189,10 @@ export default function NavbarClient({
                 className="w-12 h-12 object-contain"
               />
               <div className="hidden md:block">
-                <div className="font-bold text-lg text-primary leading-tight">
+                <div className="font-extrabold text-lg text-primary leading-tight">
                   Port City International
                 </div>
-                <div className="text-xs text-muted-foreground tracking-wide">
+                <div className="text-xs font-bold text-accent-foreground  tracking-wide">
                   University
                 </div>
               </div>
@@ -269,10 +269,12 @@ export default function NavbarClient({
             <div className="flex items-center gap-3">
               <Button
                 variant="accent"
-                className="hidden md:flex"
+                nativeButton={false}
+                render={<Link href="/admission/apply" />}
+                className="hidden md:flex font-bold "
                 aria-label="Apply now"
               >
-                Apply Now
+                Admission Now
               </Button>
 
               {/* Mobile Menu Trigger */}
@@ -465,8 +467,13 @@ export default function NavbarClient({
                 Contact
               </Link>
 
-              <Button variant="accent" className="w-full mt-4 mb-4">
-                Apply Now
+              <Button
+                variant="accent"
+                nativeButton={false}
+                render={<Link href="/admission/apply" />}
+                className="w-full mt-4 mb-4 font-bold"
+              >
+                Admission Now
               </Button>
 
               {/* Mobile Topbar Content */}

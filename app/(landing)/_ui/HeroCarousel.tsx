@@ -177,25 +177,15 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
       })}
 
       {slides.length > 1 && (
-        <>
-          <div className="absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-1 sm:right-5 sm:gap-2 md:right-8">
-            <button
-              onClick={prev}
-              className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 "
-              aria-label="Previous slide"
-            >
-              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-            </button>
-            <button
-              onClick={next}
-              className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:scale-105 "
-              aria-label="Next slide"
-            >
-              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-            </button>
-          </div>
-          {/* DOTS POINT */}
-          <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full  px-3 py-2 shadow-sm shadow-black/5 backdrop-blur-sm ">
+        <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full px-2 py-1 shadow-sm shadow-black/5 backdrop-blur-sm">
+          <button
+            onClick={prev}
+            className="flex h-6 w-6 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-accent hover:bg-accent hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:h-8 sm:w-8"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+          </button>
+          <div className="flex items-center gap-2">
             {slides.map((slide, index) => (
               <button
                 key={slide.id}
@@ -210,7 +200,14 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
               />
             ))}
           </div>
-        </>
+          <button
+            onClick={next}
+            className="flex h-6 w-6 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white shadow-sm shadow-black/5 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-accent hover:bg-accent hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:h-8 sm:w-8"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+          </button>
+        </div>
       )}
     </div>
   );
