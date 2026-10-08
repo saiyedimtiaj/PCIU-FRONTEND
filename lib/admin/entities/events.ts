@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { optionalUpload } from "./_upload";
+import { optionalUpload, optionalUploadList } from "./_upload";
 import { CalendarPlus } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
@@ -10,12 +10,12 @@ const eventsSchema = z.object({
   description: z.string().optional().or(z.literal("")),
   category: z.string().min(1, "Category is required"),
   badge_label: z.string().max(255).optional().or(z.literal("")),
-  start_datetime: z.string().min(1, "Start date/time is required"),
-  end_datetime: z.string().optional().or(z.literal("")),
+  start_date_time: z.string().min(1, "Start date/time is required"),
+  end_date_time: z.string().optional().or(z.literal("")),
   all_day: z.boolean().default(false),
   location: z.string().max(255).optional().or(z.literal("")),
   cover_image_url: optionalUpload,
-  multiple_image: z.array(z.string()).default([]),
+  multiple_image: optionalUploadList,
   url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   is_active: z.boolean().default(true),
   sort_order: z.coerce.number().int().nonnegative().default(0),
@@ -38,14 +38,10 @@ export const eventsEntity: EntitySchema<typeof eventsSchema> = {
         {
           name: "category",
           label: "Category",
-          type: "select",
+          type: "text",
           required: true,
-          options: [
-            { label: "Academic", value: "academic" },
-            { label: "Cultural", value: "cultural" },
-            { label: "Sports", value: "sports" },
-            { label: "Workshop", value: "workshop" },
-          ],
+          placeholder: "Festival",
+          helper: "A short category label, e.g. Festival, Seminar, Sports.",
         },
         {
           name: "department_id",
@@ -62,16 +58,16 @@ export const eventsEntity: EntitySchema<typeof eventsSchema> = {
     {
       title: "Schedule",
       fields: [
-        { name: "start_datetime", label: "Start Date & Time", type: "datetime", required: true },
-        { name: "end_datetime", label: "End Date & Time", type: "datetime" },
+        { name: "start_date_time", label: "Start Date & Time", type: "datetime", required: true },
+        { name: "end_date_time", label: "End Date & Time", type: "datetime" },
         { name: "all_day", label: "All Day Event", type: "switch" },
       ],
     },
     {
       title: "Media & Links",
       fields: [
-        { name: "cover_image_url", label: "Cover Image URL", type: "image", colSpan: 2 },
-        { name: "multiple_image", label: "Gallery Images", type: "json-list", colSpan: 2 },
+        { name: "cover_image_url", label: "Cover Image", type: "image", colSpan: 2 },
+        { name: "multiple_image", label: "Gallery Images", type: "image-list", colSpan: 2 },
         { name: "url", label: "External Link", type: "url" },
         { name: "sort_order", label: "Display Order", type: "number" },
         { name: "is_active", label: "Active", type: "switch" },
