@@ -41,6 +41,7 @@ export interface EndpointConfig {
    * form's `createOverwrites` warning makes the single-row nature explicit.
    */
   allowCreate?: boolean;
+  getFromList?: boolean;
 }
 
 export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
@@ -79,6 +80,7 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   "hero-slides": { path: "/heroslides", multipart: true },
   notices: { path: "/notices", multipart: true },
   "news-articles": { path: "/news-articles", multipart: true },
+  events: { path: "/events", multipart: true },
   gallery: { path: "/galleries", multipart: true },
   menus: { path: "/menus" },
 
@@ -121,13 +123,7 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
 
   contact: { path: "/contacts" },
   setting: { path: "/settings", multipart: true },
-  popup: {
-    path: "/popup",
-    singleton: true,
-    allowCreate: true,
-    deleteAtRoot: true,
-    createOverwrites: true,
-  },
+  popup: { path: "/popup", getFromList: true },
 };
 
 /**

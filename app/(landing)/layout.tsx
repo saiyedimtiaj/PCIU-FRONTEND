@@ -15,7 +15,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
       {children}
       <PopupContainer popups={popups} />
       <Footer />
-    </div>
+          </div>
   );
 };
 

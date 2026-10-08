@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import InfoCard from "@/components/shared/InfoCard";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,7 @@ export default function OnlineAdmissionSection({
         <Button
           className="mt-6 gap-2"
           variant="highlight"
-          render={<a href={content.portalUrl} target="_blank" rel="noopener noreferrer" />}
+          render={<Link href="/admission/apply" />}
           nativeButton={false}
         >
           Go to Online Admission Portal

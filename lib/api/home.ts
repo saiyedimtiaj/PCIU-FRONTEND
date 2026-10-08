@@ -10,6 +10,7 @@ import type {
   PageSettingItem,
   StatItem,
 } from "@/types/home";
+import type { PublicProgramItem, ActiveAdmissionSchedule } from "@/types/admission-apply";
 import { cache } from "react";
 import { resolveUploadUrl } from "@/lib/upload-url";
 
@@ -300,6 +301,71 @@ export async function getStats(): Promise<StatItem[]> {
   } catch (error) {
     console.error("Error fetching stats:", error);
     return [];
+  }
+}
+
+export async function getPrograms(): Promise<PublicProgramItem[]> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return [];
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/home/programs`, {
+      next: { revalidate: 300 },
+    });
+
+    if (!res.ok) {
+      console.error(`Programs request failed: ${res.status}`);
+      return [];
+    }
+
+    const json: ApiResponse<PublicProgramItem[]> = await res.json();
+
+    if (!json.success || !Array.isArray(json.data)) {
+      return [];
+    }
+
+    return json.data.filter((program) => program.status);
+  } catch (error) {
+    console.error("Error fetching programs:", error);
+    return [];
+  }
+}
+
+export async function getActiveAdmissionSchedule(): Promise<ActiveAdmissionSchedule | null> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return null;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/admission/schedule`, {
+      next: { revalidate: 300 },
+    });
+
+    if (!res.ok) {
+      console.error(`Admission schedule request failed: ${res.status}`);
+      return null;
+    }
+
+    const json: ApiResponse<unknown> = await res.json();
+    const data = json.data;
+
+    if (
+      !json.success ||
+      !data ||
+      typeof data !== "object" ||
+      !("semesterName" in data) ||
+      typeof (data as { semesterName?: unknown }).semesterName !== "string"
+    ) {
+      return null;
+    }
+
+    return data as ActiveAdmissionSchedule;
+  } catch (error) {
+    console.error("Error fetching admission schedule:", error);
+    return null;
   }
 }
 

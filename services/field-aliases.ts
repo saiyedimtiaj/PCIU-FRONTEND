@@ -57,6 +57,9 @@ export const READ_NESTED: Record<string, Record<string, string>> = {
   user: {
     full_name: "name",
   },
+  notices: {
+    pdf: "pdfUrl",
+  },
 };
 
 function getPath(record: Record<string, unknown>, path: string): unknown {
