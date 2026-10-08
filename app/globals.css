@@ -399,6 +399,7 @@
   --animate-border-flow: border-flow 4s linear infinite;
   --animate-border-flow-fast: border-flow 1.5s linear infinite;
   --animate-arc-rotate: arc-rotate 18s ease-in-out infinite alternate;
+  --animate-hero-zoom: hero-zoom 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes fade-in {
@@ -765,5 +766,29 @@
     position: absolute;
     inset: 0;
     width: 100%;
+  }
+}
+
+/* Scroll-reveal with zero JS: fades an element up as it enters the
+   viewport, driven by a CSS view timeline. Browsers without
+   `animation-timeline` (and reduced-motion users) simply see the element
+   in place — content is never hidden waiting on script. */
+@utility reveal {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: fade-in-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+/* Page-hero image settles from a slight zoom on load. */
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1.02);
   }
 }

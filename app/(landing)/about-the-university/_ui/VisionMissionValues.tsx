@@ -1,89 +1,136 @@
-import { iconMap } from "@/lib/icons";
+import { Check, Compass, Eye, Heart, Target, type LucideIcon } from "lucide-react";
 import foundationData from "@/content/about/foundation.json";
-import type { FoundationContent } from "@/types/about";
+import { cn } from "@/lib/utils";
+import type { AboutUniversity, FoundationContent } from "@/types/about";
 
+// Section heading isn't part of the `/about` record, so it stays in JSON.
 const foundation = foundationData as FoundationContent;
-const [vision, mission, strategy, values] = foundation.cards;
 
-export default function VisionMissionValues() {
-  const VisionIcon = iconMap[vision.icon];
-  const MissionIcon = iconMap[mission.icon];
-  const StrategyIcon = iconMap[strategy.icon];
-  const ValuesIcon = iconMap[values.icon];
+interface Card {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  points?: string[];
+  /** Navy card with white text; otherwise white card with navy text. */
+  dark: boolean;
+}
+
+function FoundationCard({ card, index }: { card: Card; index: number }) {
+  const { icon: Icon, dark } = card;
 
   return (
-    <section className="py-16 md:py-24 bg-muted/40">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-14">
-          <span className="inline-block bg-primary/10 text-primary text-xs font-bold uppercase tracking-[0.15em] px-4 py-1.5 rounded-full mb-4">
+    <article
+      className={cn(
+        "reveal group relative flex h-full flex-col overflow-hidden rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1 sm:p-8 lg:p-10",
+        dark
+          ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30"
+          : "border-primary/10 bg-white text-primary shadow-sm hover:border-primary/25 hover:shadow-xl hover:shadow-primary/10",
+      )}
+    >
+      {/* Oversized step number as a watermark */}
+      <span
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute right-5 top-4 select-none font-heading text-5xl font-extrabold leading-none sm:right-7 sm:top-6 sm:text-6xl",
+          dark ? "text-white/10" : "text-primary/[0.07]",
+        )}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      <div className="relative z-10 flex items-center gap-4">
+        <div
+          className={cn(
+            "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14",
+            dark ? "bg-white text-primary" : "bg-primary text-white",
+          )}
+        >
+          <Icon className="h-6 w-6 sm:h-7 sm:w-7" />
+        </div>
+        <h3 className="font-heading text-xl font-bold sm:text-2xl">{card.title}</h3>
+      </div>
+
+      <div
+        className={cn(
+          "relative z-10 my-5 h-px w-12 transition-all duration-300 group-hover:w-20 sm:my-6",
+          dark ? "bg-white/40" : "bg-primary/30",
+        )}
+      />
+
+      <p
+        className={cn(
+          "relative z-10 text-sm leading-relaxed sm:text-[15px] sm:leading-[1.8]",
+          dark ? "text-white/80" : "text-primary/75",
+        )}
+      >
+        {card.description}
+      </p>
+
+      {card.points && card.points.length > 0 && (
+        <ul className="relative z-10 mt-5 space-y-3 sm:mt-6">
+          {card.points.map((point) => (
+            <li
+              key={point}
+              className={cn("flex items-start gap-3 text-sm", dark ? "text-white/90" : "text-primary/80")}
+            >
+              <span
+                className={cn(
+                  "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+                  dark ? "bg-white text-primary" : "bg-primary text-white",
+                )}
+              >
+                <Check className="h-3 w-3" strokeWidth={3} />
+              </span>
+              {point}
+            </li>
+          ))}
+        </ul>
+      )}
+    </article>
+  );
+}
+
+export default function VisionMissionValues({ about }: { about: AboutUniversity }) {
+  // Checkerboard on the 2-column grid: navy, white / white, navy.
+  const cards: Card[] = [
+    { icon: Eye, title: about.visionTitle, description: about.vision, dark: true },
+    { icon: Target, title: about.missionTitle, description: about.mission, dark: false },
+    { icon: Compass, title: about.strategyTitle, description: about.strategy, dark: false },
+    {
+      icon: Heart,
+      title: about.valuesTitle,
+      description: about.valuesDescription,
+      points: about.valuesPoints,
+      dark: true,
+    },
+  ];
+
+  return (
+    <section className="relative overflow-hidden bg-muted/40 py-12 sm:py-14 md:py-16">
+      {/* Soft navy glow behind the heading */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 h-48 w-[min(700px,90vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl"
+      />
+      <div className="container relative mx-auto px-4">
+        <div className="reveal mx-auto mb-8 max-w-2xl text-center sm:mb-10">
+          <span className="mb-3 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.15em] text-primary">
             {foundation.eyebrow}
           </span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
+          <h2 className="text-2xl font-extrabold text-primary sm:text-3xl md:text-4xl">
             {foundation.heading} <span className="text-accent">{foundation.headingAccent}</span>
           </h2>
-        </div>
-
-        {/* Vision & Mission — Side by side large cards */}
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6 mb-6">
-          {/* Vision */}
-          <div className="relative bg-primary rounded-2xl p-8 md:p-10 text-primary-foreground overflow-hidden group">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-accent/10 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-6">
-                <VisionIcon className="w-7 h-7 text-accent" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">{vision.title}</h3>
-              <p className="text-primary-foreground/80 leading-relaxed">{vision.description}</p>
-            </div>
-          </div>
-
-          {/* Mission */}
-          <div className="relative bg-card rounded-2xl p-8 md:p-10 border border-border overflow-hidden group shadow-sm">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-6">
-                <MissionIcon className="w-7 h-7 text-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-foreground mb-4">{mission.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{mission.description}</p>
-            </div>
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <span className="h-1 w-3 rounded-full bg-accent" />
+            <span className="h-1 w-12 rounded-full bg-primary" />
+            <span className="h-1 w-3 rounded-full bg-accent" />
           </div>
         </div>
 
-        {/* Strategy & Values — Side by side */}
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
-          {/* Strategy */}
-          <div className="relative bg-card rounded-2xl p-8 md:p-10 border border-border overflow-hidden group shadow-sm">
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2 group-hover:scale-150 transition-transform duration-700" />
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                <StrategyIcon className="w-7 h-7 text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold text-foreground mb-4">{strategy.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{strategy.description}</p>
-            </div>
-          </div>
-
-          {/* Guiding Values */}
-          <div className="relative bg-linear-to-br from-accent/10 to-primary/5 rounded-2xl p-8 md:p-10 border border-accent/20 overflow-hidden group">
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-accent/20 flex items-center justify-center mb-6">
-                <ValuesIcon className="w-7 h-7 text-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-foreground mb-4">{values.title}</h3>
-              <p className="text-muted-foreground leading-relaxed mb-5">{values.description}</p>
-              <ul className="space-y-3">
-                {values.values?.map((val) => (
-                  <li key={val} className="flex items-start gap-3 text-sm text-muted-foreground">
-                    <span className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                    </span>
-                    {val}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+        <div className="mx-auto grid max-w-6xl gap-5 sm:gap-6 md:grid-cols-2">
+          {cards.map((card, index) => (
+            <FoundationCard key={card.title || index} card={card} index={index} />
+          ))}
         </div>
       </div>
     </section>

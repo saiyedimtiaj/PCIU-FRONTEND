@@ -6,19 +6,17 @@ import { ChevronRight, Users } from "lucide-react";
 import { iconMap } from "@/lib/icons";
 import MemberCard from "./MemberCard";
 import MemberTable from "./MemberTable";
-import type { ManagementPageContent } from "@/types/management";
+import type { ManagementTab } from "@/types/management";
 
-const DEFAULT_TAB_ID = "syndicate";
-
-export default function ManagementTabs({ content }: { content: ManagementPageContent }) {
+export default function ManagementTabs({ tabs }: { tabs: ManagementTab[] }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
   const requestedTab = searchParams.get("tab");
-  const activeTab = content.tabs.some((tab) => tab.id === requestedTab)
+  const activeTab = tabs.some((tab) => tab.id === requestedTab)
     ? requestedTab!
-    : DEFAULT_TAB_ID;
+    : tabs[0].id;
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
 
   function selectTab(tabId: string) {
@@ -27,8 +25,8 @@ export default function ManagementTabs({ content }: { content: ManagementPageCon
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
-  const currentTab = content.tabs.find((tab) => tab.id === activeTab) ?? content.tabs[0];
-  const members = content[currentTab.members];
+  const currentTab = tabs.find((tab) => tab.id === activeTab) ?? tabs[0];
+  const members = currentTab.members;
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
@@ -39,7 +37,7 @@ export default function ManagementTabs({ content }: { content: ManagementPageCon
             Management Bodies
           </h3>
           <nav className="flex flex-col gap-1">
-            {content.tabs.map((tab) => {
+            {tabs.map((tab) => {
               const Icon = iconMap[tab.icon];
               const isActive = tab.id === activeTab;
               return (

@@ -19,7 +19,7 @@ import type { SessionUser } from "@/types/auth";
 
 const aboutMenu = [
   { name: "About the University", href: "/about-the-university" },
-  { name: "Campus Life", href: "#campus-life" },
+  { name: "Campus Life", href: "/#campus-life" },
   { name: "Management", href: "/management" },
 ];
 

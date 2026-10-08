@@ -1,21 +1,37 @@
+"use client";
+
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ManagementMember } from "@/types/management";
 
 function roleClasses(role: string) {
-  if (role === "Chairman") return "bg-highlight/15 text-highlight";
+  if (role === "Chairman" || role === "Chairperson") return "bg-highlight/15 text-highlight";
   if (role === "Member Secretary") return "bg-accent/15 text-accent";
   return "bg-primary/10 text-primary";
 }
 
 export default function MemberCard({ member }: { member: ManagementMember }) {
   const initial = member.name.replace(/^(Mr\.|Ms\.|Mrs\.|Dr\.|Prof\.|Engr\.)\s*/g, "")[0];
+  // Uploaded photos can be missing on the API host — fall back to the initial.
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImg = member.img && !imgFailed;
 
   return (
     <div className="relative rounded-xl border border-border bg-card p-5">
       <div className="relative w-14 h-14 mb-4">
-        <div className="w-14 h-14 rounded-full bg-primary/10 text-primary font-heading font-bold text-lg flex items-center justify-center">
-          {initial}
-        </div>
+        {showImg ? (
+          // eslint-disable-next-line @next/next/no-img-element -- onError fallback; images are unoptimized anyway
+          <img
+            src={member.img!}
+            alt={member.name}
+            onError={() => setImgFailed(true)}
+            className="w-14 h-14 rounded-full object-cover bg-muted"
+          />
+        ) : (
+          <div className="w-14 h-14 rounded-full bg-primary/10 text-primary font-heading font-bold text-lg flex items-center justify-center">
+            {initial}
+          </div>
+        )}
         <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center border-2 border-card">
           {member.serial}
         </span>

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { ManagementMember } from "@/types/management";
 
 function roleClasses(role: string) {
-  if (role === "Chairman") return "bg-highlight/15 text-highlight";
+  if (role === "Chairman" || role === "Chairperson") return "bg-highlight/15 text-highlight";
   if (role === "Member Secretary") return "bg-accent/15 text-accent";
   return "bg-primary/10 text-primary";
 }

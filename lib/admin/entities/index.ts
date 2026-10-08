@@ -25,6 +25,7 @@ import { classRoutineEntity } from "./class-routine";
 import { examRoutineEntity } from "./exam-routine";
 
 import { pagesEntity } from "./pages";
+import { aboutEntity } from "./about";
 import { heroSlidesEntity } from "./hero-slides";
 import { newsArticlesEntity } from "./news-articles";
 import { eventsEntity } from "./events";
@@ -87,6 +88,7 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   "exam-routine": examRoutineEntity,
 
   pages: pagesEntity,
+  about: aboutEntity,
   "hero-slides": heroSlidesEntity,
   "news-articles": newsArticlesEntity,
   events: eventsEntity,

@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToastManager } from "@/components/ui/toast";
 import PageHeader from "@/components/admin/PageHeader";
 import { FormField } from "./FormField";
-import { FieldArrayInput, LinkListInput } from "./FieldArray";
+import { FieldArrayInput, LinkListInput, StatListInput } from "./FieldArray";
 import type { EntitySchema } from "./form-types";
 import { isConnected } from "@/services/endpoints";
 import { useCreateEntity, useUpdateEntity } from "@/features/entity";
@@ -155,7 +155,7 @@ export default function EntityForm({
             <CardContent className="pt-5">
               <div className="grid gap-5 sm:grid-cols-2">
                 {section.fields.map((field) =>
-                  field.type === "json-list" || field.type === "link-list" ? (
+                  field.type === "json-list" || field.type === "link-list" || field.type === "stat-list" ? (
                     <div
                       key={field.name}
                       className={cn(
@@ -170,7 +170,14 @@ export default function EntityForm({
                       {field.helper && (
                         <p className="text-xs text-muted-foreground">{field.helper}</p>
                       )}
-                      {field.type === "link-list" ? (
+                      {field.type === "stat-list" ? (
+                        <StatListInput
+                          control={control}
+                          register={register}
+                          name={field.name}
+                          suggestions={field.options?.map((o) => o.value)}
+                        />
+                      ) : field.type === "link-list" ? (
                         <LinkListInput
                           control={control}
                           register={register}

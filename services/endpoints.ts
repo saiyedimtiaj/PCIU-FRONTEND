@@ -83,6 +83,9 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   events: { path: "/events", multipart: true },
   gallery: { path: "/galleries", multipart: true },
   menus: { path: "/menus" },
+  // One row, no per-id routes: GET/POST/PATCH/PUT `/about` all exist,
+  // every `/about/{id}` method 404s (verified live).
+  about: { path: "/about", multipart: true, singleton: true },
 
   "pcj-volumes": { path: "/pcj/volumes", multipart: true },
   "pcj-articles": { path: "/pcj/articles", multipart: true },

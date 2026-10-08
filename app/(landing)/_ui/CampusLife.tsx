@@ -118,7 +118,7 @@ export default async function CampusLife() {
 
   return (
     <section
-      className="relative overflow-hidden bg-white py-16 sm:py-20 md:py-24"
+      className="relative scroll-mt-24 overflow-hidden bg-white py-16 sm:py-20 md:py-24"
       id="campus-life"
     >
       {/* Layered thin arcs behind the heading with a gentle 180-degree turn */}

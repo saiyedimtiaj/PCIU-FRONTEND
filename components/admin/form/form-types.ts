@@ -25,6 +25,7 @@ export type FieldType =
   | "file"
   | "json-list"
   | "link-list"
+  | "stat-list"
   | "relation";
 
 export interface FieldOption {

@@ -48,3 +48,37 @@ export interface CampusBannerContent {
   quoteAccent: string;
   quoteSuffix: string;
 }
+
+/**
+ * Shape of `GET /about` — a single record holding every section of the
+ * About the University page. `quickFacts[].icon` is a PascalCase lucide
+ * name ("GraduationCap"), not an `IconName` key; `description` separates
+ * paragraphs with blank lines.
+ */
+export interface AboutUniversity {
+  bannerImage: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  heading: string;
+  description: string;
+  highlightQuote: string;
+  quickFacts: { icon: string; label: string; value: string }[];
+  campusImage: string;
+  campusLocation: string;
+  ctaTitle: string;
+  ctaSubtitle: string;
+  ctaButtonText: string;
+  ctaButtonLink: string;
+  visionTitle: string;
+  vision: string;
+  missionTitle: string;
+  mission: string;
+  strategyTitle: string;
+  strategy: string;
+  valuesTitle: string;
+  valuesDescription: string;
+  valuesPoints: string[];
+  bottomBannerImage: string;
+  bottomBannerText: string;
+}
