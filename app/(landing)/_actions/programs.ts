@@ -3,6 +3,7 @@
 import { publicFetch } from "@/lib/server-fetch";
 import { getFaculties } from "@/lib/api/home";
 import type { FacultyItem } from "@/types/home";
+import type { ProgramDetail } from "@/types/department";
 
 export interface ProgramFinderItem {
   id: number;
@@ -200,5 +201,18 @@ export async function getProgramFinderData(): Promise<{
       programs: [],
       error: true,
     };
+  }
+}
+
+export async function getProgramDetails(id: string): Promise<ProgramDetail | null> {
+  try {
+    const res = await publicFetch.get(`/programs/${id}`, {
+      next: { tags: ["programs", `program-${id}`] }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.data as ProgramDetail;
+  } catch {
+    return null;
   }
 }

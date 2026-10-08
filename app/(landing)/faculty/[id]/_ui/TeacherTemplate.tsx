@@ -22,6 +22,7 @@ import {
 import type { TeacherDetails } from "@/types/teacher";
 import { getMediaUrl } from "@/lib/utils/media";
 import { getInitials } from "@/lib/utils";
+import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -40,8 +41,16 @@ export default function TeacherTemplate({
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
       {/* Hero Header */}
-      <section className="relative w-full h-[250px] md:h-[350px] overflow-hidden bg-gradient-to-r from-[#1e3a8a] via-[#2B355A] to-[#0ea5e9]">
-        <div className="absolute inset-0 bg-[url('/images/pattern-light.svg')] opacity-10 mix-blend-overlay" />
+      <section className="relative w-full h-62.5 md:h-87.5 overflow-hidden bg-[#1e3a8a]">
+        <Image
+          src="/images/faculty-hero-bg.jpg"
+          alt="Academic Background"
+          fill
+          priority
+          className="object-cover"
+        />
+        {/* Dark elegant gradient overlay for readability and polish */}
+        <div className="absolute inset-0 bg-linear-to-b from-[#1e3a8a]/40 via-[#1e3a8a]/20 to-[#1e3a8a]/90 mix-blend-multiply" />
       </section>
 
       {/* Main Profile Info */}
@@ -207,9 +216,10 @@ export default function TeacherTemplate({
                   <h3 className="text-xl font-bold text-[#1e3a8a] font-heading mb-4 pb-2 border-b-2 border-[#0ea5e9] inline-block">
                     Biography
                   </h3>
-                  <div className="text-slate-600 leading-relaxed space-y-4 whitespace-pre-wrap">
-                    {teacher.bio}
-                  </div>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: teacher.bio }}
+                    className="text-slate-600 leading-relaxed space-y-4 whitespace-pre-wrap"
+                  />
                 </section>
               )}
               {teacher.teachingAreas && (
