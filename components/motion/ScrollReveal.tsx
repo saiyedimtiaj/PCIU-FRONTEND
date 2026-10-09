@@ -1,87 +1,45 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 
 type Direction = "left" | "right" | "up";
 
-const OFFSET = 48;
+const OFFSET = 24;
 
-function buildVariants(
-  direction: Direction,
-  delay: number,
-  prefersReducedMotion: boolean,
-): Variants {
-  if (prefersReducedMotion) {
-    return {
-      hidden: { opacity: 0 },
-      visible: {
-        opacity: 1,
-        transition: { duration: 0.3, delay },
-      },
-    };
-  }
-
-  const x = direction === "left" ? -OFFSET : direction === "right" ? OFFSET : 0;
-
-  const y = direction === "up" ? OFFSET : 0;
-
-  return {
-    hidden: { opacity: 0, x, y },
-    visible: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      transition: {
-        duration: 0.7,
-        ease: [0.16, 1, 0.3, 1],
-        delay,
-      },
-    },
-  };
-}
-
-export default function ScrollReveal({
-  children,
-  direction = "up",
-  delay = 0,
-  amount = 0.25,
-  className,
-}: {
+type ScrollRevealProps = {
   children: ReactNode;
   direction?: Direction;
   delay?: number;
   amount?: number;
   className?: string;
-}) {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+};
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+export default function ScrollReveal({
+  children,
+  direction = "up",
+  delay = 0,
+  amount = 0.15,
+  className,
+}: ScrollRevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: false, amount });
 
-    const updateMotionPreference = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    updateMotionPreference();
-
-    mediaQuery.addEventListener("change", updateMotionPreference);
-
-    return () => {
-      mediaQuery.removeEventListener("change", updateMotionPreference);
-    };
-  }, []);
-
-  const variants = buildVariants(direction, delay, prefersReducedMotion);
+  const x = direction === "left" ? -OFFSET : direction === "right" ? OFFSET : 0;
+  const y = direction === "up" ? OFFSET : 0;
 
   return (
     <motion.div
+      ref={ref}
       className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount }}
-      variants={variants}
+      initial={{ opacity: 0, x, y }}
+      animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x, y }}
+      transition={{
+        duration: 0.75,
+        ease: [0.22, 1, 0.36, 1],
+        delay,
+      }}
     >
       {children}
     </motion.div>
