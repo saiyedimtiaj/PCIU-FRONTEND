@@ -3,7 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Building2, GraduationCap, Search } from "lucide-react";
+import {
+  Building2,
+  ChevronDown,
+  GraduationCap,
+  Search,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { resolveUploadUrl } from "@/lib/upload-url";
@@ -61,6 +68,11 @@ export default function ProgramFinder({
   const visiblePrograms = showAll
     ? filteredPrograms
     : filteredPrograms.slice(0, 6);
+
+  const activeFilterCount =
+    (search.trim() ? 1 : 0) +
+    (levelFilter !== ALL_LEVELS ? 1 : 0) +
+    (facultyFilter !== ALL_FACULTIES ? 1 : 0);
 
   function clearFilters() {
     setSearch("");
@@ -144,7 +156,11 @@ export default function ProgramFinder({
       </div>
 
       <div className="container relative z-10 mx-auto px-4 sm:px-6 md:px-12">
-        <div className="mb-10 text-center sm:mb-14">
+        <div className="mb-8 text-center ">
+          <span className="mb-2 mt-2 inline-flex items-center gap-2 rounded-full bg-primary/5 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-primary">
+            <GraduationCap className="h-3.5 w-3.5" aria-hidden />
+            Academics
+          </span>
           <h2 className="font-heading mb-3 text-3xl font-bold text-primary sm:mb-4 sm:text-4xl md:text-5xl">
             Find Your Program
           </h2>
@@ -153,8 +169,10 @@ export default function ProgramFinder({
             undergraduate and graduate offerings
           </p>
         </div>
-        <div className="mx-auto mb-12 max-w-4xl">
-          <div className="flex flex-col gap-3 sm:gap-4 md:flex-row">
+
+        {/* Filter bar — unified card instead of three loose controls */}
+        <div className="mx-auto mb-4  max-w-4xl rounded-2xl border border-primary/10 bg-white p-3 shadow-[0_10px_30px_-18px_hsl(231_77%_22%/0.3)] sm:p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -162,33 +180,62 @@ export default function ProgramFinder({
                 placeholder="Search by department name..."
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                className="pl-12"
+                className="border-transparent bg-secondary/5 pl-12 focus-visible:border-primary/30 focus-visible:ring-primary/25"
                 aria-label="Search by department name"
               />
             </div>
-            <select
-              className="rounded-lg border border-input bg-card px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring sm:text-base"
-              aria-label="Filter by level"
-              value={levelFilter}
-              onChange={(event) => setLevelFilter(event.target.value)}
-            >
-              <option>{ALL_LEVELS}</option>
-              <option>Undergraduate</option>
-              <option>Graduate</option>
-            </select>
-            <select
-              className="rounded-lg border border-input bg-card px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring sm:text-base"
-              aria-label="Filter by faculty"
-              value={facultyFilter}
-              onChange={(event) => setFacultyFilter(event.target.value)}
-            >
-              <option>{ALL_FACULTIES}</option>
-              {faculties.map((faculty) => (
-                <option key={faculty}>{faculty}</option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2 text-muted-foreground sm:px-1">
+              <SlidersHorizontal
+                className="hidden h-4 w-4 shrink-0 sm:block"
+                aria-hidden
+              />
+              <div className="relative min-w-0 flex-1 sm:w-auto sm:flex-initial">
+                <select
+                  className="w-full min-w-0 appearance-none rounded-lg border border-input bg-secondary/5 px-4 py-3 pr-9 text-sm transition-colors focus:border-primary/30 focus:outline-none focus:ring-2 focus:ring-primary/25 focus-visible:ring-2 focus-visible:ring-primary/25 sm:text-base"
+                  aria-label="Filter by level"
+                  value={levelFilter}
+                  onChange={(event) => setLevelFilter(event.target.value)}
+                >
+                  <option>{ALL_LEVELS}</option>
+                  <option>Undergraduate</option>
+                  <option>Graduate</option>
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden
+                />
+              </div>
+              <div className="relative min-w-0 flex-1 sm:w-auto sm:flex-initial">
+                <select
+                  className="w-full min-w-0 appearance-none rounded-lg border border-input bg-secondary/5 px-4 py-3 pr-9 text-sm transition-colors focus:border-primary/30 focus:outline-none focus:ring-2 focus:ring-primary/25 focus-visible:ring-2 focus-visible:ring-primary/25 sm:text-base"
+                  aria-label="Filter by faculty"
+                  value={facultyFilter}
+                  onChange={(event) => setFacultyFilter(event.target.value)}
+                >
+                  <option>{ALL_FACULTIES}</option>
+                  {faculties.map((faculty) => (
+                    <option key={faculty}>{faculty}</option>
+                  ))}
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden
+                />
+              </div>
+            </div>
+            {activeFilterCount > 0 && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-lg px-3 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/25 sm:self-auto"
+              >
+                <X className="h-3.5 w-3.5" aria-hidden />
+                Clear ({activeFilterCount})
+              </button>
+            )}
           </div>
         </div>
+
         {error && (
           <div className="py-12 text-center text-muted-foreground">
             <p className="font-semibold text-primary">
@@ -197,77 +244,125 @@ export default function ProgramFinder({
             <p>Please try again later.</p>
           </div>
         )}
+        {!error && !!filteredPrograms.length && (
+          <p className="mb-5 text-sm font-medium text-muted-foreground">
+            Showing {visiblePrograms.length} of {filteredPrograms.length}{" "}
+            {filteredPrograms.length === 1 ? "program" : "programs"}
+          </p>
+        )}
         {!error && filteredPrograms.length > 0 && (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">
-            {visiblePrograms.map((program) => (
-              <div
-                key={program.id}
-                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border-l-4 border-r-4  border-primary/10 border-l-primary border-r-primary bg-linear-to-br from-white via-white to-secondary/5 p-6 shadow-[0_10px_30px_-18px_hsl(231_77%_22%/0.45)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-l-accent hover:border-r-accent hover:shadow-[0_18px_40px_-18px_hsl(230_70%_50%/0.45)] sm:p-7"
-              >
-                <div className="mb-4 flex items-center ">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white shadow-sm transition-transform duration-500 group-hover:scale-110">
-                    {program.icon ? (
-                      <Image
-                        src={resolveUploadUrl(program.icon)}
-                        alt=""
-                        width={48}
-                        height={48}
-                        className="h-full w-full rounded-xl object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <GraduationCap className="h-6 w-6" aria-hidden />
-                    )}
+            {visiblePrograms.map((program, index) => {
+              const isGraduate =
+                getLevelLabel(program.programType) === "Graduate";
+              return (
+                <div
+                  key={program.id}
+                  style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
+                  className="group relative flex h-full animate-card-in flex-col overflow-visible rounded-[1.4rem] border border-primary/10 bg-white opacity-0 shadow-[0_14px_36px_-20px_hsl(231_77%_22%/0.5)] transition-all duration-500 ease-out focus-within:-translate-y-2 focus-within:border-accent/40 focus-within:shadow-[0_26px_50px_-18px_hsl(230_70%_50%/0.4)] hover:-translate-y-2 hover:border-accent/40 hover:shadow-[0_26px_50px_-18px_hsl(230_70%_50%/0.4)] motion-reduce:animate-none motion-reduce:opacity-100"
+                >
+                  {/* Decorative header band with icon + faculty eyebrow */}
+                  <div className="relative overflow-hidden rounded-t-[1.4rem] bg-linear-to-br from-primary via-primary to-primary/85 px-6 pb-10 pt-6 sm:px-7 sm:pb-11 sm:pt-7">
+                    <span
+                      aria-hidden
+                      className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/5 transition-transform duration-700 ease-out group-hover:scale-125"
+                    />
+                    <span
+                      aria-hidden
+                      className="absolute -right-4 bottom-0 h-24 w-24 translate-y-1/2 rounded-full bg-accent/25 blur-2xl"
+                    />
+                    {/* Light sweep — a quick diagonal shine on hover to draw the eye */}
+                    <span
+                      aria-hidden
+                      className="absolute inset-0 -translate-x-[120%] skew-x-[-20deg] bg-linear-to-r from-transparent via-white/15 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-[120%] motion-reduce:hidden"
+                    />
+
+                    <div className="relative flex items-start justify-between">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-white shadow-inner backdrop-blur-sm ring-1 ring-white/20 transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-110">
+                        {program.icon ? (
+                          <Image
+                            src={resolveUploadUrl(program.icon)}
+                            alt=""
+                            width={56}
+                            height={56}
+                            className="h-full w-full rounded-2xl object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <GraduationCap className="h-7 w-7" aria-hidden />
+                        )}
+                      </div>
+
+                      {program.facultyName && (
+                        <span className="line-clamp-2 max-w-[45%] text-right text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/60">
+                          {program.facultyName}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <span className="inline-flex w-fit items-center rounded-r-4xl bg-primary px-3 py-1 text-xs font-semibold text-white">
-                    {getLevelLabel(program.programType)}
-                  </span>
-                </div>
-
-                <h3 className="font-heading mb-2 text-lg font-extrabold text-primary sm:text-2xl">
-                  {program.title}
-                </h3>
-
-                <div className="mb-4 flex flex-wrap items-start gap-x-3 gap-y-2 text-xs text-muted-foreground sm:text-sm ">
-                  <span className="inline-flex min-w-0 flex-1 items-start gap-1.5 font-bold text-primary">
-                    <Building2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-secondary"
-                      aria-hidden
-                    />
-
-                    <span className="line-clamp-2">
-                      {program.departmentName}
+                  {/* Combined level + duration pill, straddling the band/body seam */}
+                  <div className="relative z-10 -mt-5 flex justify-center px-6 sm:px-7">
+                    <span className="inline-flex items-center divide-x divide-primary/15 overflow-hidden rounded-full bg-white text-xs font-bold shadow-[0_8px_20px_-6px_hsl(231_77%_22%/0.35)] ring-1 ring-primary/10 transition-transform duration-300 ease-out group-hover:scale-105 sm:text-sm">
+                      <span
+                        className={`flex items-center gap-1.5 px-3.5 py-2 sm:px-4 ${
+                          isGraduate
+                            ? "bg-primary text-white"
+                            : "bg-accent text-primary"
+                        }`}
+                      >
+                        <GraduationCap className="h-3.5 w-3.5" aria-hidden />
+                        {getLevelLabel(program.programType)}
+                      </span>
+                      <span className="flex items-center gap-1.5 px-3.5 py-2 text-primary sm:px-4">
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                        {formatDuration(program.duration)}
+                      </span>
                     </span>
-                  </span>
+                  </div>
 
-                  <span className="flex  gap-1.5 font-bold text-primary ">
-                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
-                    <span> {formatDuration(program.duration)} </span>
-                  </span>
-                </div>
+                  {/* Body */}
+                  <div className="flex flex-1 flex-col px-6 pb-6 pt-4 text-left sm:px-7 sm:pb-7">
+                    <h3 className="font-heading mb-2.5 text-lg font-extrabold leading-snug text-primary sm:text-xl">
+                      {program.title}
+                    </h3>
 
-                <p className="mb-6 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                  {program.departmentSubtitle || ""}
-                </p>
-                <div className="mt-auto pt-2">
-                  <Button
-                    variant="outlinePrimary"
-                    className="group/btn relative w-full overflow-hidden border-2 px-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-accent hover:text-white"
-                    nativeButton={false}
-                    render={
-                      <Link href={`/department/${program.departmentSlug}`} />
-                    }
-                  >
-                    <span
-                      className="absolute inset-0 -translate-x-full bg-linear-to-r from-primary to-primary/90 transition-transform duration-300 group-hover/btn:translate-x-0"
-                      aria-hidden
-                    />
-                    <span className="relative">Learn More</span>
-                  </Button>
+                    <span className="mb-4 inline-flex items-center gap-1.5 self-start text-xs font-semibold text-secondary sm:text-sm">
+                      <Building2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                      <span className="line-clamp-1">
+                        {program.departmentName}
+                      </span>
+                    </span>
+
+                    <p className=" line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                      {program.departmentSubtitle || ""}
+                    </p>
+
+                    <div className="mt-auto border-t border-dashed border-primary/10 pt-4">
+                      <Button
+                        variant="outlinePrimary"
+                        className="group/btn relative w-full overflow-hidden border-2 px-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-accent hover:text-white"
+                        nativeButton={false}
+                        render={
+                          <Link
+                            href={`/department/${program.departmentSlug}`}
+                          />
+                        }
+                      >
+                        <span
+                          className="absolute inset-0 -translate-x-full bg-linear-to-r from-primary to-primary/90 transition-transform duration-300 group-hover/btn:translate-x-0"
+                          aria-hidden
+                        />
+                        <span className="relative inline-flex items-center gap-1.5">
+                          Learn More
+                          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
+                        </span>
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
         {!error && filteredPrograms.length > 6 && !showAll && (
@@ -287,7 +382,11 @@ export default function ProgramFinder({
           </div>
         )}
         {!error && filteredPrograms.length === 0 && (
-          <div className="py-12 text-center text-sm text-muted-foreground sm:text-base">
+          <div className="mx-auto max-w-md rounded-2xl border border-dashed border-primary/20 bg-secondary/5 py-12 text-center text-sm text-muted-foreground sm:text-base">
+            <Search
+              className="mx-auto mb-3 h-8 w-8 text-primary/40"
+              aria-hidden
+            />
             <p>
               {search
                 ? `No programs found for "${search}".`
@@ -303,6 +402,22 @@ export default function ProgramFinder({
           </div>
         )}
       </div>
+
+      <style jsx>{`
+        @keyframes card-in {
+          from {
+            opacity: 0;
+            transform: translateY(14px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        :global(.animate-card-in) {
+          animation: card-in 0.5s ease-out forwards;
+        }
+      `}</style>
     </section>
   );
 }
