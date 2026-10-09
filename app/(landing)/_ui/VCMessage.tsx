@@ -4,6 +4,7 @@ import { ArrowRight, Globe } from "lucide-react";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { SiGooglescholar, SiResearchgate } from "react-icons/si";
 
+import ScrollReveal from "@/components/motion/ScrollReveal";
 import { getVCInfo } from "@/lib/api/home";
 import { getMediaUrl } from "@/lib/utils/media";
 
@@ -208,7 +209,8 @@ export default async function VCMessage() {
               VC PROFILE
           ====================================================== */}
 
-          <div className="relative mx-auto w-full max-w-87.5">
+          <ScrollReveal direction="left" className="w-full">
+            <div className="relative mx-auto w-full max-w-87.5">
             {/* Decorative back panel */}
             <div className="absolute -left-4 -top-4 h-[calc(100%-25px)] w-[calc(100%-20px)] rounded-[28px] bg-primary sm:-left-5 sm:-top-5" />
 
@@ -277,13 +279,15 @@ export default async function VCMessage() {
                 </nav>
               )}
             </div>
-          </div>
+            </div>
+          </ScrollReveal>
 
           {/* =====================================================
               MESSAGE CONTENT
           ====================================================== */}
 
-          <div className="relative text-center md:text-left">
+          <ScrollReveal direction="right" delay={0.08} className="w-full">
+            <div className="relative text-center md:text-left">
             {/* Main heading */}
             <h2 className="mx-auto max-w-3xl font-heading text-[24px] font-bold leading-[1.08] tracking-tight text-[#082F67] sm:text-[32px] md:mx-0 md:text-[32px] lg:text-[32px] xl:text-[36px]">
               From the Vice Chancellor
@@ -322,11 +326,12 @@ export default async function VCMessage() {
                   <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                 </span>
               </Link>
+              </div>
             </div>
+            </ScrollReveal>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 }
 function normalizeUrl(value: string | string[] | null | undefined): string | null {

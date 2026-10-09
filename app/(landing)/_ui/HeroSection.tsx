@@ -7,7 +7,7 @@ export default async function HeroSection() {
   if (slides.length === 0) {
     return (
       <section
-        className="relative w-full h-[300px] sm:h-[300px] min-h-[380px] flex items-center justify-center bg-primary"
+        className="relative flex min-h-[300px] w-full items-center justify-center bg-primary sm:min-h-[400px] lg:min-h-[450px]"
         id="home"
       >
         <div className="container mx-auto px-4 sm:px-6 text-center text-white">
@@ -24,7 +24,7 @@ export default async function HeroSection() {
 
   return (
     <section
-      className="relative  h-[300px] w-full overflow-hidden bg-primary sm:h-[300px] md:h-[350px] lg:h-[380px] xl:h-[380px]"
+      className="relative h-[300px] w-full overflow-hidden bg-primary sm:h-[400px] lg:h-[450px]"
       id="home"
     >
       <HeroCarousel slides={slides} />
