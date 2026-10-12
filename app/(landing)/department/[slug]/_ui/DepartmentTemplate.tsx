@@ -214,11 +214,11 @@ export default function DepartmentTemplate({
                       <span className="absolute -top-6 -left-4 font-serif text-7xl text-[#0ea5e9]/15 font-bold leading-none select-none">
                         “
                       </span>
-                      {content.chairman.message.map((p, i) => (
-                        <p key={i} className="relative z-10">
-                          {p}
-                        </p>
-                      ))}
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: content.chairman.bio,
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
