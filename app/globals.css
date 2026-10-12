@@ -398,7 +398,8 @@
   --animate-float: float 2.8s ease-in-out infinite;
   --animate-border-flow: border-flow 4s linear infinite;
   --animate-border-flow-fast: border-flow 1.5s linear infinite;
-  --animate-arc-rotate: arc-rotate 18s ease-in-out infinite alternate;
+  --animate-arc-highlight: arc-highlight 4s linear infinite;
+  --animate-arc-highlight-reverse: arc-highlight-reverse 4s linear infinite;
   --animate-hero-zoom: hero-zoom 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -743,12 +744,21 @@
   }
 }
 
-@keyframes arc-rotate {
+@keyframes arc-highlight {
   from {
-    transform: rotate(0deg);
+    stroke-dashoffset: 0;
   }
   to {
-    transform: rotate(180deg);
+    stroke-dashoffset: -900;
+  }
+}
+
+@keyframes arc-highlight-reverse {
+  from {
+    stroke-dashoffset: -900;
+  }
+  to {
+    stroke-dashoffset: 0;
   }
 }
 

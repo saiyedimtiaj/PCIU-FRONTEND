@@ -31,13 +31,8 @@ export default async function Page() {
         <HeroSection />
         <Stats />
         <NoticeMarquee />
-
-        <HomeSectionReveal>
-          <VCMessage />
-        </HomeSectionReveal>
-        <HomeSectionReveal>
-          <ProgramFinder {...programFinderData} />
-        </HomeSectionReveal>
+        <VCMessage />
+        <ProgramFinder {...programFinderData} />
         <HomeSectionReveal>
           <Faculties />
         </HomeSectionReveal>
