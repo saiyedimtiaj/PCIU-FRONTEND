@@ -15,7 +15,6 @@ export default function DepartmentTemplate({
 }: {
   content: DepartmentContent;
 }) {
-  console.log(content);
   // Derive stat numbers for the stats bar
   const graduatesCount =
     content.stats?.find((s) => s.label.toLowerCase().includes("graduate"))
@@ -70,9 +69,9 @@ export default function DepartmentTemplate({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
             <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-2">
+              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
                 <StatCounter value={graduatesCount} />
-              </p>
+              </div>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Graduates
               </p>
@@ -80,9 +79,9 @@ export default function DepartmentTemplate({
           </Card>
           <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
             <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-2">
+              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
                 <StatCounter value={facultyCount} />
-              </p>
+              </div>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Faculty Members
               </p>
@@ -90,9 +89,9 @@ export default function DepartmentTemplate({
           </Card>
           <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
             <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-2">
+              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
                 <StatCounter value={programsCount} />
-              </p>
+              </div>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Programs Offered
               </p>
@@ -100,9 +99,9 @@ export default function DepartmentTemplate({
           </Card>
           <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
             <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-2">
+              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
                 <StatCounter value={publicationsCount} />
-              </p>
+              </div>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Publications
               </p>
@@ -163,10 +162,10 @@ export default function DepartmentTemplate({
                   {/* Photo Card styled like VC */}
                   <div className="relative mx-auto w-full max-w-[320px] md:mx-0">
                     {/* Decorative back panel */}
-                    <div className="absolute -left-3 -top-3 h-[calc(100%-24px)] w-[calc(100%-16px)] rounded-[24px] bg-[#1e3a8a] sm:-left-4 sm:-top-4" />
+                    <div className="absolute -left-3 -top-3 h-[calc(100%-24px)] w-[calc(100%-16px)] rounded-3xl bg-[#1e3a8a] sm:-left-4 sm:-top-4" />
 
                     {/* Main card */}
-                    <div className="relative rounded-[24px] bg-white p-3 shadow-xl sm:p-4 border border-slate-100">
+                    <div className="relative rounded-3xl bg-white p-3 shadow-xl sm:p-4 border border-slate-100">
                       {/* Accent corner - top right */}
                       <div className="absolute right-4 top-4 z-20 h-16 w-16 rounded-tr-xl border-r-[3px] border-t-[3px] border-[#0ea5e9]" />
 
@@ -174,7 +173,7 @@ export default function DepartmentTemplate({
                       <div className="absolute bottom-20 left-4 z-20 h-12 w-12 rounded-bl-xl border-b-[3px] border-l-[3px] border-[#0ea5e9]" />
 
                       {/* Photo */}
-                      <div className="group relative aspect-[4/5] overflow-hidden rounded-[18px] bg-slate-100">
+                      <div className="group relative aspect-4/5 overflow-hidden rounded-[18px] bg-slate-100">
                         {content.chairman.imageUrl ? (
                           <Image
                             src={getMediaUrl(content.chairman.imageUrl) || ""}
@@ -240,7 +239,7 @@ export default function DepartmentTemplate({
                       className="group bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md hover:border-[#0ea5e9]/30 transition-all duration-300 relative overflow-hidden block"
                     >
                       <div className="absolute top-0 right-0 w-24 h-24 bg-linear-to-bl from-[#0ea5e9]/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
-                      
+
                       <div className="flex items-start justify-between mb-4">
                         <div className="w-12 h-12 rounded-lg bg-[#1e3a8a]/5 flex items-center justify-center text-[#0ea5e9]">
                           <GraduationCap className="w-7 h-7" />
@@ -251,19 +250,27 @@ export default function DepartmentTemplate({
                           </span>
                         )}
                       </div>
-                      
+
                       <h3 className="font-heading font-bold text-[#1e3a8a] text-lg mb-4 line-clamp-2">
                         {program.name}
                       </h3>
-                      
+
                       <div className="grid grid-cols-2 gap-3 text-sm text-slate-600">
                         <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100">
-                          <span className="text-xs text-slate-400 font-medium uppercase">Duration</span>
-                          <span className="font-semibold text-slate-700">{program.duration}</span>
+                          <span className="text-xs text-slate-400 font-medium uppercase">
+                            Duration
+                          </span>
+                          <span className="font-semibold text-slate-700">
+                            {program.duration}
+                          </span>
                         </div>
                         <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100">
-                          <span className="text-xs text-slate-400 font-medium uppercase">Credit Hours</span>
-                          <span className="font-semibold text-slate-700">{program.credits}</span>
+                          <span className="text-xs text-slate-400 font-medium uppercase">
+                            Credit Hours
+                          </span>
+                          <span className="font-semibold text-slate-700">
+                            {program.credits}
+                          </span>
                         </div>
                       </div>
                     </Link>
