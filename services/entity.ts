@@ -1,5 +1,5 @@
 import { api } from "./http";
-import { toApi, fromApi } from "./case";
+import { toApi, fromApi, toCamel } from "./case";
 import { buildFormData, buildJsonBody } from "./form-data";
 import {
   collectionPath,
@@ -78,7 +78,38 @@ function encodeIsoDates(slug: string, payload: Dict): void {
  */
 const DECODE_ONLY_DATE_FIELDS: Partial<Record<string, string[]>> = {
   exam: ["start_date", "end_date"],
+  notices: ["notice_date"],
 };
+
+const ISO_DATETIME_FIELDS: Partial<Record<string, string[]>> = {
+  events: ["start_date_time", "end_date_time"],
+};
+
+const INPUT_DATETIME = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})/;
+
+function encodeIsoDateTimes(slug: string, payload: Dict): void {
+  for (const name of ISO_DATETIME_FIELDS[slug] ?? []) {
+    const key = toCamel(name);
+    const value = payload[key];
+    if (typeof value !== "string") continue;
+    const trimmed = value.trim();
+    if (!trimmed) {
+      delete payload[key];
+      continue;
+    }
+    const match = trimmed.match(INPUT_DATETIME);
+    if (match && trimmed.length === 16) payload[key] = `${match[1]}:00.000Z`;
+  }
+}
+
+function decodeIsoDateTimes(slug: string, mapped: Dict): void {
+  for (const name of ISO_DATETIME_FIELDS[slug] ?? []) {
+    const value = mapped[name];
+    if (typeof value !== "string") continue;
+    const match = value.match(INPUT_DATETIME);
+    mapped[name] = match ? match[1] : "";
+  }
+}
 
 function decodeIsoDates(slug: string, mapped: Dict): void {
   const fields = [
@@ -124,6 +155,7 @@ function encode(slug: string, values: Dict, omit: string[] = []): FormData | Dic
 
   joinLeavePeriod(payload);
   encodeIsoDates(slug, payload);
+  encodeIsoDateTimes(slug, payload);
 
   return cfg?.multipart ? buildFormData(payload) : buildJsonBody(payload);
 }
@@ -197,11 +229,41 @@ function decode(
 
   if (slug === "teacher") splitLeavePeriod(mapped);
   decodeIsoDates(slug, mapped);
+  decodeIsoDateTimes(slug, mapped);
 
   return {
     ...mapped,
     __id: String(mapped.id ?? mapped.__id ?? ""),
   } as EntityRecord;
+}
+
+const MAX_LIST_PAGES = 50;
+
+/**
+ * Some list endpoints (the class/exam routines) paginate at a fixed page size
+ * and ignore `limit`, returning `{ <rows>: [...], pagination: { hasNextPage } }`.
+ * The admin list pages client-side over the full set, so walk every page and
+ * merge the rows back into that same shape. Unpaginated responses pass through.
+ */
+async function fetchAllPages(path: string): Promise<unknown> {
+  const first = await api.get<unknown>(path);
+  if (!first || typeof first !== "object" || Array.isArray(first)) return first;
+
+  const pageInfo = (d: unknown) => (d as Dict)?.pagination as Dict | undefined;
+  if (pageInfo(first)?.hasNextPage !== true) return first;
+
+  const rowsKey = Object.keys(first as Dict).find((k) => Array.isArray((first as Dict)[k]));
+  if (!rowsKey) return first;
+
+  const rows = [...((first as Dict)[rowsKey] as unknown[])];
+  let current: unknown = first;
+  for (let page = 2; page <= MAX_LIST_PAGES && pageInfo(current)?.hasNextPage === true; page++) {
+    current = await api.get<unknown>(`${path}${path.includes("?") ? "&" : "?"}page=${page}`);
+    const more = (current as Dict)?.[rowsKey];
+    if (!Array.isArray(more) || more.length === 0) break;
+    rows.push(...more);
+  }
+  return { ...(first as Dict), [rowsKey]: rows };
 }
 
 export async function listEntities(
@@ -220,7 +282,7 @@ export async function listEntities(
   const qs = query.toString();
   const path = `${collectionPath(slug)}${qs ? `?${qs}` : ""}`;
 
-  const data = await api.get<unknown>(path);
+  const data = await fetchAllPages(path);
   const cfg = getEndpoint(slug);
 
   let rows: unknown;
@@ -272,7 +334,8 @@ export async function getEntity(
   nullableStringFields: string[] = [],
 ): Promise<EntityRecord | null> {
   const cfg = getEndpoint(slug);
-  const path = cfg?.singleton ? collectionPath(slug) : itemPath(slug, id);
+  const path =
+    cfg?.singleton || cfg?.getFromList ? collectionPath(slug) : itemPath(slug, id);
 
   const data = await api.get<Dict | Dict[] | null>(path);
   if (!data) return null;

@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import PageBanner from "@/components/shared/PageBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
+import EmptyState from "@/components/shared/EmptyState";
+import { getManagementTabs } from "@/lib/api/management";
 import ManagementTabs from "./_ui/ManagementTabs";
-import pageData from "@/content/management/page.json";
-import type { ManagementPageContent } from "@/types/management";
-
-const content = pageData as ManagementPageContent;
 
 export const metadata: Metadata = {
   title: "University Management | Port City International University",
@@ -14,7 +12,9 @@ export const metadata: Metadata = {
     "Meet the distinguished members who govern and guide Port City International University — Syndicate, Academic Council, and Proctorial Bodies.",
 };
 
-export default function ManagementPage() {
+export default async function ManagementPage() {
+  const tabs = await getManagementTabs();
+
   return (
     <div className="min-h-screen bg-background">
       <PageBanner
@@ -25,9 +25,13 @@ export default function ManagementPage() {
       <Breadcrumb items={[{ label: "Management" }]} />
 
       <div className="container mx-auto px-4 py-12">
-        <Suspense fallback={null}>
-          <ManagementTabs content={content} />
-        </Suspense>
+        {tabs.length ? (
+          <Suspense fallback={null}>
+            <ManagementTabs tabs={tabs} />
+          </Suspense>
+        ) : (
+          <EmptyState title="No management members yet" />
+        )}
       </div>
     </div>
   );

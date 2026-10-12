@@ -10,6 +10,7 @@ import type {
   PageSettingItem,
   StatItem,
 } from "@/types/home";
+import type { PublicProgramItem, ActiveAdmissionSchedule } from "@/types/admission-apply";
 import { cache } from "react";
 import { resolveUploadUrl } from "@/lib/upload-url";
 
@@ -67,12 +68,29 @@ export async function getHomeNotices(): Promise<NoticeItem[]> {
     const json: ApiResponse<NoticeItem[]> = await res.json();
 
     if (!json.success || !Array.isArray(json.data)) {
+      console.error("Home notices response was unsuccessful or invalid");
       return [];
     }
 
     return json.data
-      .filter((notice) => notice.isActive && notice.isHome)
-      .sort((a, b) => a.sortOrder - b.sortOrder);
+      .filter(
+        (notice) =>
+          notice.isActive === true &&
+          notice.isHome === true &&
+          typeof notice.title === "string" &&
+          notice.title.trim().length > 0,
+      )
+      .sort((a, b) => {
+        const firstOrder =
+          typeof a.sortOrder === "number" && Number.isFinite(a.sortOrder)
+            ? a.sortOrder
+            : 0;
+        const secondOrder =
+          typeof b.sortOrder === "number" && Number.isFinite(b.sortOrder)
+            ? b.sortOrder
+            : 0;
+        return firstOrder - secondOrder;
+      });
   } catch (error) {
     console.error("Error fetching home notices:", error);
     return [];
@@ -282,6 +300,104 @@ export async function getStats(): Promise<StatItem[]> {
       }));
   } catch (error) {
     console.error("Error fetching stats:", error);
+    return [];
+  }
+}
+
+export async function getPrograms(): Promise<PublicProgramItem[]> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return [];
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/home/programs`, {
+      next: { revalidate: 300 },
+    });
+
+    if (!res.ok) {
+      console.error(`Programs request failed: ${res.status}`);
+      return [];
+    }
+
+    const json: ApiResponse<PublicProgramItem[]> = await res.json();
+
+    if (!json.success || !Array.isArray(json.data)) {
+      return [];
+    }
+
+    return json.data.filter((program) => program.status);
+  } catch (error) {
+    console.error("Error fetching programs:", error);
+    return [];
+  }
+}
+
+export async function getActiveAdmissionSchedule(): Promise<ActiveAdmissionSchedule | null> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return null;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/admission/schedule`, {
+      next: { revalidate: 300 },
+    });
+
+    if (!res.ok) {
+      console.error(`Admission schedule request failed: ${res.status}`);
+      return null;
+    }
+
+    const json: ApiResponse<unknown> = await res.json();
+    const data = json.data;
+
+    if (
+      !json.success ||
+      !data ||
+      typeof data !== "object" ||
+      !("semesterName" in data) ||
+      typeof (data as { semesterName?: unknown }).semesterName !== "string"
+    ) {
+      return null;
+    }
+
+    return data as ActiveAdmissionSchedule;
+  } catch (error) {
+    console.error("Error fetching admission schedule:", error);
+    return null;
+  }
+}
+
+/** --------- Research section settings ---------- */
+export async function getResearchSettings(): Promise<PageSettingItem[]> {
+  if (!API_BASE_URL) {
+    console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
+    return [];
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/home/settings/page/Research`, {
+      next: { revalidate: 300 },
+    });
+
+    if (!res.ok) {
+      if (res.status !== 404) {
+        console.error(`Research settings request failed: ${res.status}`);
+      }
+      return [];
+    }
+
+    const json: ApiResponse<PageSettingItem[]> = await res.json();
+
+    if (!json.success || !Array.isArray(json.data)) {
+      console.error("Research settings response was unsuccessful or invalid");
+      return [];
+    }
+
+    return json.data.filter((item) => item.status);
+  } catch (error) {
+    console.error("Error fetching research settings:", error);
     return [];
   }
 }

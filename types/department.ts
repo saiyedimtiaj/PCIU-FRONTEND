@@ -16,7 +16,8 @@ export interface DepartmentStat {
 export interface DepartmentChairman {
   name: string;
   designation: string;
-  message: string[];
+  imageUrl?: string;
+  bio: string;
 }
 
 export interface DepartmentOverview {
@@ -30,6 +31,7 @@ export interface DepartmentFacility {
 }
 
 export interface DepartmentProgram {
+  id: number;
   name: string;
   duration: string;
   credits: string;
@@ -93,12 +95,14 @@ export interface DepartmentTuitionFee {
 }
 
 export interface DepartmentContent {
+  id: number;
   slug: string;
+  image?: string;
   chairmanHeading: string;
   facilitiesHeading: string | null;
   hero: DepartmentHero;
   stats?: DepartmentStat[];
-  chairman: DepartmentChairman;
+  chairman: DepartmentChairman | null;
   overview: DepartmentOverview;
   facilities: DepartmentFacility[];
   programs: DepartmentProgram[];
@@ -146,7 +150,8 @@ export interface ApiDepartmentResponse {
   chairman: {
     name: string;
     designation: string;
-    message?: string[];
+    bio: string;
+    imageUrl?: string;
   } | null;
 }
 
@@ -190,4 +195,27 @@ export interface ApiTuitionFee {
   credit?: string | number;
   perCreditAmount?: string | number;
   totalFees?: number;
+}
+
+export interface ApiProgram {
+  id: number;
+  title?: string;
+  duration?: string | number;
+  credit?: string | number;
+  perCreditAmount?: string | number;
+  programType?: string;
+}
+
+export interface ProgramDetail extends ApiProgram {
+  department?: {
+    id: number;
+    name: string;
+    shortName: string;
+    slug: string;
+    faculty?: {
+      id: number;
+      name: string;
+      slug: string;
+    };
+  };
 }

@@ -41,6 +41,11 @@ function pageTitle(pathname: string) {
     return `Add ${ENTITY_REGISTRY[newMatch].title}`;
   }
 
+  const bulkMatch = pathname.match(/^\/admin\/[^/]+\/([^/]+)\/bulk$/)?.[1];
+  if (bulkMatch && ENTITY_REGISTRY[bulkMatch]) {
+    return `Bulk Add ${ENTITY_REGISTRY[bulkMatch].pluralTitle ?? pluralize(ENTITY_REGISTRY[bulkMatch].title)}`;
+  }
+
   const listMatch = pathname.match(/^\/admin\/[^/]+\/([^/]+)$/)?.[1];
   if (listMatch && ENTITY_REGISTRY[listMatch]) {
     const entity = ENTITY_REGISTRY[listMatch];

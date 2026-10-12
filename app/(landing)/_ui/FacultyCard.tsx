@@ -73,7 +73,7 @@ export default function FacultyCard({
 
         <div className="mt-auto pt-2">
           <Link
-            href={`/faculties?faculty=${encodeURIComponent(slug)}`}
+            href={`/faculties/${encodeURIComponent(slug)}`}
             className="group/btn relative inline-flex w-full items-center justify-center overflow-hidden rounded-lg border-2 border-primary/20 px-4 py-2.5 text-sm font-semibold text-primary transition-all duration-300 hover:border-accent hover:text-white"
           >
             <span

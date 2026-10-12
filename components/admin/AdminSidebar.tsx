@@ -236,13 +236,16 @@ function SidebarBody({
         className="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-sidebar-primary/10 blur-3xl"
       />
 
-      <div
+      <Link
+        href="/"
+        aria-label="Go to PCIU home"
+        title="Go to home"
         className={cn(
-          "relative flex items-center gap-3 px-4 py-5",
+          "relative flex items-center gap-3 px-4 py-5 transition-opacity hover:opacity-90",
           collapsed && "justify-center px-2"
         )}
       >
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-accent shadow-glow ring-1 ring-white/10">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white">
           <Image
             src="/images/pciu-logo.png"
             alt="PCIU"
@@ -261,7 +264,7 @@ function SidebarBody({
             </p>
           </div>
         )}
-      </div>
+      </Link>
 
       <nav className="scrollbar-thin relative flex-1 space-y-4 overflow-y-auto px-2.5 pb-2">
         <div className="space-y-0.5">

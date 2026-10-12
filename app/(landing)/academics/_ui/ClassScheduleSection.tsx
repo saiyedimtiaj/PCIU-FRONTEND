@@ -1,12 +1,16 @@
 import { AlertTriangle } from "lucide-react";
 import InfoCard from "@/components/shared/InfoCard";
-import type { AcademicsPageContent } from "@/types/academics";
+import type { AcademicsPageContent, Semester } from "@/types/academics";
 import ClassRoutineInteractive from "./ClassRoutineInteractive";
 
 export default function ClassScheduleSection({
   content,
+  semesters,
+  currentSemesterId,
 }: {
   content: AcademicsPageContent["classSchedule"];
+  semesters: Semester[];
+  currentSemesterId?: number;
 }) {
   return (
     <div className="space-y-6">
@@ -37,6 +41,8 @@ export default function ClassScheduleSection({
       <ClassRoutineInteractive 
         routines={content.routines} 
         timeSlots={content.timeSlots} 
+        semesters={semesters}
+        currentSemesterId={currentSemesterId}
       />
 
       <InfoCard className="border-l-4 border-l-accent">

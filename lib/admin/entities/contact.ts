@@ -33,6 +33,7 @@ export const contactEntity: EntitySchema<typeof contactSchema> = {
           label: "Type",
           type: "enum",
           required: true,
+          immutableOnEdit: true,
           options: [
             { label: "Department", value: "DEPARTMENT" },
             { label: "Security", value: "SECURITY" },

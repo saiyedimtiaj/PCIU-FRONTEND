@@ -1,7 +1,12 @@
 import { Suspense } from "react";
 import ClassScheduleSection from "../_ui/ClassScheduleSection";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getLiveClassRoutines, getLiveClassTimeSlots } from "@/lib/academics/live";
+import {
+  getCurrentSemesterId,
+  getLiveClassRoutines,
+  getLiveClassTimeSlots,
+  getLiveSemesters,
+} from "@/lib/academics/live";
 
 export default function ClassSchedulePage() {
   return (
@@ -20,10 +25,17 @@ export default function ClassSchedulePage() {
 }
 
 async function ClassScheduleData() {
-  const [routines, timeSlots] = await Promise.all([
+  const [routines, timeSlots, semesters] = await Promise.all([
     getLiveClassRoutines(),
     getLiveClassTimeSlots(),
+    getLiveSemesters(),
   ]);
 
-  return <ClassScheduleSection content={{ routines, timeSlots }} />;
+  return (
+    <ClassScheduleSection
+      content={{ routines, timeSlots }}
+      semesters={semesters}
+      currentSemesterId={getCurrentSemesterId(semesters)}
+    />
+  );
 }

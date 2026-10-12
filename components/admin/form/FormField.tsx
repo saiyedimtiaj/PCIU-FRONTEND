@@ -640,7 +640,9 @@ export function FormField({ field, control, register, error, mode = "create" }: 
                   <span className="block truncate text-xs text-muted-foreground">
                     {picked
                       ? `${(picked.size / 1024).toFixed(0)} KB selected`
-                      : existing || "No file selected yet"}
+                      : existing
+                        ? existing.split("/").pop()
+                        : "No file selected yet"}
                   </span>
                 </span>
               </label>
@@ -651,6 +653,17 @@ export function FormField({ field, control, register, error, mode = "create" }: 
                 onChange={(e) => rhf.onChange(e.target.files?.[0] ?? existing)}
                 onBlur={rhf.onBlur}
               />
+              {existing && !picked && (
+                <a
+                  href={resolveUploadUrl(existing)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                >
+                  <Paperclip className="size-3.5" />
+                  View current file
+                </a>
+              )}
             </FieldShell>
           );
         }}
@@ -729,13 +742,18 @@ export function FormField({ field, control, register, error, mode = "create" }: 
         control={control}
         name={field.name}
         render={({ field: rhf }) => (
-          <FieldShell field={field} error={error}>
+          <FieldShell field={lockedHelper} error={error} locked={locked}>
             <Select
               items={options}
               value={rhf.value ?? ""}
               onValueChange={(value) => rhf.onChange(value ?? "")}
+              disabled={locked}
             >
-              <SelectTrigger id={field.name} aria-invalid={!!error}>
+              <SelectTrigger
+                id={field.name}
+                aria-invalid={!!error}
+                className={cn(locked && "cursor-not-allowed bg-muted/60 text-muted-foreground")}
+              >
                 <SelectValue placeholder={field.placeholder ?? `Select ${field.label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>

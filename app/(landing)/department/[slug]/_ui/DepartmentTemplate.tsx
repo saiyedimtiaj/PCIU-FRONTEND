@@ -1,12 +1,14 @@
 import Link from "next/link";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import type { DepartmentContent } from "@/types/department";
 import { DepartmentNav } from "./DepartmentNav";
 import { FacultyCarousel } from "./FacultyCarousel";
 import Image from "next/image";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
+import { getMediaUrl } from "@/lib/utils/media";
+import StatCounter from "@/app/(landing)/_ui/StatCounter";
 
 export default function DepartmentTemplate({
   content,
@@ -31,7 +33,7 @@ export default function DepartmentTemplate({
   return (
     <div className="min-h-screen bg-slate-50/50">
       {/* Hero */}
-      <section className="relative bg-[#2B355A] py-16 md:py-24 overflow-hidden">
+      <section className="relative bg-[#2B355A] pt-16 md:pt-24 pb-28 md:pb-36 overflow-hidden">
         <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-3xl">
             <span className="inline-block bg-accent text-black text-xs font-bold px-3 py-1 rounded-full mb-6">
@@ -55,50 +57,56 @@ export default function DepartmentTemplate({
           </div>
         </div>
         <Image
-          src={"/images/hero-campus.jpg"}
+          src={getMediaUrl(content.image) || "/images/hero-campus.jpg"}
           alt="hero background"
           fill
           className="object-cover opacity-20"
         />
       </section>
 
-      {/* Stats Bar */}
-      <div className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-100">
-            <div className="text-center px-4">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
-                {graduatesCount}
-              </p>
+      {/* Stats Cards - Overlapping Hero */}
+      <div className="container relative z-20 mx-auto px-4 -mt-16 md:-mt-20 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
+                <StatCounter value={graduatesCount} />
+              </div>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Graduates
               </p>
-            </div>
-            <div className="text-center px-4">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
-                {facultyCount}
-              </p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
+                <StatCounter value={facultyCount} />
+              </div>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Faculty Members
               </p>
-            </div>
-            <div className="text-center px-4">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
-                {programsCount}
-              </p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
+                <StatCounter value={programsCount} />
+              </div>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Programs Offered
               </p>
-            </div>
-            <div className="text-center px-4">
-              <p className="text-4xl font-bold text-[#1e3a8a] mb-1">
-                {publicationsCount}
-              </p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
+                <StatCounter value={publicationsCount} />
+              </div>
               <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                 Publications
               </p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -107,18 +115,28 @@ export default function DepartmentTemplate({
           {/* Sidebar Nav */}
           <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-24 z-10">
             <DepartmentNav
+              title="Department Menu"
               sections={[
-                { id: "overview", label: "Overview" },
+                { id: "overview", label: "Overview", icon: "home" },
                 {
                   id: "chairman",
                   label: content.chairmanHeading || "Chairman's Message",
+                  icon: "users",
                 },
-                { id: "programs", label: "Programs Offered" },
-                { id: "tuition", label: "Tuition Fee" },
-                { id: "courses", label: "Course Details" },
-                { id: "faculty", label: "Faculty Members" },
-                { id: "research", label: "Research Activities" },
-                { id: "events", label: "Events & Notices" },
+                {
+                  id: "programs",
+                  label: "Programs Offered",
+                  icon: "graduation-cap",
+                },
+                { id: "tuition", label: "Tuition Fee", icon: "file-text" },
+                { id: "courses", label: "Course Details", icon: "book-open" },
+                { id: "faculty", label: "Faculty Members", icon: "users" },
+                {
+                  id: "research",
+                  label: "Research Activities",
+                  icon: "microscope",
+                },
+                { id: "events", label: "Events & Notices", icon: "calendar" },
               ]}
             />
           </aside>
@@ -132,59 +150,177 @@ export default function DepartmentTemplate({
               </h2>
               <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
                 {content.overview.content.map((p, i) => (
-                  <p key={i}>{p}</p>
+                  <p dangerouslySetInnerHTML={{ __html: p }} key={i}></p>
                 ))}
               </div>
             </section>
 
             {/* Chairman message */}
-            <section id="chairman" className="scroll-mt-24">
-              <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
-                {content.chairmanHeading}
-              </h2>
-              <div className="flex flex-col md:flex-row gap-8">
-                <div className="shrink-0 text-center w-full md:w-48 flex flex-col items-center">
-                  <Avatar className="w-full h-auto aspect-square rounded-xl bg-slate-200 border text-slate-500 font-heading flex items-center justify-center mb-4">
-                    <AvatarFallback className="text-5xl font-bold bg-transparent rounded-xl">
-                      {getInitials(content.chairman.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <p className="font-bold text-[#1e3a8a]">
-                    {content.chairman.name}
-                  </p>
-                  <p className="text-sm text-[#475569]">
-                    {content.chairman.designation}
-                  </p>
+            {content.chairman && (
+              <section id="chairman" className="scroll-mt-24">
+                <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-10 md:gap-14 items-start pt-6">
+                  {/* Photo Card styled like VC */}
+                  <div className="relative mx-auto w-full max-w-[320px] md:mx-0">
+                    {/* Decorative back panel */}
+                    <div className="absolute -left-3 -top-3 h-[calc(100%-24px)] w-[calc(100%-16px)] rounded-3xl bg-[#1e3a8a] sm:-left-4 sm:-top-4" />
+
+                    {/* Main card */}
+                    <div className="relative rounded-3xl bg-white p-3 shadow-xl sm:p-4 border border-slate-100">
+                      {/* Accent corner - top right */}
+                      <div className="absolute right-4 top-4 z-20 h-16 w-16 rounded-tr-xl border-r-[3px] border-t-[3px] border-[#0ea5e9]" />
+
+                      {/* Accent corner - bottom left */}
+                      <div className="absolute bottom-20 left-4 z-20 h-12 w-12 rounded-bl-xl border-b-[3px] border-l-[3px] border-[#0ea5e9]" />
+
+                      {/* Photo */}
+                      <div className="group relative aspect-4/5 overflow-hidden rounded-[18px] bg-slate-100">
+                        {content.chairman.imageUrl ? (
+                          <Image
+                            src={getMediaUrl(content.chairman.imageUrl) || ""}
+                            alt={content.chairman.name}
+                            fill
+                            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center bg-slate-200 text-5xl font-bold text-slate-400 font-heading">
+                            {getInitials(content.chairman.name)}
+                          </div>
+                        )}
+                        {/* Subtle image overlay */}
+                        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#1e3a8a]/20 via-transparent to-transparent" />
+                      </div>
+
+                      {/* Name / Designation Tag */}
+                      <div className="relative z-30 -mt-6 ml-3 mr-3 rounded-xl bg-[#1e3a8a] px-4 py-3 shadow-lg">
+                        <h3 className="font-heading text-sm font-bold leading-snug text-white">
+                          {content.chairman.name}
+                        </h3>
+                        <p className="mt-0.5 text-xs font-semibold tracking-wide text-[#0ea5e9]">
+                          {content.chairman.designation}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Message Content */}
+                  <div className="relative">
+                    <h2 className="font-heading font-bold text-2xl md:text-3xl text-[#1e3a8a] mb-2">
+                      {content.chairmanHeading}
+                    </h2>
+                    {/* Accent line */}
+                    <div className="mb-6 h-1 w-24 rounded-full bg-linear-to-r from-[#1e3a8a] to-[#0ea5e9]" />
+
+                    <div className="space-y-4 text-base text-muted-foreground leading-relaxed relative">
+                      <span className="absolute -top-6 -left-4 font-serif text-7xl text-[#0ea5e9]/15 font-bold leading-none select-none">
+                        “
+                      </span>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: content.chairman.bio,
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-4 text-base text-muted-foreground leading-relaxed">
-                  {content.chairman.message.map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
-                </div>
-              </div>
-            </section>
+              </section>
+            )}
 
             {/* Programs */}
             <section id="programs" className="scroll-mt-24">
+              <style>{`
+                @keyframes progBorderChase {
+                  to { stroke-dashoffset: -100; }
+                }
+              `}</style>
+
               <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
                 Programs Offered
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {content.programs.length > 0 ? (
                   content.programs.map((program) => (
-                    <div
+                    <Link
+                      href={`/programs/${program.id}`}
                       key={program.name}
-                      className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow"
+                      className="group relative bg-white border border-slate-200/90 rounded-xl p-6 hover:shadow-xl hover:border-transparent transition-all duration-300 overflow-hidden block hover:-translate-y-1"
                     >
-                      <GraduationCap className="w-8 h-8 text-[#0ea5e9] mb-4" />
-                      <h3 className="font-bold text-[#1e3a8a] text-lg mb-4">
+                      <div className="absolute top-0 right-0 w-28 h-28 bg-linear-to-bl from-[#0ea5e9]/10 via-[#0ea5e9]/5 to-transparent rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125" />
+
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="w-12 h-12 rounded-lg bg-[#1e3a8a]/5 flex items-center justify-center text-[#0ea5e9] transition-colors duration-300 group-hover:bg-[#0ea5e9] group-hover:text-white shadow-xs">
+                          <GraduationCap className="w-7 h-7" />
+                        </div>
+                        {program.description && (
+                          <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wider group-hover:bg-[#0ea5e9]/10 group-hover:text-[#0ea5e9] transition-colors">
+                            {program.description}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="font-heading font-bold text-[#1e3a8a] text-lg mb-4 line-clamp-2 transition-colors duration-300 group-hover:text-[#0ea5e9]">
                         {program.name}
                       </h3>
-                      <div className="space-y-1 text-sm text-slate-500">
-                        <p>Duration: {program.duration}</p>
-                        <p>Credit Hours: {program.credits}</p>
+
+                      <div className="grid grid-cols-2 gap-3 text-sm text-slate-600">
+                        <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100 group-hover:border-slate-200/60 transition-colors">
+                          <span className="text-xs text-slate-400 font-medium uppercase">
+                            Duration
+                          </span>
+                          <span className="font-semibold text-slate-700">
+                            {program.duration}
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100 group-hover:border-slate-200/60 transition-colors">
+                          <span className="text-xs text-slate-400 font-medium uppercase">
+                            Credit Hours
+                          </span>
+                          <span className="font-semibold text-slate-700">
+                            {program.credits}
+                          </span>
+                        </div>
                       </div>
-                    </div>
+
+                      {/* Traveling animated gradient border */}
+                      <svg
+                        className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+                        viewBox="0 0 100 100"
+                        preserveAspectRatio="none"
+                        aria-hidden
+                      >
+                        <defs>
+                          <linearGradient
+                            id={`prog-chase-${program.id}`}
+                            x1="0%"
+                            y1="0%"
+                            x2="100%"
+                            y2="0%"
+                          >
+                            <stop offset="0%" stopColor="#1e3a8a" />
+                            <stop offset="40%" stopColor="#0ea5e9" />
+                            <stop offset="70%" stopColor="#38bdf8" />
+                            <stop offset="100%" stopColor="#f59e0b" />
+                          </linearGradient>
+                        </defs>
+                        <rect
+                          x="0.6"
+                          y="0.6"
+                          width="98.8"
+                          height="98.8"
+                          rx="3"
+                          ry="3"
+                          fill="none"
+                          stroke={`url(#prog-chase-${program.id})`}
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                          pathLength={100}
+                          strokeDasharray="25 75"
+                          className="opacity-75 transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_0_6px_rgba(14,165,233,0.5)]"
+                          style={{
+                            animation: "progBorderChase 4s linear infinite",
+                          }}
+                        />
+                      </svg>
+                    </Link>
                   ))
                 ) : (
                   <div className="sm:col-span-2 bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500 italic">
@@ -294,10 +430,16 @@ export default function DepartmentTemplate({
                   Faculty Members
                 </h2>
                 {content.facultyMembers.length > 0 && (
-                  <Link href={`/department/${content.slug}/teachers`}>
-                    <Button variant="outlineAccent" className="rounded-full shrink-0">
+                  <Link
+                    href={`/department/${content.slug}/teachers`}
+                    className="group w-fit inline-flex items-center gap-3 rounded-full border border-[#0ea5e9]/40 bg-white/80 py-1.5 pl-5 pr-1.5 shadow-[0_6px_20px_rgba(8,47,103,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1e3a8a] hover:bg-white hover:shadow-[0_10px_28px_rgba(8,47,103,0.14)] shrink-0"
+                  >
+                    <span className="font-heading text-sm font-semibold tracking-wide text-[#1e3a8a] transition-colors duration-300 sm:text-base">
                       View All Faculty
-                    </Button>
+                    </span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0ea5e9] text-white shadow-[0_4px_12px_rgba(14,165,233,0.25)] transition-all duration-300 group-hover:bg-[#1e3a8a] group-hover:shadow-[0_5px_16px_rgba(30,58,138,0.25)]">
+                      <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </span>
                   </Link>
                 )}
               </div>

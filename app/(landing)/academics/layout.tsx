@@ -6,6 +6,7 @@ import AcademicsNav from "./_ui/AcademicsNav";
 const NAV_ITEMS: SectionNavItem[] = [
   { id: "exam-schedule", label: "Exam Schedule", icon: "calendar" },
   { id: "class-schedule", label: "Class Schedule", icon: "clock" },
+  { id: "free-rooms", label: "Check Free Rooms", icon: "building" },
   { id: "result-grading", label: "Rules & Grading System", icon: "award" },
   {
     id: "examination-policies",
@@ -19,7 +20,6 @@ const NAV_ITEMS: SectionNavItem[] = [
     icon: "check-circle",
   },
 ];
-
 export const metadata: Metadata = {
   title: "Academics | Port City International University",
   description:

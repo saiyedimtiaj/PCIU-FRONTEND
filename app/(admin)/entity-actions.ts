@@ -11,6 +11,7 @@ import {
 } from "@/services/entity";
 import { isConnected } from "@/services/endpoints";
 import { getEntitySchema } from "@/lib/admin/entities";
+import { expireAcademicsCache } from "./academics-cache";
 
 
 export type ActionResult<T> =
@@ -135,7 +136,9 @@ export async function createEntityAction(
 ): Promise<ActionResult<EntityRecord>> {
   const problem = guard(slug);
   if (problem) return { ok: false, error: problem };
-  return run(() => createEntity(slug, values, fieldNamesFor(slug)));
+  const result = await run(() => createEntity(slug, values, fieldNamesFor(slug)));
+  if (result.ok) expireAcademicsCache(slug);
+  return result;
 }
 
 export async function updateEntityAction(
@@ -145,9 +148,11 @@ export async function updateEntityAction(
 ): Promise<ActionResult<EntityRecord>> {
   const problem = guard(slug);
   if (problem) return { ok: false, error: problem };
-  return run(() =>
+  const result = await run(() =>
     updateEntity(slug, id, values, fieldNamesFor(slug), immutableFieldsFor(slug)),
   );
+  if (result.ok) expireAcademicsCache(slug);
+  return result;
 }
 
 export async function deleteEntityAction(
@@ -156,8 +161,10 @@ export async function deleteEntityAction(
 ): Promise<ActionResult<null>> {
   const problem = guard(slug);
   if (problem) return { ok: false, error: problem };
-  return run(async () => {
+  const result = await run(async () => {
     await deleteEntity(slug, id);
     return null;
   });
+  if (result.ok) expireAcademicsCache(slug);
+  return result;
 }

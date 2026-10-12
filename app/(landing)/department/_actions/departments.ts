@@ -9,6 +9,7 @@ import type {
   ApiResearch,
   ApiCourse,
   ApiTuitionFee,
+  ApiProgram,
 } from "@/types/department";
 
 export async function getDepartmentBySlug(
@@ -23,13 +24,33 @@ export async function getDepartmentBySlug(
       const data = await res.json();
       if (data.success && data.data) {
         const deptId = data.data.id;
-        
-        const [teachersRes, eventsRes, researchRes, coursesRes, tuitionRes] = await Promise.all([
-          publicFetch.get(`/teachers/department/${deptId}`, { next: { tags: ["department-teachers", slug] } }),
-          publicFetch.get(`/department/events/${deptId}`, { next: { tags: ["department-events", slug] } }),
-          publicFetch.get(`/department/research-centres/${deptId}`, { next: { tags: ["department-research", slug] } }),
-          publicFetch.get(`/department/courses/${deptId}`, { next: { tags: ["department-courses", slug] } }),
-          publicFetch.get(`/admission/tuitionfees`, { next: { tags: ["tuitionfees"] } }),
+
+        const [
+          teachersRes,
+          eventsRes,
+          researchRes,
+          coursesRes,
+          tuitionRes,
+          programsRes,
+        ] = await Promise.all([
+          publicFetch.get(`/teachers/department/${deptId}`, {
+            next: { tags: ["department-teachers", slug] },
+          }),
+          publicFetch.get(`/department/events/${deptId}`, {
+            next: { tags: ["department-events", slug] },
+          }),
+          publicFetch.get(`/department/research-centres/${deptId}`, {
+            next: { tags: ["department-research", slug] },
+          }),
+          publicFetch.get(`/department/courses/${deptId}`, {
+            next: { tags: ["department-courses", slug] },
+          }),
+          publicFetch.get(`/admission/tuitionfees`, {
+            next: { tags: ["tuitionfees"] },
+          }),
+          publicFetch.get(`/department/programs/${slug}`, {
+            next: { tags: ["department-programs", slug] },
+          }),
         ]);
 
         let teachers: ApiTeacher[] = [];
@@ -69,11 +90,29 @@ export async function getDepartmentBySlug(
           const tfData = await tuitionRes.json();
           if (tfData.success && Array.isArray(tfData.data)) {
             // Filter global tuition fees by this specific department's name
-            tuitionFees = tfData.data.filter((fee: ApiTuitionFee) => fee.departmentName === data.data.name);
+            tuitionFees = tfData.data.filter(
+              (fee: ApiTuitionFee) => fee.departmentName === data.data.name,
+            );
           }
         }
 
-        return mapApiDepartmentToContent(data.data, teachers, events, research, courses, tuitionFees);
+        let programs: ApiProgram[] = [];
+        if (programsRes.ok) {
+          const pData = await programsRes.json();
+          if (pData.success && Array.isArray(pData.data)) {
+            programs = pData.data;
+          }
+        }
+
+        return mapApiDepartmentToContent(
+          data.data,
+          teachers,
+          events,
+          research,
+          courses,
+          tuitionFees,
+          programs,
+        );
       }
     }
   } catch (error) {
@@ -93,9 +132,12 @@ function mapApiDepartmentToContent(
   research: ApiResearch[],
   courses: ApiCourse[],
   tuitionFees: ApiTuitionFee[],
+  programs: ApiProgram[],
 ): DepartmentContent {
   return {
+    id: apiData.id,
     slug: apiData.slug,
+    image: apiData.image,
     chairmanHeading: "Message from the Chairman",
     facilitiesHeading: "Department Facilities",
     hero: {
@@ -111,19 +153,23 @@ function mapApiDepartmentToContent(
       ? {
           name: apiData.chairman.name,
           designation: apiData.chairman.designation,
-          message: apiData.chairman.message || [],
+          bio: apiData.chairman.bio,
+          imageUrl: apiData.chairman.imageUrl,
         }
-      : {
-          name: "Chairman Name",
-          designation: "Head of Department",
-          message: ["Welcome to our department."],
-        },
+      : null,
     overview: {
       content: [apiData.description],
       hasImage: !!apiData.image,
     },
     facilities: [], // Empty state
-    programs: [], // Empty state
+    programs: programs.map((p) => ({
+      id: p.id,
+      name: p.title || "Program",
+      duration: p.duration ? `${p.duration} Years` : "",
+      credits: p.credit?.toString() || "",
+      description: p.programType || "",
+      concentrations: [],
+    })),
     tuitionFees: tuitionFees.map((tf) => ({
       program: tf.program || "Program",
       credit: tf.credit?.toString() || "0",
@@ -182,4 +228,28 @@ function mapApiDepartmentToContent(
     ],
     facultyQueryParam: apiData.slug,
   };
+}
+
+export async function getDepartmentTeachers(
+  deptId: number,
+  slug: string,
+): Promise<ApiTeacher[]> {
+  try {
+    const teachersRes = await publicFetch.get(
+      `/teachers/department/${deptId}`,
+      { next: { tags: ["department-teachers", slug] } },
+    );
+    if (teachersRes.ok) {
+      const tData = await teachersRes.json();
+      if (tData.success && tData.data?.teachers) {
+        return tData.data.teachers;
+      }
+    }
+  } catch (error) {
+    console.error(
+      `[Actions: getDepartmentTeachers] Failed to fetch teachers for dept ${deptId}:`,
+      error,
+    );
+  }
+  return [];
 }

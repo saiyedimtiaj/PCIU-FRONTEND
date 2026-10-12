@@ -19,7 +19,7 @@ export default function PageBanner({
         "relative overflow-hidden py-16 md:py-20",
         variant === "gradient"
           ? "bg-linear-to-br from-primary via-primary to-primary/90"
-          : "bg-primary"
+          : "bg-primary",
       )}
     >
       {variant === "blobs" && (
@@ -32,7 +32,7 @@ export default function PageBanner({
       <div
         className={cn(
           "container relative z-10 mx-auto px-4",
-          align === "center" ? "text-center" : "text-left"
+          align === "center" ? "text-center" : "text-left",
         )}
       >
         <div className={cn(align === "left" && "max-w-3xl")}>
@@ -43,7 +43,7 @@ export default function PageBanner({
             <p
               className={cn(
                 "text-primary-foreground/80 text-lg max-w-2xl",
-                align === "center" && "mx-auto"
+                align === "center" && "mx-auto",
               )}
             >
               {subtitle}

@@ -1,13 +1,12 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Clock, MapPin } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import EventCard from "@/components/shared/EventCard";
+import { getLatestPublishedEvents } from "@/lib/api/events";
 import { getNewsArticles } from "@/lib/api/news";
 import { formatPublishedDate, getPublishedAt } from "@/lib/news-date";
-import type { EventItem } from "@/types/home";
-import eventsData from "@/content/home/news-events.json";
-
-const events = (eventsData as { events: EventItem[] }).events;
 
 export default async function NewsEvents() {
   const { articles, error } = await getNewsArticles();
@@ -20,9 +19,10 @@ export default async function NewsEvents() {
     >
       <div className="container relative mx-auto px-4 sm:px-6 md:px-12">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:gap-12">
+          {/*----------------------- Latest News-------------------------- */}
           <div className="lg:col-span-2">
             <div className="mb-6 flex items-center justify-between sm:mb-8">
-              <h2 className="font-heading text-2xl font-bold text-primary sm:text-3xl">
+              <h2 className="font-heading text-2xl font-bold text-primary sm:text-2xl">
                 Latest News
               </h2>
               <Button
@@ -30,7 +30,7 @@ export default async function NewsEvents() {
                 size="cta"
                 nativeButton={false}
                 render={<Link href="/news" />}
-                className="group/all-news border-accent/0 bg-accent/5 hover:-translate-y-0.5 hover:bg-accent hover:text-accent-foreground hover:shadow-md"
+                className="group/all-news text-white border-accent/50 bg-primary px-4  hover:-translate-y-0.5 hover:bg-accent hover:text-accent-foreground hover:shadow-md"
               >
                 All News
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover/all-news:translate-x-1" />
@@ -48,7 +48,7 @@ export default async function NewsEvents() {
                   <Link
                     key={article.id}
                     href={`/news/${article.slug}`}
-                    className="group overflow-hidden rounded-xl border border-primary/10 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+                    className="group overflow-hidden rounded-xl  border-t-4  border-primary hover:border-accent bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
                   >
                     <div className="relative h-44 bg-muted">
                       {article.coverImageUrl && (
@@ -83,46 +83,61 @@ export default async function NewsEvents() {
               </div>
             )}
           </div>
-          <div>
-            <h2 className="mb-6 font-heading text-2xl font-bold text-primary sm:mb-8 sm:text-3xl">
-              Upcoming Events
-            </h2>
-            <div className="divide-y divide-primary/10 rounded-2xl border border-primary/10 bg-white shadow-sm">
-              {events.map((event) => {
-                const [month, day] = event.date.replace(",", "").split(" ");
-                return (
-                  <div key={event.title} className="flex gap-4 p-4 sm:p-5">
-                    <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-primary text-white">
-                      <div className="font-heading text-base font-bold leading-tight">
-                        {day}
-                      </div>
-                      <div className="text-[9px] font-medium uppercase tracking-wide">
-                        {month}
-                      </div>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="mb-1 line-clamp-2 font-heading text-sm font-semibold text-primary">
-                        {event.title}
-                      </h3>
-                      <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1.5">
-                          <Clock className="h-3 w-3" />
-                          {event.time}
-                        </span>
-                        <span className="flex items-center gap-1.5">
-                          <MapPin className="h-3 w-3" />
-                          {event.venue}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <Suspense fallback={<EventsLoading />}>
+            <UpcomingEvents />
+          </Suspense>
         </div>
       </div>
     </section>
+  );
+}
+
+/*-------------------- Upcoming Events------------ */
+
+async function UpcomingEvents() {
+  const { events, error } = await getLatestPublishedEvents();
+
+  return (
+    <div>
+      <div className="mb-6 flex items-center justify-between gap-3 sm:mb-8">
+        <h2 className="font-heading text-2xl font-bold text-primary sm:text-2xl">
+          Upcoming Events
+        </h2>
+        <Button
+          variant="outlineAccent"
+          size="cta"
+          nativeButton={false}
+          render={<Link href="/events" />}
+          className="group/all-news text-white border-accent/50 bg-primary px-3  hover:-translate-y-0.5 hover:bg-accent hover:text-accent-foreground hover:shadow-md"
+        >
+          All Events
+          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover/all-events:translate-x-1" />
+        </Button>
+      </div>
+      {error ? (
+        <NewsMessage>
+          Unable to load events. Please try again later.
+        </NewsMessage>
+      ) : events.length === 0 ? (
+        <NewsMessage>No upcoming events available.</NewsMessage>
+      ) : (
+        <div className="grid gap-3 ">
+          {events.map((event) => (
+            <EventCard key={event.id || event.slug} event={event} compact />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EventsLoading() {
+  return (
+    <div aria-label="Loading events" aria-busy="true" className="grid gap-3">
+      {Array.from({ length: 4 }, (_, index) => (
+        <div key={index} className="h-32 animate-pulse rounded-xl bg-muted" />
+      ))}
+    </div>
   );
 }
 

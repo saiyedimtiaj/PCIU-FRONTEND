@@ -7,11 +7,11 @@ export default async function HeroSection() {
   if (slides.length === 0) {
     return (
       <section
-        className="relative w-full h-[50vh] sm:h-[55vh] min-h-[380px] flex items-center justify-center bg-primary"
+        className="relative flex min-h-[300px] w-full items-center justify-center bg-primary sm:min-h-[400px] lg:min-h-[450px]"
         id="home"
       >
         <div className="container mx-auto px-4 sm:px-6 text-center text-white">
-          <h1 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl mb-3">
+          <h1 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl mb-1">
             Welcome to PCIU
           </h1>
           <p className="text-white/80 text-sm sm:text-base">
@@ -24,7 +24,7 @@ export default async function HeroSection() {
 
   return (
     <section
-      className="relative w-full h-[50vh] sm:h-[55vh] md:h-[58vh] lg:h-[62vh] min-h-[340px] sm:min-h-[380px] md:min-h-[420px] lg:min-h-[460px] max-h-[560px] overflow-hidden"
+      className="relative h-[300px] w-full overflow-hidden bg-primary sm:h-[400px] lg:h-[450px]"
       id="home"
     >
       <HeroCarousel slides={slides} />

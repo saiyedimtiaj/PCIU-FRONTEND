@@ -41,6 +41,7 @@ export interface EndpointConfig {
    * form's `createOverwrites` warning makes the single-row nature explicit.
    */
   allowCreate?: boolean;
+  getFromList?: boolean;
 }
 
 export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
@@ -79,8 +80,12 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   "hero-slides": { path: "/heroslides", multipart: true },
   notices: { path: "/notices", multipart: true },
   "news-articles": { path: "/news-articles", multipart: true },
+  events: { path: "/events", multipart: true },
   gallery: { path: "/galleries", multipart: true },
   menus: { path: "/menus" },
+  // One row, no per-id routes: GET/POST/PATCH/PUT `/about` all exist,
+  // every `/about/{id}` method 404s (verified live).
+  about: { path: "/about", multipart: true, singleton: true },
 
   "pcj-volumes": { path: "/pcj/volumes", multipart: true },
   "pcj-articles": { path: "/pcj/articles", multipart: true },
@@ -121,13 +126,7 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
 
   contact: { path: "/contacts" },
   setting: { path: "/settings", multipart: true },
-  popup: {
-    path: "/popup",
-    singleton: true,
-    allowCreate: true,
-    deleteAtRoot: true,
-    createOverwrites: true,
-  },
+  popup: { path: "/popup", getFromList: true },
 };
 
 /**

@@ -3,6 +3,7 @@ import { CalendarClock } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
 const classRoutineSchema = z.object({
+  semester_id: z.string().min(1, "Semester is required"),
   department_id: z.string().min(1, "Department is required"),
   course_id: z.string().min(1, "Course is required"),
   teacher_id: z.string().min(1, "Teacher is required"),
@@ -29,6 +30,15 @@ export const classRoutineEntity: EntitySchema<typeof classRoutineSchema> = {
     {
       title: "Assignment",
       fields: [
+        {
+          name: "semester_id",
+          label: "Semester",
+          type: "relation",
+          required: true,
+          relationTo: "semester",
+          options: [],
+          helper: "The public Class Schedule's semester filter shows this routine under this semester.",
+        },
         {
           name: "department_id",
           label: "Department",

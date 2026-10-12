@@ -3,14 +3,14 @@ import pageData from "@/content/academics/page.json";
 import ExamScheduleSection from "../_ui/ExamScheduleSection";
 import type { AcademicsPageContent } from "@/types/academics";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getLiveExams, getLiveExamRoutines } from "@/lib/academics/live";
+import { getLiveExams, getLiveExamRoutines, getLiveSemesters } from "@/lib/academics/live";
 
 const content = pageData as AcademicsPageContent;
 
 export default function ExamSchedulePage({
   searchParams,
 }: {
-  searchParams: Promise<{ examId?: string }>;
+  searchParams: Promise<{ examId?: string; semesterId?: string; type?: string }>;
 }) {
   return (
     <Suspense
@@ -30,11 +30,12 @@ export default function ExamSchedulePage({
 async function ExamScheduleData({
   searchParams,
 }: {
-  searchParams: Promise<{ examId?: string }>;
+  searchParams: Promise<{ examId?: string; semesterId?: string; type?: string }>;
 }) {
-  const [exams, routines] = await Promise.all([
+  const [exams, routines, semesters] = await Promise.all([
     getLiveExams(),
     getLiveExamRoutines(),
+    getLiveSemesters(),
   ]);
 
   return (
@@ -44,6 +45,7 @@ async function ExamScheduleData({
         routines,
         guidelines: content.examSchedule.guidelines,
       }}
+      semesters={semesters}
       searchParams={searchParams}
     />
   );
