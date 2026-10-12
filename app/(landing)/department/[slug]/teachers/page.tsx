@@ -86,16 +86,16 @@ export default async function DepartmentTeachersPage({ params }: Props) {
                 {/* Background Decor */}
                 <div className="absolute -right-12 -top-12 w-32 h-32 bg-[#0ea5e9]/5 rounded-full blur-2xl group-hover:bg-[#0ea5e9]/10 transition-colors duration-500" />
 
-                <CardContent className="pt-10 pb-6 px-8 flex flex-col items-center grow text-center relative z-10">
-                  <div className="relative mb-6">
-                    <div className="absolute inset-0 bg-linear-to-tr from-[#1e3a8a] to-[#0ea5e9] rounded-full blur-md opacity-0 group-hover:opacity-40 transition-opacity duration-500 translate-y-2" />
-                    <Avatar className="w-32 h-32 border-4 border-white shadow-md font-heading text-slate-500 bg-slate-50 group-hover:scale-105 transition-transform duration-500 relative">
+                <CardContent className="pt-8 pb-6 px-6 flex flex-col items-center grow text-center relative z-10">
+                  <div className="relative mb-6 w-full max-w-42.5 sm:max-w-47.5">
+                    <div className="absolute inset-0 bg-linear-to-tr from-[#1e3a8a] to-[#0ea5e9] rounded-xl blur-md opacity-0 group-hover:opacity-30 transition-opacity duration-500 translate-y-2" />
+                    <Avatar className="w-full aspect-3/4 h-auto rounded-xl border-4 border-white shadow-md font-heading text-slate-500 bg-slate-50 group-hover:scale-[1.03] transition-transform duration-500 relative overflow-hidden after:hidden">
                       <AvatarImage
                         src={getMediaUrl(member.imageUrl) || ""}
                         alt={member.name}
-                        className="object-cover"
+                        className="size-full rounded-xl object-cover"
                       />
-                      <AvatarFallback className="bg-slate-100 text-4xl font-bold group-hover:text-[#0ea5e9] transition-colors">
+                      <AvatarFallback className="size-full rounded-xl bg-slate-100 text-4xl font-bold group-hover:text-[#0ea5e9] transition-colors">
                         {getInitials(member.name)}
                       </AvatarFallback>
                     </Avatar>
