@@ -15,9 +15,6 @@ export const WRITE_DROPS: Record<string, string[]> = {
   pages: ["publishedAt"],
   contact: ["displayOrder", "status"],
   iqac: ["description"],
-  "admission-advertisements": ["isActive"],
-  "admission-test-results": ["isActive"],
-  "admission-schedules": ["isActive"],
 };
 
 /** Applies an entity's renames and drops to an already-camelCased payload. */

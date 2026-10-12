@@ -42,6 +42,13 @@ export interface EndpointConfig {
    */
   allowCreate?: boolean;
   getFromList?: boolean;
+  /**
+   * The resource has no POST at all — only GET and PATCH (verified in the
+   * API collection for `/admission/admin/fee-structure`). When its one row
+   * doesn't exist yet the form still saves through PATCH rather than
+   * offering a create that would hit a missing route.
+   */
+  noCreate?: boolean;
 }
 
 export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
@@ -103,6 +110,7 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   "fee-structures": {
     path: "/admission/admin/fee-structure",
     singleton: true,
+    noCreate: true,
   },
   "admission-schedules": {
     path: "/admission/admin/schedule",
