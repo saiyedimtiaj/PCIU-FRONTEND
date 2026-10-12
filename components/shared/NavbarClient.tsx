@@ -62,6 +62,7 @@ const academicsMenu = {
   faculties: [
     {
       name: "Faculty of Business Studies",
+      slug: "faculty-of-business-studies",
       departments: [
         {
           name: "Department of Business Administration",
@@ -71,6 +72,7 @@ const academicsMenu = {
     },
     {
       name: "Faculty of Humanities, Social Sciences & Law",
+      slug: "faculty-of-humanities-social-sciences-and-law",
       departments: [
         { name: "Department of English", href: "/department/english" },
         { name: "Department of Law", href: "/department/law" },
@@ -82,6 +84,7 @@ const academicsMenu = {
     },
     {
       name: "Faculty of Science and Engineering",
+      slug: "faculty-of-science-and-engineering",
       departments: [
         {
           name: "Department of Computer Science and Engineering",
@@ -156,6 +159,7 @@ export default function NavbarClient({
   const displayFaculties = fetchedFaculties
     ? fetchedFaculties.map((f) => ({
         name: f.name,
+        slug: f.slug,
         departments: f.departments.map((d) => ({
           name: d.name,
           href: `/department/${d.slug}`,
@@ -222,8 +226,13 @@ export default function NavbarClient({
                   <div className="grid grid-cols-3 gap-6">
                     {displayFaculties.map((faculty) => (
                       <div key={faculty.name}>
-                        <h3 className="font-bold text-sm text-primary mb-3 pb-2 border-b-2 border-accent">
-                          {faculty.name}
+                        <h3 className="mb-3 pb-2 border-b-2 border-accent">
+                          <Link
+                            href={`/faculties/${faculty.slug}`}
+                            className="font-bold text-sm text-primary hover:text-accent transition-colors block"
+                          >
+                            {faculty.name}
+                          </Link>
                         </h3>
                         {faculty.departments.length > 0 ? (
                           <ul className="space-y-1">
@@ -368,9 +377,13 @@ export default function NavbarClient({
                 ))}
                 {displayFaculties.map((faculty) => (
                   <div key={faculty.name} className="py-2">
-                    <div className="text-xs font-semibold text-muted-foreground uppercase px-4 py-1">
+                    <Link
+                      href={`/faculties/${faculty.slug}`}
+                      className="block text-xs font-semibold text-primary hover:text-accent uppercase px-4 py-1 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
                       {faculty.name}
-                    </div>
+                    </Link>
                     {faculty.departments.length > 0 ? (
                       faculty.departments.map((dept) => (
                         <Link
