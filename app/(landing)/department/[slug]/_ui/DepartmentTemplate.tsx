@@ -227,6 +227,12 @@ export default function DepartmentTemplate({
 
             {/* Programs */}
             <section id="programs" className="scroll-mt-24">
+              <style>{`
+                @keyframes progBorderChase {
+                  to { stroke-dashoffset: -100; }
+                }
+              `}</style>
+
               <h2 className="font-heading font-bold text-2xl text-[#1e3a8a] uppercase mb-6 pb-2 inline-block border-b-4 border-[#0ea5e9]">
                 Programs Offered
               </h2>
@@ -236,27 +242,27 @@ export default function DepartmentTemplate({
                     <Link
                       href={`/programs/${program.id}`}
                       key={program.name}
-                      className="group bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md hover:border-[#0ea5e9]/30 transition-all duration-300 relative overflow-hidden block"
+                      className="group relative bg-white border border-slate-200/90 rounded-xl p-6 hover:shadow-xl hover:border-transparent transition-all duration-300 overflow-hidden block hover:-translate-y-1"
                     >
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-linear-to-bl from-[#0ea5e9]/5 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
+                      <div className="absolute top-0 right-0 w-28 h-28 bg-linear-to-bl from-[#0ea5e9]/10 via-[#0ea5e9]/5 to-transparent rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125" />
 
                       <div className="flex items-start justify-between mb-4">
-                        <div className="w-12 h-12 rounded-lg bg-[#1e3a8a]/5 flex items-center justify-center text-[#0ea5e9]">
+                        <div className="w-12 h-12 rounded-lg bg-[#1e3a8a]/5 flex items-center justify-center text-[#0ea5e9] transition-colors duration-300 group-hover:bg-[#0ea5e9] group-hover:text-white shadow-xs">
                           <GraduationCap className="w-7 h-7" />
                         </div>
                         {program.description && (
-                          <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wider">
+                          <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wider group-hover:bg-[#0ea5e9]/10 group-hover:text-[#0ea5e9] transition-colors">
                             {program.description}
                           </span>
                         )}
                       </div>
 
-                      <h3 className="font-heading font-bold text-[#1e3a8a] text-lg mb-4 line-clamp-2">
+                      <h3 className="font-heading font-bold text-[#1e3a8a] text-lg mb-4 line-clamp-2 transition-colors duration-300 group-hover:text-[#0ea5e9]">
                         {program.name}
                       </h3>
 
                       <div className="grid grid-cols-2 gap-3 text-sm text-slate-600">
-                        <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                        <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100 group-hover:border-slate-200/60 transition-colors">
                           <span className="text-xs text-slate-400 font-medium uppercase">
                             Duration
                           </span>
@@ -264,7 +270,7 @@ export default function DepartmentTemplate({
                             {program.duration}
                           </span>
                         </div>
-                        <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                        <div className="flex flex-col gap-1 p-3 rounded-lg bg-slate-50 border border-slate-100 group-hover:border-slate-200/60 transition-colors">
                           <span className="text-xs text-slate-400 font-medium uppercase">
                             Credit Hours
                           </span>
@@ -273,6 +279,47 @@ export default function DepartmentTemplate({
                           </span>
                         </div>
                       </div>
+
+                      {/* Traveling animated gradient border */}
+                      <svg
+                        className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+                        viewBox="0 0 100 100"
+                        preserveAspectRatio="none"
+                        aria-hidden
+                      >
+                        <defs>
+                          <linearGradient
+                            id={`prog-chase-${program.id}`}
+                            x1="0%"
+                            y1="0%"
+                            x2="100%"
+                            y2="0%"
+                          >
+                            <stop offset="0%" stopColor="#1e3a8a" />
+                            <stop offset="40%" stopColor="#0ea5e9" />
+                            <stop offset="70%" stopColor="#38bdf8" />
+                            <stop offset="100%" stopColor="#f59e0b" />
+                          </linearGradient>
+                        </defs>
+                        <rect
+                          x="0.6"
+                          y="0.6"
+                          width="98.8"
+                          height="98.8"
+                          rx="3"
+                          ry="3"
+                          fill="none"
+                          stroke={`url(#prog-chase-${program.id})`}
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                          pathLength={100}
+                          strokeDasharray="25 75"
+                          className="opacity-75 transition-all duration-300 group-hover:opacity-100 group-hover:drop-shadow-[0_0_6px_rgba(14,165,233,0.5)]"
+                          style={{
+                            animation: "progBorderChase 4s linear infinite",
+                          }}
+                        />
+                      </svg>
                     </Link>
                   ))
                 ) : (
