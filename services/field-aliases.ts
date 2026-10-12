@@ -52,6 +52,10 @@ export const READ_NESTED: Record<string, Record<string, string>> = {
   user: {
     full_name: "name",
   },
+  management: {
+    // Rows carry only the joined `type` object, never a top-level `typeId`.
+    type_id: "type.id",
+  },
   notices: {
     pdf: "pdfUrl",
   },
