@@ -1,4 +1,3 @@
-
 import { getHomeNotices } from "@/lib/api/home";
 import NoticeMarqueeClient from "./NoticeMarqueeClient";
 

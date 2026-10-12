@@ -42,8 +42,8 @@ export default async function VCMessage() {
       label: "LinkedIn",
       icon: FaLinkedinIn,
     },
-  ].filter(
-    (link): link is ProfileLink & { href: string } => Boolean(link.href),
+  ].filter((link): link is ProfileLink & { href: string } =>
+    Boolean(link.href),
   );
 
   return (
@@ -58,6 +58,163 @@ export default async function VCMessage() {
 
         {/* Soft gold glow - bottom right */}
         <div className="absolute -right-40 -bottom-30 h-105 w-105 rounded-full bg-amber-50 opacity-60 blur-3xl" />
+
+        {/* Subtle brand-colored arcs behind the heading */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 z-0 h-24 w-[min(820px,90vw)] -translate-x-1/2"
+        >
+          <svg
+            className="h-full w-full"
+            viewBox="0 0 820 110"
+            fill="none"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id="campus-life-arc-fade">
+                <stop offset="0%" stopColor="white" stopOpacity="0" />
+                <stop offset="12%" stopColor="white" />
+                <stop offset="88%" stopColor="white" />
+                <stop offset="100%" stopColor="white" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient
+                id="campus-life-highlight-accent"
+                gradientUnits="userSpaceOnUse"
+                x1="0"
+                y1="0"
+                x2="820"
+                y2="0"
+              >
+                <stop offset="0%" stopColor="var(--accent)" stopOpacity="0" />
+                <stop offset="50%" stopColor="var(--accent)" />
+                <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient
+                id="campus-life-highlight-secondary"
+                gradientUnits="userSpaceOnUse"
+                x1="0"
+                y1="0"
+                x2="820"
+                y2="0"
+              >
+                <stop
+                  offset="0%"
+                  stopColor="var(--secondary)"
+                  stopOpacity="0"
+                />
+                <stop offset="50%" stopColor="var(--secondary)" />
+                <stop
+                  offset="100%"
+                  stopColor="var(--secondary)"
+                  stopOpacity="0"
+                />
+              </linearGradient>
+              <mask id="campus-life-arc-mask">
+                <rect
+                  width="820"
+                  height="110"
+                  fill="url(#campus-life-arc-fade)"
+                />
+              </mask>
+            </defs>
+            <g mask="url(#campus-life-arc-mask)">
+              <path
+                d="M20 6 Q410 82 800 6"
+                stroke="hsl(42 85% 58%)"
+                strokeWidth="0.9"
+                strokeLinecap="round"
+                opacity="0.42"
+              />
+              <path
+                d="M10 18 Q410 94 810 18"
+                stroke="hsl(230 70% 50%)"
+                strokeWidth="0.9"
+                strokeLinecap="round"
+                opacity="0.24"
+              />
+              <path
+                d="M28 30 Q410 102 792 30"
+                stroke="hsl(42 85% 72%)"
+                strokeWidth="0.9"
+                strokeLinecap="round"
+                opacity="0.38"
+              />
+              <path
+                d="M45 42 Q410 108 775 42"
+                stroke="hsl(231 77% 22%)"
+                strokeWidth="0.9"
+                strokeLinecap="round"
+                opacity="0.16"
+              />
+              <path
+                d="M36 12 Q410 76 784 12"
+                stroke="hsl(230 70% 50%)"
+                strokeWidth="0.7"
+                strokeLinecap="round"
+                opacity="0.18"
+              />
+              <path
+                d="M18 26 Q410 100 802 26"
+                stroke="hsl(42 85% 58%)"
+                strokeWidth="0.7"
+                strokeLinecap="round"
+                opacity="0.25"
+              />
+              <path
+                d="M54 38 Q410 106 766 38"
+                stroke="hsl(42 85% 72%)"
+                strokeWidth="0.7"
+                strokeLinecap="round"
+                opacity="0.22"
+              />
+              <path
+                d="M68 50 Q410 110 752 50"
+                stroke="hsl(231 77% 22%)"
+                strokeWidth="0.7"
+                strokeLinecap="round"
+                opacity="0.12"
+              />
+            </g>
+            <g mask="url(#campus-life-arc-mask)" opacity="1">
+              <path
+                className="animate-arc-highlight"
+                style={{ animationDelay: "0s" }}
+                d="M20 6 Q410 82 800 6"
+                stroke="url(#campus-life-highlight-accent)"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeDasharray="42 858"
+              />
+              <path
+                className="animate-arc-highlight-reverse"
+                style={{ animationDelay: "-1.6s" }}
+                d="M28 30 Q410 102 792 30"
+                stroke="url(#campus-life-highlight-secondary)"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeDasharray="42 858"
+              />
+              <path
+                className="animate-arc-highlight"
+                style={{ animationDelay: "-1.75s" }}
+                d="M54 38 Q410 106 766 38"
+                stroke="url(#campus-life-highlight-accent)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeDasharray="42 858"
+              />
+              <path
+                className="animate-arc-highlight-reverse"
+                style={{ animationDelay: "-0.9s" }}
+                d="M68 50 Q410 110 752 50"
+                stroke="url(#campus-life-highlight-secondary)"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeDasharray="42 858"
+              />
+            </g>
+          </svg>
+        </div>
 
         {/* =====================================================
             FLOWING CURVED LINES
@@ -211,74 +368,74 @@ export default async function VCMessage() {
 
           <ScrollReveal direction="left" className="w-full">
             <div className="relative mx-auto w-full max-w-87.5">
-            {/* Decorative back panel */}
-            <div className="absolute -left-4 -top-4 h-[calc(100%-25px)] w-[calc(100%-20px)] rounded-[28px] bg-primary sm:-left-5 sm:-top-5" />
+              {/* Decorative back panel */}
+              <div className="absolute -left-4 -top-4 h-[calc(100%-25px)] w-[calc(100%-20px)] rounded-[28px] bg-primary sm:-left-5 sm:-top-5" />
 
-            {/* Main card */}
-            <div className="relative rounded-[26px] bg-white p-3 shadow-[0_25px_70px_rgba(8,47,103,0.13)] sm:p-4">
-              {/* Gold corner - top right */}
-              <div className="absolute right-5 top-5 z-20 h-20 w-20 rounded-tr-2xl border-r-4 border-t-4 border-accent" />
+              {/* Main card */}
+              <div className="relative rounded-[26px] bg-white p-3 shadow-[0_25px_70px_rgba(8,47,103,0.13)] sm:p-4">
+                {/* Gold corner - top right */}
+                <div className="absolute right-5 top-5 z-20 h-20 w-20 rounded-tr-2xl border-r-4 border-t-4 border-accent" />
 
-              {/* Gold corner - bottom left */}
-              <div className="absolute bottom-28.75 left-5 z-20 h-16 w-16 rounded-bl-2xl border-b-4 border-l-4 border-accent md:bottom-31.25" />
+                {/* Gold corner - bottom left */}
+                <div className="absolute bottom-28.75 left-5 z-20 h-16 w-16 rounded-bl-2xl border-b-4 border-l-4 border-accent md:bottom-31.25" />
 
-              {/* Photo */}
-              <div className="group relative aspect-5/4 overflow-hidden rounded-[21px] bg-[#EEF5FC]">
-                {photoUrl ? (
-                  <Image
-                    src={photoUrl}
-                    alt={`${vc.name} - ${vc.designation ?? "Vice Chancellor"}`}
-                    fill
-                    priority
-                    sizes="(min-width: 1024px) 360px, (min-width: 768px) 330px, 90vw"
-                    className="object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.035]"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center px-5 text-center text-sm text-slate-400">
-                    Photo unavailable
-                  </div>
-                )}
+                {/* Photo */}
+                <div className="group relative aspect-5/4 overflow-hidden rounded-[21px] bg-[#EEF5FC]">
+                  {photoUrl ? (
+                    <Image
+                      src={photoUrl}
+                      alt={`${vc.name} - ${vc.designation ?? "Vice Chancellor"}`}
+                      fill
+                      priority
+                      sizes="(min-width: 1024px) 360px, (min-width: 768px) 330px, 90vw"
+                      className="object-contain object-top transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center px-5 text-center text-sm text-slate-400">
+                      Photo unavailable
+                    </div>
+                  )}
 
-                {/* Subtle image overlay */}
-                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#082F67]/15 via-transparent to-transparent" />
-              </div>
+                  {/* Subtle image overlay */}
+                  <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#082F67]/15 via-transparent to-transparent" />
+                </div>
 
-              {/* =================================================
+                {/* =================================================
                   NAME / DESIGNATION
               ================================================== */}
 
-              <div className="relative z-30 -mt-6 ml-5 rounded-2xl bg-primary px-4 py-4 shadow-[0_12px_35px_rgba(8,47,103,0.13)] sm:px-4">
-                <h3 className="font-heading text-xs font-bold leading-snug text-white sm:text-[13px]">
-                  {vc.name}
-                </h3>
+                <div className="relative z-30 -mt-6 ml-5 rounded-2xl bg-primary px-4 py-4 shadow-[0_12px_35px_rgba(8,47,103,0.13)] sm:px-4">
+                  <h3 className="font-heading text-xs font-bold leading-snug text-white sm:text-[13px]">
+                    {vc.name}
+                  </h3>
 
-                {vc.designation && (
-                  <p className="mt-1 text-xs font-bold leading-relaxed tracking-wide text-accent">
-                    {vc.designation}
-                  </p>
-                )}
-              </div>
+                  {vc.designation && (
+                    <p className="mt-1 text-xs font-bold leading-relaxed tracking-wide text-accent">
+                      {vc.designation}
+                    </p>
+                  )}
+                </div>
 
                 {profileLinks.length > 0 && (
-                <nav
-                  aria-label={`${vc.name} profile links`}
-                  className="relative z-30 flex justify-center gap-3 pt-3 sm:gap-4 sm:pt-3"
-                >
-                  {profileLinks.map(({ href, label, icon: Icon }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${vc.name} on ${label}`}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-[#0A4A94] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0A4A94] hover:bg-[#0A4A94] hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0A4A94] focus-visible:ring-offset-2 motion-reduce:transition-none sm:h-11 sm:w-11"
-                    >
-                      <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
-                    </a>
-                  ))}
-                </nav>
-              )}
-            </div>
+                  <nav
+                    aria-label={`${vc.name} profile links`}
+                    className="relative z-30 flex justify-center gap-3 pt-3 sm:gap-4 sm:pt-3"
+                  >
+                    {profileLinks.map(({ href, label, icon: Icon }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${vc.name} on ${label}`}
+                        className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-[#0A4A94] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0A4A94] hover:bg-[#0A4A94] hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0A4A94] focus-visible:ring-offset-2 motion-reduce:transition-none sm:h-11 sm:w-11"
+                      >
+                        <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
+                      </a>
+                    ))}
+                  </nav>
+                )}
+              </div>
             </div>
           </ScrollReveal>
 
@@ -288,59 +445,63 @@ export default async function VCMessage() {
 
           <ScrollReveal direction="right" delay={0.08} className="w-full">
             <div className="relative text-center md:text-left">
-            {/* Main heading */}
-            <h2 className="mx-auto max-w-3xl font-heading text-[24px] font-bold leading-[1.08] tracking-tight text-[#082F67] sm:text-[32px] md:mx-0 md:text-[32px] lg:text-[32px] xl:text-[36px]">
-              From the Vice Chancellor
-            </h2>
+              {/* Main heading */}
+              <h2 className="mx-auto max-w-3xl font-heading text-[24px] font-bold leading-[1.08] tracking-tight text-[#082F67] sm:text-[32px] md:mx-0 md:text-[32px] lg:text-[32px] xl:text-[36px]">
+                From the Vice Chancellor
+              </h2>
 
-            {/* Accent */}
-            <div className="mx-auto mt-3 mb-6 h-1 w-34 rounded-full bg-linear-to-r from-[#082F67] via-accent to-accent shadow-[0_3px_10px_rgba(217,154,0,0.18)] md:mx-0" />
+              {/* Accent */}
+              <div className="mx-auto mt-3 mb-6 h-1 w-34 rounded-full bg-linear-to-r from-[#082F67] via-accent to-accent shadow-[0_3px_10px_rgba(217,154,0,0.18)] md:mx-0" />
 
-            {/* Dynamic VC message */}
-            {bioPreview && (
-              <p className="relative mx-auto max-w-2xl text-sm leading-7 text-slate-900 sm:text-base sm:leading-8 md:mx-0 md:text-lg md:leading-9">
-                <span className="mr-1 font-serif text-4xl font-bold leading-none text-accent align-[-0.3em]">
-                  “
-                </span>
-                {bioPreview}
-                <span className="ml-1 font-serif text-4xl font-bold leading-none text-accent align-[-0.3em]">
-                  ”
-                </span>
-              </p>
-            )}
+              {/* Dynamic VC message */}
+              {bioPreview && (
+                <p className="relative mx-auto max-w-2xl text-sm leading-7 text-slate-900 sm:text-base sm:leading-8 md:mx-0 md:text-lg md:leading-9">
+                  <span className="mr-1 font-serif text-4xl font-bold leading-none text-accent align-[-0.3em]">
+                    “
+                  </span>
+                  {bioPreview}
+                  <span className="ml-1 font-serif text-4xl font-bold leading-none text-accent align-[-0.3em]">
+                    ”
+                  </span>
+                </p>
+              )}
 
-            {/* Read Full Message */}
+              {/* Read Full Message */}
 
-            <div className="mt-9 sm:mt-10">
-              <Link
-                href="/vice-chancellors-message"
-                className="group inline-flex items-center gap-3 rounded-full border border-[#D99A00]/40 bg-white/80 py-1.5 pl-5 pr-1.5 shadow-[0_6px_20px_rgba(8,47,103,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#082F67] hover:bg-white hover:shadow-[0_10px_28px_rgba(8,47,103,0.14)]"
-              >
-                {/* Text */}
-                <span className="font-heading text-sm font-semibold tracking-wide text-[#082F67] transition-colors duration-300 group-hover:text-[#082F67] sm:text-base">
-                  Read Full Message
-                </span>
+              <div className="mt-9 sm:mt-10">
+                <Link
+                  href="/vice-chancellors-message"
+                  className="group inline-flex items-center gap-3 rounded-full border border-[#D99A00]/40 bg-white/80 py-1.5 pl-5 pr-1.5 shadow-[0_6px_20px_rgba(8,47,103,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#082F67] hover:bg-white hover:shadow-[0_10px_28px_rgba(8,47,103,0.14)]"
+                >
+                  {/* Text */}
+                  <span className="font-heading text-sm font-semibold tracking-wide text-[#082F67] transition-colors duration-300 group-hover:text-[#082F67] sm:text-base">
+                    Read Full Message
+                  </span>
 
-                {/* Circular Arrow */}
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#D99A00] text-white shadow-[0_4px_12px_rgba(217,154,0,0.25)] transition-all duration-300 group-hover:bg-[#082F67] group-hover:shadow-[0_5px_16px_rgba(8,47,103,0.25)]">
-                  <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-                </span>
-              </Link>
+                  {/* Circular Arrow */}
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#D99A00] text-white shadow-[0_4px_12px_rgba(217,154,0,0.25)] transition-all duration-300 group-hover:bg-[#082F67] group-hover:shadow-[0_5px_16px_rgba(8,47,103,0.25)]">
+                    <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
               </div>
             </div>
-            </ScrollReveal>
-          </div>
+          </ScrollReveal>
         </div>
-      </section>
+      </div>
+    </section>
   );
 }
-function normalizeUrl(value: string | string[] | null | undefined): string | null {
+function normalizeUrl(
+  value: string | string[] | null | undefined,
+): string | null {
   const values = Array.isArray(value) ? value : [value];
   return (
-    values.find(
-      (candidate): candidate is string =>
-        typeof candidate === "string" && candidate.trim().length > 0,
-    )?.trim() ?? null
+    values
+      .find(
+        (candidate): candidate is string =>
+          typeof candidate === "string" && candidate.trim().length > 0,
+      )
+      ?.trim() ?? null
   );
 }
 

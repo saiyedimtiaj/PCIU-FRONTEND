@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { resolveUploadUrl } from "@/lib/upload-url";
 import type { ProgramFinderItem } from "@/app/(landing)/_actions/programs";
 import { ArrowRight } from "lucide-react";
+import HomeSectionReveal from "./HomeSectionReveal";
 
 const ALL_LEVELS = "All Levels";
 const ALL_FACULTIES = "All Faculties";
@@ -85,73 +86,156 @@ export default function ProgramFinder({
       className="relative overflow-hidden bg-white py-16 sm:py-20 md:py-24"
       id="academics"
     >
-      {/* Layered thin arcs behind the heading with a gentle 180-degree turn */}
+      {/* Subtle brand-colored arcs behind the heading */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 z-0 h-24 w-[min(820px,90vw)] -translate-x-1/2"
       >
         <svg
-          className="h-full w-full motion-safe:animate-arc-rotate"
+          className="h-full w-full"
           viewBox="0 0 820 110"
           fill="none"
           preserveAspectRatio="none"
         >
-          <path
-            d="M20 6 Q410 82 800 6"
-            stroke="hsl(42 85% 58%)"
-            strokeWidth="0.9"
-            strokeLinecap="round"
-            opacity="0.42"
-          />
-          <path
-            d="M10 18 Q410 94 810 18"
-            stroke="hsl(230 70% 50%)"
-            strokeWidth="0.9"
-            strokeLinecap="round"
-            opacity="0.24"
-          />
-          <path
-            d="M28 30 Q410 102 792 30"
-            stroke="hsl(42 85% 72%)"
-            strokeWidth="0.9"
-            strokeLinecap="round"
-            opacity="0.38"
-          />
-          <path
-            d="M45 42 Q410 108 775 42"
-            stroke="hsl(231 77% 22%)"
-            strokeWidth="0.9"
-            strokeLinecap="round"
-            opacity="0.16"
-          />
-          <path
-            d="M36 12 Q410 76 784 12"
-            stroke="hsl(230 70% 50%)"
-            strokeWidth="0.7"
-            strokeLinecap="round"
-            opacity="0.18"
-          />
-          <path
-            d="M18 26 Q410 100 802 26"
-            stroke="hsl(42 85% 58%)"
-            strokeWidth="0.7"
-            strokeLinecap="round"
-            opacity="0.25"
-          />
-          <path
-            d="M54 38 Q410 106 766 38"
-            stroke="hsl(42 85% 72%)"
-            strokeWidth="0.7"
-            strokeLinecap="round"
-            opacity="0.22"
-          />
-          <path
-            d="M68 50 Q410 110 752 50"
-            stroke="hsl(231 77% 22%)"
-            strokeWidth="0.7"
-            strokeLinecap="round"
-            opacity="0.12"
-          />
+          <defs>
+            <linearGradient id="campus-life-arc-fade">
+              <stop offset="0%" stopColor="white" stopOpacity="0" />
+              <stop offset="12%" stopColor="white" />
+              <stop offset="88%" stopColor="white" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient
+              id="campus-life-highlight-accent"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              y1="0"
+              x2="820"
+              y2="0"
+            >
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0" />
+              <stop offset="50%" stopColor="var(--accent)" />
+              <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient
+              id="campus-life-highlight-secondary"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              y1="0"
+              x2="820"
+              y2="0"
+            >
+              <stop offset="0%" stopColor="var(--secondary)" stopOpacity="0" />
+              <stop offset="50%" stopColor="var(--secondary)" />
+              <stop
+                offset="100%"
+                stopColor="var(--secondary)"
+                stopOpacity="0"
+              />
+            </linearGradient>
+            <mask id="campus-life-arc-mask">
+              <rect
+                width="820"
+                height="110"
+                fill="url(#campus-life-arc-fade)"
+              />
+            </mask>
+          </defs>
+          <g mask="url(#campus-life-arc-mask)">
+            <path
+              d="M20 6 Q410 82 800 6"
+              stroke="hsl(42 85% 58%)"
+              strokeWidth="0.9"
+              strokeLinecap="round"
+              opacity="0.42"
+            />
+            <path
+              d="M10 18 Q410 94 810 18"
+              stroke="hsl(230 70% 50%)"
+              strokeWidth="0.9"
+              strokeLinecap="round"
+              opacity="0.24"
+            />
+            <path
+              d="M28 30 Q410 102 792 30"
+              stroke="hsl(42 85% 72%)"
+              strokeWidth="0.9"
+              strokeLinecap="round"
+              opacity="0.38"
+            />
+            <path
+              d="M45 42 Q410 108 775 42"
+              stroke="hsl(231 77% 22%)"
+              strokeWidth="0.9"
+              strokeLinecap="round"
+              opacity="0.16"
+            />
+            <path
+              d="M36 12 Q410 76 784 12"
+              stroke="hsl(230 70% 50%)"
+              strokeWidth="0.7"
+              strokeLinecap="round"
+              opacity="0.18"
+            />
+            <path
+              d="M18 26 Q410 100 802 26"
+              stroke="hsl(42 85% 58%)"
+              strokeWidth="0.7"
+              strokeLinecap="round"
+              opacity="0.25"
+            />
+            <path
+              d="M54 38 Q410 106 766 38"
+              stroke="hsl(42 85% 72%)"
+              strokeWidth="0.7"
+              strokeLinecap="round"
+              opacity="0.22"
+            />
+            <path
+              d="M68 50 Q410 110 752 50"
+              stroke="hsl(231 77% 22%)"
+              strokeWidth="0.7"
+              strokeLinecap="round"
+              opacity="0.12"
+            />
+          </g>
+          <g mask="url(#campus-life-arc-mask)" opacity="1">
+            <path
+              className="animate-arc-highlight"
+              style={{ animationDelay: "0s" }}
+              d="M20 6 Q410 82 800 6"
+              stroke="url(#campus-life-highlight-accent)"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeDasharray="42 858"
+            />
+            <path
+              className="animate-arc-highlight-reverse"
+              style={{ animationDelay: "-1.6s" }}
+              d="M28 30 Q410 102 792 30"
+              stroke="url(#campus-life-highlight-secondary)"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeDasharray="42 858"
+            />
+            <path
+              className="animate-arc-highlight"
+              style={{ animationDelay: "-1.75s" }}
+              d="M54 38 Q410 106 766 38"
+              stroke="url(#campus-life-highlight-accent)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeDasharray="42 858"
+            />
+            <path
+              className="animate-arc-highlight-reverse"
+              style={{ animationDelay: "-0.9s" }}
+              d="M68 50 Q410 110 752 50"
+              stroke="url(#campus-life-highlight-secondary)"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeDasharray="42 858"
+            />
+          </g>
         </svg>
       </div>
 
@@ -251,119 +335,124 @@ export default function ProgramFinder({
           </p>
         )}
         {!error && filteredPrograms.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">
-            {visiblePrograms.map((program, index) => {
-              const isGraduate =
-                getLevelLabel(program.programType) === "Graduate";
-              return (
-                <div
-                  key={program.id}
-                  style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
-                  className="group relative flex h-full animate-card-in flex-col overflow-visible rounded-[1.4rem] border border-primary/10 bg-white opacity-0 shadow-[0_14px_36px_-20px_hsl(231_77%_22%/0.5)] transition-all duration-500 ease-out focus-within:-translate-y-2 focus-within:border-accent/40 focus-within:shadow-[0_26px_50px_-18px_hsl(230_70%_50%/0.4)] hover:-translate-y-2 hover:border-accent/40 hover:shadow-[0_26px_50px_-18px_hsl(230_70%_50%/0.4)] motion-reduce:animate-none motion-reduce:opacity-100"
-                >
-                  {/* Decorative header band with icon + faculty eyebrow */}
-                  <div className="relative overflow-hidden rounded-t-[1.4rem] bg-linear-to-br from-primary via-primary to-primary/85 px-6 pb-10 pt-6 sm:px-7 sm:pb-11 sm:pt-7">
-                    <span
-                      aria-hidden
-                      className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/5 transition-transform duration-700 ease-out group-hover:scale-125"
-                    />
-                    <span
-                      aria-hidden
-                      className="absolute -right-4 bottom-0 h-24 w-24 translate-y-1/2 rounded-full bg-accent/25 blur-2xl"
-                    />
-                    {/* Light sweep — a quick diagonal shine on hover to draw the eye */}
-                    <span
-                      aria-hidden
-                      className="absolute inset-0 -translate-x-[120%] skew-x-[-20deg] bg-linear-to-r from-transparent via-white/15 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-[120%] motion-reduce:hidden"
-                    />
+          <HomeSectionReveal>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">
+              {visiblePrograms.map((program, index) => {
+                const isGraduate =
+                  getLevelLabel(program.programType) === "Graduate";
+                return (
+                  <div
+                    key={program.id}
+                    style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
+                    className="group relative flex h-full animate-card-in flex-col overflow-visible rounded-[1.4rem] border border-primary/10 bg-white opacity-0 shadow-[0_14px_36px_-20px_hsl(231_77%_22%/0.5)] transition-all duration-500 ease-out focus-within:-translate-y-2 focus-within:border-accent/40 focus-within:shadow-[0_26px_50px_-18px_hsl(230_70%_50%/0.4)] hover:-translate-y-2 hover:border-accent/40 hover:shadow-[0_26px_50px_-18px_hsl(230_70%_50%/0.4)]"
+                  >
+                    {/* Decorative header band with icon + faculty eyebrow */}
+                    <div className="relative overflow-hidden rounded-t-[1.4rem] bg-linear-to-br from-primary via-primary to-primary/85 px-6 pb-10 pt-6 sm:px-7 sm:pb-11 sm:pt-7">
+                      <span
+                        aria-hidden
+                        className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/5 transition-transform duration-700 ease-out group-hover:scale-125"
+                      />
+                      <span
+                        aria-hidden
+                        className="absolute -right-4 bottom-0 h-24 w-24 translate-y-1/2 rounded-full bg-accent/25 blur-2xl"
+                      />
+                      {/* Light sweep — a quick diagonal shine on hover to draw the eye */}
+                      <span
+                        aria-hidden
+                        className="absolute inset-0 -translate-x-[120%] skew-x-[-20deg] bg-linear-to-r from-transparent via-white/15 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-[120%]"
+                      />
 
-                    <div className="relative flex items-start justify-between">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-white shadow-inner backdrop-blur-sm ring-1 ring-white/20 transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-110">
-                        {program.icon ? (
-                          <Image
-                            src={resolveUploadUrl(program.icon)}
-                            alt=""
-                            width={56}
-                            height={56}
-                            className="h-full w-full rounded-2xl object-cover"
-                            unoptimized
-                          />
-                        ) : (
-                          <GraduationCap className="h-7 w-7" aria-hidden />
+                      <div className="relative flex items-start justify-between">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-white shadow-inner backdrop-blur-sm ring-1 ring-white/20 transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-110">
+                          {program.icon ? (
+                            <Image
+                              src={resolveUploadUrl(program.icon)}
+                              alt=""
+                              width={56}
+                              height={56}
+                              className="h-full w-full rounded-2xl object-cover"
+                              unoptimized
+                            />
+                          ) : (
+                            <GraduationCap className="h-7 w-7" aria-hidden />
+                          )}
+                        </div>
+
+                        {program.facultyName && (
+                          <span className="line-clamp-2 max-w-[45%] text-right text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/60">
+                            {program.facultyName}
+                          </span>
                         )}
                       </div>
-
-                      {program.facultyName && (
-                        <span className="line-clamp-2 max-w-[45%] text-right text-[11px] font-semibold uppercase leading-tight tracking-wide text-white/60">
-                          {program.facultyName}
-                        </span>
-                      )}
                     </div>
-                  </div>
 
-                  {/* Combined level + duration pill, straddling the band/body seam */}
-                  <div className="relative z-10 -mt-5 flex justify-center px-6 sm:px-7">
-                    <span className="inline-flex items-center divide-x divide-primary/15 overflow-hidden rounded-full bg-white text-xs font-bold shadow-[0_8px_20px_-6px_hsl(231_77%_22%/0.35)] ring-1 ring-primary/10 transition-transform duration-300 ease-out group-hover:scale-105 sm:text-sm">
-                      <span
-                        className={`flex items-center gap-1.5 px-3.5 py-2 sm:px-4 ${
-                          isGraduate
-                            ? "bg-primary text-white"
-                            : "bg-accent text-primary"
-                        }`}
-                      >
-                        <GraduationCap className="h-3.5 w-3.5" aria-hidden />
-                        {getLevelLabel(program.programType)}
-                      </span>
-                      <span className="flex items-center gap-1.5 px-3.5 py-2 text-primary sm:px-4">
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                        {formatDuration(program.duration)}
-                      </span>
-                    </span>
-                  </div>
-
-                  {/* Body */}
-                  <div className="flex flex-1 flex-col px-6 pb-6 pt-4 text-left sm:px-7 sm:pb-7">
-                    <h3 className="font-heading mb-2.5 text-lg font-extrabold leading-snug text-primary sm:text-xl">
-                      {program.title}
-                    </h3>
-
-                    <span className="mb-4 inline-flex items-center gap-1.5 self-start text-xs font-semibold text-secondary sm:text-sm">
-                      <Building2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                      <span className="line-clamp-1">
-                        {program.departmentName}
-                      </span>
-                    </span>
-
-                    <p className=" line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                      {program.departmentSubtitle || ""}
-                    </p>
-
-                    <div className="mt-auto border-t border-dashed border-primary/10 pt-4">
-                      <Button
-                        variant="outlinePrimary"
-                        className="group/btn relative w-full overflow-hidden border-2 px-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-accent hover:text-white"
-                        nativeButton={false}
-                        render={
-                          <Link
-                            href={`/department/${program.departmentSlug}`}
-                          />
-                        }
-                      >
+                    {/* Combined level + duration pill, straddling the band/body seam */}
+                    <div className="relative z-10 -mt-5 flex justify-center px-6 sm:px-7">
+                      <span className="inline-flex items-center divide-x divide-primary/15 overflow-hidden rounded-full bg-white text-xs font-bold shadow-[0_8px_20px_-6px_hsl(231_77%_22%/0.35)] ring-1 ring-primary/10 transition-transform duration-300 ease-out group-hover:scale-105 sm:text-sm">
                         <span
-                          className="absolute inset-0 -translate-x-full bg-linear-to-r from-primary to-primary/90 transition-transform duration-300 group-hover/btn:translate-x-0"
+                          className={`flex items-center gap-1.5 px-3.5 py-2 sm:px-4 ${
+                            isGraduate
+                              ? "bg-primary text-white"
+                              : "bg-accent text-primary"
+                          }`}
+                        >
+                          <GraduationCap className="h-3.5 w-3.5" aria-hidden />
+                          {getLevelLabel(program.programType)}
+                        </span>
+                        <span className="flex items-center gap-1.5 px-3.5 py-2 text-primary sm:px-4">
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                          {formatDuration(program.duration)}
+                        </span>
+                      </span>
+                    </div>
+
+                    {/* Body */}
+                    <div className="flex flex-1 flex-col px-6 pb-6 pt-4 text-left sm:px-7 sm:pb-7">
+                      <h3 className="font-heading mb-2.5 text-lg font-extrabold leading-snug text-primary sm:text-xl">
+                        {program.title}
+                      </h3>
+
+                      <span className="mb-4 inline-flex items-center gap-1.5 self-start text-xs font-semibold text-secondary sm:text-sm">
+                        <Building2
+                          className="h-3.5 w-3.5 shrink-0"
                           aria-hidden
                         />
-                        <span className="relative inline-flex items-center gap-1.5">
-                          Learn More
-                          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
+                        <span className="line-clamp-1">
+                          {program.departmentName}
                         </span>
-                      </Button>
+                      </span>
+
+                      <p className=" line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                        {program.departmentSubtitle || ""}
+                      </p>
+
+                      <div className="mt-auto border-t border-dashed border-primary/10 pt-4">
+                        <Button
+                          variant="outlinePrimary"
+                          className="group/btn relative w-full overflow-hidden border-2 px-4 py-2.5 text-sm font-semibold transition-all duration-300 hover:border-accent hover:text-white"
+                          nativeButton={false}
+                          render={
+                            <Link
+                              href={`/department/${program.departmentSlug}`}
+                            />
+                          }
+                        >
+                          <span
+                            className="absolute inset-0 -translate-x-full bg-linear-to-r from-primary to-primary/90 transition-transform duration-300 group-hover/btn:translate-x-0"
+                            aria-hidden
+                          />
+                          <span className="relative inline-flex items-center gap-1.5">
+                            Learn More
+                            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
+                          </span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </HomeSectionReveal>
         )}
         {!error && filteredPrograms.length > 6 && !showAll && (
           //  Read more btn //
