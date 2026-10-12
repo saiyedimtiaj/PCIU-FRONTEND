@@ -12,6 +12,12 @@ import {
   LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 import { FaFacebook, FaLinkedin, FaInstagram } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
 import { logoutAction } from "@/app/(auth)/actions";
@@ -223,38 +229,55 @@ export default function NavbarClient({
                       </Link>
                     ))}
                   </div>
-                  <div className="grid grid-cols-3 gap-6">
-                    {displayFaculties.map((faculty) => (
-                      <div key={faculty.name}>
-                        <h3 className="mb-3 pb-2 border-b-2 border-accent">
-                          <Link
-                            href={`/faculties/${faculty.slug}`}
-                            className="font-bold text-sm text-primary hover:text-accent transition-colors block"
-                          >
-                            {faculty.name}
-                          </Link>
-                        </h3>
-                        {faculty.departments.length > 0 ? (
-                          <ul className="space-y-1">
-                            {faculty.departments.map((dept) => (
-                              <li key={dept.href}>
-                                <Link
-                                  href={dept.href}
-                                  className="text-sm text-muted-foreground hover:text-primary hover:pl-1 transition-all block py-1.5"
-                                >
-                                  {dept.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <div className="text-sm text-muted-foreground italic py-1">
-                            No departments available
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  <TooltipProvider>
+                    <div className="grid grid-cols-3 gap-6">
+                      {displayFaculties.map((faculty) => (
+                        <div key={faculty.name} className="min-w-0">
+                          <h3 className="mb-3 pb-2 border-b-2 border-accent min-w-0">
+                            <Tooltip>
+                              <TooltipTrigger
+                                delay={0}
+                                render={
+                                  <Link
+                                    href={`/faculties/${faculty.slug}`}
+                                    className="font-bold text-sm text-primary hover:text-accent transition-colors block truncate"
+                                    title={faculty.name}
+                                  >
+                                    {faculty.name}
+                                  </Link>
+                                }
+                              />
+                              <TooltipContent
+                                side="top"
+                                sideOffset={6}
+                                className="z-100 max-w-xs text-center"
+                              >
+                                {faculty.name}
+                              </TooltipContent>
+                            </Tooltip>
+                          </h3>
+                          {faculty.departments.length > 0 ? (
+                            <ul className="space-y-1">
+                              {faculty.departments.map((dept) => (
+                                <li key={dept.href}>
+                                  <Link
+                                    href={dept.href}
+                                    className="text-sm text-muted-foreground hover:text-primary hover:pl-1 transition-all block py-1.5"
+                                  >
+                                    {dept.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <div className="text-sm text-muted-foreground italic py-1">
+                              No departments available
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </TooltipProvider>
                 </div>
               </DropdownNavItem>
 
@@ -379,7 +402,8 @@ export default function NavbarClient({
                   <div key={faculty.name} className="py-2">
                     <Link
                       href={`/faculties/${faculty.slug}`}
-                      className="block text-xs font-semibold text-primary hover:text-accent uppercase px-4 py-1 transition-colors"
+                      className="block text-xs font-semibold text-primary hover:text-accent uppercase px-4 py-1 transition-colors truncate"
+                      title={faculty.name}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {faculty.name}
