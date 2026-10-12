@@ -99,7 +99,32 @@ export default function EntityFormClient({ slug, cancelHref, recordId }: EntityF
     );
   }
 
-  if (!record) return notFound;
+  if (!record) {
+    const endpoint = getEndpoint(slug);
+    if (!endpoint?.singleton) return notFound;
+
+    // A one-row resource that hasn't been saved yet. Most have a POST to
+    // create it; a `noCreate` one only has PATCH, so it saves through that.
+    return (
+      <div className="space-y-4">
+        <Alert
+          variant="info"
+          message={`No ${schema.title.toLowerCase()} has been saved yet — fill this in to create it.`}
+        />
+        {endpoint.noCreate ? (
+          <EntityForm
+            schema={schema}
+            cancelHref={cancelHref}
+            mode="edit"
+            recordId={recordId}
+            initialValues={schema.defaultValues as Record<string, unknown>}
+          />
+        ) : (
+          <EntityForm schema={schema} cancelHref={cancelHref} />
+        )}
+      </div>
+    );
+  }
 
   return (
     <EntityForm

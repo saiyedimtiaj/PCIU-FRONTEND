@@ -1,4 +1,4 @@
-import { api } from "./http";
+import { api, ApiError } from "./http";
 import { toApi, fromApi, toCamel } from "./case";
 import { buildFormData, buildJsonBody } from "./form-data";
 import {
@@ -56,6 +56,7 @@ function asInputDate(value: string): string {
 const ISO_DATE_FIELDS: Partial<Record<string, string[]>> = {
   education: ["educationYear"],
   awards: ["awardDate"],
+  "admission-test-results": ["publishedAt"],
 };
 
 function toIsoDateTime(value: string): string {
@@ -83,6 +84,19 @@ const DECODE_ONLY_DATE_FIELDS: Partial<Record<string, string[]>> = {
 
 const ISO_DATETIME_FIELDS: Partial<Record<string, string[]>> = {
   events: ["start_date_time", "end_date_time"],
+  "admission-schedules": [
+    "applicationStartDate",
+    "directAdmissionDeadline",
+    "writtenApplicationDeadline",
+    "writtenTestDate",
+    "testResultDate",
+    "admissionWindowStart",
+    "admissionWindowEnd",
+    "courseRegistrationStart",
+    "courseRegistrationEnd",
+    "classStartDate",
+    "orientationDate",
+  ],
 };
 
 const INPUT_DATETIME = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})/;
@@ -337,7 +351,15 @@ export async function getEntity(
   const path =
     cfg?.singleton || cfg?.getFromList ? collectionPath(slug) : itemPath(slug, id);
 
-  const data = await api.get<Dict | Dict[] | null>(path);
+  let data: Dict | Dict[] | null;
+  try {
+    data = await api.get<Dict | Dict[] | null>(path);
+  } catch (error) {
+    // A one-row resource 404s ("Fee structure not found") until its row is
+    // first saved — that's an empty state the form handles, not a failure.
+    if (cfg?.singleton && error instanceof ApiError && error.status === 404) return null;
+    throw error;
+  }
   if (!data) return null;
 
   const record = Array.isArray(data)

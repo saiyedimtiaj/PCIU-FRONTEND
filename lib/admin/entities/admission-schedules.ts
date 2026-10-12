@@ -2,22 +2,27 @@ import { z } from "zod";
 import { CalendarDays } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
+// Every milestone is a full datetime — the API stores e.g. the written test
+// at "2026-11-15T09:00:00.000Z" — so these are `datetime` inputs, converted
+// to/from ISO in services/entity.ts (ISO_DATETIME_FIELDS).
+const required = z.string().min(1, "Required");
+const optional = z.string().optional().or(z.literal(""));
+
 const admissionSchedulesSchema = z.object({
   semesterName: z.string().min(2, "Semester is required").max(255),
   year: z.coerce.number().int().min(2000).max(2100),
   programLevel: z.string().min(1, "Program level is required"),
-  applicationStartDate: z.string().min(1, "Required"),
-  directAdmissionDeadline: z.string().optional().or(z.literal("")),
-  writtenApplicationDeadline: z.string().optional().or(z.literal("")),
-  writtenTestDate: z.string().optional().or(z.literal("")),
-  testResultDate: z.string().optional().or(z.literal("")),
-  admissionWindowStart: z.string().min(1, "Required"),
-  admissionWindowEnd: z.string().min(1, "Required"),
-  courseRegistrationStart: z.string().optional().or(z.literal("")),
-  courseRegistrationEnd: z.string().optional().or(z.literal("")),
-  classStartDate: z.string().min(1, "Required"),
-  orientationDate: z.string().max(255).optional().or(z.literal("")),
-  isActive: z.boolean().default(true),
+  applicationStartDate: required,
+  directAdmissionDeadline: optional,
+  writtenApplicationDeadline: optional,
+  writtenTestDate: optional,
+  testResultDate: optional,
+  admissionWindowStart: required,
+  admissionWindowEnd: required,
+  courseRegistrationStart: optional,
+  courseRegistrationEnd: optional,
+  classStartDate: required,
+  orientationDate: optional,
 });
 
 export const admissionSchedulesEntity: EntitySchema<typeof admissionSchedulesSchema> = {
@@ -27,45 +32,44 @@ export const admissionSchedulesEntity: EntitySchema<typeof admissionSchedulesSch
   icon: CalendarDays,
   group: "Admission",
   zodSchema: admissionSchedulesSchema,
-  defaultValues: { isActive: true },
+  defaultValues: {},
   sections: [
     {
       title: "Semester",
       fields: [
-        { name: "semesterName", label: "Semester", type: "text", required: true, placeholder: "Spring" },
-        { name: "year", label: "Year", type: "number", required: true },
+        { name: "semesterName", label: "Semester", type: "text", required: true, placeholder: "Fall" },
+        { name: "year", label: "Year", type: "number", required: true, placeholder: "2026" },
         {
           name: "programLevel",
           label: "Program Level",
           type: "select",
           required: true,
           options: [
-            { label: "Undergraduate", value: "UNDERGRADUATE" },
-            { label: "Graduate", value: "GRADUATE" },
+            { label: "Undergraduate", value: "Undergraduate" },
+            { label: "Graduate", value: "Graduate" },
           ],
         },
       ],
     },
     {
-      title: "Application Window",
+      title: "Application & Test",
       fields: [
-        { name: "applicationStartDate", label: "Application Start", type: "date", required: true },
-        { name: "directAdmissionDeadline", label: "Direct Admission Deadline", type: "date" },
-        { name: "writtenApplicationDeadline", label: "Written Application Deadline", type: "date" },
-        { name: "writtenTestDate", label: "Written Test Date", type: "date" },
-        { name: "testResultDate", label: "Test Result Date", type: "date" },
+        { name: "applicationStartDate", label: "Application Start", type: "datetime", required: true },
+        { name: "directAdmissionDeadline", label: "Direct Admission Deadline", type: "datetime" },
+        { name: "writtenApplicationDeadline", label: "Written Application Deadline", type: "datetime" },
+        { name: "writtenTestDate", label: "Written Test", type: "datetime" },
+        { name: "testResultDate", label: "Test Result", type: "datetime" },
       ],
     },
     {
       title: "Admission & Classes",
       fields: [
-        { name: "admissionWindowStart", label: "Admission Window Start", type: "date", required: true },
-        { name: "admissionWindowEnd", label: "Admission Window End", type: "date", required: true },
-        { name: "courseRegistrationStart", label: "Course Registration Start", type: "date" },
-        { name: "courseRegistrationEnd", label: "Course Registration End", type: "date" },
-        { name: "classStartDate", label: "Class Start Date", type: "date", required: true },
-        { name: "orientationDate", label: "Orientation Date", type: "text", placeholder: "TBA" },
-        { name: "isActive", label: "Active", type: "switch" },
+        { name: "admissionWindowStart", label: "Admission Window Start", type: "datetime", required: true },
+        { name: "admissionWindowEnd", label: "Admission Window End", type: "datetime", required: true },
+        { name: "courseRegistrationStart", label: "Course Registration Start", type: "datetime" },
+        { name: "courseRegistrationEnd", label: "Course Registration End", type: "datetime" },
+        { name: "orientationDate", label: "Orientation", type: "datetime" },
+        { name: "classStartDate", label: "Class Start", type: "datetime", required: true },
       ],
     },
   ],

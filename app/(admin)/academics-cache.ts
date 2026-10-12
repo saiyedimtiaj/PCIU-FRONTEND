@@ -29,6 +29,7 @@ const ACADEMICS_SLUGS = new Set([
 const PUBLIC_PAGE_TAGS: Record<string, string> = {
   about: "about-university",
   management: "management",
+  "management-type": "management",
 };
 
 /** Call only from a Server Action — updateTag is Server-Action-only. */
