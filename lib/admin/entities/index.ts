@@ -57,6 +57,7 @@ import { iqacSectionsEntity } from "./iqac-sections";
 import { iqacDocumentsEntity } from "./iqac-documents";
 import { iqacQuickLinksEntity } from "./iqac-quick-links";
 import { managementEntity } from "./management";
+import { managementTypeEntity } from "./management-type";
 
 import { contactEntity } from "./contact";
 import { settingEntity } from "./setting";
@@ -120,6 +121,7 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   "iqac-documents": iqacDocumentsEntity,
   "iqac-quick-links": iqacQuickLinksEntity,
   management: managementEntity,
+  "management-type": managementTypeEntity,
 
   contact: contactEntity,
   setting: settingEntity,

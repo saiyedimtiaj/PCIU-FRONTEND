@@ -1,43 +1,41 @@
 import { z } from "zod";
 import { Users } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
+import { optionalUpload } from "./_upload";
 
 const managementSchema = z.object({
-  teacher_id: z.string().min(1, "Teacher is required"),
-  designation: z.string().min(2, "Designation is required").max(100),
+  name: z.string().min(2, "Name is required").max(255),
+  img: optionalUpload,
+  designation: z.string().max(255).optional().or(z.literal("")),
   management_role: z.string().max(100).optional().or(z.literal("")),
-  types: z.enum(["SYNDICATE", "ACADEMIC_COUNCIL", "PROCTORIAL_BODIES"]),
+  type_id: z.string().min(1, "Management type is required"),
   status: z.boolean().default(true),
-  iqac_order: z.coerce.number().int().nonnegative().default(0),
 });
 
 export const managementEntity: EntitySchema<typeof managementSchema> = {
   slug: "management",
   title: "Management Member",
-  description: "Add a member of the Syndicate, Academic Council, or Proctorial Bodies.",
+  description: "Add a member to a management body (Syndicate, Academic Council, ...).",
   icon: Users,
   group: "IQAC",
   zodSchema: managementSchema,
-  defaultValues: { types: "SYNDICATE", status: true, iqac_order: 0 },
+  defaultValues: { status: true },
   sections: [
     {
       title: "Member",
       fields: [
-        { name: "teacher_id", label: "Teacher", type: "relation", required: true, relationTo: "teacher", options: [] },
-        { name: "designation", label: "Designation", type: "text", required: true, placeholder: "Vice Chancellor, PCIU" },
-        { name: "management_role", label: "Role", type: "text", placeholder: "Chairman" },
+        { name: "name", label: "Name", type: "text", required: true, placeholder: "Mr. Zahirul Islam" },
         {
-          name: "types",
-          label: "Body",
-          type: "enum",
+          name: "type_id",
+          label: "Management Type",
+          type: "relation",
           required: true,
-          options: [
-            { label: "Syndicate", value: "SYNDICATE" },
-            { label: "Academic Council", value: "ACADEMIC_COUNCIL" },
-            { label: "Proctorial Bodies", value: "PROCTORIAL_BODIES" },
-          ],
+          relationTo: "management-type",
+          options: [],
         },
-        { name: "iqac_order", label: "Display Order", type: "number" },
+        { name: "designation", label: "Designation", type: "text", placeholder: "Govt Nominated" },
+        { name: "management_role", label: "Role", type: "text", placeholder: "Member" },
+        { name: "img", label: "Photo", type: "image", colSpan: 2 },
         { name: "status", label: "Active", type: "switch" },
       ],
     },

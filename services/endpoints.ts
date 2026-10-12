@@ -122,7 +122,8 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   // rather than truly removing it — see deleteAtRoot).
   iqac: { path: "/iqac", deleteAtRoot: true, createOverwrites: true },
   "iqac-committee": { path: "/iqac/committee" },
-  management: { path: "/management" },
+  management: { path: "/management", multipart: true },
+  "management-type": { path: "/management/type" },
 
   contact: { path: "/contacts" },
   setting: { path: "/settings", multipart: true },

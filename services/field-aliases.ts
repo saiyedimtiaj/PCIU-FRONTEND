@@ -6,7 +6,6 @@ export const WRITE_ALIASES: Record<string, Record<string, string>> = {
   "pcj-volumes": { coverImage: "coverImage" },
 
   faculty: { teacherId: "deanId" },
-  management: { types: "type" },
   user: { fullName: "name" },
 };
 
@@ -16,7 +15,6 @@ export const WRITE_DROPS: Record<string, string[]> = {
   pages: ["publishedAt"],
   contact: ["displayOrder", "status"],
   iqac: ["description"],
-  management: ["iqacOrder"],
   "admission-advertisements": ["isActive"],
   "admission-test-results": ["isActive"],
   "admission-schedules": ["isActive"],
