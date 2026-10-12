@@ -25,27 +25,33 @@ export async function getDepartmentBySlug(
       if (data.success && data.data) {
         const deptId = data.data.id;
 
-        const [teachersRes, eventsRes, researchRes, coursesRes, tuitionRes, programsRes] =
-          await Promise.all([
-            publicFetch.get(`/teachers/department/${deptId}`, {
-              next: { tags: ["department-teachers", slug] },
-            }),
-            publicFetch.get(`/department/events/${deptId}`, {
-              next: { tags: ["department-events", slug] },
-            }),
-            publicFetch.get(`/department/research-centres/${deptId}`, {
-              next: { tags: ["department-research", slug] },
-            }),
-            publicFetch.get(`/department/courses/${deptId}`, {
-              next: { tags: ["department-courses", slug] },
-            }),
-            publicFetch.get(`/admission/tuitionfees`, {
-              next: { tags: ["tuitionfees"] },
-            }),
-            publicFetch.get(`/department/programs/${slug}`, {
-              next: { tags: ["department-programs", slug] },
-            }),
-          ]);
+        const [
+          teachersRes,
+          eventsRes,
+          researchRes,
+          coursesRes,
+          tuitionRes,
+          programsRes,
+        ] = await Promise.all([
+          publicFetch.get(`/teachers/department/${deptId}`, {
+            next: { tags: ["department-teachers", slug] },
+          }),
+          publicFetch.get(`/department/events/${deptId}`, {
+            next: { tags: ["department-events", slug] },
+          }),
+          publicFetch.get(`/department/research-centres/${deptId}`, {
+            next: { tags: ["department-research", slug] },
+          }),
+          publicFetch.get(`/department/courses/${deptId}`, {
+            next: { tags: ["department-courses", slug] },
+          }),
+          publicFetch.get(`/admission/tuitionfees`, {
+            next: { tags: ["tuitionfees"] },
+          }),
+          publicFetch.get(`/department/programs/${slug}`, {
+            next: { tags: ["department-programs", slug] },
+          }),
+        ]);
 
         let teachers: ApiTeacher[] = [];
         if (teachersRes.ok) {
@@ -147,7 +153,7 @@ function mapApiDepartmentToContent(
       ? {
           name: apiData.chairman.name,
           designation: apiData.chairman.designation,
-          message: apiData.chairman.message || [],
+          bio: apiData.chairman.bio,
           imageUrl: apiData.chairman.imageUrl,
         }
       : null,

@@ -16,8 +16,8 @@ export interface DepartmentStat {
 export interface DepartmentChairman {
   name: string;
   designation: string;
-  message: string[];
   imageUrl?: string;
+  bio: string;
 }
 
 export interface DepartmentOverview {
@@ -150,7 +150,7 @@ export interface ApiDepartmentResponse {
   chairman: {
     name: string;
     designation: string;
-    message?: string[];
+    bio: string;
     imageUrl?: string;
   } | null;
 }

@@ -56,16 +56,18 @@ export default function TeacherTemplate({
       {/* Main Profile Info */}
       <div className="container mx-auto px-4 -mt-32 relative z-10">
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-10 border border-slate-100 flex flex-col md:flex-row gap-8 items-center md:items-start">
-          <Avatar className="w-48 h-48 border-8 border-white shadow-lg bg-slate-100 text-slate-400">
-            <AvatarImage
-              src={getMediaUrl(teacher.imageUrl) || ""}
-              alt={teacher.name}
-              className="object-cover"
-            />
-            <AvatarFallback className="text-6xl font-bold font-heading bg-slate-100 text-[#0ea5e9]">
-              {getInitials(teacher.name)}
-            </AvatarFallback>
-          </Avatar>
+          <div className="shrink-0 relative">
+            <Avatar className="w-48 sm:w-56 aspect-3/4 h-auto rounded-2xl border-4 md:border-8 border-white shadow-xl bg-slate-100 text-slate-400 overflow-hidden after:hidden">
+              <AvatarImage
+                src={getMediaUrl(teacher.imageUrl) || ""}
+                alt={teacher.name}
+                className="size-full rounded-2xl object-cover"
+              />
+              <AvatarFallback className="size-full rounded-2xl text-6xl font-bold font-heading bg-slate-100 text-[#0ea5e9]">
+                {getInitials(teacher.name)}
+              </AvatarFallback>
+            </Avatar>
+          </div>
 
           <div className="flex-1 text-center md:text-left space-y-4">
             <div>
@@ -77,12 +79,6 @@ export default function TeacherTemplate({
               </p>
               <p className="text-slate-600 mt-1">{teacher.department.name}</p>
             </div>
-
-            {teacher.shortBio && (
-              <p className="text-slate-500 italic max-w-2xl text-sm leading-relaxed">
-                {teacher.shortBio}
-              </p>
-            )}
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm text-slate-600 font-medium pt-2">
               {teacher.office && (
