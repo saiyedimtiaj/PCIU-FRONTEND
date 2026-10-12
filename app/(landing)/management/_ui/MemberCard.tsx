@@ -24,8 +24,8 @@ export default function MemberCard({ member }: { member: ManagementMember }) {
   const showImg = member.img && !imgFailed;
 
   return (
-    <div className="relative mx-auto w-full max-w-[230px] pl-2.5 pt-2.5">
-      <div className="pointer-events-none absolute left-0 top-0 bottom-4 w-[calc(100%-12px)] rounded-[18px] bg-primary" />
+    <div className="  relative mx-auto w-full max-w-[230px] pl-2.5 pt-2.5">
+      {/* <div className=" pointer-events-none absolute left-0 top-0 bottom-4 w-[calc(100%-12px)] rounded-[18px] bg-primary" /> */}
 
       <div className="relative z-10 flex h-full flex-col rounded-xl bg-card p-2.5 shadow-[0_15px_42px_rgba(8,47,103,0.13)]">
         <div className="group relative aspect-[5/4] overflow-hidden rounded-[13px] bg-[#EEF5FC]">
@@ -43,11 +43,11 @@ export default function MemberCard({ member }: { member: ManagementMember }) {
             </div>
           )}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#082F67]/15 via-transparent to-transparent" />
-          <div className="pointer-events-none absolute right-2 top-2 h-10 w-10 rounded-tr-xl border-r-[3px] border-t-[3px] border-accent" />
-          <div className="pointer-events-none absolute bottom-6 left-2 h-8 w-8 rounded-bl-xl border-b-[3px] border-l-[3px] border-accent" />
-          <span className="absolute left-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow">
-            {member.serial}
-          </span>
+          {/* <div className="pointer-events-none absolute right-2 top-2 h-10 w-10 rounded-tr-xl border-r-[3px] border-t-[3px] border-accent" />
+          <div className="pointer-events-none absolute bottom-6 left-2 h-8 w-8 rounded-bl-xl border-b-[3px] border-l-[3px] border-accent" /> */}
+          {/* <span className="absolute left-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow">
+            {member.serial + 11}
+          </span> */}
         </div>
 
         <div className="relative z-20 -mt-4 ml-3 rounded-xl bg-primary px-3 py-2.5 shadow-[0_8px_21px_rgba(8,47,103,0.13)]">
