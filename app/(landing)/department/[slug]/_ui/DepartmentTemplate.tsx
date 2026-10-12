@@ -385,7 +385,7 @@ export default function DepartmentTemplate({
                 {content.facultyMembers.length > 0 && (
                   <Link
                     href={`/department/${content.slug}/teachers`}
-                    className="group inline-flex items-center gap-3 rounded-full border border-[#0ea5e9]/40 bg-white/80 py-1.5 pl-5 pr-1.5 shadow-[0_6px_20px_rgba(8,47,103,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1e3a8a] hover:bg-white hover:shadow-[0_10px_28px_rgba(8,47,103,0.14)] shrink-0"
+                    className="group w-fit inline-flex items-center gap-3 rounded-full border border-[#0ea5e9]/40 bg-white/80 py-1.5 pl-5 pr-1.5 shadow-[0_6px_20px_rgba(8,47,103,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1e3a8a] hover:bg-white hover:shadow-[0_10px_28px_rgba(8,47,103,0.14)] shrink-0"
                   >
                     <span className="font-heading text-sm font-semibold tracking-wide text-[#1e3a8a] transition-colors duration-300 sm:text-base">
                       View All Faculty
