@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { Eye, Target, ClipboardCheck, GraduationCap, Users, FileText, BookOpen, Mail, Phone, MapPin, Building2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ActivitiesGallery from "./_ui/ActivitiesGallery";
 import pageData from "@/content/iqac/page.json";
-import type { IqacPageContent } from "@/types/iqac";
+import { getIqacActivities, getIqacGallery, getIqacPage } from "@/lib/api/iqac";
+import type { IqacPageContent, IqacPerson } from "@/types/iqac";
 
 const content = pageData as IqacPageContent;
 
@@ -20,19 +23,54 @@ const NOTICE_BORDER: Record<string, string> = {
   highlight: "border-l-highlight",
 };
 
-export default function IqacPage() {
+const RICH_TEXT =
+  "space-y-3 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:font-semibold [&_strong]:text-foreground [&_a]:text-primary [&_a]:underline";
+
+function initial(name: string) {
+  return name.replace(/^((Prof|Dr|Engr|Mr|Mrs|Ms)\.\s*)+/g, "").charAt(0).toUpperCase();
+}
+
+function Avatar({ person, className }: { person: IqacPerson; className: string }) {
+  return (
+    <div
+      className={`relative overflow-hidden rounded-full bg-primary/10 text-primary font-heading font-bold flex items-center justify-center shrink-0 ${className}`}
+    >
+      {person.image ? (
+        <Image src={person.image} alt={person.name} fill sizes="96px" className="object-cover" />
+      ) : (
+        initial(person.name)
+      )}
+    </div>
+  );
+}
+
+function PersonName({ person }: { person: IqacPerson }) {
+  return person.href ? (
+    <Link href={person.href} className="hover:text-primary">
+      {person.name}
+    </Link>
+  ) : (
+    <>{person.name}</>
+  );
+}
+
+export default async function IqacPage() {
+  const [data, activities, gallery] = await Promise.all([
+    getIqacPage(),
+    getIqacActivities(),
+    getIqacGallery(),
+  ]);
+  const director = data.director;
+
   return (
     <div className="min-h-screen bg-background">
       <section className="bg-linear-to-br from-primary via-primary/95 to-secondary py-20 lg:py-28">
         <div className="container mx-auto px-4 text-center">
           <Badge className="bg-accent text-accent-foreground mb-4">Quality Assurance</Badge>
           <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white mb-4">
-            Institutional Quality Assurance Cell
+            {data.title}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto">
-            Ensuring excellence in teaching, learning, and research through systematic quality
-            enhancement initiatives at PCIU.
-          </p>
+          <p className="text-white/80 text-lg max-w-2xl mx-auto">{data.subtitle}</p>
         </div>
       </section>
 
@@ -45,11 +83,18 @@ export default function IqacPage() {
                 About IQAC
               </h2>
               <Card>
-                <CardContent className="space-y-4 text-sm text-muted-foreground leading-relaxed">
-                  {content.about.map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
-                </CardContent>
+                {data.aboutHtml ? (
+                  <CardContent
+                    className={`text-sm text-muted-foreground leading-relaxed ${RICH_TEXT}`}
+                    dangerouslySetInnerHTML={{ __html: data.aboutHtml }}
+                  />
+                ) : (
+                  <CardContent className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+                    {data.about.map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </CardContent>
+                )}
               </Card>
             </section>
 
@@ -58,14 +103,14 @@ export default function IqacPage() {
                 <CardContent>
                   <Eye className="size-6 text-accent mb-3" />
                   <h3 className="font-semibold text-foreground mb-2">Our Vision</h3>
-                  <p className="text-sm text-muted-foreground">{content.vision}</p>
+                  <p className="text-sm text-muted-foreground">{data.vision}</p>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent>
                   <Target className="size-6 text-accent mb-3" />
                   <h3 className="font-semibold text-foreground mb-2">Our Mission</h3>
-                  <p className="text-sm text-muted-foreground">{content.mission}</p>
+                  <p className="text-sm text-muted-foreground">{data.mission}</p>
                 </CardContent>
               </Card>
             </section>
@@ -78,8 +123,8 @@ export default function IqacPage() {
               <Card>
                 <CardContent>
                   <ol className="grid sm:grid-cols-2 gap-3">
-                    {content.objectives.map((obj, i) => (
-                      <li key={obj} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    {data.objectives.map((obj, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                         <span className="font-heading font-bold text-accent shrink-0">{i + 1}.</span>
                         {obj}
                       </li>
@@ -96,19 +141,32 @@ export default function IqacPage() {
               </h2>
               <Card>
                 <CardContent className="flex flex-col sm:flex-row gap-6">
-                  <div className="w-24 h-24 rounded-full bg-primary/10 text-primary font-heading font-bold text-2xl flex items-center justify-center shrink-0">
-                    {content.directorMessage.name.replace(/^(Prof\.|Dr\.)\s*/g, "")[0]}
-                  </div>
+                  {director && <Avatar person={director} className="w-24 h-24 text-2xl" />}
                   <div>
-                    <div className="space-y-3 text-sm text-muted-foreground leading-relaxed mb-4">
-                      {content.directorMessage.paragraphs.map((p, i) => (
-                        <p key={i}>{p}</p>
-                      ))}
-                    </div>
-                    <p className="font-semibold text-foreground">{content.directorMessage.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {content.directorMessage.designation} &middot; {content.directorMessage.email}
-                    </p>
+                    {data.directorMessageHtml ? (
+                      <div
+                        className={`text-sm text-muted-foreground leading-relaxed mb-4 ${RICH_TEXT}`}
+                        dangerouslySetInnerHTML={{ __html: data.directorMessageHtml }}
+                      />
+                    ) : (
+                      <div className="space-y-3 text-sm text-muted-foreground leading-relaxed mb-4">
+                        {data.directorMessage.map((p, i) => (
+                          <p key={i}>{p}</p>
+                        ))}
+                      </div>
+                    )}
+                    {director && (
+                      <>
+                        <p className="font-semibold text-foreground">
+                          <PersonName person={director} />
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {["Director, IQAC", director.designation, director.email]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -119,30 +177,40 @@ export default function IqacPage() {
                 <Users className="size-5 text-primary" />
                 IQAC Committee
               </h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {content.committeeMembers.map((member) => (
-                  <Card key={member.email}>
-                    <CardContent className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-full bg-primary/10 text-primary font-heading font-bold flex items-center justify-center shrink-0">
-                        {member.name.replace(/^(Prof\.|Dr\.)\s*/g, "")[0]}
-                      </div>
-                      <div className="min-w-0">
-                        <Badge variant="secondary" className="mb-1">
-                          {member.role}
-                        </Badge>
-                        <p className="text-sm font-semibold text-foreground truncate">
-                          {member.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{member.designation}</p>
-                        <p className="text-xs text-muted-foreground">{member.department}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              {data.committee.length ? (
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {data.committee.map((member, i) => (
+                    <Card key={`${member.name}-${i}`}>
+                      <CardContent className="flex items-center gap-4">
+                        <Avatar person={member} className="w-16 h-16" />
+                        <div className="min-w-0">
+                          <Badge variant="secondary" className="mb-1">
+                            {member.role}
+                          </Badge>
+                          <p className="text-sm font-semibold text-foreground truncate">
+                            <PersonName person={member} />
+                          </p>
+                          {member.designation && (
+                            <p className="text-xs text-muted-foreground">{member.designation}</p>
+                          )}
+                          {member.department && (
+                            <p className="text-xs text-muted-foreground">{member.department}</p>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card>
+                  <CardContent className="text-sm text-muted-foreground">
+                    Committee members will be announced soon.
+                  </CardContent>
+                </Card>
+              )}
             </section>
 
-            <ActivitiesGallery activities={content.activities} gallery={content.gallery} />
+            <ActivitiesGallery activities={activities} gallery={gallery} />
           </div>
 
           <aside className="space-y-6">

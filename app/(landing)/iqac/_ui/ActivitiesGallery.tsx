@@ -1,25 +1,38 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Calendar, Award } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { IqacActivity, IqacGalleryItem } from "@/types/iqac";
+import type { IqacActivityItem, IqacGalleryPhoto } from "@/types/iqac";
 
-const ACTIVITY_TYPES = ["Workshop", "Training", "Seminar", "Meeting"];
-const GALLERY_FILTERS = ["all", "Workshop", "Training", "Meeting", "Seminar"];
+/** Distinct labels in first-seen order — tabs/filters follow whatever the admin entered. */
+function kinds<T>(items: T[], key: (item: T) => string) {
+  return [...new Set(items.map(key))];
+}
+
+function EmptyNote({ children }: { children: React.ReactNode }) {
+  return (
+    <Card>
+      <CardContent className="text-sm text-muted-foreground">{children}</CardContent>
+    </Card>
+  );
+}
 
 export default function ActivitiesGallery({
   activities,
   gallery,
 }: {
-  activities: IqacActivity[];
-  gallery: IqacGalleryItem[];
+  activities: IqacActivityItem[];
+  gallery: IqacGalleryPhoto[];
 }) {
   const [galleryFilter, setGalleryFilter] = useState("all");
 
+  const activityTypes = kinds(activities, (a) => a.type);
+  const galleryFilters = ["all", ...kinds(gallery, (g) => g.category)];
   const filteredGallery =
     galleryFilter === "all" ? gallery : gallery.filter((item) => item.category === galleryFilter);
 
@@ -31,34 +44,31 @@ export default function ActivitiesGallery({
           <Calendar className="size-5 text-primary" />
           Our Activities
         </h2>
-        <Tabs defaultValue="all">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            {ACTIVITY_TYPES.map((type) => (
-              <TabsTrigger key={type} value={type}>
-                {type}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <TabsContent value="all">
-            <div className="grid sm:grid-cols-2 gap-4">
-              {activities.map((activity) => (
-                <ActivityCard key={activity.title} activity={activity} />
+        {activities.length ? (
+          <Tabs defaultValue="all">
+            <TabsList className="flex-wrap h-auto">
+              <TabsTrigger value="all">All</TabsTrigger>
+              {activityTypes.map((type) => (
+                <TabsTrigger key={type} value={type}>
+                  {type}
+                </TabsTrigger>
               ))}
-            </div>
-          </TabsContent>
-          {ACTIVITY_TYPES.map((type) => (
-            <TabsContent key={type} value={type}>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {activities
-                  .filter((a) => a.type === type)
-                  .map((activity) => (
-                    <ActivityCard key={activity.title} activity={activity} />
-                  ))}
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
+            </TabsList>
+            {["all", ...activityTypes].map((type) => (
+              <TabsContent key={type} value={type}>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {activities
+                    .filter((a) => type === "all" || a.type === type)
+                    .map((activity, i) => (
+                      <ActivityCard key={`${activity.title}-${i}`} activity={activity} />
+                    ))}
+                </div>
+              </TabsContent>
+            ))}
+          </Tabs>
+        ) : (
+          <EmptyNote>No IQAC activities have been published yet.</EmptyNote>
+        )}
       </section>
 
       {/* Gallery */}
@@ -67,51 +77,78 @@ export default function ActivitiesGallery({
           <Award className="size-5 text-primary" />
           Gallery
         </h2>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {GALLERY_FILTERS.map((filter) => (
-            <button
-              key={filter}
-              type="button"
-              onClick={() => setGalleryFilter(filter)}
-              className={cn(
-                "rounded-full px-4 py-1.5 text-xs font-medium transition-colors capitalize",
-                galleryFilter === filter
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/70"
-              )}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {filteredGallery.map((item) => (
-            <div
-              key={item.title}
-              className="group relative aspect-video rounded-lg bg-gradient-accent overflow-hidden"
-            >
-              <div className="absolute inset-0 flex items-end bg-linear-to-t from-black/70 via-black/0 to-black/0 p-3 opacity-0 transition-opacity group-hover:opacity-100">
-                <p className="text-xs font-medium text-white">{item.title}</p>
-              </div>
+        {gallery.length ? (
+          <>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {galleryFilters.map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => setGalleryFilter(filter)}
+                  className={cn(
+                    "rounded-full px-4 py-1.5 text-xs font-medium transition-colors capitalize",
+                    galleryFilter === filter
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/70"
+                  )}
+                >
+                  {filter}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {filteredGallery.map((item, i) => (
+                <div
+                  key={`${item.image}-${i}`}
+                  className="group relative aspect-video rounded-lg bg-gradient-accent overflow-hidden"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- API uploads, sized by the tile */}
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    loading="lazy"
+                    className="absolute inset-0 size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 flex items-end bg-linear-to-t from-black/70 via-black/0 to-black/0 p-3 opacity-0 transition-opacity group-hover:opacity-100">
+                    <p className="text-xs font-medium text-white">{item.title}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <EmptyNote>No IQAC photos have been published yet.</EmptyNote>
+        )}
       </section>
     </>
   );
 }
 
-function ActivityCard({ activity }: { activity: IqacActivity }) {
-  return (
-    <Card>
+function ActivityCard({ activity }: { activity: IqacActivityItem }) {
+  const body = (
+    <Card className="h-full overflow-hidden">
+      {activity.image && (
+        // eslint-disable-next-line @next/next/no-img-element -- API uploads, sized by the card
+        <img src={activity.image} alt="" loading="lazy" className="aspect-video w-full object-cover" />
+      )}
       <CardContent>
         <div className="flex items-start justify-between gap-2 mb-2">
           <h3 className="font-semibold text-foreground text-sm">{activity.title}</h3>
           <Badge variant="secondary">{activity.type}</Badge>
         </div>
-        <p className="text-xs text-muted-foreground mb-2">{activity.date}</p>
-        <p className="text-sm text-muted-foreground">{activity.description}</p>
+        {activity.date && <p className="text-xs text-muted-foreground mb-2">{activity.date}</p>}
+        {activity.description && (
+          <p className="text-sm text-muted-foreground line-clamp-3">{activity.description}</p>
+        )}
       </CardContent>
     </Card>
+  );
+
+  return activity.href ? (
+    <Link href={activity.href} className="block transition-opacity hover:opacity-90">
+      {body}
+    </Link>
+  ) : (
+    body
   );
 }

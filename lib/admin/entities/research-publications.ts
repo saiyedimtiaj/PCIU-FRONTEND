@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { BookMarked } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
+import { optionalUpload } from "./_upload";
 
 const researchPublicationsSchema = z.object({
   department_id: z.string().min(1, "Department is required"),
@@ -12,7 +13,7 @@ const researchPublicationsSchema = z.object({
   type: z.string().min(1, "Type is required"),
   external_link: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   abstract: z.string().optional().or(z.literal("")),
-  pdf_file: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  pdf_file: optionalUpload,
   status: z.enum(["draft", "published"]),
 });
 
@@ -59,7 +60,7 @@ export const researchPublicationsEntity: EntitySchema<typeof researchPublication
       fields: [
         { name: "abstract", label: "Abstract", type: "textarea", colSpan: 2 },
         { name: "external_link", label: "External Link", type: "url" },
-        { name: "pdf_file", label: "PDF File URL", type: "file" },
+        { name: "pdf_file", label: "PDF File", type: "file" },
         {
           name: "status",
           label: "Status",

@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { FileText } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
+import { requiredUpload } from "./_upload";
 
 const iqacDocumentsSchema = z.object({
   name: z.string().min(2, "Name is required").max(255),
-  file_url: z.string().url("Must be a valid URL"),
+  file_url: requiredUpload,
   file_type: z.string().min(1, "File type is required"),
   file_size: z.string().max(255).optional().or(z.literal("")),
   display_order: z.coerce.number().int().nonnegative().default(0),
@@ -24,7 +25,7 @@ export const iqacDocumentsEntity: EntitySchema<typeof iqacDocumentsSchema> = {
       title: "Document",
       fields: [
         { name: "name", label: "Document Name", type: "text", required: true, colSpan: 2 },
-        { name: "file_url", label: "File URL", type: "file", required: true, colSpan: 2 },
+        { name: "file_url", label: "Document File", type: "file", required: true, colSpan: 2 },
         {
           name: "file_type",
           label: "File Type",
