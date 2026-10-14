@@ -109,8 +109,8 @@ export default function ActivitiesGallery({
                     loading="lazy"
                     className="absolute inset-0 size-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 flex items-end bg-linear-to-t from-black/70 via-black/0 to-black/0 p-3 opacity-0 transition-opacity group-hover:opacity-100">
-                    <p className="text-xs font-medium text-white">{item.title}</p>
+                  <div className="absolute inset-0 flex items-end bg-linear-to-t from-black/70 via-black/0 to-black/0 p-3 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
+                    <p className="text-xs font-medium text-white line-clamp-2">{item.title}</p>
                   </div>
                 </div>
               ))}
@@ -133,12 +133,12 @@ function ActivityCard({ activity }: { activity: IqacActivityItem }) {
       )}
       <CardContent>
         <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="font-semibold text-foreground text-sm">{activity.title}</h3>
+          <h3 className="font-semibold text-foreground text-sm min-w-0 wrap-anywhere">{activity.title}</h3>
           <Badge variant="secondary">{activity.type}</Badge>
         </div>
         {activity.date && <p className="text-xs text-muted-foreground mb-2">{activity.date}</p>}
         {activity.description && (
-          <p className="text-sm text-muted-foreground line-clamp-3">{activity.description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-3 wrap-anywhere">{activity.description}</p>
         )}
       </CardContent>
     </Card>

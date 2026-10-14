@@ -35,7 +35,7 @@ export const galleryEntity: EntitySchema<typeof gallerySchema> = {
           type: "text",
           required: true,
           placeholder: "campus",
-          helper: "A short category key, e.g. campus, lifeAtPciu, academic. For the IQAC page gallery use iqac-<kind>, e.g. iqac-workshop, iqac-training.",
+          helper: "A short category key, e.g. campus, lifeAtPciu, academic. IQAC photos are managed under IQAC → IQAC Gallery Photo.",
         },
         {
           name: "department_id",

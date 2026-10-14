@@ -153,17 +153,17 @@ export default function TeacherTemplate({
       {/* Tabs Section */}
       <div className="container mx-auto px-4 mt-12">
         <Tabs defaultValue="about" className="w-full">
-          <TabsList className="w-full justify-start overflow-x-auto bg-transparent border-b border-slate-200 p-0 h-auto rounded-none mb-8">
+          <TabsList className="w-full flex-nowrap justify-start overflow-x-auto [scrollbar-width:none] bg-transparent border-b border-slate-200 p-0 h-auto rounded-none mb-8">
             <TabsTrigger
               value="about"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none py-4 px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none shrink-0 whitespace-nowrap py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
             >
               <User className="w-4 h-4 mr-2" /> About
             </TabsTrigger>
             {hasEducation && (
               <TabsTrigger
                 value="education"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none py-4 px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none shrink-0 whitespace-nowrap py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
               >
                 <GraduationCap className="w-4 h-4 mr-2" /> Education
               </TabsTrigger>
@@ -171,7 +171,7 @@ export default function TeacherTemplate({
             {hasExperience && (
               <TabsTrigger
                 value="experience"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none py-4 px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none shrink-0 whitespace-nowrap py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
               >
                 <Briefcase className="w-4 h-4 mr-2" /> Experience
               </TabsTrigger>
@@ -179,7 +179,7 @@ export default function TeacherTemplate({
             {hasPublications && (
               <TabsTrigger
                 value="publications"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none py-4 px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none shrink-0 whitespace-nowrap py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
               >
                 <BookText className="w-4 h-4 mr-2" /> Publications
               </TabsTrigger>
@@ -187,7 +187,7 @@ export default function TeacherTemplate({
             {hasAwards && (
               <TabsTrigger
                 value="awards"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none py-4 px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none shrink-0 whitespace-nowrap py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
               >
                 <Award className="w-4 h-4 mr-2" /> Awards
               </TabsTrigger>
@@ -195,7 +195,7 @@ export default function TeacherTemplate({
             {hasMemberships && (
               <TabsTrigger
                 value="memberships"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none py-4 px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-[#0ea5e9] data-[state=active]:text-[#1e3a8a] data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none shrink-0 whitespace-nowrap py-3 px-4 sm:py-4 sm:px-6 font-semibold text-slate-500 hover:text-slate-700 transition-colors"
               >
                 <BookOpen className="w-4 h-4 mr-2" /> Memberships
               </TabsTrigger>

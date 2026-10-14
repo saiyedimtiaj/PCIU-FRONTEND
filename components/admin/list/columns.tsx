@@ -42,6 +42,14 @@ const TYPE_PRIORITY: readonly FieldType[] = [
 const HIDE_BELOW_BY_INDEX: readonly ("sm" | "md" | "lg" | "xl")[] = ["sm", "md", "lg", "xl"];
 const MAX_DATA_COLUMNS = 5;
 
+/** The switch that means "this row is live" — drives the Active/Inactive filter and column. */
+export function pickStatusField(fields: FieldDescriptor[]): FieldDescriptor | undefined {
+  const switches = fields.filter((f) => f.type === "switch");
+  const exact = switches.find((f) => /^(is_active|status|active)$/i.test(f.name));
+  if (exact) return exact;
+  return switches.find((f) => /^(is_|status|active|published)/i.test(f.name));
+}
+
 function pickPrimaryField(fields: FieldDescriptor[]): FieldDescriptor {
   const byName = fields.find((f) => PRIMARY_NAME_PATTERN.test(f.name));
   if (byName) return byName;
@@ -232,11 +240,16 @@ export function deriveColumns(
     const idx = TYPE_PRIORITY.indexOf(f.type);
     return idx === -1 ? TYPE_PRIORITY.length : idx;
   };
-  const extra = remaining
-    .filter((f) => f.name !== subtitleField?.name)
-    .slice()
-    .sort((a, b) => rankOf(a) - rankOf(b))
-    .slice(0, MAX_DATA_COLUMNS - 1);
+  // The status column always gets a slot — with enough higher-ranked
+  // fields (dates, order, a select) it would otherwise be cut, leaving the
+  // Active/Inactive filter tabs with no visible column to explain them.
+  const statusField = pickStatusField(remaining);
+  const ranked = remaining
+    .filter((f) => f.name !== subtitleField?.name && f.name !== statusField?.name)
+    .sort((a, b) => rankOf(a) - rankOf(b));
+  const extra = statusField
+    ? [...ranked.slice(0, MAX_DATA_COLUMNS - 2), statusField]
+    : ranked.slice(0, MAX_DATA_COLUMNS - 1);
 
   const thumbnailField = findThumbnailField(allFields);
 
@@ -257,7 +270,8 @@ export function deriveColumns(
   ];
 
   extra.forEach((field, i) => {
-    const hideBelow = HIDE_BELOW_BY_INDEX[i];
+    // Columns drop away on narrow screens, but never the status badge.
+    const hideBelow = field.name === statusField?.name ? undefined : HIDE_BELOW_BY_INDEX[i];
     columns.push({
       key: field.name,
       header: field.label,

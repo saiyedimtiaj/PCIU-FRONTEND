@@ -42,6 +42,13 @@ function normalizeEvent(event: HomeEvent): HomeEvent {
   };
 }
 
+const MAX_EVENT_PAGES = 20;
+
+function hasNextPage(payload: unknown): boolean {
+  const data = (payload as { data?: { pagination?: { hasNextPage?: unknown } } } | null)?.data;
+  return data?.pagination?.hasNextPage === true;
+}
+
 export async function getEvents(): Promise<{
   events: HomeEvent[];
   error: boolean;
@@ -49,22 +56,32 @@ export async function getEvents(): Promise<{
   if (!API_BASE_URL) return { events: [], error: true };
 
   try {
-    const response = await fetch(`${API_BASE_URL}/home/events`, {
-      next: { revalidate: 300 },
-    });
-    if (!response.ok) return { events: [], error: true };
+    // `/home/events` is the homepage feed — capped at a handful of upcoming
+    // events, so anything else (an IQAC activity, a past event) never
+    // appeared on /events, /events/[slug] or the IQAC page. `/events/active`
+    // is the full public list, paginated at 20.
+    const payloads: unknown[] = [];
+    for (let page = 1; page <= MAX_EVENT_PAGES; page++) {
+      const response = await fetch(`${API_BASE_URL}/events/active?page=${page}`, {
+        next: { revalidate: 300, tags: ["events"] },
+      });
+      if (!response.ok) return { events: [], error: true };
 
-    const payload: unknown = await response.json();
-    if (
-      payload &&
-      typeof payload === "object" &&
-      "success" in payload &&
-      payload.success === false
-    ) {
-      return { events: [], error: true };
+      const payload: unknown = await response.json();
+      if (
+        payload &&
+        typeof payload === "object" &&
+        "success" in payload &&
+        payload.success === false
+      ) {
+        return { events: [], error: true };
+      }
+      payloads.push(payload);
+      if (!hasNextPage(payload)) break;
     }
 
-    const events = extractEvents(payload)
+    const events = payloads
+      .flatMap(extractEvents)
       .filter(
         (event) =>
           event.isActive === true &&

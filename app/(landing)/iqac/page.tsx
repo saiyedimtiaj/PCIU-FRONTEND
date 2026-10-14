@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, Target, ClipboardCheck, GraduationCap, Users, FileText, BookOpen, Mail, Phone, MapPin, Building2 } from "lucide-react";
+import { ArrowRight, Eye, Target, ClipboardCheck, GraduationCap, Users, FileText, BookOpen, Mail, Phone, MapPin, Building2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ActivitiesGallery from "./_ui/ActivitiesGallery";
@@ -67,10 +67,10 @@ export default async function IqacPage() {
       <section className="bg-linear-to-br from-primary via-primary/95 to-secondary py-20 lg:py-28">
         <div className="container mx-auto px-4 text-center">
           <Badge className="bg-accent text-accent-foreground mb-4">Quality Assurance</Badge>
-          <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white mb-4">
+          <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white mb-4 wrap-anywhere">
             {data.title}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto">{data.subtitle}</p>
+          <p className="text-white/80 text-base sm:text-lg max-w-2xl mx-auto wrap-anywhere">{data.subtitle}</p>
         </div>
       </section>
 
@@ -141,7 +141,14 @@ export default async function IqacPage() {
               </h2>
               <Card>
                 <CardContent className="flex flex-col sm:flex-row gap-6">
-                  {director && <Avatar person={director} className="w-24 h-24 text-2xl" />}
+                  {director &&
+                    (director.href ? (
+                      <Link href={director.href} className="shrink-0 self-start rounded-full transition-opacity hover:opacity-90">
+                        <Avatar person={director} className="w-24 h-24 text-2xl" />
+                      </Link>
+                    ) : (
+                      <Avatar person={director} className="w-24 h-24 text-2xl" />
+                    ))}
                   <div>
                     {data.directorMessageHtml ? (
                       <div
@@ -165,6 +172,15 @@ export default async function IqacPage() {
                             .filter(Boolean)
                             .join(" · ")}
                         </p>
+                        {director.href && (
+                          <Link
+                            href={director.href}
+                            className="group mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                          >
+                            View profile
+                            <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                          </Link>
+                        )}
                       </>
                     )}
                   </div>
@@ -179,27 +195,43 @@ export default async function IqacPage() {
               </h2>
               {data.committee.length ? (
                 <div className="grid sm:grid-cols-2 gap-4">
-                  {data.committee.map((member, i) => (
-                    <Card key={`${member.name}-${i}`}>
-                      <CardContent className="flex items-center gap-4">
-                        <Avatar person={member} className="w-16 h-16" />
-                        <div className="min-w-0">
-                          <Badge variant="secondary" className="mb-1">
-                            {member.role}
-                          </Badge>
-                          <p className="text-sm font-semibold text-foreground truncate">
-                            <PersonName person={member} />
-                          </p>
-                          {member.designation && (
-                            <p className="text-xs text-muted-foreground">{member.designation}</p>
-                          )}
-                          {member.department && (
-                            <p className="text-xs text-muted-foreground">{member.department}</p>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                  {data.committee.map((member, i) => {
+                    const card = (
+                      <Card className="h-full transition-shadow group-hover:shadow-md group-hover:ring-primary/30">
+                        <CardContent className="flex items-center gap-4">
+                          <Avatar person={member} className="w-16 h-16" />
+                          <div className="min-w-0 flex-1">
+                            <Badge variant="secondary" className="mb-1">
+                              {member.role}
+                            </Badge>
+                            <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary">
+                              {member.name}
+                            </p>
+                            {member.designation && (
+                              <p className="text-xs text-muted-foreground">{member.designation}</p>
+                            )}
+                            {member.department && (
+                              <p className="text-xs text-muted-foreground">{member.department}</p>
+                            )}
+                            {member.href && (
+                              <p className="mt-2 text-xs font-medium text-primary inline-flex items-center gap-1">
+                                View profile
+                                <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                              </p>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                    const key = `${member.name}-${i}`;
+                    return member.href ? (
+                      <Link key={key} href={member.href} className="group block">
+                        {card}
+                      </Link>
+                    ) : (
+                      <div key={key}>{card}</div>
+                    );
+                  })}
                 </div>
               ) : (
                 <Card>

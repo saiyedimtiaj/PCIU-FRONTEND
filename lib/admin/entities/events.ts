@@ -41,7 +41,7 @@ export const eventsEntity: EntitySchema<typeof eventsSchema> = {
           type: "text",
           required: true,
           placeholder: "Festival",
-          helper: "A short category label, e.g. Festival, Seminar, Sports. Start with \"IQAC \" (e.g. IQAC Workshop, IQAC Seminar) to list it under the IQAC page's activities.",
+          helper: "A short category label, e.g. Festival, Seminar, Sports. IQAC activities are managed under IQAC → IQAC Activity.",
         },
         {
           name: "department_id",

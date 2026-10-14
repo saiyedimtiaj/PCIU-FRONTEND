@@ -30,6 +30,14 @@ const PUBLIC_PAGE_TAGS: Record<string, string> = {
   about: "about-university",
   management: "management",
   "management-type": "management",
+  iqac: "iqac",
+  "iqac-committee": "iqac",
+  gallery: "iqac",
+  "iqac-gallery": "iqac",
+  events: "events",
+  "iqac-activities": "events",
+  popup: "popup",
+  teacher: "teacher",
 };
 
 /** Call only from a Server Action — updateTag is Server-Action-only. */

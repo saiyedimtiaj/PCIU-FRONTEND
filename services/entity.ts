@@ -84,6 +84,7 @@ const DECODE_ONLY_DATE_FIELDS: Partial<Record<string, string[]>> = {
 
 const ISO_DATETIME_FIELDS: Partial<Record<string, string[]>> = {
   events: ["start_date_time", "end_date_time"],
+  "iqac-activities": ["start_date_time", "end_date_time"],
   "admission-schedules": [
     "applicationStartDate",
     "directAdmissionDeadline",
@@ -333,6 +334,7 @@ export async function listEntities(
 
   return (Array.isArray(rows) ? rows : [rows])
     .filter((r): r is Dict => !!r && typeof r === "object")
+    .filter((r) => !cfg?.listFilter || cfg.listFilter(r))
     .map((r) =>
       decode(slug, r, fieldNames, listFields, relationFields, timeFields, nullableStringFields),
     );

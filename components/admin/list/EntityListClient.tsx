@@ -16,7 +16,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import type { FieldDescriptor } from "@/components/admin/form/form-types";
 import { generateSampleRows, type SampleRow } from "./sample-data";
-import { deriveColumns } from "./columns";
+import { deriveColumns, pickStatusField } from "./columns";
 import { isConnected, getEndpoint } from "@/services/endpoints";
 import { useEntityList, useDeleteEntity, useUpdateEntity, useRelationOptions } from "@/features/entity";
 import { useToastManager } from "@/components/ui/toast";
@@ -39,13 +39,6 @@ export interface EntityListClientProps {
 
 const PAGE_SIZE = 10;
 const MAX_INLINE_OPTION_FILTERS = 2;
-
-function pickStatusField(fields: FieldDescriptor[]): FieldDescriptor | undefined {
-  const switches = fields.filter((f) => f.type === "switch");
-  const exact = switches.find((f) => /^(is_active|status|active)$/i.test(f.name));
-  if (exact) return exact;
-  return switches.find((f) => /^(is_|status|active|published)/i.test(f.name));
-}
 
 function isOptionField(field: FieldDescriptor): boolean {
   return (

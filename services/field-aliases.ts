@@ -3,6 +3,7 @@ export const WRITE_ALIASES: Record<string, Record<string, string>> = {
   pages: { ogImageUrl: "ogImage" },
   teacher: { imageUrl: "image" },
   gallery: { imageUrl: "imageUrl" },
+  "iqac-gallery": { imageUrl: "imageUrl" },
   "pcj-volumes": { coverImage: "coverImage" },
 
   faculty: { teacherId: "deanId" },

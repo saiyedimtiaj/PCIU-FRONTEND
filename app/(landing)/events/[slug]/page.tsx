@@ -111,7 +111,7 @@ export default async function EventDetailsPage({
               )}
             </div>
             {description && (
-              <p className="mt-6 whitespace-pre-line text-base leading-8 text-muted-foreground">
+              <p className="mt-6 whitespace-pre-line wrap-anywhere text-base leading-8 text-muted-foreground">
                 {description}
               </p>
             )}

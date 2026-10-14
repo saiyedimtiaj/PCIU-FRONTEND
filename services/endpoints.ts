@@ -49,7 +49,18 @@ export interface EndpointConfig {
    * offering a create that would hit a missing route.
    */
   noCreate?: boolean;
+  /**
+   * Keeps only the raw API rows this entity owns, for a slug that is a
+   * filtered view over another resource's collection (the IQAC activities
+   * and gallery are `/events` and `/galleries` rows tagged with an "iqac"
+   * prefix — the API has no IQAC-specific routes for either).
+   */
+  listFilter?: (row: Record<string, unknown>) => boolean;
 }
+
+/** An Event category like "IQAC Workshop" / Gallery type like "iqac-workshop". */
+const hasIqacPrefix = (value: unknown) =>
+  typeof value === "string" && /^iqac[\s:_-]+\S/i.test(value.trim());
 
 export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   department: { path: "/departments", multipart: true },
@@ -130,6 +141,16 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   // rather than truly removing it — see deleteAtRoot).
   iqac: { path: "/iqac", deleteAtRoot: true, createOverwrites: true },
   "iqac-committee": { path: "/iqac/committee" },
+  "iqac-activities": {
+    path: "/events",
+    multipart: true,
+    listFilter: (row) => hasIqacPrefix(row.category),
+  },
+  "iqac-gallery": {
+    path: "/galleries",
+    multipart: true,
+    listFilter: (row) => hasIqacPrefix(row.types),
+  },
   management: { path: "/management", multipart: true },
   "management-type": { path: "/management/type" },
 
