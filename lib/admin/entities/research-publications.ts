@@ -14,7 +14,7 @@ const researchPublicationsSchema = z.object({
   external_link: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   abstract: z.string().optional().or(z.literal("")),
   pdf_file: optionalUpload,
-  status: z.enum(["draft", "published"]),
+  status: z.boolean().default(true),
 });
 
 export const researchPublicationsEntity: EntitySchema<typeof researchPublicationsSchema> = {
@@ -24,7 +24,7 @@ export const researchPublicationsEntity: EntitySchema<typeof researchPublication
   icon: BookMarked,
   group: "Research",
   zodSchema: researchPublicationsSchema,
-  defaultValues: { status: "published" },
+  defaultValues: { status: true },
   sections: [
     {
       title: "Publication",
@@ -48,8 +48,8 @@ export const researchPublicationsEntity: EntitySchema<typeof researchPublication
           type: "select",
           required: true,
           options: [
-            { label: "Journal", value: "Journal" },
-            { label: "Conference", value: "Conference" },
+            { label: "Journal Article", value: "Journal Article" },
+            { label: "Conference Paper", value: "Conference Paper" },
             { label: "Book Chapter", value: "Book Chapter" },
           ],
         },
@@ -61,16 +61,7 @@ export const researchPublicationsEntity: EntitySchema<typeof researchPublication
         { name: "abstract", label: "Abstract", type: "textarea", colSpan: 2 },
         { name: "external_link", label: "External Link", type: "url" },
         { name: "pdf_file", label: "PDF File", type: "file" },
-        {
-          name: "status",
-          label: "Status",
-          type: "enum",
-          required: true,
-          options: [
-            { label: "Draft", value: "draft" },
-            { label: "Published", value: "published" },
-          ],
-        },
+        { name: "status", label: "Active", type: "switch" },
       ],
     },
   ],

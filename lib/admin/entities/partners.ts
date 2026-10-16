@@ -12,7 +12,7 @@ const partnersSchema = z.object({
   website_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   description: z.string().optional().or(z.literal("")),
   display_order: z.coerce.number().int().nonnegative().default(0),
-  status: z.enum(["draft", "published"]),
+  status: z.boolean().default(true),
 });
 
 export const partnersEntity: EntitySchema<typeof partnersSchema> = {
@@ -22,7 +22,7 @@ export const partnersEntity: EntitySchema<typeof partnersSchema> = {
   icon: Handshake,
   group: "Research",
   zodSchema: partnersSchema,
-  defaultValues: { status: "published" },
+  defaultValues: { status: true },
   sections: [
     {
       title: "Partner",
@@ -52,16 +52,7 @@ export const partnersEntity: EntitySchema<typeof partnersSchema> = {
         { name: "website_url", label: "Website", type: "url" },
         { name: "description", label: "Description", type: "textarea", colSpan: 2 },
         { name: "display_order", label: "Display Order", type: "number" },
-        {
-          name: "status",
-          label: "Status",
-          type: "enum",
-          required: true,
-          options: [
-            { label: "Draft", value: "draft" },
-            { label: "Published", value: "published" },
-          ],
-        },
+        { name: "status", label: "Active", type: "switch" },
       ],
     },
   ],

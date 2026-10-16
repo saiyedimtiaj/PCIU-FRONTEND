@@ -21,7 +21,7 @@ import {
 import { FaFacebook, FaLinkedin, FaInstagram } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
 import { logoutAction } from "@/app/(auth)/actions";
-import type { SessionUser } from "@/types/auth";
+import { clearNavSession, useNavSession } from "./use-nav-session";
 
 const aboutMenu = [
   { name: "About the University", href: "/about-the-university" },
@@ -153,11 +153,10 @@ import type { AcademicFaculty } from "@/types/academics";
 
 export default function NavbarClient({
   fetchedFaculties,
-  session,
 }: {
   fetchedFaculties?: AcademicFaculty[];
-  session?: SessionUser | null;
 }) {
+  const session = useNavSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -542,6 +541,7 @@ export default function NavbarClient({
                       <button
                         onClick={async () => {
                           await logoutAction();
+                          clearNavSession();
                           setIsMobileMenuOpen(false);
                         }}
                         className="flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium cursor-pointer w-full text-left"

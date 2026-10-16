@@ -6,7 +6,8 @@ import type { AcademicFaculty } from "@/types/academics";
 export async function getFaculties(): Promise<AcademicFaculty[] | undefined> {
   try {
     const res = await publicFetch.get("/home/faculties", {
-      next: { tags: ["faculties"] },
+      // Cached: this runs in the public layout on every page.
+      next: { revalidate: 300, tags: ["faculties"] },
     });
     if (!res.ok) {
       console.error(

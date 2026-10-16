@@ -105,6 +105,13 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   // every `/about/{id}` method 404s (verified live).
   about: { path: "/about", multipart: true, singleton: true },
 
+  // Admin CRUD needs a session; the public page reads each one's `/active`.
+  // There is no research-centres route on the API (every variant 404s).
+  "research-areas": { path: "/research-areas" },
+  "research-publications": { path: "/research-publications", multipart: true },
+  partners: { path: "/partners", multipart: true },
+  mous: { path: "/mous", multipart: true },
+
   "pcj-volumes": { path: "/pcj/volumes", multipart: true },
   "pcj-articles": { path: "/pcj/articles", multipart: true },
 

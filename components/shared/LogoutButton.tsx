@@ -4,6 +4,7 @@ import { LogOut } from "lucide-react";
 import { logoutAction } from "@/app/(auth)/actions";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { clearNavSession } from "./use-nav-session";
 
 export function LogoutButton() {
   const [isPending, startTransition] = useTransition();
@@ -12,6 +13,7 @@ export function LogoutButton() {
   const handleLogout = () => {
     startTransition(async () => {
       await logoutAction();
+      clearNavSession();
       router.refresh();
     });
   };

@@ -1,10 +1,8 @@
 import { getFaculties } from "@/app/(landing)/department/_actions/faculties";
 import NavbarClient from "./NavbarClient";
-import { getSession } from "@/app/(auth)/actions";
 
 export default async function Navbar() {
   const fetchedFaculties = await getFaculties();
-  const session = await getSession();
 
-  return <NavbarClient fetchedFaculties={fetchedFaculties} session={session} />;
+  return <NavbarClient fetchedFaculties={fetchedFaculties} />;
 }

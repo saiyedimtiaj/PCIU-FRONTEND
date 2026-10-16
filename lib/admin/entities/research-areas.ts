@@ -7,7 +7,7 @@ const researchAreasSchema = z.object({
   icon: z.string().max(255).optional().or(z.literal("")),
   background_color: z.string().max(255).optional().or(z.literal("")),
   display_order: z.coerce.number().int().nonnegative().default(0),
-  status: z.enum(["draft", "published"]),
+  status: z.boolean().default(true),
 });
 
 export const researchAreasEntity: EntitySchema<typeof researchAreasSchema> = {
@@ -17,7 +17,7 @@ export const researchAreasEntity: EntitySchema<typeof researchAreasSchema> = {
   icon: Compass,
   group: "Research",
   zodSchema: researchAreasSchema,
-  defaultValues: { status: "published" },
+  defaultValues: { status: true },
   sections: [
     {
       title: "Research Area",
@@ -26,16 +26,7 @@ export const researchAreasEntity: EntitySchema<typeof researchAreasSchema> = {
         { name: "icon", label: "Icon Key", type: "text", placeholder: "microscope" },
         { name: "background_color", label: "Background Gradient", type: "text", placeholder: "from-blue-500 to-indigo-600" },
         { name: "display_order", label: "Display Order", type: "number" },
-        {
-          name: "status",
-          label: "Status",
-          type: "enum",
-          required: true,
-          options: [
-            { label: "Draft", value: "draft" },
-            { label: "Published", value: "published" },
-          ],
-        },
+        { name: "status", label: "Active", type: "switch" },
       ],
     },
   ],

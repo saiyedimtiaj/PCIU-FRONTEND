@@ -9,7 +9,7 @@ const mousSchema = z.object({
   scope_of_collaboration: z.string().min(2, "Scope is required"),
   document_pdf: optionalUpload,
   validity_expiry_date: z.string().optional().or(z.literal("")),
-  status: z.enum(["active", "expired"]),
+  status: z.boolean().default(true),
 });
 
 export const mousEntity: EntitySchema<typeof mousSchema> = {
@@ -19,7 +19,7 @@ export const mousEntity: EntitySchema<typeof mousSchema> = {
   icon: FileText,
   group: "Research",
   zodSchema: mousSchema,
-  defaultValues: { status: "active" },
+  defaultValues: { status: true },
   sections: [
     {
       title: "MoU",
@@ -29,16 +29,7 @@ export const mousEntity: EntitySchema<typeof mousSchema> = {
         { name: "validity_expiry_date", label: "Expiry Date", type: "date" },
         { name: "scope_of_collaboration", label: "Scope of Collaboration", type: "textarea", required: true, colSpan: 2 },
         { name: "document_pdf", label: "Document PDF", type: "file", colSpan: 2 },
-        {
-          name: "status",
-          label: "Status",
-          type: "enum",
-          required: true,
-          options: [
-            { label: "Active", value: "active" },
-            { label: "Expired", value: "expired" },
-          ],
-        },
+        { name: "status", label: "Active", type: "switch" },
       ],
     },
   ],

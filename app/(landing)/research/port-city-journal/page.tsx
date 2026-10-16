@@ -2,17 +2,16 @@ import type { Metadata } from "next";
 import { BookOpen, Mail, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import JournalArchive from "./_ui/JournalArchive";
-import pageData from "@/content/research/port-city-journal.json";
-import type { PortCityJournalContent } from "@/types/port-city-journal";
-
-const content = pageData as PortCityJournalContent;
+import { getJournalPage } from "@/lib/api/research";
 
 export const metadata: Metadata = {
   title: "Port City Journal | Port City International University",
   description: "Peer-reviewed multidisciplinary journal of Port City International University — ISSN: 2311-3146.",
 };
 
-export default function PortCityJournalPage() {
+export default async function PortCityJournalPage() {
+  const content = await getJournalPage();
+
   return (
     <div className="min-h-screen bg-background">
       <section className="relative h-[300px] flex items-center justify-center overflow-hidden bg-linear-to-r from-primary via-primary/90 to-accent">
