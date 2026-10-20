@@ -53,8 +53,12 @@ export default function RequirementSection({
                 {i + 1}
               </span>
               <div>
-                <p className="text-sm font-medium text-foreground">{entry.program}</p>
-                <p className="text-sm text-muted-foreground mt-1">{entry.req}</p>
+                <p className="text-sm font-medium text-foreground">
+                  {entry.program}
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {entry.req}
+                </p>
               </div>
             </div>
           </InfoCard>

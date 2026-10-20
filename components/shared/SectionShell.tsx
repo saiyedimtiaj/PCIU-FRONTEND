@@ -22,11 +22,14 @@ export default function SectionShell({ title, items, activeId, basePath, routing
   return (
     <div className="grid lg:grid-cols-4 gap-8">
       <aside className="lg:col-span-1">
-        <div className="lg:sticky lg:top-24 rounded-xl border border-border bg-card overflow-hidden">
-          <div className="bg-primary text-primary-foreground px-4 py-3">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm lg:sticky lg:top-24">
+          <div className="bg-primary px-4 py-3 text-primary-foreground">
             <h3 className="font-heading font-semibold text-sm">{title}</h3>
           </div>
-          <nav className="flex flex-col p-2">
+          <nav
+            aria-label={title}
+            className="scrollbar-thin flex max-h-[164px] touch-pan-y flex-col gap-1 overflow-y-auto overscroll-y-contain p-1.5 lg:max-h-[268px]"
+          >
             {items.map((item) => {
               const Icon = iconMap[item.icon];
               const isActive = item.id === activeId;
@@ -36,15 +39,16 @@ export default function SectionShell({ title, items, activeId, basePath, routing
                   key={item.id}
                   href={href}
                   scroll={false}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                    "flex h-12 shrink-0 items-center gap-2.5 overflow-hidden rounded-xl px-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary",
                     isActive
-                      ? "bg-accent/10 text-accent border-l-4 border-accent font-medium"
-                      : "text-muted-foreground hover:bg-muted"
+                      ? "border-l-[5px] border-primary bg-primary/20 font-medium text-primary"
+                      : "border-l-[5px] border-transparent text-muted-foreground hover:bg-muted hover:text-primary"
                   )}
                 >
                   <Icon className="size-4 shrink-0" />
-                  {item.label}
+                  <span className="truncate">{item.label}</span>
                 </Link>
               );
             })}

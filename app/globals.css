@@ -716,6 +716,7 @@
     var(--scrollbar-track, transparent);
 
   &::-webkit-scrollbar {
+    display: block;
     width: 6px;
     height: 6px;
   }
@@ -731,6 +732,15 @@
   }
   &::-webkit-scrollbar-corner {
     background: transparent;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  scrollbar-gutter: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
