@@ -2,16 +2,13 @@ import { z } from "zod";
 import { Layers } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
-/**
- * The API takes these amounts as strings (`"admissionFeeBDT": "18000"`), so
- * they're validated as numeric text rather than coerced to numbers. `coerce`
- * still accepts a number if a GET ever returns one.
- */
-const amount = z.coerce
-  .string()
-  .trim()
-  .min(1, "Amount is required")
-  .regex(/^\d+(\.\d{1,2})?$/, "Enter an amount like 18000");
+// Sent as JSON numbers (`"admissionFeeBDT": 18000`), as the API's POST takes them.
+// A blank input arrives as "", which z.coerce would turn into 0 — treat it
+// as missing so the field is genuinely required.
+const amount = z.preprocess(
+  (value) => (value === "" || value === null ? undefined : value),
+  z.coerce.number({ error: "Amount is required" }).nonnegative("Amount can't be negative"),
+);
 
 const feeStructuresSchema = z.object({
   admissionFeeBDT: amount,

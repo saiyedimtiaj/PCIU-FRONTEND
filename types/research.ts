@@ -59,6 +59,16 @@ export const RESEARCH_SECTION_IDS = [
 export type ResearchSectionId = (typeof RESEARCH_SECTION_IDS)[number];
 
 /** Rows as the API returns them (camelCase, joined relations inline). */
+export interface ResearchApiCentre {
+  id: number;
+  name?: string | null;
+  description?: string | null;
+  tags?: unknown;
+  coordinatorName?: string | null;
+  displayOrder?: number | null;
+  department?: { name?: string | null; shortName?: string | null } | null;
+}
+
 export interface ResearchApiArea {
   id: number;
   title?: string | null;
