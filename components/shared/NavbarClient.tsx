@@ -293,6 +293,7 @@ export default function NavbarClient({
               </DropdownNavItem>
 
               <NavItem href="/iqac" label="IQAC" />
+              <NavItem href="/developers" label="Developers" />
               <NavItem href="/contacts" label="Contact" />
             </nav>
 
@@ -494,6 +495,13 @@ export default function NavbarClient({
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 IQAC
+              </Link>
+              <Link
+                href="/developers"
+                className="text-foreground hover:text-primary font-medium py-3 px-2 border-b border-border"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Developers
               </Link>
               <Link
                 href="/contacts"

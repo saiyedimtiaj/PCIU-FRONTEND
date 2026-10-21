@@ -74,7 +74,7 @@ export default async function ResearchPage() {
             backgroundSize: "24px 24px",
           }}
         />
-        <div className="container relative z-10 mx-auto px-4 pt-20 pb-28 md:pt-24 md:pb-32 text-center">
+        <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-28 md:pt-24 md:pb-32 text-center">
           <Badge variant="accent" className="mb-4">
             Office of Research &amp; Innovation
           </Badge>
@@ -90,7 +90,7 @@ export default async function ResearchPage() {
 
       {/* Live counts, overlapping the hero; each jumps to its tab. */}
       {stats.length > 0 && (
-      <div className="container mx-auto px-4 -mt-16 relative z-10">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-16 relative z-10">
         <div
           className={`mx-auto grid ${statCols} ${stats.length < 4 ? "max-w-3xl" : ""} gap-px overflow-hidden rounded-2xl border border-border bg-border shadow-lg`}
         >
@@ -115,14 +115,14 @@ export default async function ResearchPage() {
       </div>
       )}
 
-      <div id="research-sections" className="container mx-auto px-4 py-14 scroll-mt-24">
+      <div id="research-sections" className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 scroll-mt-24">
         <Suspense fallback={null}>
           <ResearchTabs content={content} />
         </Suspense>
       </div>
 
       <section className="bg-muted/40 border-t border-border py-14">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <p className="text-xs font-semibold uppercase tracking-widest text-accent-hover mb-2">
               Publish with PCIU

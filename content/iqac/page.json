@@ -48,12 +48,12 @@
     { "category": "Training", "title": "Assessment Training" }
   ],
   "documents": [
-    { "name": "IQAC Annual Report 2023-24", "type": "PDF", "size": "2.5 MB" },
-    { "name": "Quality Assurance Policy", "type": "PDF", "size": "1.2 MB" },
-    { "name": "Academic Audit Guidelines", "type": "PDF", "size": "850 KB" },
-    { "name": "Faculty Development Plan", "type": "PDF", "size": "1.8 MB" },
-    { "name": "Student Feedback Form", "type": "PDF", "size": "450 KB" },
-    { "name": "Curriculum Review Process", "type": "PDF", "size": "920 KB" }
+    { "name": "IQAC Annual Report 2023-24", "type": "PDF", "size": "2.5 MB", "url": "/documents/iqac/iqac-annual-report-2023-24.pdf" },
+    { "name": "Quality Assurance Policy", "type": "PDF", "size": "1.2 MB", "url": "/documents/iqac/quality-assurance-policy.pdf" },
+    { "name": "Academic Audit Guidelines", "type": "PDF", "size": "850 KB", "url": "/documents/iqac/academic-audit-guidelines.pdf" },
+    { "name": "Faculty Development Plan", "type": "PDF", "size": "1.8 MB", "url": "/documents/iqac/faculty-development-plan.pdf" },
+    { "name": "Student Feedback Form", "type": "PDF", "size": "450 KB", "url": "/documents/iqac/student-feedback-form.pdf" },
+    { "name": "Curriculum Review Process", "type": "PDF", "size": "920 KB", "url": "/documents/iqac/curriculum-review-process.pdf" }
   ],
   "quickLinks": [
     { "name": "UGC Bangladesh", "url": "https://ugc.gov.bd" },

@@ -401,6 +401,7 @@
   --animate-arc-highlight: arc-highlight 4s linear infinite;
   --animate-arc-highlight-reverse: arc-highlight-reverse 4s linear infinite;
   --animate-hero-zoom: hero-zoom 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-drift: drift 14s ease-in-out infinite;
 }
 
 @keyframes fade-in {
@@ -800,6 +801,40 @@
       animation-timeline: view();
       animation-range: entry 0% entry 35%;
     }
+  }
+}
+
+/* Like `reveal`, but the element also tips up from a slight 3D lean.
+   Pair with a `perspective-*` parent. */
+@utility reveal-rise {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: rise-3d linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+@keyframes rise-3d {
+  from {
+    opacity: 0;
+    transform: translateY(48px) rotateX(18deg) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Developers page: slow background glows. */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(40px, -30px) scale(1.1);
   }
 }
 

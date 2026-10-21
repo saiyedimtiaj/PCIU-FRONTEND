@@ -1,7 +1,10 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import {
   ArrowRight,
   ArrowUpRight,
   Bell,
+  Download,
   FileText,
   FolderOpen,
   Link2,
@@ -9,6 +12,7 @@ import {
   MapPin,
   Phone,
 } from "lucide-react";
+import SectionArcs from "@/components/shared/SectionArcs";
 import { Button } from "@/components/ui/button";
 import type { IqacPageContent } from "@/types/iqac";
 
@@ -33,15 +37,27 @@ function splitDate(value: string) {
   return match ? { month: match[1], day: match[2] } : { month: "", day: "—" };
 }
 
+/**
+ * The document's download link, or null when there's nothing to fetch yet. A
+ * local path only counts once the file is actually in public/, so a missing
+ * upload shows as "Coming soon" instead of downloading a 404 page.
+ */
+function downloadHref(url?: string) {
+  if (!url) return null;
+  if (/^https?:\/\//.test(url)) return url;
+  return existsSync(path.join(process.cwd(), "public", url)) ? url : null;
+}
+
 function monogram(name: string) {
   return name.replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase();
 }
 
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
-    <div className="mb-6 md:mb-8 text-center">
-      <p className="text-xs font-semibold uppercase tracking-widest text-accent-hover mb-2">{eyebrow}</p>
-      <h2 className="font-heading font-bold text-[22px] sm:text-2xl md:text-3xl leading-tight text-foreground">
+    <div className="mb-12 md:mb-14 text-center relative">
+      <SectionArcs className="top-full mt-1 h-8 w-[min(420px,80vw)]" />
+      <p className="relative text-xs font-semibold uppercase tracking-widest text-accent-hover mb-2">{eyebrow}</p>
+      <h2 className="relative font-heading font-bold text-[22px] sm:text-2xl md:text-3xl leading-tight text-foreground">
         {title}
       </h2>
     </div>
@@ -61,7 +77,7 @@ export default function ResourcesContact({
 }: Pick<IqacPageContent, "documents" | "notices" | "quickLinks" | "contact">) {
   return (
     <>
-      <section id="resources" className="container mx-auto px-4 py-10 md:py-14 scroll-mt-24">
+      <section id="resources" className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-14 scroll-mt-24">
         <SectionTitle eyebrow="Stay informed" title="Resources & Notices" />
         <div className="grid lg:grid-cols-12 gap-4 md:gap-6">
           <div className="lg:col-span-7 flex flex-col rounded-3xl border border-border bg-card p-5 sm:p-7">
@@ -82,27 +98,55 @@ export default function ResourcesContact({
               </span>
             </div>
             <ul className="grid flex-1 auto-rows-fr sm:grid-cols-2 gap-3">
-              {documents.map((doc) => (
-                <li
-                  key={doc.name}
-                  className="group flex items-center gap-4 rounded-2xl border border-border bg-muted/30 p-4 transition-all hover:border-primary/30 hover:bg-card hover:shadow-md"
-                >
-                  {/* A little file glyph with a folded corner and type tag */}
-                  <div className="relative flex h-14 w-11 shrink-0 flex-col items-center justify-end rounded-md border border-destructive/20 bg-card pb-1.5 shadow-sm">
-                    <span className="absolute top-0 right-0 size-3 rounded-bl-md border-b border-l border-destructive/20 bg-destructive/10" />
-                    <FileText className="mb-1 size-4 text-destructive/70" />
-                    <span className="rounded-sm bg-destructive px-1 text-[9px] font-bold leading-tight text-white">
-                      {doc.type}
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary">
-                      {doc.name}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">{doc.size}</p>
-                  </div>
-                </li>
-              ))}
+              {documents.map((doc) => {
+                const href = downloadHref(doc.url);
+                const body = (
+                  <>
+                    {/* A little file glyph with a folded corner and type tag */}
+                    <div className="relative flex h-14 w-11 shrink-0 flex-col items-center justify-end rounded-md border border-destructive/20 bg-card pb-1.5 shadow-sm">
+                      <span className="absolute top-0 right-0 size-3 rounded-bl-md border-b border-l border-destructive/20 bg-destructive/10" />
+                      <FileText className="mb-1 size-4 text-destructive/70" />
+                      <span className="rounded-sm bg-destructive px-1 text-[9px] font-bold leading-tight text-white">
+                        {doc.type}
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary">
+                        {doc.name}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {doc.size}
+                        {!href && <span className="ml-2 font-medium text-accent-hover">· Coming soon</span>}
+                      </p>
+                    </div>
+                    {href && (
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                        <Download className="size-4" />
+                      </span>
+                    )}
+                  </>
+                );
+                return (
+                  <li key={doc.name}>
+                    {href ? (
+                      <a
+                        href={href}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Download ${doc.name} (${doc.type}, ${doc.size})`}
+                        className="group flex h-full items-center gap-4 rounded-2xl border border-border bg-muted/30 p-4 transition-all hover:border-primary/30 hover:bg-card hover:shadow-md"
+                      >
+                        {body}
+                      </a>
+                    ) : (
+                      <div className="flex h-full items-center gap-4 rounded-2xl border border-dashed border-border bg-muted/30 p-4 opacity-80">
+                        {body}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -171,7 +215,7 @@ export default function ResourcesContact({
         </div>
       </section>
 
-      <section className="container mx-auto px-4 pb-10 md:pb-14">
+      <section className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-10 md:pb-14">
         <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-xl lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <div className="relative overflow-hidden bg-linear-to-br from-primary via-primary to-secondary p-6 sm:p-10 text-primary-foreground">
             <div className="absolute inset-0 opacity-10" style={DOT_PATTERN} />
