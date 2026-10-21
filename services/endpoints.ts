@@ -43,13 +43,6 @@ export interface EndpointConfig {
   allowCreate?: boolean;
   getFromList?: boolean;
   /**
-   * The resource has no POST at all — only GET and PATCH (verified in the
-   * API collection for `/admission/admin/fee-structure`). When its one row
-   * doesn't exist yet the form still saves through PATCH rather than
-   * offering a create that would hit a missing route.
-   */
-  noCreate?: boolean;
-  /**
    * Keeps only the raw API rows this entity owns, for a slug that is a
    * filtered view over another resource's collection (the IQAC activities
    * and gallery are `/events` and `/galleries` rows tagged with an "iqac"
@@ -106,9 +99,15 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   about: { path: "/about", multipart: true, singleton: true },
 
   // Admin CRUD needs a session; the public page reads each one's `/active`.
-  // There is no research-centres route on the API (every variant 404s).
-  "research-areas": { path: "/research-areas" },
-  "research-publications": { path: "/research-publications", multipart: true },
+  "research-centres": { path: "/researchcentres" },
+  "research-areas": { path: "/research-areas", multipart: true },
+  // The API collection has no GET-by-id for publications (only list,
+  // create, edit, delete), so the edit form reads its row from the list.
+  "research-publications": {
+    path: "/research-publications",
+    multipart: true,
+    getFromList: true,
+  },
   partners: { path: "/partners", multipart: true },
   mous: { path: "/mous", multipart: true },
 
@@ -128,15 +127,13 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   "fee-structures": {
     path: "/admission/admin/fee-structure",
     singleton: true,
-    noCreate: true,
   },
   "admission-schedules": {
     path: "/admission/admin/schedule",
     grouped: true,
-    // The spec really does misspell the DELETE route as "/admision"
-    // (one 's') while GET/POST use "/admission". Both are encoded exactly
-    // as the server exposes them — do not "correct" this.
-    item: (id) => `/admission/admin/schedule/${id}`,
+    // DELETE used to go to a misspelled "/admision/admin/schedule/{id}"
+    // (one 's') — that route 404s "Route not found" on the live API, so
+    // every delete failed. All methods use the "/admission" spelling.
   },
   "mba-eligibility-tiers": { path: "/admission/admin/mba-eligibility" },
   faqs: { path: "/faqs" },
@@ -161,18 +158,14 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   management: { path: "/management", multipart: true },
   "management-type": { path: "/management/type" },
 
-  contact: { path: "/contacts" },
+  // The API has no DELETE for contacts — every DELETE /contacts/... path
+  // 404s "Route not found" (GET/PATCH /contacts/{id} exist), and `status`
+  // is ignored on write, so there's no deactivate fallback either. Hide the
+  // action rather than offer a button that always fails.
+  contact: { path: "/contacts", noDelete: true },
   setting: { path: "/settings", multipart: true },
   popup: { path: "/popup", getFromList: true },
 };
-
-/**
- * DELETE for admission schedules lives on the misspelled "/admision"
- * prefix while its PATCH uses "/admission". Kept separate so the shared
- * item-path helper stays honest about the difference.
- */
-export const ADMISSION_SCHEDULE_DELETE_PATH = (id: string | number) =>
-  `/admision/admin/schedule/${id}`;
 
 export function getEndpoint(slug: string): EndpointConfig | undefined {
   return ENTITY_ENDPOINTS[slug];
@@ -195,7 +188,6 @@ export function itemPath(slug: string, id: string | number): string {
 }
 
 export function deletePath(slug: string, id: string | number): string {
-  if (slug === "admission-schedules") return ADMISSION_SCHEDULE_DELETE_PATH(id);
   if (ENTITY_ENDPOINTS[slug]?.deleteAtRoot) return collectionPath(slug);
   return itemPath(slug, id);
 }

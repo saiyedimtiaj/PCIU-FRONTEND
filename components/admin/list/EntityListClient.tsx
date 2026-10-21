@@ -41,6 +41,12 @@ const PAGE_SIZE = 10;
 const MAX_INLINE_OPTION_FILTERS = 2;
 
 function isOptionField(field: FieldDescriptor): boolean {
+  // A relation whose target is connected loads its choices live (see
+  // useOptionFieldChoices), so it's filterable even with an empty
+  // hand-authored `options` list — e.g. Settings' "Related Page".
+  if (field.type === "relation" && !!field.relationTo && isConnected(field.relationTo)) {
+    return true;
+  }
   return (
     (field.type === "enum" || field.type === "select" || field.type === "relation") &&
     !!field.options &&
@@ -175,7 +181,7 @@ export default function EntityListClient({
     for (const field of optionFields) {
       const want = optionFilters[field.name];
       if (want && want !== "all") {
-        result = result.filter((row) => row[field.name] === want);
+        result = result.filter((row) => String(row[field.name] ?? "") === want);
       }
     }
     if (dateField && (dateFrom || dateTo)) {

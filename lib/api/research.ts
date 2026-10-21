@@ -11,10 +11,12 @@ import type {
 } from "@/types/port-city-journal";
 import type {
   ResearchApiArea,
+  ResearchApiCentre,
   ResearchApiMou,
   ResearchApiPartner,
   ResearchApiPublication,
   ResearchArea,
+  ResearchCentre,
   ResearchMou,
   ResearchPageContent,
   ResearchPartnership,
@@ -59,6 +61,24 @@ function formatDate(value: string | null | undefined): string {
   if (Number.isNaN(date.getTime())) return value;
   // Formatted on the server, so the client never re-formats and can't mismatch.
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Dhaka" });
+}
+
+/** `tags` is a JSON array on the API, but tolerate a comma-separated string. */
+function toTags(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(text).filter(Boolean);
+  if (typeof value === "string") return value.split(",").map((t) => t.trim()).filter(Boolean);
+  return [];
+}
+
+function toCentre(row: ResearchApiCentre): ResearchCentre | null {
+  const name = text(row.name);
+  if (!name) return null;
+  return {
+    name,
+    lead: text(row.department?.name) || text(row.coordinatorName),
+    description: text(row.description),
+    focus: toTags(row.tags),
+  };
 }
 
 function toArea(row: ResearchApiArea): ResearchArea | null {
@@ -115,11 +135,11 @@ const compact = <T>(list: (T | null)[]) => list.filter((item): item is T => item
 
 /**
  * The /research page's tabs, live from the API. Each section falls back to
- * the static JSON only when its own request fails. Research centres have no
- * API route at all, so they always come from the JSON.
+ * the static JSON only when its own request fails.
  */
 export async function getResearchPage(): Promise<ResearchPageContent> {
-  const [areas, publications, partners, mous] = await Promise.all([
+  const [centres, areas, publications, partners, mous] = await Promise.all([
+    getActive<ResearchApiCentre>("/researchcentres/active"),
     getActive<ResearchApiArea>("/research-areas/active"),
     getActive<ResearchApiPublication>("/research-publications/active"),
     getActive<ResearchApiPartner>("/partners/active"),
@@ -129,7 +149,7 @@ export async function getResearchPage(): Promise<ResearchPageContent> {
   const partnerNames = new Map((partners ?? []).map((p) => [p.id, text(p.name)]));
 
   return {
-    centres: content.centres,
+    centres: centres ? compact([...centres].sort(byOrder).map(toCentre)) : content.centres,
     areas: areas ? compact([...areas].sort(byOrder).map(toArea)) : content.areas,
     publications: publications
       ? compact(publications.map(toPublication)).sort((a, b) => b.year - a.year)

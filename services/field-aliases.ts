@@ -8,6 +8,9 @@ export const WRITE_ALIASES: Record<string, Record<string, string>> = {
 
   faculty: { teacherId: "deanId" },
   user: { fullName: "name" },
+  // Sent exactly as the API collection spells it — "departmentid", all
+  // lowercase — while teacherId on the same request is camelCase.
+  "research-publications": { departmentId: "departmentid" },
 };
 
 /** Keys the API ignores — dropped so they can't overwrite or bloat a payload. */
@@ -53,12 +56,20 @@ export const READ_NESTED: Record<string, Record<string, string>> = {
   user: {
     full_name: "name",
   },
+  // Written as "syllabuspdf"; tolerate the API echoing it back camelCased.
+  department: {
+    syllabuspdf: "syllabusPdf",
+  },
   management: {
     // Rows carry only the joined `type` object, never a top-level `typeId`.
     type_id: "type.id",
   },
   notices: {
     pdf: "pdfUrl",
+  },
+  "research-publications": {
+    department_id: "departmentid",
+    teacher_id: "teacher.id",
   },
 };
 

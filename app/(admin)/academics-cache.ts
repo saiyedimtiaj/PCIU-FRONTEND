@@ -40,6 +40,7 @@ const PUBLIC_PAGE_TAGS: Record<string, string> = {
   teacher: "teacher",
   faculty: "faculties",
   department: "faculties",
+  "research-centres": "research",
   "research-areas": "research",
   "research-publications": "research",
   partners: "research",

@@ -4,8 +4,8 @@ import type { EntitySchema } from "@/components/admin/form/form-types";
 import { optionalUpload } from "./_upload";
 
 const researchPublicationsSchema = z.object({
+  teacher_id: z.string().min(1, "Teacher is required"),
   department_id: z.string().min(1, "Department is required"),
-  teacher_id: z.string().optional().or(z.literal("")),
   title: z.string().min(2, "Title is required").max(255),
   authors: z.string().min(2, "Authors are required").max(255),
   venue: z.string().max(255).optional().or(z.literal("")),
@@ -30,26 +30,27 @@ export const researchPublicationsEntity: EntitySchema<typeof researchPublication
       title: "Publication",
       fields: [
         { name: "title", label: "Title", type: "text", required: true, colSpan: 2 },
-        { name: "authors", label: "Authors", type: "text", required: true, colSpan: 2 },
         {
-          name: "department_id",
-          label: "Department",
-          type: "relation",
+          name: "authors",
+          label: "Authors",
+          type: "text",
           required: true,
-          relationTo: "department",
-          options: [{ label: "Computer Science and Engineering", value: "1" }],
+          colSpan: 2,
+          placeholder: "Dr Jane Doe, Dr XYZ",
+          helper: "Separate authors with commas.",
         },
-        { name: "teacher_id", label: "Lead Author (Teacher)", type: "relation", relationTo: "teacher", options: [] },
-        { name: "venue", label: "Venue", type: "text", placeholder: "IEEE ICCIT" },
-        { name: "year", label: "Year", type: "number", required: true },
+        { name: "teacher_id", label: "Teacher", type: "relation", required: true, relationTo: "teacher", options: [] },
+        { name: "department_id", label: "Department", type: "relation", required: true, relationTo: "department", options: [] },
+        { name: "venue", label: "Venue", type: "text", placeholder: "IEEE Transactions on Wireless Communications" },
+        { name: "year", label: "Year", type: "number", required: true, placeholder: "2025" },
         {
           name: "type",
           label: "Type",
           type: "select",
           required: true,
           options: [
-            { label: "Journal Article", value: "Journal Article" },
-            { label: "Conference Paper", value: "Conference Paper" },
+            { label: "Journal", value: "Journal" },
+            { label: "Conference", value: "Conference" },
             { label: "Book Chapter", value: "Book Chapter" },
           ],
         },
@@ -59,7 +60,7 @@ export const researchPublicationsEntity: EntitySchema<typeof researchPublication
       title: "Content",
       fields: [
         { name: "abstract", label: "Abstract", type: "textarea", colSpan: 2 },
-        { name: "external_link", label: "External Link", type: "url" },
+        { name: "external_link", label: "External Link", type: "url", placeholder: "https://doi.org/…" },
         { name: "pdf_file", label: "PDF File", type: "file" },
         { name: "status", label: "Active", type: "switch" },
       ],
