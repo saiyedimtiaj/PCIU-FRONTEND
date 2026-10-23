@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { DepartmentContent } from "@/types/department";
 import { DepartmentNav } from "./DepartmentNav";
 import { FacultyCarousel } from "./FacultyCarousel";
+import { ChairmanMessage } from "./ChairmanMessage";
 import Image from "next/image";
 import { getInitials } from "@/lib/utils";
 import { getMediaUrl } from "@/lib/utils/media";
@@ -65,48 +66,28 @@ export default function DepartmentTemplate({
       </section>
 
       {/* Stats Cards - Overlapping Hero */}
-      <div className="container relative z-20 mx-auto px-4 -mt-16 md:-mt-20 mb-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
-                <StatCounter value={graduatesCount} />
-              </div>
-              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
-                Graduates
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
-                <StatCounter value={facultyCount} />
-              </div>
-              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
-                Faculty Members
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
-                <StatCounter value={programsCount} />
-              </div>
-              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
-                Programs Offered
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="shadow-lg border-slate-100 hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-              <div className="text-4xl font-bold text-[#1e3a8a] mb-2">
-                <StatCounter value={publicationsCount} />
-              </div>
-              <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
-                Publications
-              </p>
-            </CardContent>
-          </Card>
+      <div className="container relative z-20 mx-auto px-4 -mt-14 md:-mt-18 mb-8">
+        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          {[
+            { label: "Graduates", value: graduatesCount },
+            { label: "Faculty Members", value: facultyCount },
+            { label: "Programs Offered", value: programsCount },
+            { label: "Publications", value: publicationsCount },
+          ].map((stat) => (
+            <Card
+              key={stat.label}
+              className="rounded-2xl border-slate-100 shadow-lg transition-shadow duration-300 hover:shadow-xl"
+            >
+              <CardContent className="flex h-full flex-col items-center justify-center gap-1 px-3 py-5 text-center">
+                <div className="text-2xl font-bold text-[#1e3a8a] tabular-nums md:text-3xl">
+                  <StatCounter value={stat.value} />
+                </div>
+                <p className="text-[10px] font-semibold uppercase leading-tight tracking-wider text-muted-foreground md:text-[11px]">
+                  {stat.label}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
 
@@ -210,15 +191,11 @@ export default function DepartmentTemplate({
                     {/* Accent line */}
                     <div className="mb-6 h-1 w-24 rounded-full bg-linear-to-r from-[#1e3a8a] to-[#0ea5e9]" />
 
-                    <div className="space-y-4 text-base text-muted-foreground leading-relaxed relative">
+                    <div className="relative">
                       <span className="absolute -top-6 -left-4 font-serif text-7xl text-[#0ea5e9]/15 font-bold leading-none select-none">
                         “
                       </span>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: content.chairman.bio,
-                        }}
-                      />
+                      <ChairmanMessage bio={content.chairman.bio} />
                     </div>
                   </div>
                 </div>

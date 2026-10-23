@@ -1,11 +1,9 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { getMediaUrl } from "@/lib/utils/media";
 import { getInitials } from "@/lib/utils";
-import { ArrowLeft, ExternalLink, User } from "lucide-react";
+import { ArrowLeft, ArrowRight, User } from "lucide-react";
 import EmptyState from "@/components/shared/EmptyState";
 import { getDepartmentBySlug } from "../../_actions/departments";
 
@@ -74,59 +72,46 @@ export default async function DepartmentTeachersPage({ params }: Props) {
       <div className="container mx-auto px-4 max-w-7xl -mt-8 relative z-20">
         {/* Teachers Grid */}
         {facultyMembers.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {facultyMembers.map((member) => (
-              <Card
+              <Link
                 key={member.id}
-                className="group h-full flex flex-col bg-white border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500 overflow-hidden relative rounded-2xl"
+                href={`/faculty/${member.id}`}
+                className="group relative flex gap-4 overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#0ea5e9]/40 hover:shadow-[0_20px_40px_-20px_rgba(30,58,138,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/40 focus-visible:ring-offset-2"
               >
-                {/* Decorative Top Accent */}
-                <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-[#1e3a8a] to-[#0ea5e9] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 z-10" />
+                {/* Hover accent rail */}
+                <span className="absolute inset-y-0 left-0 w-1 origin-top scale-y-0 bg-linear-to-b from-[#1e3a8a] to-[#0ea5e9] transition-transform duration-300 group-hover:scale-y-100" />
 
-                {/* Background Decor */}
-                <div className="absolute -right-12 -top-12 w-32 h-32 bg-[#0ea5e9]/5 rounded-full blur-2xl group-hover:bg-[#0ea5e9]/10 transition-colors duration-500" />
+                <div className="relative aspect-3/4 w-24 shrink-0 overflow-hidden rounded-xl bg-slate-100 shadow-sm sm:w-28">
+                  <Avatar className="size-full overflow-hidden rounded-none bg-slate-100 text-slate-300 after:hidden">
+                    <AvatarImage
+                      src={getMediaUrl(member.imageUrl) || ""}
+                      alt={member.name}
+                      className="rounded-none object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <AvatarFallback className="rounded-none bg-slate-100 font-heading text-2xl font-bold">
+                      {getInitials(member.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
 
-                <CardContent className="pt-8 pb-6 px-6 flex flex-col items-center grow text-center relative z-10">
-                  <div className="relative mb-6 w-full max-w-42.5 sm:max-w-47.5">
-                    <div className="absolute inset-0 bg-linear-to-tr from-[#1e3a8a] to-[#0ea5e9] rounded-xl blur-md opacity-0 group-hover:opacity-30 transition-opacity duration-500 translate-y-2" />
-                    <Avatar className="w-full aspect-3/4 h-auto rounded-xl border-4 border-white shadow-md font-heading text-slate-500 bg-slate-50 group-hover:scale-[1.03] transition-transform duration-500 relative overflow-hidden after:hidden">
-                      <AvatarImage
-                        src={getMediaUrl(member.imageUrl) || ""}
-                        alt={member.name}
-                        className="size-full rounded-xl object-cover"
-                      />
-                      <AvatarFallback className="size-full rounded-xl bg-slate-100 text-4xl font-bold group-hover:text-[#0ea5e9] transition-colors">
-                        {getInitials(member.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-
-                  <h3 className="font-bold text-[#1e3a8a] text-xl leading-tight mb-2 group-hover:text-[#0ea5e9] transition-colors line-clamp-2">
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <h3 className="font-heading text-base font-bold leading-snug text-[#1e3a8a] line-clamp-2 transition-colors group-hover:text-[#0c7bb3]">
                     {member.name}
                   </h3>
-                  <div className="mb-4">
-                    <span className="text-sm font-bold text-[#0ea5e9] bg-[#0ea5e9]/10 px-4 py-1.5 rounded-full inline-block">
-                      {member.designation}
-                    </span>
-                  </div>
-
+                  <p className="mt-1 w-fit max-w-full truncate rounded-full bg-[#0ea5e9]/10 px-2.5 py-1 text-[11px] font-semibold text-[#0c7bb3]">
+                    {member.designation}
+                  </p>
                   {member.specialization && (
-                    <p className="text-sm text-slate-500 font-medium line-clamp-2 mt-auto leading-relaxed px-2">
+                    <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate-500">
                       {member.specialization}
                     </p>
                   )}
-                </CardContent>
-                <CardFooter className="px-8 pb-8 pt-0 mt-auto w-full relative z-10">
-                  <Link href={`/faculty/${member.id}`} className="w-full">
-                    <Button
-                      variant="outlineAccent"
-                      className="w-full h-12 rounded-xl border-slate-200 text-slate-600 hover:bg-[#0ea5e9] hover:text-white hover:border-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/25 transition-all duration-300 font-bold"
-                    >
-                      View Profile <ExternalLink className="w-4 h-4 ml-2" />
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
+                  <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-semibold text-[#0ea5e9] transition-all duration-300 group-hover:gap-2">
+                    View Profile <ArrowRight className="size-3.5" />
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         ) : (
