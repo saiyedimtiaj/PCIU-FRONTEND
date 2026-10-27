@@ -89,18 +89,42 @@ export default function EntityForm({
     }
 
     try {
+      let saved: Record<string, unknown>;
       if (isEdit) {
         if (!recordId) throw new Error("Missing record id for this update.");
-        await updateEntity.mutateAsync({ id: recordId, values });
+        saved = await updateEntity.mutateAsync({ id: recordId, values });
       } else {
-        await createEntity.mutateAsync(values);
+        saved = await createEntity.mutateAsync(values);
       }
 
-      toast.add({
-        type: "success",
-        title: isEdit ? `${schema.title} updated` : `${schema.title} created`,
-        description: `${label} has been saved.`,
-      });
+      // The API answers 200 even when it drops an uploaded file, so a save
+      // could look successful while the image/PDF was silently lost (seen on
+      // admission advertisements: imageUrl stayed null). Compare what was
+      // uploaded against the record the server sent back, and say so.
+      const lostUploads = sections
+        .flatMap((section) => section.fields)
+        .filter(
+          (f) =>
+            (f.type === "image" || f.type === "file") &&
+            values[f.name] instanceof File &&
+            f.name in saved &&
+            !saved[f.name],
+        )
+        .map((f) => f.label);
+
+      if (lostUploads.length) {
+        toast.add({
+          type: "warning",
+          title: `${schema.title} saved, but the file wasn't stored`,
+          description: `The server accepted the save but kept no ${lostUploads.join(", ")}. This needs fixing on the backend.`,
+        });
+      } else {
+        toast.add({
+          type: "success",
+          title: isEdit ? `${schema.title} updated` : `${schema.title} created`,
+          description: `${label} has been saved.`,
+        });
+      }
 
       if (stayAfterSave) {
         // Keep what was just saved on screen, with the form marked clean.
