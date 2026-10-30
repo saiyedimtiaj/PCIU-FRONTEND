@@ -21,7 +21,7 @@ export default async function EditIqacSectionsPage({ params }: { params: Promise
   if (!getEntitySchema("iqac-sections")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="iqac-sections" recordId={id} cancelHref="/admin/iqac/iqac-sections" />
     </div>
   );

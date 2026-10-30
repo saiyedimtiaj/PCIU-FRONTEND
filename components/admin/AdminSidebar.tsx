@@ -21,17 +21,20 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/comp
 import { cn } from "@/lib/utils";
 import { NAV_GROUPS, type NavGroup } from "./nav-groups";
 import { logoutAction } from "@/app/(auth)/actions";
+import { useAccess } from "@/features/permissions/use-access";
 
 interface TopLevelItem {
   title: string;
   href: string;
   icon: LucideIcon;
+  /** Module whose "view" permission gates this link; unset = always shown. */
+  slug?: string;
 }
 
 const TOP_LEVEL_ITEMS: TopLevelItem[] = [
   { title: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { title: "Faculty Directory", href: "/admin/faculty", icon: GraduationCap },
-  { title: "Pages", href: "/admin/pages", icon: FileText },
+  { title: "Faculty Directory", href: "/admin/faculty", icon: GraduationCap, slug: "teacher" },
+  { title: "Pages", href: "/admin/pages", icon: FileText, slug: "pages" },
   { title: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
@@ -219,6 +222,15 @@ function SidebarBody({
 }) {
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
+  const access = useAccess();
+
+  // Only links the signed-in role may view (per the /permissions matrix);
+  // a group whose every module is hidden disappears with them.
+  const topLevelItems = TOP_LEVEL_ITEMS.filter((item) => !item.slug || access.can(item.slug, "view"));
+  const navGroups = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => !item.slug || access.can(item.slug, "view")),
+  })).filter((group) => group.items.length > 0);
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -268,7 +280,7 @@ function SidebarBody({
 
       <nav className="scrollbar-thin relative flex-1 space-y-4 overflow-y-auto px-2.5 pb-2">
         <div className="space-y-0.5">
-          {TOP_LEVEL_ITEMS.map((item) => (
+          {topLevelItems.map((item) => (
             <NavLink
               key={item.href}
               title={item.title}
@@ -287,7 +299,7 @@ function SidebarBody({
               Content
             </p>
           )}
-          {NAV_GROUPS.map((group) => (
+          {navGroups.map((group) => (
             <NavGroupItem
               key={group.key}
               group={group}

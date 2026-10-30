@@ -12,7 +12,7 @@ export default async function EditTeacherPage({ params }: { params: Promise<{ id
   if (!getEntitySchema("teacher")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="teacher" recordId={id} cancelHref="/admin/people/teacher" />
     </div>
   );

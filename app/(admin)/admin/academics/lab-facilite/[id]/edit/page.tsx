@@ -21,7 +21,7 @@ export default async function EditLabFacilitePage({ params }: { params: Promise<
   if (!getEntitySchema("lab-facilite")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="lab-facilite" recordId={id} cancelHref="/admin/academics/lab-facilite" />
     </div>
   );

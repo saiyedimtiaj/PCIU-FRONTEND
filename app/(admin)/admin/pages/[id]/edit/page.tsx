@@ -12,7 +12,7 @@ export default async function EditAdminPagePage({ params }: { params: Promise<{ 
   if (!getEntitySchema("pages")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="pages" recordId={id} cancelHref="/admin/pages" />
     </div>
   );

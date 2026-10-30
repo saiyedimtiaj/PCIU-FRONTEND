@@ -12,7 +12,7 @@ export default async function EditMenusPage({ params }: { params: Promise<{ id: 
   if (!getEntitySchema("menus")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="menus" recordId={id} cancelHref="/admin/content/menus" />
     </div>
   );

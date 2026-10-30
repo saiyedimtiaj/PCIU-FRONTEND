@@ -12,7 +12,7 @@ export default async function EditIqacGalleryPage({ params }: { params: Promise<
   if (!getEntitySchema("iqac-gallery")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="iqac-gallery" recordId={id} cancelHref="/admin/iqac/iqac-gallery" />
     </div>
   );

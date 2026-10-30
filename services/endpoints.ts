@@ -4,7 +4,12 @@ export interface EndpointConfig {
   item?: (id: string | number) => string;
   multipart?: boolean;
   singleton?: boolean;
-  updateMethod?: "patch" | "put";
+  /**
+   * "post-collection": save edits with POST to the collection path. Only for
+   * a resource whose POST upserts its one row (`createOverwrites`) and whose
+   * PATCH silently drops fields — see `iqac` below.
+   */
+  updateMethod?: "patch" | "put" | "post-collection";
   noDelete?: boolean;
   /**
    * When `noDelete` is set but the resource has a boolean "active" field,
@@ -28,8 +33,7 @@ export interface EndpointConfig {
    * POST creates a new record everywhere except here: for a resource the
    * backend keeps as one row, POST upserts that same row instead of
    * adding a second. Verified live for `iqac` — POST /iqac twice returns
-   * the same id and original createdAt, only the content changes. The Add
-   * form warns about this rather than letting it look like ordinary create.
+   * the same id and original createdAt, only the content changes.
    */
   createOverwrites?: boolean;
   /**
@@ -37,8 +41,7 @@ export interface EndpointConfig {
    * a one-row backend that still has no per-id GET/PATCH/DELETE routes
    * (verified: every `/popup/{id}` method 404s "Route not found", while
    * GET/POST/PATCH/DELETE `/popup` all exist) — so it needs `singleton`'s
-   * id-less pathing, but the workflow still routes through /new. The Add
-   * form's `createOverwrites` warning makes the single-row nature explicit.
+   * id-less pathing, but the workflow still routes through /new.
    */
   allowCreate?: boolean;
   getFromList?: boolean;
@@ -143,8 +146,19 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   // with working per-row Edit. POST and DELETE only ever act on the one
   // row the backend keeps (POST upserts it; DELETE resets it to defaults
   // rather than truly removing it — see deleteAtRoot).
-  iqac: { path: "/iqac", deleteAtRoot: true, createOverwrites: true },
+  // PATCH /iqac/{id} accepts the request (updatedAt moves) but discards
+  // `quickLinks` — the record kept `quickLinks: null` after an edit that
+  // sent two links (2026-10-27). POST /iqac is the documented route for
+  // quickLinks and upserts the same row, so edits go through it instead.
+  iqac: {
+    path: "/iqac",
+    deleteAtRoot: true,
+    createOverwrites: true,
+    updateMethod: "post-collection",
+  },
   "iqac-committee": { path: "/iqac/committee" },
+  // GET answers { documents: [...] }; rows are { id, title, type, pdfFile }.
+  "iqac-documents": { path: "/iqac/documents", multipart: true },
   "iqac-activities": {
     path: "/events",
     multipart: true,

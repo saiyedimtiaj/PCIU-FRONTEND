@@ -89,18 +89,49 @@ export default function EntityForm({
     }
 
     try {
+      let saved: Record<string, unknown>;
       if (isEdit) {
         if (!recordId) throw new Error("Missing record id for this update.");
-        await updateEntity.mutateAsync({ id: recordId, values });
+        saved = await updateEntity.mutateAsync({ id: recordId, values });
       } else {
-        await createEntity.mutateAsync(values);
+        saved = await createEntity.mutateAsync(values);
       }
 
-      toast.add({
-        type: "success",
-        title: isEdit ? `${schema.title} updated` : `${schema.title} created`,
-        description: `${label} has been saved.`,
-      });
+      // The API answers 200 even when it drops an uploaded file, so a save
+      // could look successful while the image/PDF was silently lost (seen on
+      // admission advertisements: imageUrl stayed null). Compare what was
+      // uploaded against the record the server sent back, and say so.
+      const lostUploads = sections
+        .flatMap((section) => section.fields)
+        .filter((f) => {
+          if (!(f.name in saved)) return false;
+          const back = saved[f.name];
+          if (f.type === "image" || f.type === "file") {
+            return values[f.name] instanceof File && !back;
+          }
+          // Same silent-drop check for list fields (e.g. IQAC quick links):
+          // entries were sent, the server's copy came back empty.
+          if (f.type === "link-list" || f.type === "json-list" || f.type === "stat-list") {
+            const sent = values[f.name];
+            return Array.isArray(sent) && sent.length > 0 && !(Array.isArray(back) && back.length > 0);
+          }
+          return false;
+        })
+        .map((f) => f.label);
+
+      if (lostUploads.length) {
+        toast.add({
+          type: "warning",
+          title: `${schema.title} saved, but some data wasn't stored`,
+          description: `The server accepted the save but kept no ${lostUploads.join(", ")}. This needs fixing on the backend.`,
+        });
+      } else {
+        toast.add({
+          type: "success",
+          title: isEdit ? `${schema.title} updated` : `${schema.title} created`,
+          description: `${label} has been saved.`,
+        });
+      }
 
       if (stayAfterSave) {
         // Keep what was just saved on screen, with the form marked clean.
@@ -204,6 +235,7 @@ export default function EntityForm({
                         />
                       )}
                     </div>
+                    //
                   ) : (
                     <FormField
                       key={field.name}
@@ -221,7 +253,7 @@ export default function EntityForm({
         ))}
       </div>
 
-      <div className="sticky bottom-0 z-30 -mx-6 mt-6 border-t border-border bg-card/95 px-6 py-3 backdrop-blur supports-backdrop-filter:bg-card/80">
+      <div className="sticky bottom-0 z-30 -mx-4 mt-6 border-t border-border bg-card/95 px-6 py-3 backdrop-blur supports-backdrop-filter:bg-card/80">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2 text-xs">
             {errorCount > 0 ? (

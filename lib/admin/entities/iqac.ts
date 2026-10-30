@@ -11,6 +11,17 @@ const iqacSchema = z.object({
   vision: z.string().optional().or(z.literal("")),
   director_message: z.string().optional().or(z.literal("")),
   objectives: z.array(z.string()).default([]),
+  // Stored on the IQAC record itself as `quickLinks: [{ title, url }]`.
+  // A record saved before this field existed returns null — treat as none.
+  quick_links: z.preprocess(
+    (value) => value ?? [],
+    z.array(
+      z.object({
+        title: z.string().min(1, "Title is required"),
+        url: z.url("Must be a valid URL"),
+      }),
+    ),
+  ),
 });
 
 export const iqacEntity: EntitySchema<typeof iqacSchema> = {
@@ -20,7 +31,7 @@ export const iqacEntity: EntitySchema<typeof iqacSchema> = {
   icon: ScrollText,
   group: "IQAC",
   zodSchema: iqacSchema,
-  defaultValues: { objectives: [] },
+  defaultValues: { objectives: [], quick_links: [] },
   sections: [
     {
       title: "Overview",
@@ -38,6 +49,13 @@ export const iqacEntity: EntitySchema<typeof iqacSchema> = {
         { name: "vision", label: "Vision", type: "textarea", colSpan: 2 },
         { name: "director_message", label: "Director's Message", type: "richtext", colSpan: 2 },
         { name: "objectives", label: "Objectives", type: "json-list", colSpan: 2, placeholder: "Develop a quality culture" },
+      ],
+    },
+    {
+      title: "Quick Links",
+      description: "Links shown in the Quick Links box on the public IQAC page.",
+      fields: [
+        { name: "quick_links", label: "Quick Links", type: "link-list", colSpan: 2, placeholder: "Academic Programs" },
       ],
     },
   ],

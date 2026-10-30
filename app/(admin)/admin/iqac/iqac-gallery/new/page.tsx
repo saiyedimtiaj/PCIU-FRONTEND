@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function NewIqacGalleryPage() {
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="iqac-gallery" cancelHref="/admin/iqac/iqac-gallery" />
     </div>
   );

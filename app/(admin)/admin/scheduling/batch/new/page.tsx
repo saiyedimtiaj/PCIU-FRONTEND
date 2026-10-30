@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function NewBatchPage() {
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="batch" cancelHref="/admin/scheduling/batch" />
     </div>
   );

@@ -14,6 +14,14 @@ function rowLabel(row: Record<string, unknown>): string | null {
   const name = row.name ?? row.title ?? row.designation;
   if (typeof name === "string" && name) return name;
 
+  // PCJ volumes have no name/title — label them by volume and issue number.
+  const { volume_number, issue_number } = row as { volume_number?: unknown; issue_number?: unknown };
+  if (volume_number != null && volume_number !== "") {
+    return issue_number != null && issue_number !== ""
+      ? `Volume ${volume_number}, Issue ${issue_number}`
+      : `Volume ${volume_number}`;
+  }
+
   const { start_time, end_time } = row as { start_time?: unknown; end_time?: unknown };
   if (typeof start_time === "string" && typeof end_time === "string") {
     return `${start_time} – ${end_time}`;

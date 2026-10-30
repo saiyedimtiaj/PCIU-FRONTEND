@@ -12,7 +12,7 @@ export default async function EditMembershipPage({ params }: { params: Promise<{
   if (!getEntitySchema("membership")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="membership" recordId={id} cancelHref="/admin/people/membership" />
     </div>
   );

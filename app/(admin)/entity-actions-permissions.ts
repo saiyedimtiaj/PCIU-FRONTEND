@@ -1,16 +1,10 @@
 "use server";
 
 import { api, ApiError } from "@/services/http";
+import { getSession } from "@/app/(auth)/actions";
+import type { Access, PermissionRow } from "@/lib/admin/permissions";
 
-export interface PermissionRow {
-  id: number;
-  role: string;
-  resource: string;
-  view: boolean;
-  create: boolean;
-  edit: boolean;
-  delete: boolean;
-}
+export type { PermissionRow } from "@/lib/admin/permissions";
 
 export type PermissionResult<T> =
   | { ok: true; data: T }
@@ -64,4 +58,17 @@ export async function createPermissionAction(
   values: Omit<PermissionRow, "id">,
 ): Promise<PermissionResult<PermissionRow>> {
   return run(() => api.post<PermissionRow>("/permissions", values));
+}
+
+/**
+ * The signed-in admin's role plus the permission matrix, for hiding what
+ * that role can't use. `rows` is `null` when the API won't show the matrix
+ * to this role — the UI then shows everything and the API's own check
+ * stays the gate (see `can()` in lib/admin/permissions.ts).
+ */
+export async function getMyAccessAction(): Promise<Access> {
+  const user = await getSession();
+  if (!user) return { role: null, rows: null };
+  const result = await listPermissionsAction();
+  return { role: user.role, rows: result.ok ? result.data : null };
 }

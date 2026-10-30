@@ -12,7 +12,7 @@ export default async function EditGalleryPage({ params }: { params: Promise<{ id
   if (!getEntitySchema("gallery")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="gallery" recordId={id} cancelHref="/admin/content/gallery" />
     </div>
   );

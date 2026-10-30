@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function FacultyPortalDashboardPage() {
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <LiveFacultyDashboard />
     </div>
   );

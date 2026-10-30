@@ -73,7 +73,7 @@ export function FacultyCarousel({
               <div className="absolute inset-0 bg-linear-to-t from-[#0f172a] via-[#0f172a]/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
 
               {/* Content */}
-              <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col justify-end text-left z-10">
+              <div className="absolute bottom-0 left-0 w-full px-4 pt-6 flex flex-col justify-end text-left z-10">
                 <h3 className="font-bold font-heading text-white text-xl leading-tight mb-1.5 group-hover:text-[#0ea5e9] transition-colors line-clamp-2">
                   {member.name}
                 </h3>
