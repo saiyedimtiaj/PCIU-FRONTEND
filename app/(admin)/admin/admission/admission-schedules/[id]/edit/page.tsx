@@ -12,7 +12,7 @@ export default async function EditAdmissionSchedulesPage({ params }: { params: P
   if (!getEntitySchema("admission-schedules")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="admission-schedules" recordId={id} cancelHref="/admin/admission/admission-schedules" />
     </div>
   );

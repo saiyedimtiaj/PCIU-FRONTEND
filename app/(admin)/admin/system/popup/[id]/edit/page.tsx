@@ -12,7 +12,7 @@ export default async function EditPopupPage({ params }: { params: Promise<{ id: 
   if (!getEntitySchema("popup")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="popup" recordId={id} cancelHref="/admin/system/popup" />
     </div>
   );

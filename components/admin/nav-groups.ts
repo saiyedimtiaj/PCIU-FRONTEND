@@ -15,6 +15,8 @@ import { ENTITY_REGISTRY, ENTITY_GROUP_ORDER } from "@/lib/admin/entities";
 export interface NavGroupItem {
   title: string;
   href: string;
+  /** Entity slug, for checking the signed-in role's "view" permission. */
+  slug?: string;
 }
 
 export interface NavGroup {
@@ -49,11 +51,12 @@ export function pluralize(title: string): string {
 
 export const NAV_GROUPS: NavGroup[] = ENTITY_GROUP_ORDER.map((group) => {
   const meta = GROUP_META[group];
-  const items = Object.values(ENTITY_REGISTRY)
+  const items: NavGroupItem[] = Object.values(ENTITY_REGISTRY)
     .filter((entity) => entity.group === group)
     .map((entity) => ({
       title: entity.title,
       href: `/admin/${meta.routeSegment}/${entity.slug}`,
+      slug: entity.slug,
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
 

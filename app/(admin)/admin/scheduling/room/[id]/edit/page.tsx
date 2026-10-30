@@ -12,7 +12,7 @@ export default async function EditRoomPage({ params }: { params: Promise<{ id: s
   if (!getEntitySchema("room")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="room" recordId={id} cancelHref="/admin/scheduling/room" />
     </div>
   );

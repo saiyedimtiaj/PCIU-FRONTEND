@@ -12,7 +12,7 @@ export default async function EditSettingPage({ params }: { params: Promise<{ id
   if (!getEntitySchema("setting")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="setting" recordId={id} cancelHref="/admin/system/setting" />
     </div>
   );

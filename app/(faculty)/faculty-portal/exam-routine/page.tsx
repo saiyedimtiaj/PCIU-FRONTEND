@@ -10,7 +10,7 @@ export default async function FacultyPortalExamRoutinePage() {
   const { teacherName, examRoutines } = await getMyRoutines();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <TeacherExamRoutine
         routines={examRoutines}
         teacherName={teacherName ?? ""}

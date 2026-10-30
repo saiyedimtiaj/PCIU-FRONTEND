@@ -12,7 +12,7 @@ export default async function EditClassRoutinePage({ params }: { params: Promise
   if (!getEntitySchema("class-routine")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="class-routine" recordId={id} cancelHref="/admin/scheduling/class-routine" />
     </div>
   );

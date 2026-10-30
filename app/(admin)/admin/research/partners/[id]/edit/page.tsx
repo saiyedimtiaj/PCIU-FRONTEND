@@ -21,7 +21,7 @@ export default async function EditPartnersPage({ params }: { params: Promise<{ i
   if (!getEntitySchema("partners")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="partners" recordId={id} cancelHref="/admin/research/partners" />
     </div>
   );

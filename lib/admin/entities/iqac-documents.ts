@@ -3,39 +3,28 @@ import { FileText } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 import { requiredUpload } from "./_upload";
 
+// Mirrors /iqac/documents exactly: { id, title, type, pdfFile }.
 const iqacDocumentsSchema = z.object({
-  name: z.string().min(2, "Name is required").max(255),
-  file_url: requiredUpload,
-  file_type: z.string().min(1, "File type is required"),
-  file_size: z.string().max(255).optional().or(z.literal("")),
-  display_order: z.coerce.number().int().nonnegative().default(0),
-  status: z.boolean().default(true),
+  title: z.string().min(2, "Title is required").max(255),
+  type: z.string().min(1, "Type is required").max(255),
+  pdfFile: requiredUpload,
 });
 
 export const iqacDocumentsEntity: EntitySchema<typeof iqacDocumentsSchema> = {
   slug: "iqac-documents",
   title: "IQAC Document",
-  description: "Add a downloadable IQAC document.",
+  description: "Add a downloadable IQAC document (PDF).",
   icon: FileText,
   group: "IQAC",
   zodSchema: iqacDocumentsSchema,
-  defaultValues: { file_type: "PDF", status: true },
+  defaultValues: {},
   sections: [
     {
       title: "Document",
       fields: [
-        { name: "name", label: "Document Name", type: "text", required: true, colSpan: 2 },
-        { name: "file_url", label: "Document File", type: "file", required: true, colSpan: 2 },
-        {
-          name: "file_type",
-          label: "File Type",
-          type: "select",
-          required: true,
-          options: [{ label: "PDF", value: "PDF" }],
-        },
-        { name: "file_size", label: "File Size", type: "text", placeholder: "2.5 MB" },
-        { name: "display_order", label: "Display Order", type: "number" },
-        { name: "status", label: "Active", type: "switch" },
+        { name: "title", label: "Title", type: "text", required: true, colSpan: 2, placeholder: "IQAC Annual Report 2026" },
+        { name: "type", label: "Type", type: "text", required: true, placeholder: "Annual Report" },
+        { name: "pdfFile", label: "PDF File", type: "file", required: true, colSpan: 2 },
       ],
     },
   ],

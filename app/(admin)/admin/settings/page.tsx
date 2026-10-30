@@ -28,7 +28,7 @@ function Field({
 
 export default function AdminSettingsPage() {
   return (
-    <div className="w-full p-6 space-y-6">
+    <div className="w-full px-4 pt-6 space-y-6">
       <p className="text-sm text-muted-foreground">
         Global site information used across the public pages.
       </p>

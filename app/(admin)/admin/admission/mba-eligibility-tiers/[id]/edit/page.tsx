@@ -12,7 +12,7 @@ export default async function EditMbaEligibilityTiersPage({ params }: { params: 
   if (!getEntitySchema("mba-eligibility-tiers")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="mba-eligibility-tiers" recordId={id} cancelHref="/admin/admission/mba-eligibility-tiers" />
     </div>
   );

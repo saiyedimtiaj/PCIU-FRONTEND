@@ -12,7 +12,7 @@ export default async function EditTimeSlotPage({ params }: { params: Promise<{ i
   if (!getEntitySchema("time-slot")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="time-slot" recordId={id} cancelHref="/admin/scheduling/time-slot" />
     </div>
   );

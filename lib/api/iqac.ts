@@ -11,6 +11,7 @@ import type {
   IqacPageContent,
   IqacPageData,
   IqacPerson,
+  IqacQuickLink,
 } from "@/types/iqac";
 
 const content = pageData as IqacPageContent;
@@ -47,6 +48,7 @@ function fallbackPage(): IqacPageData {
       ...person(m, m.department),
       role: m.role,
     })),
+    quickLinks: content.quickLinks,
   };
 }
 
@@ -106,6 +108,24 @@ async function getJson<T>(path: string): Promise<T> {
  * come from the API once it's reachable, so no placeholder names leak onto
  * the live page.
  */
+/** `quickLinks` is a JSON column of `{ title, url }` — accept it stringified too. */
+function parseQuickLinks(value: IqacApiRecord["quickLinks"]): IqacQuickLink[] {
+  let list: unknown = value;
+  if (typeof value === "string") {
+    try {
+      list = JSON.parse(value);
+    } catch {
+      return [];
+    }
+  }
+  if (!Array.isArray(list)) return [];
+  return list.flatMap((item) => {
+    const name = typeof item?.title === "string" ? item.title.trim() : "";
+    const url = typeof item?.url === "string" ? item.url.trim() : "";
+    return name && url ? [{ name, url }] : [];
+  });
+}
+
 export async function getIqacPage(): Promise<IqacPageData> {
   const fallback = fallbackPage();
 
@@ -148,6 +168,9 @@ export async function getIqacPage(): Promise<IqacPageData> {
       directorMessageHtml: message.html,
       directorMessage: hasMessage ? message.paragraphs : fallback.directorMessage,
       committee,
+      // Live links only; an empty list on the record means "none", so the
+      // static placeholders only show when the API is unreachable.
+      quickLinks: parseQuickLinks(record.quickLinks),
     };
   } catch (error) {
     console.error("[IQAC] Falling back to static content:", error);

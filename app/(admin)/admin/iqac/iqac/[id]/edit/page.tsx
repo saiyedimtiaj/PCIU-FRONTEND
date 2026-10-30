@@ -12,7 +12,7 @@ export default async function EditIqacPage({ params }: { params: Promise<{ id: s
   if (!getEntitySchema("iqac")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="iqac" recordId={id} cancelHref="/admin/iqac/iqac" />
     </div>
   );

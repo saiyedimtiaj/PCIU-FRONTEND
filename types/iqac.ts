@@ -94,6 +94,7 @@ export interface IqacApiRecord {
   vision: string | null;
   directorMessage: string | null;
   objectives: string[] | string | null;
+  quickLinks?: { title?: string | null; url?: string | null }[] | string | null;
   director: IqacApiTeacher | null;
   committeeMembers?: IqacApiCommitteeMember[];
 }
@@ -121,6 +122,7 @@ export interface IqacPageData {
   directorMessageHtml: string | null;
   directorMessage: string[];
   committee: (IqacPerson & { role: string })[];
+  quickLinks: IqacQuickLink[];
 }
 
 /** An IQAC activity as rendered — an Event whose category starts with "IQAC". */

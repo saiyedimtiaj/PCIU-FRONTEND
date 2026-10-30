@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import EmptyState from "@/components/shared/EmptyState";
 import EntityForm from "./EntityForm";
 import FormSkeleton from "./FormSkeleton";
+import RequirePermission from "@/components/admin/RequirePermission";
 
 export interface EntityFormClientProps {
   slug: string;
@@ -18,7 +19,20 @@ export interface EntityFormClientProps {
   recordId?: string;
 }
 
-export default function EntityFormClient({ slug, cancelHref, recordId }: EntityFormClientProps) {
+export default function EntityFormClient(props: EntityFormClientProps) {
+  const { slug, recordId } = props;
+  const title = getEntitySchema(slug)?.title.toLowerCase() ?? "this section";
+  // A one-record page (fee structure, …) is an edit of its single row; its
+  // create-if-missing case is gated again inside, once the row is known.
+  const action = recordId ? "edit" : "create";
+  return (
+    <RequirePermission slug={slug} action={action} label={recordId ? `this ${title}` : `a ${title}`}>
+      <EntityFormClientInner {...props} />
+    </RequirePermission>
+  );
+}
+
+function EntityFormClientInner({ slug, cancelHref, recordId }: EntityFormClientProps) {
   const schema = getEntitySchema(slug);
   const connected = isConnected(slug);
 
@@ -41,18 +55,7 @@ export default function EntityFormClient({ slug, cancelHref, recordId }: EntityF
   }
 
   if (!recordId) {
-    const createOverwrites = getEndpoint(slug)?.createOverwrites;
-    return (
-      <div className="space-y-4">
-        {createOverwrites && (
-          <Alert
-            variant="warning"
-            message={`${schema.title} only ever keeps one record. Saving this replaces the existing one — it does not add a second.`}
-          />
-        )}
-        <EntityForm schema={schema} cancelHref={cancelHref} />
-      </div>
-    );
+    return <EntityForm schema={schema} cancelHref={cancelHref} />;
   }
 
   const notFound = (
@@ -110,7 +113,9 @@ export default function EntityFormClient({ slug, cancelHref, recordId }: EntityF
           variant="info"
           message={`No ${schema.title.toLowerCase()} has been saved yet — fill this in to create it.`}
         />
-        <EntityForm schema={schema} cancelHref={cancelHref} stayAfterSave />
+        <RequirePermission slug={slug} action="create" label={`a ${schema.title.toLowerCase()}`}>
+          <EntityForm schema={schema} cancelHref={cancelHref} stayAfterSave />
+        </RequirePermission>
       </div>
     );
   }
@@ -126,3 +131,4 @@ export default function EntityFormClient({ slug, cancelHref, recordId }: EntityF
     />
   );
 }
+

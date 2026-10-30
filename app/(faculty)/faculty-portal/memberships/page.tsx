@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function FacultyPortalMembershipsPage() {
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <FacultySectionList section="memberships" source="live" />
     </div>
   );

@@ -12,7 +12,7 @@ export default async function EditPcjVolumesPage({ params }: { params: Promise<{
   if (!getEntitySchema("pcj-volumes")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="pcj-volumes" recordId={id} cancelHref="/admin/journal/pcj-volumes" />
     </div>
   );

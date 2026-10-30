@@ -12,7 +12,7 @@ export default async function EditExperiencePage({ params }: { params: Promise<{
   if (!getEntitySchema("experience")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="experience" recordId={id} cancelHref="/admin/people/experience" />
     </div>
   );

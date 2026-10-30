@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function AdminFacultyPage() {
   return (
-    <div className="w-full p-6 space-y-6">
+    <div className="w-full px-4 pt-6 space-y-6">
       <PageHeader
         title="Faculty Directory"
         description="Manage the public faculty directory. Click a name to open their full profile workspace."
