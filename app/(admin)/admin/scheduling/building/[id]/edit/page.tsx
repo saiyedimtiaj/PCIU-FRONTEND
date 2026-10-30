@@ -12,7 +12,7 @@ export default async function EditBuildingPage({ params }: { params: Promise<{ i
   if (!getEntitySchema("building")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="building" recordId={id} cancelHref="/admin/scheduling/building" />
     </div>
   );

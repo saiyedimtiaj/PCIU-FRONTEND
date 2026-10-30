@@ -55,7 +55,6 @@ import { iqacEntity } from "./iqac";
 import { iqacCommitteeEntity } from "./iqac-committee";
 import { iqacSectionsEntity } from "./iqac-sections";
 import { iqacDocumentsEntity } from "./iqac-documents";
-import { iqacQuickLinksEntity } from "./iqac-quick-links";
 import { iqacActivitiesEntity } from "./iqac-activities";
 import { iqacGalleryEntity } from "./iqac-gallery";
 import { managementEntity } from "./management";
@@ -121,7 +120,6 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   "iqac-committee": iqacCommitteeEntity,
   "iqac-sections": iqacSectionsEntity,
   "iqac-documents": iqacDocumentsEntity,
-  "iqac-quick-links": iqacQuickLinksEntity,
   "iqac-activities": iqacActivitiesEntity,
   "iqac-gallery": iqacGalleryEntity,
   management: managementEntity,

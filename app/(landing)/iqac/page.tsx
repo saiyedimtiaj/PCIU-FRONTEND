@@ -320,7 +320,7 @@ export default async function IqacPage() {
       <ResourcesContact
         documents={content.documents}
         notices={content.notices}
-        quickLinks={content.quickLinks}
+        quickLinks={data.quickLinks}
         contact={content.contact}
       />
     </div>

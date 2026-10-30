@@ -12,7 +12,7 @@ export default async function EditIqacActivitiesPage({ params }: { params: Promi
   if (!getEntitySchema("iqac-activities")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="iqac-activities" recordId={id} cancelHref="/admin/iqac/iqac-activities" />
     </div>
   );

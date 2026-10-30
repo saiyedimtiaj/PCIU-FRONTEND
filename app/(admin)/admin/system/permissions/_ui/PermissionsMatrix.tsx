@@ -2,42 +2,37 @@
 
 import { useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ShieldCheck, Search, X, Plus } from "lucide-react";
+import { ShieldCheck, Search, X } from "lucide-react";
 import {
   listPermissionsAction,
   updatePermissionAction,
   createPermissionAction,
   type PermissionRow,
 } from "@/app/(admin)/entity-actions-permissions";
+import {
+  ADMIN_ROLES,
+  PERMISSION_ACTIONS,
+  knownResources,
+  modulesByResource,
+  type PermissionAction,
+} from "@/lib/admin/permissions";
+import { getEntitySchema } from "@/lib/admin/entities";
 import PageHeader from "@/components/admin/PageHeader";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { useToastManager } from "@/components/ui/toast";
 import { Alert } from "@/components/shared/Aleart";
-import { Modal } from "@/components/shared/Modal";
 import EmptyState from "@/components/shared/EmptyState";
 
+/** A role/resource pair with no row yet — shown unchecked, created on first tick. */
+type MatrixRow = PermissionRow & { missing?: boolean };
 
-const ALL_RESOURCES = [
-  "ACTIVITY", "ADMISSION_ADVERTISEMENT", "ADMISSION_SCHEDULE", "ADMISSION_TEST_RESULT",
-  "AWARD", "BATCH", "BUILDING", "CLASS_ROUTINE", "CONTACT", "COURSE", "DEPARTMENT",
-  "EDUCATION", "EVENT", "EXAM", "EXAM_ROUTINE", "EXPERIENCE", "FACULTY", "FAQ",
-  "FEE_STRUCTURE", "GALLERY", "HERO_SLIDE", "IQAC", "IQAC_COMMITTEE", "LAB_FACILITY",
-  "MANAGEMENT", "MBA_ELIGIBILITY_TIER", "MEMBERSHIP", "MENU", "MOU", "NEWS_ARTICLE",
-  "NOTICE", "PAGE", "PARTNER", "PCJ_ARTICLE", "PCJ_VOLUME", "POPUP", "PROGRAM",
-  "RESEARCH_AREA", "RESEARCH_CENTRE", "RESEARCH_PUBLICATION", "ROOM", "SECTION",
-  "SEMESTER", "SEMINAR", "SETTING", "TEACHER", "TIME_SLOT", "USER",
-] as const;
-
-const ACTIONS = ["view", "create", "edit", "delete"] as const;
-type Action = (typeof ACTIONS)[number];
-
+/** Same prefix `useAccess()` lives under, so a change here re-gates the sidebar too. */
 const PERMISSION_KEY = ["permissions"] as const;
 
 function prettyResource(resource: string) {
@@ -56,7 +51,7 @@ export default function PermissionsMatrix() {
   const [savingCell, setSavingCell] = useState<string | null>(null);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: PERMISSION_KEY,
+    queryKey: [...PERMISSION_KEY, "all"],
     queryFn: async () => {
       const result = await listPermissionsAction();
       if (!result.ok) throw new Error(result.error);
@@ -64,13 +59,15 @@ export default function PermissionsMatrix() {
     },
   });
 
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: PERMISSION_KEY });
+
   const updatePermission = useMutation({
     mutationFn: async (row: PermissionRow) => {
       const result = await updatePermissionAction(row);
       if (!result.ok) throw new Error(result.error);
       return result.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: PERMISSION_KEY }),
+    onSuccess: invalidate,
   });
 
   const createPermission = useMutation({
@@ -79,51 +76,86 @@ export default function PermissionsMatrix() {
       if (!result.ok) throw new Error(result.error);
       return result.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: PERMISSION_KEY }),
+    onSuccess: invalidate,
   });
 
+  // Every admin role gets a tab even before it has a single row.
   const roles = useMemo(
-    () => Array.from(new Set((data ?? []).map((r) => r.role))),
+    () => Array.from(new Set<string>([...ADMIN_ROLES, ...(data ?? []).map((r) => r.role)])),
     [data],
   );
   const activeRole = role ?? roles[0] ?? null;
 
-  const rows = useMemo(() => {
-    const forRole = (data ?? []).filter((r) => r.role === activeRole);
+  const resources = useMemo(() => knownResources(data ?? []), [data]);
+
+  // Which admin modules each resource controls, as display titles.
+  const moduleTitles = useMemo(() => {
+    const byResource = modulesByResource(new Set(resources));
+    const out = new Map<string, string[]>();
+    for (const [resource, slugs] of byResource) {
+      out.set(
+        resource,
+        slugs.map((slug) => getEntitySchema(slug)?.title ?? slug),
+      );
+    }
+    return out;
+  }, [resources]);
+
+  // One row per known resource for the active role — real rows where they
+  // exist, placeholders where the role has nothing configured yet.
+  const rows = useMemo<MatrixRow[]>(() => {
+    if (!activeRole) return [];
+    const forRole = new Map(
+      (data ?? []).filter((r) => r.role === activeRole).map((r) => [r.resource, r]),
+    );
+    const all = resources.map(
+      (resource): MatrixRow =>
+        forRole.get(resource) ?? {
+          id: -1,
+          role: activeRole,
+          resource,
+          view: false,
+          create: false,
+          edit: false,
+          delete: false,
+          missing: true,
+        },
+    );
     const q = query.trim().toLowerCase();
-    const filtered = q
-      ? forRole.filter((r) => r.resource.toLowerCase().includes(q))
-      : forRole;
-    return [...filtered].sort((a, b) => a.resource.localeCompare(b.resource));
-  }, [data, activeRole, query]);
+    if (!q) return all;
+    return all.filter(
+      (r) =>
+        prettyResource(r.resource).toLowerCase().includes(q) ||
+        (moduleTitles.get(r.resource) ?? []).some((t) => t.toLowerCase().includes(q)),
+    );
+  }, [data, activeRole, resources, query, moduleTitles]);
 
-  // A role doesn't have a row for every resource yet (MODERATOR has 14 of
-  // 48) — these are the ones the Add dialog can offer for the active role.
-  const missingResources = useMemo(() => {
-    const have = new Set((data ?? []).filter((r) => r.role === activeRole).map((r) => r.resource));
-    return ALL_RESOURCES.filter((r) => !have.has(r));
-  }, [data, activeRole]);
+  const missingCount = useMemo(
+    () =>
+      activeRole
+        ? resources.filter((res) => !(data ?? []).some((r) => r.role === activeRole && r.resource === res)).length
+        : 0,
+    [data, activeRole, resources],
+  );
 
-  const [addOpen, setAddOpen] = useState(false);
-  const [newResource, setNewResource] = useState<string>("");
-  const [newFlags, setNewFlags] = useState<Record<Action, boolean>>({
-    view: true,
-    create: false,
-    edit: false,
-    delete: false,
-  });
-
-  function openAddDialog() {
-    setNewResource(missingResources[0] ?? "");
-    setNewFlags({ view: true, create: false, edit: false, delete: false });
-    setAddOpen(true);
-  }
-
-  async function toggle(row: PermissionRow, action: Action, next: boolean) {
-    const cell = `${row.id}-${action}`;
+  async function toggle(row: MatrixRow, action: PermissionAction, next: boolean) {
+    const cell = `${row.role}-${row.resource}-${action}`;
     setSavingCell(cell);
     try {
-      await updatePermission.mutateAsync({ ...row, [action]: next });
+      if (row.missing) {
+        // No row yet: create it with just this flag set.
+        await createPermission.mutateAsync({
+          role: row.role,
+          resource: row.resource,
+          view: false,
+          create: false,
+          edit: false,
+          delete: false,
+          [action]: next,
+        });
+      } else {
+        await updatePermission.mutateAsync({ ...row, [action]: next });
+      }
     } catch (err) {
       toast.add({
         type: "error",
@@ -135,34 +167,11 @@ export default function PermissionsMatrix() {
     }
   }
 
-  async function submitAdd() {
-    if (!activeRole || !newResource) return;
-    try {
-      await createPermission.mutateAsync({
-        role: activeRole,
-        resource: newResource,
-        ...newFlags,
-      });
-      toast.add({
-        type: "success",
-        title: "Permission added",
-        description: `${prettyResource(newResource)} added for ${prettyResource(activeRole)}.`,
-      });
-      setAddOpen(false);
-    } catch (err) {
-      toast.add({
-        type: "error",
-        title: "Could not add this permission",
-        description: err instanceof Error ? err.message : "Please try again.",
-      });
-    }
-  }
-
   return (
     <div className="w-full space-y-6 p-6">
       <PageHeader
         title="Permissions"
-        description="Control what each role can see and change across the dashboard."
+        description="Control what each role can see and change across the dashboard. A role sees a module in the sidebar only with View; Create, Edit and Delete show or hide those buttons."
         icon={ShieldCheck}
       />
 
@@ -178,187 +187,112 @@ export default function PermissionsMatrix() {
       )}
 
       {isLoading ? (
-        <Card>
-          <CardContent className="space-y-3">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-full" />
-            ))}
-          </CardContent>
+        <Card className="space-y-3 p-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="h-10 w-full" />
+          ))}
         </Card>
       ) : (
-        <>
-          <div className="flex flex-wrap items-center gap-3">
-            {roles.length > 0 && activeRole && (
-              <Tabs
-                value={activeRole}
-                onValueChange={(value) => setRole(value as string)}
-                variant="pill"
-              >
-                <TabsList>
-                  {roles.map((r) => (
-                    <TabsTrigger key={r} value={r}>
-                      {prettyResource(r)}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-            )}
+        !isError && (
+          <>
+            <div className="flex flex-wrap items-center gap-3">
+              {activeRole && (
+                <Tabs value={activeRole} onValueChange={(value) => setRole(value as string)} variant="pill">
+                  <TabsList>
+                    {roles.map((r) => (
+                      <TabsTrigger key={r} value={r}>
+                        {prettyResource(r)}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </Tabs>
+              )}
 
-            <div className="relative ml-auto w-full max-w-xs">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search resources..."
-                className="pl-9"
-              />
+              <div className="relative ml-auto w-full max-w-xs">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search resources or modules..."
+                  className="pl-9"
+                />
+              </div>
+
+              {query && (
+                <Button variant="ghost" size="admin" onClick={() => setQuery("")}>
+                  <X className="size-4" />
+                  Clear
+                </Button>
+              )}
             </div>
 
-            {query && (
-              <Button variant="ghost" size="admin" onClick={() => setQuery("")}>
-                <X className="size-4" />
-                Clear
-              </Button>
+            {missingCount > 0 && activeRole && (
+              <Alert
+                variant="info"
+                message={`${prettyResource(activeRole)} has no permission set for ${missingCount} resource${missingCount === 1 ? "" : "s"} (marked "Not set") — it can't use those modules until you tick a box.`}
+              />
             )}
 
-            <Button
-              variant="highlight"
-              size="admin"
-              onClick={openAddDialog}
-              disabled={!activeRole || missingResources.length === 0}
-              title={
-                missingResources.length === 0
-                  ? `${activeRole ? prettyResource(activeRole) : "This role"} already has every resource.`
-                  : undefined
-              }
-            >
-              <Plus className="size-4" />
-              Add Permission
-            </Button>
-          </div>
-
-          <Card className="overflow-hidden">
-            {rows.length === 0 ? (
-              <EmptyState
-                title="No resources match"
-                description="Try a different search term."
-              />
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/30">
-                      <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                        Resource
-                      </th>
-                      {ACTIONS.map((action) => (
-                        <th
-                          key={action}
-                          className="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground"
-                        >
-                          {action}
+            <Card className="overflow-hidden">
+              {rows.length === 0 ? (
+                <EmptyState title="No resources match" description="Try a different search term." />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/30">
+                        <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          Resource
                         </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {rows.map((row) => (
-                      <tr key={row.id} className="transition-colors hover:bg-muted/30">
-                        <td className="px-5 py-3 text-sm font-medium text-foreground">
-                          {prettyResource(row.resource)}
-                        </td>
-                        {ACTIONS.map((action) => (
-                          <td key={action} className="px-5 py-3 text-center">
-                            <span className="inline-flex items-center justify-center">
-                              <Checkbox
-                                checked={row[action]}
-                                disabled={savingCell === `${row.id}-${action}`}
-                                onCheckedChange={(next) =>
-                                  toggle(row, action, next === true)
-                                }
-                                aria-label={`${action} ${prettyResource(row.resource)}`}
-                              />
-                            </span>
-                          </td>
+                        {PERMISSION_ACTIONS.map((action) => (
+                          <th
+                            key={action}
+                            className="px-5 py-3.5 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+                          >
+                            {action}
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </Card>
-        </>
-      )}
-
-      <Modal
-        open={addOpen}
-        onClose={() => setAddOpen(false)}
-        title="Add permission"
-        description={
-          activeRole
-            ? `Give ${prettyResource(activeRole)} access to a resource it doesn't have yet.`
-            : undefined
-        }
-        loading={createPermission.isPending}
-        footer={
-          <>
-            <Button variant="outline" onClick={() => setAddOpen(false)} disabled={createPermission.isPending}>
-              Cancel
-            </Button>
-            <Button
-              variant="highlight"
-              onClick={submitAdd}
-              disabled={!newResource || createPermission.isPending}
-              loading={createPermission.isPending}
-            >
-              Add Permission
-            </Button>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {rows.map((row) => {
+                        const modules = moduleTitles.get(row.resource) ?? [];
+                        return (
+                          <tr key={row.resource} className="transition-colors hover:bg-muted/30">
+                            <td className="px-5 py-3">
+                              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                                {prettyResource(row.resource)}
+                                {row.missing && <Badge variant="warning">Not set</Badge>}
+                              </div>
+                              {modules.length > 0 && (
+                                <p className="mt-0.5 text-xs text-muted-foreground">
+                                  {modules.join(", ")}
+                                </p>
+                              )}
+                            </td>
+                            {PERMISSION_ACTIONS.map((action) => (
+                              <td key={action} className="px-5 py-3 text-center">
+                                <span className="inline-flex items-center justify-center">
+                                  <Checkbox
+                                    checked={row[action]}
+                                    disabled={savingCell === `${row.role}-${row.resource}-${action}`}
+                                    onCheckedChange={(next) => toggle(row, action, next === true)}
+                                    aria-label={`${action} ${prettyResource(row.resource)}`}
+                                  />
+                                </span>
+                              </td>
+                            ))}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </Card>
           </>
-        }
-      >
-        <div className="space-y-5">
-          <div className="space-y-1.5">
-            <Label htmlFor="permission-resource">Resource</Label>
-            <Select
-              items={missingResources.map((r) => ({ label: prettyResource(r), value: r }))}
-              value={newResource}
-              onValueChange={(value) => setNewResource(value ?? "")}
-            >
-              <SelectTrigger id="permission-resource">
-                <SelectValue placeholder="Select a resource" />
-              </SelectTrigger>
-              <SelectContent>
-                {missingResources.map((r) => (
-                  <SelectItem key={r} value={r}>
-                    {prettyResource(r)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Permissions</Label>
-            <div className="grid grid-cols-2 gap-3">
-              {ACTIONS.map((action) => (
-                <label
-                  key={action}
-                  className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-border px-3 py-2.5 text-sm capitalize transition-colors hover:bg-muted/40"
-                >
-                  <Checkbox
-                    checked={newFlags[action]}
-                    onCheckedChange={(next) =>
-                      setNewFlags((prev) => ({ ...prev, [action]: next === true }))
-                    }
-                  />
-                  {action}
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Modal>
+        )
+      )}
     </div>
   );
 }

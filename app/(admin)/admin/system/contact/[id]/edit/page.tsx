@@ -12,7 +12,7 @@ export default async function EditContactPage({ params }: { params: Promise<{ id
   if (!getEntitySchema("contact")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="contact" recordId={id} cancelHref="/admin/system/contact" />
     </div>
   );

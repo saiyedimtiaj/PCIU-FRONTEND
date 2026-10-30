@@ -67,7 +67,7 @@ export default function FacultyDashboard({ basePath, publicProfileHref, demoNoti
   const links = QUICK_LINKS.map((l) => ({ ...l, href: l.href.replace("/faculty-portal", basePath) }));
 
   return (
-    // No self-padding — the caller's page.tsx wraps this in "w-full p-6".
+    // No self-padding — the caller's page.tsx wraps this in "w-full px-4 pt-6".
     <div className="w-full space-y-6">
       <PageHeader title="Dashboard" description="Overview of your profile and recent activity." icon={LayoutDashboard} />
 

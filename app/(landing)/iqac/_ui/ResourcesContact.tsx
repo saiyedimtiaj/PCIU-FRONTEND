@@ -148,9 +148,12 @@ export default function ResourcesContact({
                 <Link2 className="size-5 text-primary" />
                 Quick Links
               </h3>
+              {quickLinks.length === 0 && (
+                <p className="text-sm text-muted-foreground">Quick links will be added soon.</p>
+              )}
               <ul className="grid grid-cols-2 gap-3">
                 {quickLinks.map((link) => (
-                  <li key={link.name}>
+                  <li key={`${link.name}-${link.url}`}>
                     <a
                       href={link.url}
                       target={link.url !== "#" ? "_blank" : undefined}

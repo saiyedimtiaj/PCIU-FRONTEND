@@ -12,7 +12,7 @@ export default async function EditNewsArticlesPage({ params }: { params: Promise
   if (!getEntitySchema("news-articles")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="news-articles" recordId={id} cancelHref="/admin/content/news-articles" />
     </div>
   );

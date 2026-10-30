@@ -12,7 +12,7 @@ export default async function EditManagementPage({ params }: { params: Promise<{
   if (!getEntitySchema("management")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="management" recordId={id} cancelHref="/admin/iqac/management" />
     </div>
   );

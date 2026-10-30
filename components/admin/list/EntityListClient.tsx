@@ -21,6 +21,8 @@ import { isConnected, getEndpoint } from "@/services/endpoints";
 import { useEntityList, useDeleteEntity, useUpdateEntity, useRelationOptions } from "@/features/entity";
 import { useToastManager } from "@/components/ui/toast";
 import type { FieldOption } from "@/components/admin/form/form-types";
+import RequirePermission from "@/components/admin/RequirePermission";
+import { useAccess } from "@/features/permissions/use-access";
 
 export interface EntityListClientProps {
   slug: string;
@@ -104,12 +106,26 @@ function OptionFilterSelect({
   );
 }
 
-export default function EntityListClient({
+export default function EntityListClient(props: EntityListClientProps) {
+  const schema = getEntitySchema(props.slug);
+  return (
+    <RequirePermission
+      slug={props.slug}
+      action="view"
+      label={schema ? (schema.pluralTitle ?? pluralize(schema.title)).toLowerCase() : undefined}
+    >
+      <EntityListClientInner {...props} />
+    </RequirePermission>
+  );
+}
+
+function EntityListClientInner({
   slug,
   basePath: basePathOverride,
   extraActions,
 }: EntityListClientProps) {
   const schema = getEntitySchema(slug);
+  const access = useAccess();
 
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
@@ -135,9 +151,15 @@ export default function EntityListClient({
   const connected = isConnected(slug);
   const endpointCfg = getEndpoint(slug);
   const isSingleton = !!endpointCfg?.singleton;
-  const showAddButton = !isSingleton || !!endpointCfg?.allowCreate;
+  // Extra header actions (bulk add for routines) create rows too.
+  const visibleExtraActions = access.can(slug, "create") ? extraActions : null;
+  const showAddButton = (!isSingleton || !!endpointCfg?.allowCreate) && access.can(slug, "create");
   const deactivateField = getEndpoint(slug)?.deactivateField;
-  const canDelete = !getEndpoint(slug)?.noDelete || !!deactivateField;
+  // Deactivating is a PATCH, so it's governed by "edit", not "delete".
+  const canEdit = access.can(slug, "edit");
+  const canDelete = deactivateField
+    ? canEdit
+    : !getEndpoint(slug)?.noDelete && access.can(slug, "delete");
   const resetsAtRoot = !!getEndpoint(slug)?.deleteAtRoot;
   const toast = useToastManager();
 
@@ -161,10 +183,11 @@ export default function EntityListClient({
         ? deriveColumns(schema, {
             onDelete: setDeleteTarget,
             canDelete,
+            canEdit,
             deactivateMode: !!deactivateField,
           })
         : [],
-    [schema, canDelete, deactivateField]
+    [schema, canDelete, canEdit, deactivateField]
   );
 
   const activeFilterCount =
@@ -220,7 +243,7 @@ export default function EntityListClient({
 
   if (!schema) {
     return (
-      <div className="w-full p-6">
+      <div className="w-full px-4 pt-6">
         <p className="text-sm text-muted-foreground">No listing is registered for &quot;{slug}&quot; yet.</p>
       </div>
     );
@@ -318,9 +341,9 @@ export default function EntityListClient({
         description={schema.description}
         icon={schema.icon}
         actions={
-          showAddButton || extraActions ? (
+          showAddButton || visibleExtraActions ? (
             <>
-              {extraActions}
+              {visibleExtraActions}
               {showAddButton && (
                 <Button variant="highlight" size="admin" render={<Link href={`${basePath}/new`} />} nativeButton={false}>
                   <Plus className="size-4" />

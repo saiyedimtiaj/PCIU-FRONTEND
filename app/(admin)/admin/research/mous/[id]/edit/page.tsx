@@ -21,7 +21,7 @@ export default async function EditMousPage({ params }: { params: Promise<{ id: s
   if (!getEntitySchema("mous")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="mous" recordId={id} cancelHref="/admin/research/mous" />
     </div>
   );

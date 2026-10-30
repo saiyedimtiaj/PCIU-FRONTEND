@@ -21,7 +21,7 @@ export default async function EditActivitiesPage({ params }: { params: Promise<{
   if (!getEntitySchema("activities")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="activities" recordId={id} cancelHref="/admin/content/activities" />
     </div>
   );

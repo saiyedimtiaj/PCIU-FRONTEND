@@ -72,6 +72,7 @@ const END_OF_DAY_DATE_FIELDS: Partial<Record<string, string[]>> = {
 /** Relation ids a JSON body must send as numbers (`"departmentId": 3`). */
 const NUMERIC_ID_FIELDS: Partial<Record<string, string[]>> = {
   "research-centres": ["departmentId"],
+  iqac: ["directorId"],
 };
 
 function encodeNumericIds(slug: string, payload: Dict): void {
@@ -439,6 +440,11 @@ export async function updateEntity(
 ): Promise<EntityRecord> {
   const cfg = getEndpoint(slug);
   const body = encode(slug, values, immutableFields);
+  if (cfg?.updateMethod === "post-collection") {
+    const saved = await api.post<Dict>(collectionPath(slug), body);
+    return decode(slug, saved ?? {}, fieldNames);
+  }
+
   const path = cfg?.singleton ? collectionPath(slug) : itemPath(slug, id);
   const method = cfg?.updateMethod === "put" ? api.put : api.patch;
 

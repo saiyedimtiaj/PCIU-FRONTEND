@@ -21,7 +21,7 @@ export default async function EditIqacDocumentsPage({ params }: { params: Promis
   if (!getEntitySchema("iqac-documents")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="iqac-documents" recordId={id} cancelHref="/admin/iqac/iqac-documents" />
     </div>
   );

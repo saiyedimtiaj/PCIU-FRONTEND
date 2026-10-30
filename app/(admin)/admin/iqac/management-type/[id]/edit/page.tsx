@@ -12,7 +12,7 @@ export default async function EditManagementTypePage({ params }: { params: Promi
   if (!getEntitySchema("management-type")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="management-type" recordId={id} cancelHref="/admin/iqac/management-type" />
     </div>
   );

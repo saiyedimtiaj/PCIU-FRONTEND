@@ -21,7 +21,7 @@ export default async function EditSeminarPage({ params }: { params: Promise<{ id
   if (!getEntitySchema("seminar")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="seminar" recordId={id} cancelHref="/admin/research/seminar" />
     </div>
   );

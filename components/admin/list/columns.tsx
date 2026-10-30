@@ -17,6 +17,8 @@ const EXCLUDED_TYPES: readonly FieldType[] = [
   "password",
   "file",
   "json-list",
+  "link-list",
+  "stat-list",
   "image",
   "image-list",
   "text-or-image",
@@ -139,7 +141,14 @@ function joinedName(value: unknown): string | undefined {
   if (!value || typeof value !== "object") return undefined;
   const obj = value as Record<string, unknown>;
   const label = obj.name ?? obj.title ?? obj.designation;
-  return typeof label === "string" && label ? label : undefined;
+  if (typeof label === "string" && label) return label;
+  // A joined PCJ volume has no name — only its volume/issue numbers.
+  if (obj.volumeNumber != null) {
+    return obj.issueNumber != null
+      ? `Volume ${obj.volumeNumber}, Issue ${obj.issueNumber}`
+      : `Volume ${obj.volumeNumber}`;
+  }
+  return undefined;
 }
 
 function relationLabel(field: FieldDescriptor, row: SampleRow): string {
@@ -206,6 +215,8 @@ export interface DeriveColumnsActions {
   onDelete: (row: SampleRow) => void;
   /** Hidden when the resource exposes no DELETE route (e.g. teachers). */
   canDelete?: boolean;
+  /** Hidden when the signed-in role has no "edit" permission for the module. */
+  canEdit?: boolean;
   /**
    * When set (see `EndpointConfig.deactivateField`), the row action is a
    * "deactivate" icon instead of delete — still calls `onDelete`, which
@@ -292,16 +303,19 @@ export function deriveColumns(
     align: "right",
     cell: (row) => (
       <div className="flex items-center justify-end gap-1">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          render={<Link href={`${basePath}/${row.__id}/edit`} />}
-          nativeButton={false}
-          aria-label={`Edit ${schema.title.toLowerCase()}`}
-        >
-          <Pencil className="size-4" />
-        </Button>
+        {actions.canEdit !== false && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            render={<Link href={`${basePath}/${row.__id}/edit`} />}
+            nativeButton={false}
+            aria-label={`Edit ${schema.title.toLowerCase()}`}
+          >
+            <Pencil className="size-4" />
+          </Button>
+        )}
         {actions.deactivateMode ? (
+          actions.canDelete !== false && (
           <Button
             variant="ghost"
             size="icon-sm"
@@ -311,6 +325,7 @@ export function deriveColumns(
           >
             <UserX className="size-4" />
           </Button>
+          )
         ) : (
           actions.canDelete !== false && (
             <Button

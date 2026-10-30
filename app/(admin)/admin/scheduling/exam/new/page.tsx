@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function NewExamPage() {
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="exam" cancelHref="/admin/scheduling/exam" />
     </div>
   );

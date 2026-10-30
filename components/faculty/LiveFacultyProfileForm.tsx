@@ -137,7 +137,7 @@ export default function LiveFacultyProfileForm() {
   }
 
   return (
-    // No self-padding — the caller's page.tsx wraps this in "w-full p-6".
+    // No self-padding — the caller's page.tsx wraps this in "w-full px-4 pt-6".
     <form onSubmit={handleSubmit} className="w-full space-y-6" noValidate>
       <PageHeader title="My Profile" description="Your public-facing contact details and biography." icon={UserRound} />
 

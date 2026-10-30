@@ -21,7 +21,7 @@ export default async function EditResearchAreasPage({ params }: { params: Promis
   if (!getEntitySchema("research-areas")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="research-areas" recordId={id} cancelHref="/admin/research/research-areas" />
     </div>
   );

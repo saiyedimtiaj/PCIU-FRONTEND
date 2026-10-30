@@ -21,7 +21,7 @@ export default async function EditResearchCentresPage({ params }: { params: Prom
   if (!getEntitySchema("research-centres")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="research-centres" recordId={id} cancelHref="/admin/research/research-centres" />
     </div>
   );

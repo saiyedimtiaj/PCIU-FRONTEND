@@ -12,7 +12,7 @@ export default async function EditSectionPage({ params }: { params: Promise<{ id
   if (!getEntitySchema("section")) notFound();
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 pt-6">
       <EntityFormClient slug="section" recordId={id} cancelHref="/admin/scheduling/section" />
     </div>
   );
