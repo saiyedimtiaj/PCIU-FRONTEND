@@ -23,7 +23,7 @@ export default async function PortCityJournalPage() {
             backgroundSize: "24px 24px",
           }}
         />
-        <div className="container relative z-10 mx-auto px-4 text-center">
+        <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
             <BookOpen className="size-8 text-white" />
           </div>
@@ -35,7 +35,7 @@ export default async function PortCityJournalPage() {
       </section>
 
       <section className="py-12 bg-background">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Card className="border-l-4 border-l-accent max-w-4xl mx-auto">
             <CardContent>
               <h2 className="font-heading font-bold text-xl text-foreground mb-3">
@@ -48,13 +48,13 @@ export default async function PortCityJournalPage() {
       </section>
 
       <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <JournalArchive content={content} />
         </div>
       </section>
 
       <section className="py-12 bg-background">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Card className="bg-primary text-primary-foreground max-w-4xl mx-auto">
             <CardContent className="grid sm:grid-cols-2 gap-6">
               <div className="flex items-start gap-3">

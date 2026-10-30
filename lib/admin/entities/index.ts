@@ -63,6 +63,7 @@ import { managementTypeEntity } from "./management-type";
 import { contactEntity } from "./contact";
 import { settingEntity } from "./setting";
 import { popupEntity } from "./popup";
+import { developersEntity } from "./developers";
 
 export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   department: departmentEntity,
@@ -98,6 +99,7 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   notices: noticesEntity,
   gallery: galleryEntity,
   menus: menusEntity,
+  developers: developersEntity,
 
   "research-centres": researchCentresEntity,
   "research-areas": researchAreasEntity,

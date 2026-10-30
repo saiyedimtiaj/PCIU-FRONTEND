@@ -22,6 +22,8 @@ export interface IqacDocument {
   name: string;
   type: string;
   size: string;
+  /** File under public/ (or an absolute URL) — the card downloads it. */
+  url?: string;
 }
 
 export interface IqacQuickLink {

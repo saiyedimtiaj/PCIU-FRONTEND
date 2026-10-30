@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { resolveUploadUrl } from "@/lib/upload-url";
 import type { ProgramFinderItem } from "@/app/(landing)/_actions/programs";
 import { ArrowRight } from "lucide-react";
-import HomeSectionReveal from "./HomeSectionReveal";
+import SectionReveal from "@/components/shared/SectionReveal";
 
 const ALL_LEVELS = "All Levels";
 const ALL_FACULTIES = "All Faculties";
@@ -335,7 +335,7 @@ export default function ProgramFinder({
           </p>
         )}
         {!error && filteredPrograms.length > 0 && (
-          <HomeSectionReveal>
+          <SectionReveal>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">
               {visiblePrograms.map((program, index) => {
                 const isGraduate =
@@ -452,7 +452,7 @@ export default function ProgramFinder({
                 );
               })}
             </div>
-          </HomeSectionReveal>
+          </SectionReveal>
         )}
         {!error && filteredPrograms.length > 6 && !showAll && (
           //  Read more btn //

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, Camera, ArrowRight, CalendarRange } from "lucide-react";
+import SectionArcs from "@/components/shared/SectionArcs";
 import SeeMore from "@/components/shared/SeeMore";
 import { cn } from "@/lib/utils";
 import type { IqacActivityItem, IqacGalleryPhoto } from "@/types/iqac";
@@ -15,9 +16,10 @@ function kinds<T>(items: T[], key: (item: T) => string) {
 
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
-    <div className="mb-6 sm:mb-8 text-center">
-      <p className="text-xs font-semibold uppercase tracking-widest text-accent-hover mb-2">{eyebrow}</p>
-      <h2 className="font-heading font-bold text-[22px] sm:text-2xl md:text-3xl leading-tight text-foreground">
+    <div className="mb-12 sm:mb-14 text-center relative">
+      <SectionArcs className="top-full mt-1 h-8 w-[min(420px,80vw)]" />
+      <p className="relative text-xs font-semibold uppercase tracking-widest text-accent-hover mb-2">{eyebrow}</p>
+      <h2 className="relative font-heading font-bold text-[22px] sm:text-2xl md:text-3xl leading-tight text-foreground">
         {title}
       </h2>
     </div>
@@ -87,7 +89,7 @@ export default function ActivitiesGallery({
   return (
     <>
       <section id="activities" className="bg-muted/40 border-y border-border py-10 md:py-14 scroll-mt-24">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle eyebrow="What we've been doing" title="Our Activities" />
           {activities.length ? (
             <>
@@ -109,7 +111,7 @@ export default function ActivitiesGallery({
         </div>
       </section>
 
-      <section id="gallery" className="container mx-auto px-4 py-10 md:py-14 scroll-mt-24">
+      <section id="gallery" className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-14 scroll-mt-24">
         <SectionTitle eyebrow="Moments" title="Photo Gallery" />
         {gallery.length ? (
           <>

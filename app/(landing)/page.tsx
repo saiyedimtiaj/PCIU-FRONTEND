@@ -11,7 +11,7 @@ import NewsEvents from "./_ui/NewsEvents";
 import Stats from "./_ui/Stats";
 import { getProgramFinderData } from "@/app/(landing)/_actions/programs";
 import { getHomeGallery } from "@/lib/api/home";
-import HomeSectionReveal from "./_ui/HomeSectionReveal";
+import SectionReveal from "@/components/shared/SectionReveal";
 
 export default async function Page() {
   const [gallery, programFinderData] = await Promise.all([
@@ -33,24 +33,24 @@ export default async function Page() {
         <NoticeMarquee />
         <VCMessage />
         <ProgramFinder {...programFinderData} />
-        <HomeSectionReveal>
+        <SectionReveal>
           <Faculties />
-        </HomeSectionReveal>
-        <HomeSectionReveal>
+        </SectionReveal>
+        <SectionReveal>
           <Admissions />
-        </HomeSectionReveal>
-        <HomeSectionReveal>
+        </SectionReveal>
+        <SectionReveal>
           <Research />
-        </HomeSectionReveal>
-        <HomeSectionReveal>
+        </SectionReveal>
+        <SectionReveal>
           <PhotoGallery items={gallery} />
-        </HomeSectionReveal>
-        <HomeSectionReveal>
+        </SectionReveal>
+        <SectionReveal>
           <CampusLife />
-        </HomeSectionReveal>
-        <HomeSectionReveal>
+        </SectionReveal>
+        <SectionReveal>
           <NewsEvents />
-        </HomeSectionReveal>
+        </SectionReveal>
       </main>
     </>
   );

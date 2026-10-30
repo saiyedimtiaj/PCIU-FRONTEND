@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
-export default function HomeSectionReveal({
+export default function SectionReveal({
   children,
 }: {
   children: ReactNode;
