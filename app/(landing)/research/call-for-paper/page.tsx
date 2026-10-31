@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FileText, Calendar, Mail, MapPin, User, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import JournalHero from "../_ui/JournalHero";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -26,34 +27,21 @@ export const metadata: Metadata = {
 export default function CallForPaperPage() {
   return (
     <div className="min-h-screen bg-background">
-      <section className="relative h-[300px] flex items-center justify-center overflow-hidden bg-linear-to-br from-accent via-accent/90 to-primary">
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-            backgroundSize: "24px 24px",
-          }}
-        />
-        <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
-            <FileText className="size-8 text-white" />
-          </div>
-          <h1 className="font-heading font-bold text-3xl md:text-4xl text-white mb-2">
-            Call For Paper
-          </h1>
-          <p className="text-white/80">
-            The Port City Journal &middot; ISSN: 2311-3146 &middot; Volume 13, Issue (1+2)
-          </p>
-        </div>
-      </section>
+      <JournalHero
+        active="call-for-paper"
+        icon={FileText}
+        title="Call for Paper"
+        subtitle="Submit your original research to the Port City Journal."
+        chips={["ISSN 2311-3146", "Volume 13", "Issue (1+2)"]}
+      />
 
-      <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12 space-y-6">
+      <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10 space-y-6 sm:py-12">
         <Card className="bg-linear-to-r from-destructive/10 to-accent/10 border-l-4 border-l-destructive">
-          <CardContent className="flex items-center gap-4">
-            <Calendar className="size-8 text-destructive shrink-0" />
+          <CardContent className="flex items-center gap-3 sm:gap-4">
+            <Calendar className="size-7 text-destructive shrink-0 sm:size-8" />
             <div className="flex-1">
-              <p className="text-sm text-muted-foreground">Last Date of Submission</p>
-              <p className="font-heading font-bold text-xl text-foreground">31 March, 2027</p>
+              <p className="text-xs text-muted-foreground sm:text-sm">Last Date of Submission</p>
+              <p className="font-heading font-bold text-lg text-foreground whitespace-nowrap sm:text-xl">31 March, 2027</p>
             </div>
             <Badge variant="destructive">Open Now</Badge>
           </CardContent>

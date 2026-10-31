@@ -88,7 +88,7 @@ export default function ActivitiesGallery({
 
   return (
     <>
-      <section id="activities" className="bg-muted/40 border-y border-border py-10 md:py-14 scroll-mt-24">
+      <section id="activities" className="bg-background py-10 md:py-14 scroll-mt-24">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle eyebrow="What we've been doing" title="Our Activities" />
           {activities.length ? (

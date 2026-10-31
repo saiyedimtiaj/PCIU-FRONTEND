@@ -42,14 +42,19 @@ const Topbar = () => {
               <FaInstagram className="text-base" />
             </Link>
           </div>
-          <Link
-            href="https://studentportal.portcity.edu.bd"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-accent transition-colors"
-          >
-            Student Portal
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link
+              href="https://studentportal.portcity.edu.bd"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent transition-colors"
+            >
+              Student Portal
+            </Link>
+            <Link href="/developers" className="hover:text-accent transition-colors">
+              Developers
+            </Link>
+          </div>
           <div className="flex items-center gap-4">
             <TopbarAuth />
           </div>
