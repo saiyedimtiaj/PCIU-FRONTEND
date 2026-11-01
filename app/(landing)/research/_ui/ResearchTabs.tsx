@@ -15,6 +15,10 @@ import {
   MapPin,
   CalendarDays,
   Globe,
+  GraduationCap,
+  Factory,
+  Landmark,
+  Palette,
   RotateCcw,
   type LucideIcon,
 } from "lucide-react";
@@ -94,9 +98,9 @@ const TAB_META: {
 ];
 
 /**
- * Area colors are typed in by admins, but Tailwind only generates classes it
- * finds in source — so a gradient is used only when it's one of these, a CSS
- * color goes inline, and anything else takes the next gradient in turn.
+ * Each card takes the next gradient in turn, so neighbouring areas never share
+ * a color however many are added. The admin-entered color is ignored here:
+ * admins tend to reuse one color, which made every card look the same.
  */
 const AREA_GRADIENTS = [
   "from-blue-500 to-indigo-600",
@@ -109,15 +113,22 @@ const AREA_GRADIENTS = [
   "from-slate-500 to-gray-700",
 ];
 
-const CSS_COLOR = /^(#[0-9a-f]{3,8}|(rgb|hsl|oklch)a?\(.+\))$/i;
+function areaGradient(index: number) {
+  return `bg-linear-to-br ${AREA_GRADIENTS[index % AREA_GRADIENTS.length]}`;
+}
 
-function areaBackground(color: string, index: number) {
-  if (CSS_COLOR.test(color))
-    return { className: "", style: { backgroundColor: color } };
-  const gradient = AREA_GRADIENTS.includes(color)
-    ? color
-    : AREA_GRADIENTS[index % AREA_GRADIENTS.length];
-  return { className: `bg-linear-to-br ${gradient}`, style: undefined };
+/** Partner type → badge icon; types are free text from the admin, so match loosely. */
+const PARTNER_TYPE_ICONS: [RegExp, LucideIcon][] = [
+  [/academ|universit|educat/i, GraduationCap],
+  [/industr|corporate|company/i, Factory],
+  [/international|global/i, Globe],
+  [/cultur/i, Palette],
+  [/gov/i, Landmark],
+  [/research/i, Microscope],
+];
+
+function partnerTypeIcon(type: string): LucideIcon {
+  return PARTNER_TYPE_ICONS.find(([pattern]) => pattern.test(type))?.[1] ?? Handshake;
 }
 
 const DOT_PATTERN = {
@@ -410,27 +421,41 @@ export default function ResearchTabs({
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {content.areas.map((area, index) => {
               const Icon = iconMap[area.icon];
-              const background = areaBackground(area.color, index);
               return (
                 <article
                   key={area.title}
                   className={cn(
-                    "group relative flex aspect-4/3 flex-col justify-between overflow-hidden rounded-2xl p-4 md:p-5 text-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl",
-                    background.className,
+                    "group relative flex min-h-44 flex-col justify-between gap-6 overflow-hidden rounded-2xl p-4 md:min-h-52 md:p-5 text-white shadow-md ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+                    areaGradient(index),
                   )}
-                  style={background.style}
                 >
                   <div
                     className="absolute inset-0 opacity-15"
                     style={DOT_PATTERN}
                   />
-                  <Icon className="absolute -right-4 -bottom-4 size-28 text-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" />
-                  <div className="relative flex size-10 md:size-11 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
-                    <Icon className="size-5 md:size-6" />
+                  {/* Soft light from the top corner, and a darker base so the title always reads */}
+                  <div className="pointer-events-none absolute -right-10 -top-10 size-36 rounded-full bg-white/20 blur-2xl" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/25 to-transparent" />
+                  <Icon className="absolute -right-5 -bottom-5 size-32 text-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" />
+
+                  <div className="relative flex items-start justify-between gap-3">
+                    <div className="flex size-10 md:size-12 items-center justify-center rounded-xl bg-white/20 ring-1 ring-white/30 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                      <Icon className="size-5 md:size-6" />
+                    </div>
+                    <span className="font-heading text-2xl md:text-3xl font-bold leading-none text-white/25 tabular-nums">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                   </div>
-                  <h3 className="relative font-heading font-semibold text-sm md:text-base leading-snug">
-                    {area.title}
-                  </h3>
+
+                  <div className="relative">
+                    <p className="mb-1.5 text-[10px] md:text-[11px] font-semibold uppercase tracking-widest text-white/70">
+                      Research Area
+                    </p>
+                    <h3 className="font-heading font-bold text-sm md:text-lg leading-snug line-clamp-3">
+                      {area.title}
+                    </h3>
+                    <span className="mt-3 block h-1 w-10 rounded-full bg-white/60 transition-all duration-300 group-hover:w-16" />
+                  </div>
                 </article>
               );
             })}
@@ -662,9 +687,15 @@ export default function ResearchTabs({
                             </p>
                           )}
                           <div className="mt-auto flex items-center gap-2 pt-4">
-                            {partner.type && (
-                              <Badge variant="secondary">{partner.type}</Badge>
-                            )}
+                            {partner.type && (() => {
+                              const TypeIcon = partnerTypeIcon(partner.type);
+                              return (
+                                <Badge variant="secondary" className="gap-1">
+                                  <TypeIcon />
+                                  {partner.type}
+                                </Badge>
+                              );
+                            })()}
                             {partner.website && (
                               <Globe className="size-4 text-muted-foreground group-hover:text-primary" />
                             )}

@@ -121,7 +121,7 @@ export default async function ResearchPage() {
         </Suspense>
       </div>
 
-      <section className="bg-muted/40 border-t border-border py-14">
+      <section className="py-14">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <p className="text-xs font-semibold uppercase tracking-widest text-accent-hover mb-2">

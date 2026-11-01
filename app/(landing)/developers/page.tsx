@@ -10,7 +10,6 @@ import CardMotion from "./_ui/CardMotion";
 import DeveloperDetails from "./_ui/DeveloperDetails";
 import { DOT_PATTERN, githubProfile, initials } from "./_ui/developer-utils";
 import raw from "@/content/developers/page.json";
-import { getDevelopers } from "@/lib/api/developers";
 import type { Developer, DevelopersPageContent } from "@/types/developers";
 
 const data = raw as DevelopersPageContent;
@@ -36,12 +35,7 @@ function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
 }
 
 const SOCIAL_LINK =
-  "flex size-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground";
-
-/** Decorative barcode bar widths derived from the name, so each card's differs but stays stable between renders. */
-function barcode(seed: string) {
-  return Array.from({ length: 26 }, (_, i) => (seed.charCodeAt(i % seed.length) * (i + 7)) % 3 + 1);
-}
+  "flex size-7 sm:size-8 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground";
 
 function DeveloperCard({ dev }: { dev: Developer }) {
   const github = dev.github ? githubProfile(dev.github) : null;
@@ -53,50 +47,54 @@ function DeveloperCard({ dev }: { dev: Developer }) {
   ].filter((link) => !!link);
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/15">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-border bg-card shadow-sm transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/15">
       {/* Clicking anywhere on the card opens the profile and work */}
       <DeveloperDetails dev={dev} />
 
-      {/* ID-card header band with a lanyard slot */}
-      <div className="relative h-20 bg-[linear-gradient(110deg,var(--primary),var(--secondary),var(--primary))] bg-size-[300%_100%] group-hover:motion-safe:animate-border-flow">
-        <div className="absolute inset-0 opacity-15" style={DOT_PATTERN} />
-        <span className="absolute left-1/2 top-3 h-1.5 w-12 -translate-x-1/2 rounded-full bg-black/25 shadow-inner" />
-        <span className="absolute left-4 top-6 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70">
+      {/* Full-width photo with the ID-card labels over it */}
+      <div className="relative aspect-4/5 overflow-hidden bg-linear-to-br from-primary to-secondary">
+        {dev.image ? (
+          <Image
+            src={dev.image}
+            alt={dev.name}
+            fill
+            sizes="(min-width: 640px) 260px, 50vw"
+            className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 opacity-15" style={DOT_PATTERN} />
+            <span className="absolute inset-0 flex items-center justify-center font-heading text-4xl font-bold text-white sm:text-6xl">
+              {initials(dev.name)}
+            </span>
+          </>
+        )}
+        <div className="absolute inset-x-0 top-0 h-16 bg-linear-to-b from-black/50 to-transparent" />
+        <span className="absolute left-3 top-3.5 font-mono text-[9px] font-semibold uppercase tracking-[0.2em] sm:left-4 sm:top-6 sm:text-[10px] text-white/80">
           PCIU · Dev
         </span>
-        <span className="absolute right-4 top-5 inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent">
+        <span className="absolute right-3 top-3 inline-flex sm:right-4 sm:top-5 items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent">
           <CodeXml className="size-3.5" />
-          <span className="transition-opacity duration-300 pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100">
+          <span className="hidden transition-opacity duration-300 sm:inline pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100">
             View work
           </span>
         </span>
       </div>
 
-      {/* Photo overlapping the band */}
-      <div className="relative mx-auto -mt-11 size-22 overflow-hidden rounded-2xl bg-linear-to-br from-primary to-secondary shadow-lg ring-4 ring-card transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-105">
-        {dev.image ? (
-          <Image src={dev.image} alt={dev.name} fill sizes="88px" className="object-cover object-top" />
-        ) : (
-          <span className="absolute inset-0 flex items-center justify-center font-heading text-2xl font-bold text-white">
-            {initials(dev.name)}
-          </span>
-        )}
-      </div>
-
       {/* Details */}
-      <div className="flex flex-1 flex-col items-center px-5 pt-3 text-center">
-        <h3 className="font-heading text-base font-bold leading-snug text-foreground transition-colors group-hover:text-primary">
+      <div className="flex flex-1 flex-col items-center px-3 pt-3 text-center sm:px-5 sm:pt-4">
+        <h3 className="font-heading text-sm font-bold leading-snug sm:text-base text-foreground transition-colors group-hover:text-primary">
           {dev.name}
         </h3>
-        <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-accent-light px-2.5 py-0.5 text-[11px] font-semibold text-foreground">
+        <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-accent-light px-2 py-0.5 text-[10px] sm:px-2.5 sm:text-[11px] font-semibold text-foreground">
           <span className="size-1.5 rounded-full bg-accent-hover" />
           {dev.role}
         </span>
         {dev.about && (
-          <p className="mt-2.5 flex-1 text-xs leading-relaxed text-muted-foreground line-clamp-2">{dev.about}</p>
+          <p className="mt-2 flex-1 text-[11px] leading-relaxed sm:mt-2.5 sm:text-xs text-muted-foreground line-clamp-2">{dev.about}</p>
         )}
         {socials.length > 0 && (
-          <div className="relative z-10 mt-3 flex items-center justify-center gap-1.5">
+          <div className="relative z-10 mt-3 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
             {socials.map(({ href, label, Icon }) => (
               <a
                 key={label}
@@ -114,31 +112,26 @@ function DeveloperCard({ dev }: { dev: Developer }) {
       </div>
 
       {/* Student ID strip */}
-      <div className="relative mt-4 flex items-end justify-between gap-3 border-t border-dashed border-border bg-muted/40 px-5 py-3">
+      <div className="relative mt-3 flex justify-center border-t border-dashed border-border bg-muted/40 px-3 py-2.5 sm:mt-4 sm:px-5 sm:py-3">
         {/* Punched notches on the tear line */}
         <span className="absolute -left-2 -top-2 size-4 rounded-full border border-border bg-background" />
         <span className="absolute -right-2 -top-2 size-4 rounded-full border border-border bg-background" />
-        <div className="min-w-0 text-left">
+        <div className="min-w-0 text-center">
           <p className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground">
             {dev.studentId ? "Student ID" : "Department"}
           </p>
-          <p className="mt-0.5 flex items-center gap-1 font-mono text-xs font-semibold text-foreground">
+          <p className="mt-0.5 flex items-center justify-center gap-1 font-mono text-xs font-semibold text-foreground">
             <IdCard className="size-3.5 shrink-0 text-accent-hover" />
             <span className="truncate">{dev.studentId ?? "CSE · PCIU"}</span>
           </p>
-        </div>
-        <div aria-hidden className="flex h-7 shrink-0 items-stretch gap-px opacity-70">
-          {barcode(dev.name).map((width, i) => (
-            <span key={i} className="bg-foreground" style={{ width }} />
-          ))}
         </div>
       </div>
     </article>
   );
 }
 
-export default async function DevelopersPage() {
-  const developers = await getDevelopers();
+export default function DevelopersPage() {
+  const { developers } = data;
 
   return (
     <div className="min-h-screen bg-background">
@@ -182,7 +175,7 @@ export default async function DevelopersPage() {
       {/* Team */}
       <section id="team" className="container mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-20 lg:px-8 scroll-mt-24">
         <SectionTitle eyebrow="git log --authors" title={data.team} />
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(230px,260px))] justify-center gap-5 sm:gap-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-[repeat(auto-fit,minmax(230px,260px))] sm:justify-center sm:gap-6">
           {developers.map((dev, i) => (
             <CardMotion key={`${dev.name}-${i}`} index={i}>
               <DeveloperCard dev={dev} />

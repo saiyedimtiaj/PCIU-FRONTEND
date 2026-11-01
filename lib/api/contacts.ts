@@ -59,7 +59,9 @@ export async function getAdministrationContacts(): Promise<{
   error: boolean;
 }> {
   try {
-    const response = await publicFetch.get("/contacts/public", {
+    // Filter server-side: the unfiltered list fails (400) whenever any row,
+    // of any type, holds a value the backend's ContactType enum no longer has.
+    const response = await publicFetch.get("/contacts/public?type=ADMINISTRATION", {
       next: { revalidate: 300, tags: ["public-contacts"] },
     });
 
