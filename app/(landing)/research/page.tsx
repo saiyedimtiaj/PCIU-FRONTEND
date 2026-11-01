@@ -59,8 +59,8 @@ export default async function ResearchPage() {
     <div className="min-h-screen bg-background">
       <section className="relative overflow-hidden">
         <Image
-          src="/images/research-lab.jpg"
-          alt="PCIU Research Laboratory"
+          src="/images/campus-life-library.jpg"
+          alt="PCIU students researching together in the library"
           fill
           preload
           sizes="100vw"
