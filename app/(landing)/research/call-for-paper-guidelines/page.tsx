@@ -53,14 +53,6 @@ const SECTIONS = [
   },
 ];
 
-const TOC = [
-  { id: "overview", label: "Overview" },
-  ...SECTIONS.map(({ id, title }) => ({ id, label: title.split(",")[0] })),
-  { id: "reference-examples", label: "Reference examples" },
-  { id: "short-communication", label: "Short communication" },
-  { id: "declaration", label: "Declaration" },
-];
-
 const REFERENCE_EXAMPLES = [
   {
     label: "Journal",
@@ -99,28 +91,7 @@ export default function CallForPaperGuidelinesPage() {
         chips={["Max 10 pages", "Abstract ≤ 150 words", "Up to 5 key words"]}
       />
 
-      <div className="container mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:grid lg:grid-cols-[220px_1fr] lg:gap-10 lg:px-8">
-        {/* Section index — desktop only; on phones the page just reads top to bottom */}
-        <aside className="hidden lg:block">
-          <nav aria-label="On this page" className="sticky top-28">
-            <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-widest text-accent-hover">
-              On this page
-            </p>
-            <ol className="space-y-0.5 border-l border-border">
-              {TOC.map((item) => (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    className="-ml-px block border-l-2 border-transparent py-1.5 pl-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        </aside>
-
+      <div className="container mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="min-w-0 space-y-6">
           <Card id="overview" className="scroll-mt-28 border-l-4 border-l-accent">
             <CardContent className="space-y-4 text-sm text-muted-foreground leading-relaxed">

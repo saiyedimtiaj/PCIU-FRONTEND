@@ -26,6 +26,7 @@ function parseList(value: unknown): string[] {
 
 function toDeveloper(row: DeveloperApiRecord): Developer {
   return {
+    order: row.display_order ?? 0,
     name: row.name.trim(),
     role: text(row.role) ?? "Developer",
     studentId: row.student_id == null ? null : text(String(row.student_id)),

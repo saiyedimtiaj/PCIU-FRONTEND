@@ -131,7 +131,7 @@ function DeveloperCard({ dev }: { dev: Developer }) {
 }
 
 export default function DevelopersPage() {
-  const { developers } = data;
+  const developers = [...data.developers].sort((a, b) => a.order - b.order);
 
   return (
     <div className="min-h-screen bg-background">

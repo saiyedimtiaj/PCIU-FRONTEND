@@ -1,4 +1,6 @@
 export interface Developer {
+  /** Serial on the Developers page, ascending (1 = first). */
+  order: number;
   name: string;
   role: string;
   studentId: string | null;

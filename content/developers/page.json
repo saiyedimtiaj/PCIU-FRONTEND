@@ -3,6 +3,7 @@
   "intro": "The PCIU website, admin dashboard and faculty portal are designed, built and maintained in-house at Port City International University.",
   "developers": [
     {
+      "order": 1,
       "name": "Saiyed Mohammad Imtiaj",
       "role": "Frontend Developer",
       "studentId": null,
@@ -23,6 +24,7 @@
       ]
     },
     {
+      "order": 2,
       "name": "Sajmul Hossain",
       "role": "Frontend Developer",
       "studentId": null,
@@ -42,6 +44,7 @@
       ]
     },
     {
+      "order": 3,
       "name": "Shuvo Dev Nath",
       "role": "Frontend Developer",
       "studentId": null,
@@ -61,6 +64,7 @@
       ]
     },
     {
+      "order": 4,
       "name": "Abu Bin Naser",
       "role": "Frontend Developer",
       "studentId": "CSE 029 07629",
@@ -80,6 +84,7 @@
       ]
     },
     {
+      "order": 5,
       "name": "Md Mehedi Hasan",
       "role": "Backend Developer",
       "studentId": null,
