@@ -1,5 +1,5 @@
 export { entityKeys } from "./keys";
-export { useEntityList, useEntityById } from "./queries";
+export { useEntityList, useEntityById, EntityQueryError, isForbidden } from "./queries";
 export {
   useCreateEntity,
   useUpdateEntity,

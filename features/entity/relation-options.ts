@@ -22,9 +22,12 @@ function rowLabel(row: Record<string, unknown>): string | null {
       : `Volume ${volume_number}`;
   }
 
-  const { start_time, end_time } = row as { start_time?: unknown; end_time?: unknown };
+  const { start_time, end_time, shift } = row as { start_time?: unknown; end_time?: unknown; shift?: unknown };
   if (typeof start_time === "string" && typeof end_time === "string") {
-    return `${start_time} – ${end_time}`;
+    // Day and evening slots can share a clock time — show the shift too.
+    const shiftLabel =
+      typeof shift === "string" && shift ? ` · ${shift.charAt(0)}${shift.slice(1).toLowerCase()}` : "";
+    return `${start_time} – ${end_time}${shiftLabel}`;
   }
 
   return null;

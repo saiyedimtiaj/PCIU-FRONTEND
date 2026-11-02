@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CalendarClock } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
+import { LAB_GROUP_OPTIONS } from "@/lib/admin/routine-bulk";
 
 const classRoutineSchema = z.object({
   semester_id: z.string().min(1, "Semester is required"),
@@ -14,6 +15,9 @@ const classRoutineSchema = z.object({
   section_id: z.string().min(1, "Section is required"),
   day: z.string().min(1, "Day is required"),
   shift: z.enum(["DAY", "EVENING"], { message: "Shift is required" }),
+  // Lab group within the section (A1/A2/B1/B2). "NONE" = the whole section;
+  // services/entity.ts sends it as null.
+  group: z.string().default("NONE"),
   student_range: z.string().max(100).optional().or(z.literal("")),
   status: z.boolean().default(true),
 });
@@ -25,7 +29,7 @@ export const classRoutineEntity: EntitySchema<typeof classRoutineSchema> = {
   icon: CalendarClock,
   group: "Scheduling",
   zodSchema: classRoutineSchema,
-  defaultValues: { status: true },
+  defaultValues: { status: true, group: "NONE" },
   sections: [
     {
       title: "Assignment",
@@ -51,6 +55,13 @@ export const classRoutineEntity: EntitySchema<typeof classRoutineSchema> = {
         { name: "teacher_id", label: "Teacher", type: "relation", required: true, relationTo: "teacher", options: [] },
         { name: "batch_id", label: "Batch", type: "relation", required: true, relationTo: "batch", options: [] },
         { name: "section_id", label: "Section", type: "relation", required: true, relationTo: "section", options: [] },
+        {
+          name: "group",
+          label: "Lab Group",
+          type: "select",
+          helper: "For lab classes split within a section. Choose None for the whole section.",
+          options: LAB_GROUP_OPTIONS,
+        },
       ],
     },
     {
