@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { getPrograms, getActiveAdmissionSchedule } from "@/lib/api/home";
+import { getPrograms } from "@/lib/api/home";
+import { getActiveAdmissionCycle, isCycleOpen } from "@/lib/api/admission-apply";
 import ApplyFormShell from "../_ui/ApplyFormShell";
+import ApplicationsClosed from "../_ui/ApplicationsClosed";
 import MasterApplicationForm from "./_ui/MasterApplicationForm";
 
 export const metadata: Metadata = {
@@ -9,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ApplyMasterPage() {
-  const [programs, schedule] = await Promise.all([getPrograms(), getActiveAdmissionSchedule()]);
+  const [programs, cycle] = await Promise.all([getPrograms(), getActiveAdmissionCycle()]);
   const graduatePrograms = programs.filter((program) => program.programType === "GRADUATE");
 
   return (
@@ -25,12 +27,16 @@ export default async function ApplyMasterPage() {
       ]}
       checklist={[
         "Keep your SSC, HSC and Bachelor's certificates nearby",
-        "Use an active mobile number (8801XXXXXXXXX)",
+        "Use an active mobile number (+8801XXXXXXXXX)",
         "Use an email address you check regularly",
       ]}
       helpPhone="+880 1881-075020"
     >
-      <MasterApplicationForm programs={graduatePrograms} schedule={schedule} />
+      {cycle && isCycleOpen(cycle) ? (
+        <MasterApplicationForm programs={graduatePrograms} cycle={cycle} />
+      ) : (
+        <ApplicationsClosed />
+      )}
     </ApplyFormShell>
   );
 }

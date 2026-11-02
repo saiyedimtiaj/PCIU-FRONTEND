@@ -229,7 +229,11 @@ function SidebarBody({
   const topLevelItems = TOP_LEVEL_ITEMS.filter((item) => !item.slug || access.can(item.slug, "view"));
   const navGroups = NAV_GROUPS.map((group) => ({
     ...group,
-    items: group.items.filter((item) => !item.slug || access.can(item.slug, "view")),
+    items: group.items.filter(
+      (item) =>
+        (!item.superAdminOnly || access.isSuperAdmin) &&
+        (!item.slug || access.can(item.slug, "view")),
+    ),
   })).filter((group) => group.items.length > 0);
 
   async function handleSignOut() {

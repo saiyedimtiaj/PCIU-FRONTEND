@@ -43,10 +43,13 @@ export function SscHscRow<T extends FieldValues>({
         <span className="h-5 w-1 rounded-full bg-accent" />
         {legend}
       </legend>
-      <div className="clear-both grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* 3 + 2 on wide screens: five fields in one row left each too narrow
+          for "Registration Number" and the 11-digit numbers people type. */}
+      <div className="clear-both grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
         <FormSelect
           label="Board"
           required
+          className="lg:col-span-2"
           value={boardValue}
           onValueChange={onBoardChange}
           options={BOARD_SELECT_OPTIONS}
@@ -55,35 +58,34 @@ export function SscHscRow<T extends FieldValues>({
         <FormInput
           label="Group"
           required
-          placeholder="Science"
+          className="lg:col-span-2"
+          placeholder="Business Studies"
           registration={register(fieldName(namePrefix, "group"))}
           error={prefixErrors?.group?.message}
         />
         <FormInput
           label="Passing Year"
           required
-          placeholder="2024"
+          className="sm:col-span-2 lg:col-span-2"
+          placeholder="2017"
           registration={register(fieldName(namePrefix, "passingYear"))}
           error={prefixErrors?.passingYear?.message}
         />
         <FormInput
           label="Roll Number"
           required
+          className="lg:col-span-3"
+          placeholder="234567"
           registration={register(fieldName(namePrefix, "rollNumber"))}
           error={prefixErrors?.rollNumber?.message}
         />
         <FormInput
-          label="Reg Number"
+          label="Registration Number"
           required
-          registration={register(fieldName(namePrefix, "regNumber"))}
-          error={prefixErrors?.regNumber?.message}
-        />
-        <FormInput
-          label="GPA"
-          required
-          placeholder="5.00"
-          registration={register(fieldName(namePrefix, "gpa"))}
-          error={prefixErrors?.gpa?.message}
+          className="lg:col-span-3"
+          placeholder="2012131415"
+          registration={register(fieldName(namePrefix, "registrationNumber"))}
+          error={prefixErrors?.registrationNumber?.message}
         />
       </div>
     </fieldset>
@@ -118,48 +120,44 @@ export function DegreeRow<T extends FieldValues>({
         {legend}
       </legend>
       {note && <p className="clear-both -mt-2 mb-5 rounded-xl bg-accent/10 px-4 py-2.5 text-sm font-medium text-foreground">{note}</p>}
-      <div className="clear-both grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="clear-both grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
         <FormInput
-          label="Program"
+          label="Degree Name"
           required={required}
-          registration={register(fieldName(namePrefix, "program"))}
-          error={prefixErrors?.program?.message}
+          className="sm:col-span-2 lg:col-span-3"
+          placeholder="Bachelor of Business Administration"
+          registration={register(fieldName(namePrefix, "degreeName"))}
+          error={prefixErrors?.degreeName?.message}
         />
         <FormInput
           label="University"
           required={required}
+          className="sm:col-span-2 lg:col-span-3"
+          placeholder="University of Chittagong"
           registration={register(fieldName(namePrefix, "university"))}
           error={prefixErrors?.university?.message}
         />
         <FormInput
           label="Subject"
           required={required}
+          className="lg:col-span-2"
+          placeholder="Finance"
           registration={register(fieldName(namePrefix, "subject"))}
           error={prefixErrors?.subject?.message}
         />
         <FormInput
           label="Passing Year"
           required={required}
-          placeholder="2024"
+          className="lg:col-span-2"
+          placeholder="2022"
           registration={register(fieldName(namePrefix, "passingYear"))}
           error={prefixErrors?.passingYear?.message}
         />
         <FormInput
-          label="Roll Number"
+          label="GPA / CGPA"
           required={required}
-          registration={register(fieldName(namePrefix, "rollNumber"))}
-          error={prefixErrors?.rollNumber?.message}
-        />
-        <FormInput
-          label="Reg Number"
-          required={required}
-          registration={register(fieldName(namePrefix, "regNumber"))}
-          error={prefixErrors?.regNumber?.message}
-        />
-        <FormInput
-          label="GPA"
-          required={required}
-          placeholder="3.75"
+          className="sm:col-span-2 lg:col-span-2"
+          placeholder="3.68"
           registration={register(fieldName(namePrefix, "gpa"))}
           error={prefixErrors?.gpa?.message}
         />

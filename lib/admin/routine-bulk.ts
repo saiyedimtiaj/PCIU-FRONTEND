@@ -20,6 +20,14 @@ export const DAYS = [
 
 export const SHIFTS = ["DAY", "EVENING"] as const;
 
+/** Lab groups within a section. "NONE" (the whole section) is sent as null. */
+export const LAB_GROUPS = ["A1", "A2", "B1", "B2"] as const;
+export const NO_LAB_GROUP = "NONE";
+export const LAB_GROUP_OPTIONS = [
+  { label: "None (whole section)", value: NO_LAB_GROUP },
+  ...LAB_GROUPS.map((g) => ({ label: g, value: g })),
+];
+
 const required = (label: string) => z.string().min(1, `${label} is required`);
 
 const baseRow = {
@@ -37,6 +45,7 @@ const baseRow = {
 export const classRowSchema = z.object({
   ...baseRow,
   teacher_id: required("Teacher"),
+  group: z.string().default(NO_LAB_GROUP),
   day: z.enum(DAYS, { message: "Day is required" }),
 });
 
@@ -75,6 +84,7 @@ export const EMPTY_CLASS_ROW: BulkRowDraft = {
   section_id: "",
   day: "",
   shift: "",
+  group: NO_LAB_GROUP,
   student_range: "",
 };
 
@@ -114,6 +124,8 @@ export function toClassBulkBody(values: ClassBulkValues) {
       ...baseRowPayload(row, semesterId),
       teacherId: Number(row.teacher_id),
       day: row.day,
+      // Only lab rows carry a group; whole-section rows leave it out.
+      ...(row.group && row.group !== NO_LAB_GROUP ? { group: row.group } : {}),
     })),
   };
 }

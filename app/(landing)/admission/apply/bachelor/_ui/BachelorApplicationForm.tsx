@@ -12,14 +12,14 @@ import PersonalInfoSection from "../../_ui/PersonalInfoSection";
 import { SscHscRow } from "../../_ui/EducationRowFields";
 import ApplicationSubmitted from "../../_ui/ApplicationSubmitted";
 import FormSectionCard from "../../_ui/FormSectionCard";
-import type { PublicProgramItem, ActiveAdmissionSchedule } from "@/types/admission-apply";
+import type { PublicProgramItem, ActiveAdmissionCycle } from "@/types/admission-apply";
 
 export default function BachelorApplicationForm({
   programs,
-  schedule,
+  cycle,
 }: {
   programs: PublicProgramItem[];
-  schedule: ActiveAdmissionSchedule | null;
+  cycle: ActiveAdmissionCycle;
 }) {
   const [referenceId, setReferenceId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -33,17 +33,14 @@ export default function BachelorApplicationForm({
     resolver: zodResolver(bachelorApplicationSchema),
     defaultValues: {
       programId: "",
-      title: "Mr.",
-      firstName: "",
-      middleName: "",
-      lastName: "",
+      name: "",
       fatherName: "",
       motherName: "",
       mobileNumber: "",
       dateOfBirth: "",
       email: "",
-      ssc: { board: "", group: "", passingYear: "", rollNumber: "", regNumber: "", gpa: "" },
-      hsc: { board: "", group: "", passingYear: "", rollNumber: "", regNumber: "", gpa: "" },
+      ssc: { board: "", group: "", passingYear: "", rollNumber: "", registrationNumber: "" },
+      hsc: { board: "", group: "", passingYear: "", rollNumber: "", registrationNumber: "" },
     },
   });
 
@@ -69,7 +66,7 @@ export default function BachelorApplicationForm({
         render={({ field }) => (
           <ProgramSelectionSection
             programs={programs}
-            schedule={schedule}
+            cycle={cycle}
             programId={field.value}
             onProgramChange={field.onChange}
             error={errors.programId?.message}
@@ -77,18 +74,7 @@ export default function BachelorApplicationForm({
         )}
       />
 
-      <Controller
-        control={control}
-        name="title"
-        render={({ field }) => (
-          <PersonalInfoSection
-            register={register}
-            errors={errors}
-            titleValue={field.value}
-            onTitleChange={(value) => field.onChange(value as BachelorApplicationValues["title"])}
-          />
-        )}
-      />
+      <PersonalInfoSection register={register} errors={errors} />
 
       <FormSectionCard
         id="education"

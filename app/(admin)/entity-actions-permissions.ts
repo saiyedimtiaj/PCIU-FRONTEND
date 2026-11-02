@@ -2,7 +2,13 @@
 
 import { api, ApiError } from "@/services/http";
 import { getSession } from "@/app/(auth)/actions";
-import type { Access, PermissionRow } from "@/lib/admin/permissions";
+import { collectionPath, isConnected } from "@/services/endpoints";
+import {
+  MODULE_RESOURCES,
+  SUPER_ADMIN,
+  type Access,
+  type PermissionRow,
+} from "@/lib/admin/permissions";
 
 export type { PermissionRow } from "@/lib/admin/permissions";
 
@@ -60,15 +66,76 @@ export async function createPermissionAction(
   return run(() => api.post<PermissionRow>("/permissions", values));
 }
 
+/** DELETE /permissions/{id} — removes a role's row, so the role loses that resource. */
+export async function deletePermissionAction(id: number): Promise<PermissionResult<null>> {
+  return run(async () => {
+    await api.delete(`/permissions/${id}`);
+    return null;
+  });
+}
+
 /**
- * The signed-in admin's role plus the permission matrix, for hiding what
- * that role can't use. `rows` is `null` when the API won't show the matrix
- * to this role — the UI then shows everything and the API's own check
- * stays the gate (see `can()` in lib/admin/permissions.ts).
+ * The signed-in role's own rows — "getpermissionbyrole", GET
+ * /permissions/{ROLE} (e.g. /permissions/ADMIN) — for a role that can't
+ * read the whole matrix. Any failure just means falling back to probing.
+ */
+async function permissionsForRole(role: string): Promise<PermissionRow[] | null> {
+  try {
+    const rows = await api.get<unknown>(`/permissions/${encodeURIComponent(role)}`);
+    const list = Array.isArray(rows)
+      ? rows
+      : rows && typeof rows === "object"
+        ? Object.values(rows as Record<string, unknown>).find(Array.isArray)
+        : null;
+    return Array.isArray(list) ? (list as PermissionRow[]).filter((r) => r.role === role) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Module slugs whose list endpoint answers 403 for this session. Used only
+ * when the role can't read `/permissions` itself: one request per distinct
+ * endpoint (`limit=1` keeps each tiny), all in parallel, so the sidebar can
+ * hide modules the role can't open instead of finding out on click.
+ */
+async function probeDeniedModules(): Promise<string[]> {
+  const byPath = new Map<string, string[]>();
+  for (const slug of Object.keys(MODULE_RESOURCES)) {
+    if (!isConnected(slug)) continue;
+    const path = collectionPath(slug);
+    byPath.set(path, [...(byPath.get(path) ?? []), slug]);
+  }
+
+  const results = await Promise.all(
+    [...byPath].map(async ([path, slugs]) => {
+      try {
+        await api.get(`${path}${path.includes("?") ? "&" : "?"}limit=1`);
+        return [];
+      } catch (error) {
+        return error instanceof ApiError && error.status === 403 ? slugs : [];
+      }
+    }),
+  );
+  return results.flat();
+}
+
+/**
+ * The signed-in admin's role plus what it may use. SUPER_ADMIN always has
+ * full access. Other roles get the permission matrix when the API lets them
+ * read it; otherwise the modules that answer 403 (see `can()` in
+ * lib/admin/permissions.ts).
  */
 export async function getMyAccessAction(): Promise<Access> {
   const user = await getSession();
   if (!user) return { role: null, rows: null };
+  if (user.role === SUPER_ADMIN) return { role: user.role, rows: null, denied: [] };
+
   const result = await listPermissionsAction();
-  return { role: user.role, rows: result.ok ? result.data : null };
+  if (result.ok) return { role: user.role, rows: result.data };
+
+  const own = await permissionsForRole(user.role);
+  if (own && own.length) return { role: user.role, rows: own };
+
+  return { role: user.role, rows: null, denied: await probeDeniedModules() };
 }

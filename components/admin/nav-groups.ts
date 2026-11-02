@@ -17,6 +17,8 @@ export interface NavGroupItem {
   href: string;
   /** Entity slug, for checking the signed-in role's "view" permission. */
   slug?: string;
+  /** Shown only to SUPER_ADMIN (the Permissions matrix). */
+  superAdminOnly?: boolean;
 }
 
 export interface NavGroup {
@@ -63,7 +65,7 @@ export const NAV_GROUPS: NavGroup[] = ENTITY_GROUP_ORDER.map((group) => {
   // Permissions is a custom matrix page, not a schema-driven entity, so it
   // isn't in ENTITY_REGISTRY and has to be appended by hand.
   if (group === "System") {
-    items.push({ title: "Permissions", href: "/admin/system/permissions" });
+    items.push({ title: "Permissions", href: "/admin/system/permissions", superAdminOnly: true });
     items.sort((a, b) => a.title.localeCompare(b.title));
   }
 

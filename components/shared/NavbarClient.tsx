@@ -26,6 +26,7 @@ import { clearNavSession, useNavSession } from "./use-nav-session";
 const aboutMenu = [
   { name: "About the University", href: "/about-the-university" },
   { name: "Campus Life", href: "/#campus-life" },
+  { name: "Clubs & Forums", href: "/clubs" },
   { name: "Management", href: "/management" },
 ];
 

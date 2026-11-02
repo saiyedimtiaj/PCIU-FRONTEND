@@ -38,6 +38,7 @@ const PUBLIC_PAGE_TAGS: Record<string, string> = {
   events: "events",
   "iqac-activities": "events",
   popup: "popup",
+  clubs: "clubs",
   teacher: "teacher",
   faculty: "faculties",
   department: "faculties",

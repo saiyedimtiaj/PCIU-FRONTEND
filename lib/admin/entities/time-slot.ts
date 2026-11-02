@@ -5,6 +5,9 @@ import type { EntitySchema } from "@/components/admin/form/form-types";
 const timeSlotSchema = z
   .object({
     type: z.enum(["CLASS", "EXAM"]),
+    // Older slots were saved before shifts existed and come back null — the
+    // edit form then asks for one.
+    shift: z.string().min(1, "Shift is required"),
     start_time: z.string().min(1, "Start time is required"),
     end_time: z.string().min(1, "End time is required"),
     status: z.boolean().default(true),
@@ -21,7 +24,7 @@ export const timeSlotEntity: EntitySchema<typeof timeSlotSchema> = {
   icon: Clock,
   group: "Scheduling",
   zodSchema: timeSlotSchema,
-  defaultValues: { type: "CLASS", status: true },
+  defaultValues: { type: "CLASS", shift: "DAY", status: true },
   sections: [
     {
       title: "Time Slot",
@@ -34,6 +37,16 @@ export const timeSlotEntity: EntitySchema<typeof timeSlotSchema> = {
           options: [
             { label: "Class", value: "CLASS" },
             { label: "Exam", value: "EXAM" },
+          ],
+        },
+        {
+          name: "shift",
+          label: "Shift",
+          type: "enum",
+          required: true,
+          options: [
+            { label: "Day", value: "DAY" },
+            { label: "Evening", value: "EVENING" },
           ],
         },
         { name: "start_time", label: "Start Time", type: "time", required: true },

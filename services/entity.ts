@@ -69,10 +69,32 @@ const END_OF_DAY_DATE_FIELDS: Partial<Record<string, string[]>> = {
   mous: ["validity_expiry_date"],
 };
 
+/**
+ * Optional select fields whose "nothing" is a sentinel option in the form
+ * (a select can't hold an empty choice) but null on the API.
+ */
+const NULL_SENTINEL_FIELDS: Partial<Record<string, Record<string, string>>> = {
+  "class-routine": { group: "NONE" },
+};
+
+function encodeNullSentinels(slug: string, payload: Dict): void {
+  for (const [name, sentinel] of Object.entries(NULL_SENTINEL_FIELDS[slug] ?? {})) {
+    const key = toCamel(name);
+    if (payload[key] === sentinel) payload[key] = null;
+  }
+}
+
+function decodeNullSentinels(slug: string, mapped: Dict): void {
+  for (const [name, sentinel] of Object.entries(NULL_SENTINEL_FIELDS[slug] ?? {})) {
+    if (mapped[name] === null || mapped[name] === undefined || mapped[name] === "") mapped[name] = sentinel;
+  }
+}
+
 /** Relation ids a JSON body must send as numbers (`"departmentId": 3`). */
 const NUMERIC_ID_FIELDS: Partial<Record<string, string[]>> = {
   "research-centres": ["departmentId"],
   iqac: ["directorId"],
+  "room-bookings": ["roomId", "timeSlotId"],
 };
 
 function encodeNumericIds(slug: string, payload: Dict): void {
@@ -111,7 +133,50 @@ function encodeIsoDates(slug: string, payload: Dict): void {
 const DECODE_ONLY_DATE_FIELDS: Partial<Record<string, string[]>> = {
   exam: ["start_date", "end_date"],
   notices: ["notice_date"],
+  // POST takes "2026-10-20"; GET returns "2026-10-20T00:00:00.000Z".
+  circulars: ["start_date", "end_date"],
+  "room-bookings": ["date"],
 };
+
+/**
+ * `link-list` fields the API stores as a JSON column and may return as a
+ * JSON string, an array, or a `{ platform: url }` object — normalized to the
+ * `[{ title, url }]` rows the form edits.
+ */
+const LINK_LIST_FIELDS: Partial<Record<string, string[]>> = {
+  clubs: ["socialmedia"],
+};
+
+function toLinkRows(value: unknown): { title: string; url: string }[] {
+  let parsed = value;
+  if (typeof value === "string") {
+    try {
+      parsed = JSON.parse(value);
+    } catch {
+      return [];
+    }
+  }
+  if (Array.isArray(parsed)) {
+    return parsed.flatMap((item) => {
+      const row = (item ?? {}) as Dict;
+      const title = row.title ?? row.platform ?? row.name ?? row.label;
+      const url = row.url ?? row.link ?? row.href;
+      return typeof title === "string" && typeof url === "string" ? [{ title, url }] : [];
+    });
+  }
+  if (parsed && typeof parsed === "object") {
+    return Object.entries(parsed as Dict).flatMap(([title, url]) =>
+      typeof url === "string" && url ? [{ title, url }] : [],
+    );
+  }
+  return [];
+}
+
+function decodeLinkLists(slug: string, mapped: Dict): void {
+  for (const name of LINK_LIST_FIELDS[slug] ?? []) {
+    if (name in mapped) mapped[name] = toLinkRows(mapped[name]);
+  }
+}
 
 const ISO_DATETIME_FIELDS: Partial<Record<string, string[]>> = {
   events: ["start_date_time", "end_date_time"],
@@ -204,6 +269,14 @@ function encode(slug: string, values: Dict, omit: string[] = []): FormData | Dic
   encodeIsoDates(slug, payload);
   encodeIsoDateTimes(slug, payload);
   encodeNumericIds(slug, payload);
+  encodeNullSentinels(slug, payload);
+
+  // An optional relation left blank ("departmentId": "") isn't an id —
+  // form-data would send it as an empty string the API reads as 0 or
+  // rejects. Leave it out instead. (JSON bodies already drop "".)
+  for (const key of Object.keys(payload)) {
+    if (/Id$/.test(key) && payload[key] === "") delete payload[key];
+  }
 
   return cfg?.multipart ? buildFormData(payload) : buildJsonBody(payload);
 }
@@ -277,6 +350,8 @@ function decode(
 
   if (slug === "teacher") splitLeavePeriod(mapped);
   decodeIsoDates(slug, mapped);
+  decodeLinkLists(slug, mapped);
+  decodeNullSentinels(slug, mapped);
   decodeIsoDateTimes(slug, mapped);
 
   return {

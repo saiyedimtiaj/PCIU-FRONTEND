@@ -23,6 +23,7 @@ import { roomEntity } from "./room";
 import { timeSlotEntity } from "./time-slot";
 import { classRoutineEntity } from "./class-routine";
 import { examRoutineEntity } from "./exam-routine";
+import { roomBookingsEntity } from "./room-bookings";
 
 import { pagesEntity } from "./pages";
 import { aboutEntity } from "./about";
@@ -33,6 +34,8 @@ import { activitiesEntity } from "./activities";
 import { noticesEntity } from "./notices";
 import { galleryEntity } from "./gallery";
 import { menusEntity } from "./menus";
+import { clubsEntity } from "./clubs";
+import { circularsEntity } from "./circulars";
 
 import { researchCentresEntity } from "./research-centres";
 import { researchAreasEntity } from "./research-areas";
@@ -53,7 +56,6 @@ import { faqsEntity } from "./faqs";
 
 import { iqacEntity } from "./iqac";
 import { iqacCommitteeEntity } from "./iqac-committee";
-import { iqacSectionsEntity } from "./iqac-sections";
 import { iqacDocumentsEntity } from "./iqac-documents";
 import { iqacActivitiesEntity } from "./iqac-activities";
 import { iqacGalleryEntity } from "./iqac-gallery";
@@ -89,6 +91,7 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   "time-slot": timeSlotEntity,
   "class-routine": classRoutineEntity,
   "exam-routine": examRoutineEntity,
+  "room-bookings": roomBookingsEntity,
 
   pages: pagesEntity,
   about: aboutEntity,
@@ -99,6 +102,8 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   notices: noticesEntity,
   gallery: galleryEntity,
   menus: menusEntity,
+  clubs: clubsEntity,
+  circulars: circularsEntity,
   developers: developersEntity,
 
   "research-centres": researchCentresEntity,
@@ -120,7 +125,6 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
 
   iqac: iqacEntity,
   "iqac-committee": iqacCommitteeEntity,
-  "iqac-sections": iqacSectionsEntity,
   "iqac-documents": iqacDocumentsEntity,
   "iqac-activities": iqacActivitiesEntity,
   "iqac-gallery": iqacGalleryEntity,
