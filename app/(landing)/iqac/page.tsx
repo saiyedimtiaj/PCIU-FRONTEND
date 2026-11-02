@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import ActivitiesGallery from "./_ui/ActivitiesGallery";
 import ResourcesContact from "./_ui/ResourcesContact";
 import pageData from "@/content/iqac/page.json";
-import { getIqacActivities, getIqacGallery, getIqacPage } from "@/lib/api/iqac";
+import { getIqacActivities, getIqacDocuments, getIqacGallery, getIqacPage } from "@/lib/api/iqac";
 import type { IqacPageContent, IqacPerson } from "@/types/iqac";
 
 const content = pageData as IqacPageContent;
@@ -83,10 +83,11 @@ function SectionTitle({
 }
 
 export default async function IqacPage() {
-  const [data, activities, gallery] = await Promise.all([
+  const [data, activities, gallery, documents] = await Promise.all([
     getIqacPage(),
     getIqacActivities(),
     getIqacGallery(),
+    getIqacDocuments(),
   ]);
   const director = data.director;
   const hasDirectorMessage = Boolean(data.directorMessageHtml || data.directorMessage.length);
@@ -329,9 +330,9 @@ export default async function IqacPage() {
 
       <div className="reveal">
         <ResourcesContact
-          documents={content.documents}
+          documents={documents}
           notices={content.notices}
-          quickLinks={content.quickLinks}
+          quickLinks={data.quickLinks}
           contact={content.contact}
         />
       </div>

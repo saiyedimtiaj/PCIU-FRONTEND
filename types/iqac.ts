@@ -20,9 +20,13 @@ export interface IqacGalleryItem {
 
 export interface IqacDocument {
   name: string;
+  /** File format shown on the file glyph, e.g. "PDF". */
   type: string;
-  size: string;
-  /** File under public/ (or an absolute URL) — the card downloads it. */
+  /** File size — only the static fallback knows it; the API doesn't send one. */
+  size?: string;
+  /** The admin-entered document type, e.g. "Annual Report". */
+  category?: string;
+  /** File under public/ (or an absolute URL) — the card opens it in a new tab. */
   url?: string;
 }
 

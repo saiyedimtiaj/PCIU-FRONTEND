@@ -4,7 +4,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Bell,
-  Download,
+  ExternalLink,
   FileText,
   FolderOpen,
   Link2,
@@ -38,7 +38,7 @@ function splitDate(value: string) {
 }
 
 /**
- * The document's download link, or null when there's nothing to fetch yet. A
+ * The document's link, or null when there's nothing to fetch yet. A
  * local path only counts once the file is actually in public/, so a missing
  * upload shows as "Coming soon" instead of downloading a 404 page.
  */
@@ -115,26 +115,25 @@ export default function ResourcesContact({
                         {doc.name}
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {doc.size}
+                        {doc.category ?? doc.size}
                         {!href && <span className="ml-2 font-medium text-accent-hover">· Coming soon</span>}
                       </p>
                     </div>
                     {href && (
                       <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                        <Download className="size-4" />
+                        <ExternalLink className="size-4" />
                       </span>
                     )}
                   </>
                 );
                 return (
-                  <li key={doc.name}>
+                  <li key={`${doc.name}-${doc.url ?? ""}`}>
                     {href ? (
                       <a
                         href={href}
-                        download
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={`Download ${doc.name} (${doc.type}, ${doc.size})`}
+                        aria-label={`Open ${doc.name} (${doc.type}) in a new tab`}
                         className="group flex h-full items-center gap-4 rounded-2xl border border-border bg-muted/30 p-4 transition-all hover:border-primary/30 hover:bg-card hover:shadow-md"
                       >
                         {body}

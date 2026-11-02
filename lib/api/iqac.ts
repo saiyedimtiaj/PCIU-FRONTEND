@@ -4,6 +4,7 @@ import { getEvents } from "@/lib/api/events";
 import pageData from "@/content/iqac/page.json";
 import type {
   IqacActivityItem,
+  IqacDocument,
   IqacApiCommitteeMember,
   IqacApiRecord,
   IqacApiTeacher,
@@ -259,5 +260,44 @@ export async function getIqacGallery(): Promise<IqacGalleryPhoto[]> {
   } catch (error) {
     console.error("[IQAC] Gallery request failed:", error);
     return [];
+  }
+}
+
+interface ApiIqacDocument {
+  id: number;
+  title: string;
+  type: string | null;
+  pdfFile: string | null;
+}
+
+/** "/uploads/x/report.pdf" -> "PDF", for the file glyph's tag. */
+function fileFormat(file: string): string {
+  const ext = file.split(/[?#]/)[0].match(/\.([a-z0-9]+)$/i)?.[1];
+  return ext ? ext.toUpperCase() : "FILE";
+}
+
+/**
+ * `GET /iqac/documents` — answers `{ documents: [...] }`. An empty list is
+ * shown as empty; the static placeholders only appear if the API is down.
+ */
+export async function getIqacDocuments(): Promise<IqacDocument[]> {
+  try {
+    const data = await getJson<{ documents?: ApiIqacDocument[] } | null>("/iqac/documents");
+    const rows = Array.isArray(data?.documents) ? data.documents : [];
+    return rows.flatMap((doc) => {
+      const url = getMediaUrl(doc.pdfFile);
+      if (!doc.title?.trim() || !url) return [];
+      return [
+        {
+          name: doc.title.trim(),
+          type: fileFormat(doc.pdfFile ?? ""),
+          category: doc.type?.trim() || undefined,
+          url,
+        },
+      ];
+    });
+  } catch (error) {
+    console.error("[IQAC] Documents request failed:", error);
+    return content.documents;
   }
 }
