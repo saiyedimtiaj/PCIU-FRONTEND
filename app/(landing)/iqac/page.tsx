@@ -193,7 +193,7 @@ export default async function IqacPage() {
       {/* Director's message */}
       {(director || hasDirectorMessage) && (
         <div className="reveal">
-          <section id="director" className="bg-muted/40 border-y border-border py-10 md:py-14 scroll-mt-24">
+          <section id="director" className="py-10 md:py-14 scroll-mt-24">
             <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <SectionTitle eyebrow="A word from the head" title="Message from the Director" />
               <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-border bg-card shadow-lg md:grid md:grid-cols-[320px_1fr]">

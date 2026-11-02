@@ -294,7 +294,6 @@ export default function NavbarClient({
               </DropdownNavItem>
 
               <NavItem href="/iqac" label="IQAC" />
-              <NavItem href="/developers" label="Developers" />
               <NavItem href="/contacts" label="Contact" />
             </nav>
 
@@ -498,13 +497,6 @@ export default function NavbarClient({
                 IQAC
               </Link>
               <Link
-                href="/developers"
-                className="text-foreground hover:text-primary font-medium py-3 px-2 border-b border-border"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Developers
-              </Link>
-              <Link
                 href="/contacts"
                 className="text-foreground hover:text-primary font-medium py-3 px-2 border-b border-border"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -531,6 +523,13 @@ export default function NavbarClient({
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Student Portal
+                </Link>
+                <Link
+                  href="/developers"
+                  className="text-foreground hover:text-primary font-medium px-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Developers
                 </Link>
                 <div className="px-2">
                   {session ? (

@@ -33,20 +33,21 @@ export default function DeveloperDetails({ dev }: { dev: Developer }) {
         <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity data-ending-style:opacity-0 data-starting-style:opacity-0" />
         <Dialog.Viewport className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4">
           <Dialog.Popup className="relative flex max-h-[92vh] w-full max-w-xl flex-col overflow-hidden rounded-t-3xl bg-card shadow-2xl transition-all duration-300 data-ending-style:translate-y-6 data-ending-style:opacity-0 data-starting-style:translate-y-6 data-starting-style:opacity-0 sm:rounded-3xl">
-            {/* Header band */}
-            <div className="relative h-24 shrink-0 bg-linear-to-r from-primary to-secondary">
-              <div className="absolute inset-0 opacity-15" style={DOT_PATTERN} />
-              <Dialog.Close
-                aria-label="Close"
-                className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/25 text-white transition-colors hover:bg-white hover:text-primary"
-              >
-                <X className="size-4" />
-              </Dialog.Close>
-            </div>
+            <Dialog.Close
+              aria-label="Close"
+              className="absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-black/25 text-white transition-colors hover:bg-white hover:text-primary"
+            >
+              <X className="size-4" />
+            </Dialog.Close>
 
             <div className="overflow-y-auto px-6 pb-6 sm:px-8 sm:pb-8">
+              {/* Header band — inside the scroll area so the photo overlapping it isn't clipped */}
+              <div className="relative -mx-6 h-24 bg-linear-to-r from-primary to-secondary sm:-mx-8">
+                <div className="absolute inset-0 opacity-15" style={DOT_PATTERN} />
+              </div>
+
               {/* Identity */}
-              <div className="-mt-12 flex flex-col items-center text-center sm:flex-row sm:items-end sm:gap-5 sm:text-left">
+              <div className="relative -mt-12 flex flex-col items-center text-center sm:flex-row sm:items-end sm:gap-5 sm:text-left">
                 <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl bg-linear-to-br from-primary to-secondary shadow-lg ring-4 ring-card">
                   {dev.image ? (
                     <Image src={dev.image} alt={dev.name} fill sizes="96px" className="object-cover object-top" />
