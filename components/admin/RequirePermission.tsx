@@ -1,8 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { ShieldOff } from "lucide-react";
-import EmptyState from "@/components/shared/EmptyState";
+import AccessDenied from "@/components/admin/AccessDenied";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAccess } from "@/features/permissions/use-access";
 import type { PermissionAction } from "@/lib/admin/permissions";
@@ -45,14 +44,9 @@ export default function RequirePermission({
 
   if (!access.can(slug, action)) {
     return (
-      <div className="p-6">
-        <EmptyState
-          variant="icon"
-          icon={<ShieldOff className="size-6" />}
-          title="You don't have access to this"
-          description={`Your role isn't allowed to ${VERB[action]} ${label ?? "this section"}. Ask a super admin to update your permissions.`}
-        />
-      </div>
+      <AccessDenied
+        description={`Your role isn't allowed to ${VERB[action]} ${label ?? "this section"}.`}
+      />
     );
   }
 

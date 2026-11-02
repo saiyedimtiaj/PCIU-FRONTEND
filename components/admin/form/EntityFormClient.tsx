@@ -5,7 +5,8 @@ import { FileQuestion } from "lucide-react";
 import { getEntitySchema } from "@/lib/admin/entities";
 import { generateSampleRows } from "@/components/admin/list/sample-data";
 import { isConnected, getEndpoint } from "@/services/endpoints";
-import { useEntityById } from "@/features/entity";
+import { useEntityById, isForbidden } from "@/features/entity";
+import AccessDenied from "@/components/admin/AccessDenied";
 import { Alert } from "@/components/shared/Aleart";
 import { Button } from "@/components/ui/button";
 import EmptyState from "@/components/shared/EmptyState";
@@ -88,6 +89,15 @@ function EntityFormClientInner({ slug, cancelHref, recordId }: EntityFormClientP
   }
 
   if (isLoading) return <FormSkeleton schema={schema} />;
+
+  if (isForbidden(error)) {
+    return (
+      <AccessDenied
+        title={`You don't have access to this ${schema.title.toLowerCase()}`}
+        description={`Your role isn't allowed to open ${schema.title.toLowerCase()} records.`}
+      />
+    );
+  }
 
   if (isError) {
     return (

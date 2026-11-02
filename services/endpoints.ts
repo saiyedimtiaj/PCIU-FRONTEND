@@ -89,6 +89,9 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   "time-slot": { path: "/academic/admin/time-slots" },
   "class-routine": { path: "/routines/class" },
   "exam-routine": { path: "/routines/exam" },
+  // No edit route — a booking is created, cancelled (PATCH /{id}/cancel,
+  // see app/(admin)/room-booking-actions.ts) or deleted.
+  "room-bookings": { path: "/room-bookings" },
 
   pages: { path: "/pages", multipart: true },
   "hero-slides": { path: "/heroslides", multipart: true },
@@ -97,6 +100,10 @@ export const ENTITY_ENDPOINTS: Record<string, EndpointConfig> = {
   events: { path: "/events", multipart: true },
   gallery: { path: "/galleries", multipart: true },
   menus: { path: "/menus" },
+  // There's no GET /clubs/{id} — only by slug — so edit reads from the list.
+  clubs: { path: "/clubs", multipart: true, getFromList: true },
+  // GET pages at 30 ({ circulars, pagination }); the list walks every page.
+  circulars: { path: "/circulars", multipart: true },
   // One row, no per-id routes: GET/POST/PATCH/PUT `/about` all exist,
   // every `/about/{id}` method 404s (verified live).
   about: { path: "/about", multipart: true, singleton: true },

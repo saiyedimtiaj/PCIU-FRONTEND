@@ -34,6 +34,7 @@ import {
 import {
   DAYS,
   SHIFTS,
+  LAB_GROUP_OPTIONS,
   EMPTY_CLASS_ROW,
   EMPTY_EXAM_ROW,
   classBulkSchema,
@@ -79,6 +80,8 @@ const DEPENDENTS: Record<string, string[]> = {
   department_id: ["course_id", "teacher_id", "batch_id", "section_id"],
   building_id: ["room_id"],
   batch_id: ["section_id"],
+  // Time slots belong to a shift — a new shift invalidates the chosen slot.
+  shift: ["time_slot_id"],
 };
 
 function str(value: unknown): string {
@@ -123,7 +126,8 @@ function useLookups(timeSlotType: string) {
   const sections = useOptions("section", name);
   const timeSlots = useOptions(
     "time-slot",
-    (r) => `${str(r.start_time)} – ${str(r.end_time)}`,
+    (r) =>
+      `${str(r.start_time)} – ${str(r.end_time)}${r.shift ? ` · ${titleCase(str(r.shift))}` : ""}`,
     (r) => !r.type || str(r.type) === timeSlotType,
   );
   const semesters = useOptions("semester", (r) => str(r.title) || `#${idOf(r)}`);
@@ -324,9 +328,17 @@ function RoutineRow({
           rooms.toOptions(byParent(rooms.all, "building_id", row.building_id)),
           { disabled: !row.building_id, placeholder: "building", loading: rooms.isLoading },
         )}
-        {select("time_slot_id", "Time Slot", timeSlots.toOptions(timeSlots.all), {
-          loading: timeSlots.isLoading,
-        })}
+        {select("shift", "Shift", SHIFTS.map((s) => ({ label: titleCase(s), value: s })))}
+        {select(
+          "time_slot_id",
+          "Time Slot",
+          // Only the chosen shift's slots; slots saved before shifts existed
+          // (no shift) stay available under either.
+          timeSlots.toOptions(
+            timeSlots.all.filter((t) => !row.shift || !t.shift || str(t.shift) === row.shift),
+          ),
+          { loading: timeSlots.isLoading },
+        )}
         {kind === "class" ? (
           select("day", "Day", DAYS.map((d) => ({ label: titleCase(d), value: d })))
         ) : (
@@ -351,7 +363,7 @@ function RoutineRow({
             {err("date") && <p className="text-xs text-destructive">{err("date")}</p>}
           </div>
         )}
-        {select("shift", "Shift", SHIFTS.map((s) => ({ label: titleCase(s), value: s })))}
+        {kind === "class" && select("group", "Lab Group", LAB_GROUP_OPTIONS)}
         <div className="min-w-0 space-y-1.5">
           <Label htmlFor={`${prefix}.student_range`} className="text-xs font-medium text-foreground">
             Student Range

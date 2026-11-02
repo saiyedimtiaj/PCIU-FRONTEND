@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Plus, Search, X, SlidersHorizontal } from "lucide-react";
 import { getEntitySchema } from "@/lib/admin/entities";
@@ -18,10 +18,17 @@ import type { FieldDescriptor } from "@/components/admin/form/form-types";
 import { generateSampleRows, type SampleRow } from "./sample-data";
 import { deriveColumns, pickStatusField } from "./columns";
 import { isConnected, getEndpoint } from "@/services/endpoints";
-import { useEntityList, useDeleteEntity, useUpdateEntity, useRelationOptions } from "@/features/entity";
+import {
+  useEntityList,
+  useDeleteEntity,
+  useUpdateEntity,
+  useRelationOptions,
+  isForbidden,
+} from "@/features/entity";
 import { useToastManager } from "@/components/ui/toast";
 import type { FieldOption } from "@/components/admin/form/form-types";
 import RequirePermission from "@/components/admin/RequirePermission";
+import AccessDenied from "@/components/admin/AccessDenied";
 import { useAccess } from "@/features/permissions/use-access";
 
 export interface EntityListClientProps {
@@ -170,6 +177,17 @@ function EntityListClientInner({
     error,
   } = useEntityList(slug, undefined, { enabled: connected });
 
+  // The API refused this module for the signed-in role: remember it so the
+  // sidebar drops the link, and show the access screen instead of an error
+  // banner over an empty table.
+  const forbidden = isForbidden(error);
+  const { markDenied } = access;
+  useEffect(() => {
+    if (forbidden) markDenied(slug);
+  }, [forbidden, markDenied, slug]);
+
+  console.log({apiRows})
+
   const deleteEntity = useDeleteEntity(slug);
   const updateEntity = useUpdateEntity(slug);
 
@@ -251,6 +269,15 @@ function EntityListClientInner({
 
   const basePath = basePathOverride ?? `/admin/${groupRouteSegment(schema.group)}/${schema.slug}`;
   const pluralTitle = schema.pluralTitle ?? pluralize(schema.title);
+
+  if (forbidden) {
+    return (
+      <AccessDenied
+        title={`You don't have access to ${pluralTitle}`}
+        description={`Your role isn't allowed to view ${pluralTitle.toLowerCase()}.`}
+      />
+    );
+  }
   const entityTitle = schema.title;
 
   function handleSort(field: string) {

@@ -10,6 +10,9 @@ const managementSchema = z.object({
   management_role: z.string().max(100).optional().or(z.literal("")),
   type_id: z.string().min(1, "Management type is required"),
   status: z.boolean().default(true),
+  // Sent exactly as the API spells them: all lowercase.
+  iskeyperson: z.boolean().default(false),
+  sortorder: z.coerce.number().int().nonnegative().default(0),
 });
 
 export const managementEntity: EntitySchema<typeof managementSchema> = {
@@ -19,7 +22,7 @@ export const managementEntity: EntitySchema<typeof managementSchema> = {
   icon: Users,
   group: "IQAC",
   zodSchema: managementSchema,
-  defaultValues: { status: true },
+  defaultValues: { status: true, iskeyperson: false, sortorder: 0 },
   sections: [
     {
       title: "Member",
@@ -42,7 +45,14 @@ export const managementEntity: EntitySchema<typeof managementSchema> = {
         },
         { name: "management_role", label: "Role", type: "text", placeholder: "Member" },
         { name: "img", label: "Photo", type: "image", colSpan: 2 },
+        { name: "sortorder", label: "Sort Order", type: "number", placeholder: "1" },
         { name: "status", label: "Active", type: "switch" },
+        {
+          name: "iskeyperson",
+          label: "Key Person",
+          type: "switch",
+          helper: "Key persons are highlighted on the Home page.",
+        },
       ],
     },
   ],

@@ -63,9 +63,16 @@ export const READ_NESTED: Record<string, Record<string, string>> = {
   management: {
     // Rows carry only the joined `type` object, never a top-level `typeId`.
     type_id: "type.id",
+    // Written all-lowercase; tolerate the API echoing them back camelCased.
+    iskeyperson: "isKeyPerson",
+    sortorder: "sortOrder",
   },
   notices: {
     pdf: "pdfUrl",
+  },
+  // Written as `socialmedia`; the API returns it as `socialMedia`.
+  clubs: {
+    socialmedia: "socialMedia",
   },
   "research-publications": {
     department_id: "departmentid",

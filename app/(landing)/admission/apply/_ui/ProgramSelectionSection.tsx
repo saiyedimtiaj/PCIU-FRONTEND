@@ -3,17 +3,17 @@
 import { BookOpenCheck } from "lucide-react";
 import FormSelect, { type FormSelectOption } from "./FormSelect";
 import FormSectionCard from "./FormSectionCard";
-import type { PublicProgramItem, ActiveAdmissionSchedule } from "@/types/admission-apply";
+import type { PublicProgramItem, ActiveAdmissionCycle } from "@/types/admission-apply";
 
 export default function ProgramSelectionSection({
   programs,
-  schedule,
+  cycle,
   programId,
   onProgramChange,
   error,
 }: {
   programs: PublicProgramItem[];
-  schedule: ActiveAdmissionSchedule | null;
+  cycle: ActiveAdmissionCycle;
   programId: string;
   onProgramChange: (value: string) => void;
   error?: string;
@@ -23,7 +23,7 @@ export default function ProgramSelectionSection({
     value: String(program.id),
   }));
 
-  const semesterLabel = schedule ? `${schedule.semesterName} ${schedule.year}` : "Upcoming Semester";
+  const semesterLabel = cycle.semester || "Upcoming Semester";
 
   return (
     <FormSectionCard

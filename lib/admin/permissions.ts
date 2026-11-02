@@ -82,7 +82,6 @@ export const MODULE_RESOURCES: Record<string, readonly string[]> = {
   // IQAC
   iqac: ["IQAC"],
   "iqac-committee": ["IQAC_COMMITTEE"],
-  "iqac-sections": ["IQAC_SECTION", "IQAC"],
   "iqac-documents": ["IQAC_DOCUMENT", "IQAC"],
   // These two are `/events` and `/galleries` rows, so the API guards them
   // with the same resources as the plain Events / Gallery modules.
@@ -90,6 +89,12 @@ export const MODULE_RESOURCES: Record<string, readonly string[]> = {
   "iqac-gallery": ["GALLERY"],
   management: ["MANAGEMENT"],
   "management-type": ["MANAGEMENT_TYPE", "MANAGEMENT"],
+
+  // Clubs / circulars / room bookings were added after the permission seed.
+  clubs: ["CLUB"],
+  circulars: ["CIRCULAR"],
+  "room-bookings": ["ROOM_BOOKING", "ROOM"],
+  developers: ["DEVELOPER"],
 
   // System
   contact: ["CONTACT"],
@@ -124,10 +129,29 @@ export function knownResources(rows: PermissionRow[]): string[] {
   return Array.from(new Set<string>([...SEEDED_RESOURCES, ...rows.map((r) => r.resource)])).sort();
 }
 
+/** Each module's own resource — the first, most specific candidate. */
+export function ownResource(slug: string): string | null {
+  return MODULE_RESOURCES[slug]?.[0] ?? null;
+}
+
 /**
- * The resource guarding a module: its first candidate the matrix actually
- * has. `null` for a module with no mapping at all — the UI then leaves it
- * to the API to decide.
+ * Every resource the Permissions page lists: the known ones plus each
+ * module's own resource, even before any role has a row for it (POST
+ * /permissions accepts a new resource such as "MANAGEMENT_TYPE"). That's
+ * how a module that still borrows a parent's permission gets its own.
+ */
+export function matrixResources(rows: PermissionRow[]): string[] {
+  const own = Object.keys(MODULE_RESOURCES)
+    .map(ownResource)
+    .filter((r): r is string => !!r);
+  return Array.from(new Set<string>([...knownResources(rows), ...own])).sort();
+}
+
+/**
+ * The resource guarding a module right now: its first candidate the matrix
+ * actually has rows for. A module whose own resource has no rows yet keeps
+ * using its parent's (Management Type → MANAGEMENT) so nobody loses access
+ * the moment a module is split out. `null` for an unmapped module.
  */
 export function resolveResource(slug: string, known: ReadonlySet<string>): string | null {
   const candidates = MODULE_RESOURCES[slug];
@@ -135,38 +159,64 @@ export function resolveResource(slug: string, known: ReadonlySet<string>): strin
   return candidates.find((c) => known.has(c)) ?? candidates[candidates.length - 1];
 }
 
-/** Admin modules (by slug) each resource covers, for labelling the matrix. */
-export function modulesByResource(known: ReadonlySet<string>): Map<string, string[]> {
+/** Modules (by slug) whose own resource is `resource`, for labelling the matrix. */
+export function modulesByResource(): Map<string, string[]> {
   const out = new Map<string, string[]>();
   for (const slug of Object.keys(MODULE_RESOURCES)) {
-    const resource = resolveResource(slug, known);
-    if (!resource) continue;
-    out.set(resource, [...(out.get(resource) ?? []), slug]);
+    const resource = ownResource(slug);
+    if (resource) out.set(resource, [...(out.get(resource) ?? []), slug]);
   }
   return out;
 }
+
+/**
+ * The parent resource a module currently falls back to because its own
+ * resource has no rows yet — e.g. "MANAGEMENT" for MANAGEMENT_TYPE.
+ */
+export function fallbackFor(resource: string, known: ReadonlySet<string>): string | null {
+  if (known.has(resource)) return null;
+  for (const candidates of Object.values(MODULE_RESOURCES)) {
+    if (candidates[0] !== resource) continue;
+    const parent = candidates.slice(1).find((c) => known.has(c));
+    if (parent) return parent;
+  }
+  return null;
+}
+
+export const SUPER_ADMIN = "SUPER_ADMIN";
 
 export interface Access {
   role: string | null;
   /** The matrix rows, or `null` when this session isn't allowed to read them. */
   rows: PermissionRow[] | null;
+  /**
+   * Module slugs whose API answered 403 for this session. Only used when
+   * `rows` is null — the role can't read the matrix, so access is learned
+   * from the modules themselves (probed on load, plus any 403 seen later).
+   */
+  denied?: string[];
 }
 
 /**
  * Whether `access.role` may do `action` on module `slug`.
  *
- * - The matrix couldn't be read (e.g. the API won't show it to this role):
- *   allow, and let the API's own check be the gate — better than locking an
- *   admin out of the whole dashboard on a guess.
- * - The module has no mapped resource: allow (same reasoning).
+ * - SUPER_ADMIN: always — the role has full access by definition and its
+ *   matrix rows are display-only.
+ * - The matrix couldn't be read: allowed unless the module answered 403
+ *   (`denied`); the API's own check still guards every write.
+ * - The module has no mapped resource: allow (the API decides).
  * - The role has no row for the resource: deny — the API answers that case
  *   with 403 "Permission not configured".
  */
 export function can(access: Access | undefined, slug: string, action: PermissionAction): boolean {
-  if (!access?.rows || !access.role) return true;
+  if (!access?.role) return true;
+  if (access.role === SUPER_ADMIN) return true;
+  if (!access.rows) return !(access.denied ?? []).includes(slug);
   const known = new Set(knownResources(access.rows));
   const resource = resolveResource(slug, known);
-  if (!resource) return true;
+  // A module whose resource the matrix doesn't know yet (newly added on the
+  // backend, e.g. clubs before its CLUB rows exist): leave it to the API.
+  if (!resource || !known.has(resource)) return true;
   const row = access.rows.find((r) => r.role === access.role && r.resource === resource);
   return !!row?.[action];
 }
