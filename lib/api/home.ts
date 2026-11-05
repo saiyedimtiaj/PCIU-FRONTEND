@@ -5,6 +5,8 @@ import type {
   GalleryApiItem,
   GalleryItem,
   HeroSliderItem,
+  KeyPerson,
+  KeyPersonApiItem,
   NoticeItem,
   VCInfo,
   PageSettingItem,
@@ -13,6 +15,8 @@ import type {
 import type { PublicProgramItem, ActiveAdmissionSchedule } from "@/types/admission-apply";
 import { cache } from "react";
 import { resolveUploadUrl } from "@/lib/upload-url";
+import { publicFetch } from "@/lib/server-fetch";
+import { getMediaUrl } from "@/lib/utils/media";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
@@ -411,3 +415,78 @@ export async function getResearchSettings(): Promise<PageSettingItem[]> {
     return [];
   }
 }
+
+/** --------- Key persons ---------- */
+
+function cleanText(value: string | null | undefined): string | null {
+  const text = value?.trim();
+  return text ? text : null;
+}
+
+/** "member" → "Member", "member secretary" → "Member Secretary". */
+function titleCase(value: string): string {
+  return value.replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/**
+ * A `designation` reads as a statement (worth quoting) rather than a title
+ * like "Dean" when it is sentence-length or contains sentence punctuation.
+ */
+function isStatement(text: string): boolean {
+  return text.length > 60 || /[.!?;:]\s/.test(text);
+}
+
+/**
+ * Active key persons from `GET /home/keypersons`, sorted by `sortorder`.
+ * Cached under the "management" tag, which admin management saves already
+ * expire (see app/(admin)/academics-cache.ts). `error` is true when the
+ * request failed, so the section can tell "no one listed" from "unreachable".
+ */
+export const getKeyPersons = cache(async function getKeyPersons(): Promise<{
+  persons: KeyPerson[];
+  error: boolean;
+}> {
+  try {
+    const res = await publicFetch.get("/home/keypersons", {
+      next: { revalidate: 300, tags: ["management"] },
+    });
+
+    if (!res.ok) {
+      console.error(`Key persons request failed: ${res.status}`);
+      return { persons: [], error: true };
+    }
+
+    const json: ApiResponse<KeyPersonApiItem[]> = await res.json();
+
+    if (!json.success || !Array.isArray(json.data)) {
+      return { persons: [], error: true };
+    }
+
+    const persons = json.data
+      .filter((item) => item.status === true && item.iskeyperson === true)
+      .sort(
+        (a, b) =>
+          (a.sortorder ?? Number.MAX_SAFE_INTEGER) -
+          (b.sortorder ?? Number.MAX_SAFE_INTEGER),
+      )
+      .map((item): KeyPerson => {
+        const designation = cleanText(item.designation);
+        const role = cleanText(item.managementRole);
+        return {
+          id: item.id,
+          name: cleanText(item.name),
+          role: role ? titleCase(role) : null,
+          typeName: cleanText(item.type?.name),
+          typeDescription: cleanText(item.type?.description),
+          designation,
+          designationIsStatement: designation ? isStatement(designation) : false,
+          imageUrl: getMediaUrl(cleanText(item.img)),
+        };
+      });
+
+    return { persons, error: false };
+  } catch (error) {
+    console.error("Error fetching key persons:", error);
+    return { persons: [], error: true };
+  }
+});

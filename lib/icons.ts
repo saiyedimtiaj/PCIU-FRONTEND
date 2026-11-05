@@ -54,6 +54,11 @@ import {
   PenTool,
   Handshake,
   Beaker,
+  ClipboardCheck,
+  FolderDown,
+  CreditCard,
+  ShieldCheck,
+  ChartNoAxesColumnIncreasing,
   type LucideIcon,
 } from "lucide-react";
 
@@ -118,6 +123,11 @@ export const iconMap = {
   "pen-tool": PenTool,
   handshake: Handshake,
   beaker: Beaker,
+  "clipboard-check": ClipboardCheck,
+  "folder-down": FolderDown,
+  "credit-card": CreditCard,
+  "shield-check": ShieldCheck,
+  "chart-increasing": ChartNoAxesColumnIncreasing,
 } as const satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof iconMap;

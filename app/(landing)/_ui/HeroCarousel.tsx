@@ -103,7 +103,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSliderItem[] }) {
                 priority={index === 0}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
-                className=" h-full w-full object-cover object-[center_30%] sm:object-[center_30%] md:object-[center_35%] lg:object-center "
+                className="h-full w-full object-cover object-[center_30%] sm:object-[center_30%] md:object-[center_35%] lg:object-center"
               />
             ) : (
               <div className="absolute inset-0 bg-primary" />

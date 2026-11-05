@@ -123,6 +123,47 @@ export interface NoticeItem {
 //   photo: string;
 // }
 
+/**--------------- Key persons (from /home/keypersons API) ------------------ */
+
+export interface KeyPersonManagementType {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+}
+
+/** One raw record of `GET /home/keypersons`. */
+export interface KeyPersonApiItem {
+  id: number;
+  teacherId: number | null;
+  typeId: number | null;
+  name: string | null;
+  img: string | null;
+  designation: string | null;
+  managementRole: string | null;
+  iskeyperson: boolean;
+  sortorder: number | null;
+  status: boolean;
+  type: KeyPersonManagementType | null;
+}
+
+/** A key person normalized for the homepage carousel (serializable). */
+export interface KeyPerson {
+  id: number;
+  name: string | null;
+  role: string | null;
+  typeName: string | null;
+  typeDescription: string | null;
+  designation: string | null;
+  /**
+   * The API's `designation` is sometimes a statement ("The vision of this
+   * university is…") and sometimes just a title ("Dean"). Only a statement
+   * gets the editorial quotation treatment.
+   */
+  designationIsStatement: boolean;
+  imageUrl: string | null;
+}
+
 /** Vice Chancellor (from /home/vc API) */
 export interface VCEducationEntry {
   id?: number;
@@ -203,16 +244,24 @@ export interface AdmissionCard {
   title: string;
   description: string;
   buttonText: string;
-  buttonVariant: "highlight" | "accent";
+  /** Destination route for the card's call-to-action button. */
+  href: string;
+}
+
+export interface AdmissionHighlight {
+  icon: IconName;
+  label: string;
 }
 
 export interface AdmissionsContent {
   badge: string;
   heading: string;
+  /** Trailing heading word rendered in the accent gold. */
+  headingHighlight: string;
   subheading: string;
+  backgroundImage: string;
   cards: AdmissionCard[];
-  tuitionNote: string;
-  tuitionButtonText: string;
+  highlights: AdmissionHighlight[];
 }
 
 /** Research */

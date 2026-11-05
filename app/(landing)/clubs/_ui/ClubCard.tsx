@@ -1,10 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Users } from "lucide-react";
 import type { Club } from "@/types/clubs";
+import FallbackImage, { CoverImage } from "@/components/shared/FallbackImage";
+import { toItems } from "./SocialLinks";
 
 /** Initials for a club with no logo: "PCIU Computer Club" → "PC". */
-function initials(name: string): string {
+export function initials(name: string): string {
   return name
     .split(/\s+/)
     .filter(Boolean)
@@ -13,53 +14,96 @@ function initials(name: string): string {
     .join("");
 }
 
-export default function ClubCard({ club }: { club: Club }) {
+export const BANNER_FALLBACK = (
+  <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-primary via-primary-glow to-secondary">
+    <div className="absolute inset-0 bg-[radial-gradient(currentColor_1px,transparent_1px)] bg-size-[18px_18px] text-white opacity-15" />
+    <span className="relative flex size-14 items-center justify-center rounded-2xl bg-accent/15 text-accent ring-1 ring-accent/25">
+      <Users className="size-7" aria-hidden />
+    </span>
+  </div>
+);
+
+/**
+ * A club as a profile card: cover on top, a round logo overlapping it, then
+ * name, department, a short bio and the club's social channels.
+ * The whole card is one link, so the social chips are icons, not anchors.
+ */
+export default function ClubCard({ club, eager = false }: { club: Club; eager?: boolean }) {
+  const { department } = club;
+  const channels = toItems(club.socialLinks).filter((s) => s.url);
+
   return (
     <Link
       href={`/clubs/${club.slug}`}
-      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl"
+      aria-label={`View ${club.name} profile`}
+      className="reveal group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-lg shadow-primary/5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-2xl hover:shadow-primary/15 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
     >
-      <div className="relative h-40 overflow-hidden bg-gradient-accent">
-        {club.bannerImage ? (
-          <Image
-            src={club.bannerImage}
-            alt=""
-            fill
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Users className="size-12 text-white/40" />
-          </div>
-        )}
-        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent" />
-        {club.department && (
-          <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-primary backdrop-blur">
-            {club.department}
+      {/* Cover */}
+      <div className="relative aspect-[27/10] overflow-hidden bg-muted">
+        <CoverImage
+          src={club.bannerImage}
+          alt={`${club.name} banner`}
+          sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+          eager={eager}
+          className="transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          fallback={BANNER_FALLBACK}
+        />
+        <div aria-hidden className="absolute inset-0 bg-linear-to-t from-black/25 via-transparent to-transparent" />
+        {department?.shortName && (
+          <span className="absolute top-3 right-3 rounded-full bg-primary/85 px-2.5 py-1 text-[0.65rem] font-bold tracking-wider text-primary-foreground uppercase shadow-md backdrop-blur-sm">
+            {department.shortName}
           </span>
         )}
       </div>
 
-      <div className="relative flex flex-1 flex-col px-6 pb-6 pt-11">
-        <div className="absolute -top-9 left-6 flex size-[4.5rem] items-center justify-center overflow-hidden rounded-2xl border-4 border-card bg-white shadow-md">
-          {club.logo ? (
-            <Image src={club.logo} alt={`${club.name} logo`} width={72} height={72} className="size-full object-contain p-1.5" />
-          ) : (
-            <span className="font-heading text-lg font-bold text-primary">{initials(club.name)}</span>
-          )}
+      {/* Avatar */}
+      <div className="relative -mt-11 flex justify-center">
+        <div className="flex size-22 items-center justify-center overflow-hidden rounded-full bg-white shadow-xl ring-4 ring-card transition-transform duration-300 group-hover:scale-105">
+          <FallbackImage
+            src={club.logo}
+            alt={`${club.name} logo`}
+            width={88}
+            height={88}
+            className="size-full object-contain p-2"
+            fallback={<span className="font-heading text-xl font-bold text-primary">{initials(club.name)}</span>}
+          />
         </div>
+      </div>
 
-        <h2 className="font-heading text-lg font-bold leading-snug text-foreground transition-colors group-hover:text-primary">
+      <div className="flex flex-1 flex-col px-5 pt-3 pb-5 text-center">
+        <h3 className="line-clamp-2 font-heading text-lg leading-snug font-bold text-foreground capitalize transition-colors group-hover:text-primary">
           {club.name}
-        </h2>
-        {club.description && (
-          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{club.description}</p>
+        </h3>
+        {department && (
+          <p className="mt-1 line-clamp-1 text-xs text-muted-foreground" title={department.name}>
+            {department.name}
+          </p>
         )}
 
-        <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-primary">
-          Explore club
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+        {club.description && (
+          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{club.description}</p>
+        )}
+
+        <div aria-hidden className="min-h-4 flex-1" />
+
+        {channels.length > 0 && (
+          <ul className="mb-4 flex flex-wrap justify-center gap-1.5" aria-label="Social channels">
+            {channels.map(({ key, label, Icon }) => (
+              <li
+                key={key}
+                title={label}
+                className="flex size-8 items-center justify-center rounded-full border border-border bg-muted/60 text-foreground/70"
+              >
+                <Icon className="size-3.5" />
+                <span className="sr-only">{label}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <span className="flex h-10 items-center justify-center gap-2 rounded-xl bg-primary/8 text-sm font-semibold text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+          View profile
+          <ArrowRight aria-hidden className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
         </span>
       </div>
     </Link>

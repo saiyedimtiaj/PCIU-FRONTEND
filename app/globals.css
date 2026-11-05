@@ -404,6 +404,17 @@
   --animate-drift: drift 14s ease-in-out infinite;
   /* Traveling dashed stroke used by the shared <ChaseBorder> card outline. */
   --animate-border-chase: border-chase 4s linear infinite;
+  /* Homepage Key Persons autoplay timer; its animationend advances the slide. */
+  --animate-key-person-progress: key-person-progress 7s linear forwards;
+}
+
+@keyframes key-person-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 @keyframes fade-in {

@@ -12,6 +12,7 @@ import Stats from "./_ui/Stats";
 import { getProgramFinderData } from "@/app/(landing)/_actions/programs";
 import { getHomeGallery } from "@/lib/api/home";
 import SectionReveal from "@/components/shared/SectionReveal";
+import Keyperson from "./_ui/keypreson";
 
 export default async function Page() {
   const [gallery, programFinderData] = await Promise.all([
@@ -32,6 +33,7 @@ export default async function Page() {
         <Stats />
         <NoticeMarquee />
         <VCMessage />
+        <Keyperson />
         <ProgramFinder {...programFinderData} />
         <SectionReveal>
           <Faculties />
