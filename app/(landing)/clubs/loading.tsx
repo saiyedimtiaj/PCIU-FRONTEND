@@ -34,10 +34,17 @@ export default function ClubsLoading() {
             ))}
           </div>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }, (_, i) => (
-            <ClubCardSkeleton key={i} />
-          ))}
+        <div className="grid gap-8 lg:grid-cols-[16rem_minmax(0,1fr)] xl:grid-cols-[17rem_minmax(0,1fr)]">
+          <div className="hidden space-y-2 rounded-2xl border border-border bg-card p-3 lg:block lg:self-start">
+            {Array.from({ length: 5 }, (_, i) => (
+              <div key={i} className="h-11 animate-pulse rounded-xl bg-muted" />
+            ))}
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }, (_, i) => (
+              <ClubCardSkeleton key={i} />
+            ))}
+          </div>
         </div>
       </main>
     </div>
