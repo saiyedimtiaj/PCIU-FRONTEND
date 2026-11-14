@@ -1,0 +1,205 @@
+{
+  "intro": {
+    "eyebrow": "PCIU Content Control Center",
+    "title": "Everything important, at a glance.",
+    "description": "Manage public content, connected modules, faculty information and admissions activity from one focused workspace.",
+    "dataLabel": "Static dashboard preview",
+    "primaryAction": { "label": "Add a notice", "href": "/admin/content/notices/new" },
+    "secondaryAction": { "label": "Preview website", "href": "/" }
+  },
+  "stats": [
+    {
+      "label": "Admin modules",
+      "value": "58",
+      "caption": "Registered content workspaces",
+      "meta": "Across 9 groups",
+      "icon": "database",
+      "tone": "dark",
+      "href": "/admin/pages"
+    },
+    {
+      "label": "API connected",
+      "value": "54",
+      "caption": "Modules wired to the backend",
+      "meta": "93% connected",
+      "icon": "check-circle",
+      "tone": "violet",
+      "href": "/admin/system/setting"
+    },
+    {
+      "label": "Public routes",
+      "value": "41",
+      "caption": "Website pages maintained",
+      "meta": "Landing website",
+      "icon": "file-text",
+      "tone": "blue",
+      "href": "/admin/pages"
+    },
+    {
+      "label": "Faculty profiles",
+      "value": "20",
+      "caption": "Directory profiles in site content",
+      "meta": "4 faculty areas",
+      "icon": "users",
+      "tone": "gold",
+      "href": "/admin/faculty"
+    }
+  ],
+  "workspace": {
+    "title": "Content workspace coverage",
+    "description": "A factual view of the entity modules registered in this admin dashboard and their backend connection status.",
+    "totalModules": 58,
+    "connectedModules": 54,
+    "connectionRate": 93,
+    "groups": [
+      { "label": "Academics", "count": 5, "icon": "book-open", "href": "/admin/academics/department" },
+      { "label": "People", "count": 7, "icon": "users", "href": "/admin/people/teacher" },
+      { "label": "Scheduling", "count": 10, "icon": "calendar", "href": "/admin/scheduling/semester" },
+      { "label": "Content", "count": 12, "icon": "file-text", "href": "/admin/content/pages" },
+      { "label": "Research", "count": 6, "icon": "microscope", "href": "/admin/research/research-centres" },
+      { "label": "Journal", "count": 2, "icon": "book-marked", "href": "/admin/journal/pcj-volumes" },
+      { "label": "Admission", "count": 6, "icon": "graduation-cap", "href": "/admin/admission/admission-schedules" },
+      { "label": "IQAC", "count": 7, "icon": "shield-check", "href": "/admin/iqac/iqac" },
+      { "label": "System", "count": 3, "icon": "shield", "href": "/admin/system/setting" }
+    ],
+    "unconnected": [
+      { "label": "Lab Facilities", "group": "Academics", "href": "/admin/academics/lab-facilite" },
+      { "label": "Activities", "group": "Content", "href": "/admin/content/activities" },
+      { "label": "Developers", "group": "Content", "href": "/admin/content/developers" },
+      { "label": "Seminars", "group": "Research", "href": "/admin/research/seminar" }
+    ]
+  },
+  "recentUpdates": [
+    {
+      "title": "Online Admission",
+      "path": "/admission/apply",
+      "category": "Admissions",
+      "status": "Published",
+      "updated": "Today, 10:32 AM",
+      "icon": "graduation-cap",
+      "href": "/admin/pages"
+    },
+    {
+      "title": "Faculty Directory",
+      "path": "/faculty-directory",
+      "category": "People",
+      "status": "In review",
+      "updated": "Yesterday, 4:18 PM",
+      "icon": "users",
+      "href": "/admin/faculty"
+    },
+    {
+      "title": "Research Wing",
+      "path": "/research",
+      "category": "Research",
+      "status": "Published",
+      "updated": "12 Nov, 2:05 PM",
+      "icon": "microscope",
+      "href": "/admin/research/research-centres"
+    },
+    {
+      "title": "Computer Science & Engineering",
+      "path": "/department/cse",
+      "category": "Academics",
+      "status": "Scheduled",
+      "updated": "11 Nov, 11:40 AM",
+      "icon": "book-open",
+      "href": "/admin/academics/department"
+    },
+    {
+      "title": "Port City News",
+      "path": "/port-city-news",
+      "category": "Content",
+      "status": "Published",
+      "updated": "10 Nov, 3:15 PM",
+      "icon": "newspaper",
+      "href": "/admin/content/news-articles"
+    }
+  ],
+  "admissions": {
+    "eyebrow": "Admission pulse",
+    "term": "Spring 2027",
+    "title": "Prospective student activity is trending upward.",
+    "description": "A demo funnel showing the admissions information this dashboard can surface when a reporting API becomes available.",
+    "applicationTotal": "286",
+    "change": "+18%",
+    "stages": [
+      { "label": "Started", "value": "286" },
+      { "label": "Submitted", "value": "214" },
+      { "label": "Verified", "value": "168" },
+      { "label": "Admitted", "value": "96" }
+    ],
+    "weekly": [
+      { "label": "W1", "value": 32 },
+      { "label": "W2", "value": 45 },
+      { "label": "W3", "value": 39 },
+      { "label": "W4", "value": 58 },
+      { "label": "W5", "value": 61 },
+      { "label": "W6", "value": 51 }
+    ],
+    "primaryAction": { "label": "Admission schedules", "href": "/admin/admission/admission-schedules" },
+    "secondaryAction": { "label": "Open apply page", "href": "/admission/apply" }
+  },
+  "inventory": {
+    "title": "Public content inventory",
+    "description": "Current static records that already power visible areas of the PCIU website.",
+    "items": [
+      { "label": "JSON content files", "value": "36", "detail": "Structured public-site content", "icon": "database" },
+      { "label": "Homepage news items", "value": "12", "detail": "News and university updates", "icon": "newspaper" },
+      { "label": "Featured programs", "value": "6", "detail": "Undergraduate and graduate", "icon": "graduation-cap" },
+      { "label": "Public event entries", "value": "3", "detail": "Admission and campus activity", "icon": "calendar" }
+    ]
+  },
+  "facultySnapshot": {
+    "title": "Faculty directory snapshot",
+    "description": "Distribution of the 20 profiles in the website's current faculty content.",
+    "total": 20,
+    "groups": [
+      { "label": "Science & Engineering", "count": 9 },
+      { "label": "Humanities, Social Sciences & Law", "count": 8 },
+      { "label": "Business Studies", "count": 2 },
+      { "label": "Administration", "count": 1 }
+    ],
+    "action": { "label": "Open faculty directory", "href": "/admin/faculty" }
+  },
+  "quickActions": [
+    {
+      "title": "Add a notice",
+      "description": "Publish an important campus update.",
+      "icon": "newspaper",
+      "href": "/admin/content/notices/new",
+      "tone": "primary"
+    },
+    {
+      "title": "Publish an event",
+      "description": "Add a seminar, workshop or ceremony.",
+      "icon": "calendar",
+      "href": "/admin/content/events/new",
+      "tone": "violet"
+    },
+    {
+      "title": "Add faculty profile",
+      "description": "Create a new teacher directory entry.",
+      "icon": "users",
+      "href": "/admin/people/teacher/new",
+      "tone": "success"
+    },
+    {
+      "title": "Update homepage hero",
+      "description": "Manage the public landing-page slides.",
+      "icon": "sparkles",
+      "href": "/admin/content/hero-slides",
+      "tone": "warning"
+    }
+  ],
+  "upcoming": {
+    "title": "Upcoming university activity",
+    "description": "A demo schedule based on the event types already shown on the public website.",
+    "items": [
+      { "month": "NOV", "day": "28", "title": "Admission Test — Spring 2027", "meta": "10:00 AM · Main Campus", "category": "Admission" },
+      { "month": "DEC", "day": "05", "title": "PCIU Research Symposium", "meta": "9:30 AM · University Auditorium", "category": "Research" },
+      { "month": "DEC", "day": "12", "title": "Faculty Development Workshop", "meta": "11:00 AM · Conference Hall", "category": "Academic" }
+    ],
+    "action": { "label": "Manage events", "href": "/admin/content/events" }
+  }
+}
