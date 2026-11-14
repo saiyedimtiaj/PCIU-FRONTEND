@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ENTITY_REGISTRY } from "@/lib/admin/entities";
+import type { SessionUser } from "@/types/auth";
+import AdminAccountMenu from "./AdminAccountMenu";
 import { pluralize } from "./nav-groups";
 import profiles from "@/content/faculty-directory/profiles.json";
 import type { FacultyProfile } from "@/types/faculty-directory";
@@ -75,12 +77,14 @@ export interface AdminHeaderProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
   onOpenMobileNav: () => void;
+  user: SessionUser;
 }
 
 export default function AdminHeader({
   collapsed,
   onToggleCollapse,
   onOpenMobileNav,
+  user,
 }: AdminHeaderProps) {
   const pathname = usePathname();
 
@@ -105,6 +109,9 @@ export default function AdminHeader({
         <Menu className="size-4" />
       </Button>
       <h1 className="font-heading text-sm font-semibold text-foreground">{pageTitle(pathname)}</h1>
+      <div className="ml-auto">
+        <AdminAccountMenu user={user} />
+      </div>
     </header>
   );
 }

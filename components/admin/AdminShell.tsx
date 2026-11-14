@@ -4,8 +4,9 @@ import { useState, type ReactNode } from "react";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
 import { ToastProvider, Toaster } from "@/components/ui/toast";
+import type { SessionUser } from "@/types/auth";
 
-export default function AdminShell({ children }: { children: ReactNode }) {
+export default function AdminShell({ children, user }: { children: ReactNode; user: SessionUser }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -22,6 +23,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
             collapsed={collapsed}
             onToggleCollapse={() => setCollapsed((c) => !c)}
             onOpenMobileNav={() => setMobileOpen(true)}
+            user={user}
           />
           <main className="min-w-0 flex-1 bg-muted/30">{children}</main>
         </div>
