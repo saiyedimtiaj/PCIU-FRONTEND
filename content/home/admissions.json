@@ -1,30 +1,43 @@
 {
-  "badge": "Admissions Open — Fall 2025",
-  "heading": "Start Your Application",
+  "badge": "Admissions Open",
+  "heading": "Start Your",
+  "headingHighlight": "Application",
   "subheading": "Join thousands of students pursuing excellence at PCIU",
+  "backgroundImage": "/images/pciu.png",
   "cards": [
     {
-      "icon": "check-circle",
+      "icon": "clipboard-check",
       "title": "Apply Now",
-      "description": "Start your application for Fall 2025 admission",
+      "description": "Start your application for year admission",
       "buttonText": "Start Application",
-      "buttonVariant": "highlight"
+      "href": "/admission/apply"
     },
     {
-      "icon": "award",
+      "icon": "graduation-cap",
       "title": "Scholarships",
       "description": "Explore merit and need-based financial aid options",
       "buttonText": "View Scholarships",
-      "buttonVariant": "accent"
+      "href": "/admission?section=scholarship"
     },
     {
-      "icon": "download",
-      "title": "Prospectus",
-      "description": "Download our comprehensive admission guide",
-      "buttonText": "Download PDF",
-      "buttonVariant": "accent"
+      "icon": "folder-down",
+      "title": "Documents Required",
+      "description": "Check the required documents for your application",
+      "buttonText": "View Required",
+      "href": "/admission?section=documents-required"
+    },
+    {
+      "icon": "credit-card",
+      "title": "Need help with tuition?",
+      "description": "We offer flexible payment plans and financial assistance.",
+      "buttonText": "View Tuition & Fees",
+      "href": "/admission?section=tuition-fees"
     }
   ],
-  "tuitionNote": "Need help with tuition? We offer flexible payment plans and financial assistance.",
-  "tuitionButtonText": "View Tuition & Fees"
+  "highlights": [
+    { "icon": "graduation-cap", "label": "Quality Education" },
+    { "icon": "shield-check", "label": "Academic Excellence" },
+    { "icon": "users", "label": "Supportive Community" },
+    { "icon": "chart-increasing", "label": "Brighter Future" }
+  ]
 }

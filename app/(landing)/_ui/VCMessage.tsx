@@ -446,8 +446,8 @@ export default async function VCMessage() {
           <ScrollReveal direction="right" delay={0.08} className="w-full">
             <div className="relative text-center md:text-left">
               {/* Main heading */}
-              <h2 className="mx-auto max-w-3xl font-heading text-[24px] font-bold leading-[1.08] tracking-tight text-[#082F67] sm:text-[32px] md:mx-0 md:text-[32px] lg:text-[32px] xl:text-[36px]">
-                From the Vice Chancellor
+              <h2 className="mx-auto max-w-3xl font-heading text-[18px] font-bold leading-[1.08] tracking-tight text-[#082F67] sm:text-[26px] md:mx-0 md:text-[26px] lg:text-[26px] xl:text-[26px]">
+                Message From the Vice Chancellor
               </h2>
 
               {/* Accent */}

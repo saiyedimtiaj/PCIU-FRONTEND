@@ -5,7 +5,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
-  FileText,
   ListFilter,
   RotateCcw,
   Search,
@@ -187,34 +186,8 @@ export default function CircularsBrowser({
 
   return (
     <div className="space-y-6 md:space-y-8">
-      {/* Section header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0">
-          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            Official announcements
-          </p>
-          <h2 className="mt-1 font-heading text-2xl font-bold text-foreground md:text-3xl">
-            Latest circulars
-          </h2>
-          <p className="mt-1.5 max-w-xl text-sm text-muted-foreground md:text-base">
-            Job openings, tenders and official notices from across the university.
-          </p>
-        </div>
-        <div className="flex shrink-0 items-center gap-3 self-start rounded-xl border border-border bg-card px-4 py-2.5 shadow-sm sm:self-auto">
-          <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <FileText aria-hidden className="size-4.5" />
-          </span>
-          <div className="leading-tight">
-            <p className="font-heading text-xl font-bold text-foreground">{totalCirculars}</p>
-            <p className="text-xs text-muted-foreground">
-              {hasServerFilters ? "matching circulars" : totalCirculars === 1 ? "circular" : "total circulars"}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Toolbar */}
-      <div role="search" className="rounded-2xl border border-border bg-card p-3 shadow-sm sm:p-4">
+      {/* Toolbar — overlaps the hero, hence the heavier shadow. */}
+      <div role="search" className="rounded-2xl border border-border bg-card p-3 shadow-lg sm:p-4">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_11rem_17rem]">
           <div className="relative sm:col-span-2 lg:col-span-1">
             <label htmlFor="circular-search" className="sr-only">
@@ -348,23 +321,29 @@ export default function CircularsBrowser({
         className={cn("scroll-mt-28 transition-opacity", pending && "pointer-events-none opacity-60")}
       >
         {circulars.length > 0 && (
-          <p className="mb-4 text-sm text-muted-foreground" aria-live="polite">
-            {term || status ? (
-              <>
-                <span className="font-semibold text-foreground">{visible.length}</span> of{" "}
-                {circulars.length} on this page match your filters
-                {totalPages > 1 && " (search and status cover the current page only)"}
-              </>
-            ) : (
-              <>
-                Showing{" "}
-                <span className="font-semibold text-foreground">
-                  {rangeStart}–{rangeEnd}
-                </span>{" "}
-                of {totalCirculars}
-              </>
-            )}
-          </p>
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-x-4 gap-y-1 border-b border-border pb-3">
+            <h2 className="flex items-center gap-2.5 font-heading text-lg font-bold text-foreground md:text-xl">
+              <span aria-hidden className="h-5 w-1 rounded-full bg-accent" />
+              Latest circulars
+            </h2>
+            <p className="text-sm text-muted-foreground" aria-live="polite">
+              {term || status ? (
+                <>
+                  <span className="font-semibold text-foreground">{visible.length}</span> of{" "}
+                  {circulars.length} on this page match your filters
+                  {totalPages > 1 && " (search and status cover the current page only)"}
+                </>
+              ) : (
+                <>
+                  Showing{" "}
+                  <span className="font-semibold text-foreground">
+                    {rangeStart}–{rangeEnd}
+                  </span>{" "}
+                  of {totalCirculars}
+                </>
+              )}
+            </p>
+          </div>
         )}
 
         {circulars.length === 0 ? (

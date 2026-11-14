@@ -1,6 +1,7 @@
+import { cache } from "react";
 import { publicFetch } from "@/lib/server-fetch";
 import { resolveUploadUrl } from "@/lib/upload-url";
-import type { Club, ClubActivity, ClubDetail, ClubSocialLink } from "@/types/clubs";
+import type { Club, ClubActivity, ClubDepartment, ClubDetail, ClubSocialLink } from "@/types/clubs";
 
 type Dict = Record<string, unknown>;
 
@@ -39,11 +40,19 @@ function toSocialLinks(value: unknown): ClubSocialLink[] {
   return [];
 }
 
+function toDepartment(value: unknown): ClubDepartment | null {
+  if (!value || typeof value !== "object") return null;
+  const row = value as Dict;
+  const name = text(row.name);
+  const shortName = text(row.shortName) || null;
+  if (!name && !shortName) return null;
+  return { name: name || (shortName as string), shortName };
+}
+
 function toClub(row: Dict): Club | null {
   const name = text(row.name);
   const slug = text(row.slug);
   if (!name || !slug) return null;
-  const department = (row.department ?? null) as Dict | null;
   return {
     id: Number(row.id),
     name,
@@ -52,7 +61,7 @@ function toClub(row: Dict): Club | null {
     logo: media(row.logo),
     bannerImage: media(row.bannerImage),
     website: text(row.website) || null,
-    department: department ? text(department.shortName) || text(department.name) || null : null,
+    department: toDepartment(row.department),
     socialLinks: toSocialLinks(row.socialMedia ?? row.socialmedia),
   };
 }
@@ -74,6 +83,7 @@ function toActivity(row: Dict): ClubActivity | null {
     type: text(row.type),
     title,
     description: text(row.description),
+    location: text(row.location) || null,
     date: formatDate(row.activityDate),
     coverImage: media(row.coverImageUrl),
     url: text(row.url) || null,
@@ -101,8 +111,12 @@ export async function getClubs(): Promise<Club[] | null> {
   }
 }
 
-/** One club and its activities, or null if it doesn't exist / is inactive. */
-export async function getClub(slug: string): Promise<ClubDetail | null> {
+/**
+ * One club and its active activities in `sortOrder`, or null if it doesn't
+ * exist / is inactive. React `cache` lets `generateMetadata` and the page
+ * share one call per request.
+ */
+export const getClub = cache(async (slug: string): Promise<ClubDetail | null> => {
   try {
     const res = await publicFetch.get(`/clubs/${encodeURIComponent(slug)}`, CACHE);
     if (!res.ok) return null;
@@ -112,11 +126,14 @@ export async function getClub(slug: string): Promise<ClubDetail | null> {
     const club = toClub(raw);
     if (!club) return null;
     const activities = Array.isArray(body.data?.activities)
-      ? (body.data.activities as Dict[]).map(toActivity).filter((a): a is ClubActivity => a !== null)
+      ? [...(body.data.activities as Dict[])]
+          .sort(bySortOrder)
+          .map(toActivity)
+          .filter((a): a is ClubActivity => a !== null)
       : [];
     return { club, activities };
   } catch (error) {
     console.error(`[Clubs] Failed to load club "${slug}":`, error);
     return null;
   }
-}
+});

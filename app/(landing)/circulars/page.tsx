@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import PageBanner from "@/components/shared/PageBanner";
-import Breadcrumb from "@/components/shared/Breadcrumb";
 import { CIRCULAR_TYPES } from "@/lib/api/circulars";
+import CircularsHero from "./_ui/CircularsHero";
 import CircularsResults from "./_ui/CircularsResults";
 import CircularsSkeleton from "./_ui/CircularsSkeleton";
-
-const title = "University Circulars";
 
 export const metadata: Metadata = {
   title: `Circulars | Port City International University`,
@@ -42,16 +39,10 @@ export default async function CircularsPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <PageBanner
-        title={title}
-        subtitle="Explore the latest opportunities and official announcements."
-        align="center"
-        variant="gradient"
-      />
+      <CircularsHero />
 
-      <Breadcrumb items={[{ label: "Circulars" }]} />
-
-      <div className="container mx-auto px-4 py-8 md:px-8 md:py-12">
+      {/* Pulled up so the filter toolbar overlaps the hero's lower edge. */}
+      <div className="relative z-10 container mx-auto -mt-12 px-4 pb-8 md:-mt-14 md:px-8 md:pb-12">
         <Suspense fallback={<CircularsSkeleton />}>
           <CircularsResults query={query} />
         </Suspense>

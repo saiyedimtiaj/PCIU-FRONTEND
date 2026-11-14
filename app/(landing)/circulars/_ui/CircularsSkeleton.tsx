@@ -33,15 +33,7 @@ export function CircularCardSkeleton() {
 export default function CircularsSkeleton() {
   return (
     <div aria-busy="true" aria-label="Loading circulars" className="space-y-6 md:space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-2">
-          <Skeleton className="h-3 w-40" />
-          <Skeleton className="h-8 w-56" />
-          <Skeleton className="h-4 w-72 max-w-full" />
-        </div>
-        <Skeleton className="h-14 w-40 rounded-xl" />
-      </div>
-      <div className="space-y-3 rounded-2xl border border-border bg-card p-3 sm:p-4">
+      <div className="space-y-3 rounded-2xl border border-border bg-card p-3 shadow-lg sm:p-4">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_11rem_17rem]">
           <Skeleton className="h-11 sm:col-span-2 lg:col-span-1" />
           <Skeleton className="h-11" />
