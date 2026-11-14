@@ -22,6 +22,12 @@ export interface FacultyDepartment {
   name: string;
   subtitle?: string;
   slug?: string;
+  /** The API returns a few extra display fields alongside the core shape. */
+  shortName?: string;
+  title?: string;
+  image?: string;
+  graduate?: number;
+  currentStudent?: number;
 }
 
 export interface FacultyDean {
@@ -31,6 +37,14 @@ export interface FacultyDean {
   imageUrl?: string;
   bio?: string;
   shortBio?: string;
+  slug?: string;
+  office?: string;
+  googleScholarUrl?: string | null;
+  researchgateUrl?: string | null;
+  linkedinUrl?: string | null;
+  facebookUrl?: string | null;
+  twitterUrl?: string | null;
+  websiteUrl?: string | null;
 }
 
 export interface FacultyDetail {

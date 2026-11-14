@@ -34,7 +34,7 @@ export default function CallForPaperPage() {
             backgroundSize: "24px 24px",
           }}
         />
-        <div className="container relative z-10 mx-auto px-4 text-center">
+        <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
             <FileText className="size-8 text-white" />
           </div>
@@ -47,7 +47,7 @@ export default function CallForPaperPage() {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-12 max-w-4xl space-y-6">
+      <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12 space-y-6">
         <Card className="bg-linear-to-r from-destructive/10 to-accent/10 border-l-4 border-l-destructive">
           <CardContent className="flex items-center gap-4">
             <Calendar className="size-8 text-destructive shrink-0" />

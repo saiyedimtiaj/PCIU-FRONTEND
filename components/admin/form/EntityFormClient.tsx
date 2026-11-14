@@ -99,7 +99,21 @@ export default function EntityFormClient({ slug, cancelHref, recordId }: EntityF
     );
   }
 
-  if (!record) return notFound;
+  if (!record) {
+    const endpoint = getEndpoint(slug);
+    if (!endpoint?.singleton) return notFound;
+
+    // A one-row resource that hasn't been saved yet: create it with POST.
+    return (
+      <div className="space-y-4">
+        <Alert
+          variant="info"
+          message={`No ${schema.title.toLowerCase()} has been saved yet — fill this in to create it.`}
+        />
+        <EntityForm schema={schema} cancelHref={cancelHref} stayAfterSave />
+      </div>
+    );
+  }
 
   return (
     <EntityForm
@@ -108,6 +122,7 @@ export default function EntityFormClient({ slug, cancelHref, recordId }: EntityF
       mode="edit"
       recordId={recordId}
       initialValues={record}
+      stayAfterSave={!!getEndpoint(slug)?.singleton}
     />
   );
 }

@@ -1,13 +1,9 @@
-import { Shield, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
-import { LogoutButton } from "./LogoutButton";
 import { FaFacebook, FaLinkedin, FaInstagram } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
-import { getSession } from "@/app/(auth)/actions";
+import TopbarAuth from "./TopbarAuth";
 
-const Topbar = async () => {
-  const session = await getSession();
-
+const Topbar = () => {
   return (
     <div className="hidden lg:block bg-primary text-primary-foreground py-2">
       <div className="container mx-auto px-4">
@@ -55,27 +51,7 @@ const Topbar = async () => {
             Student Portal
           </Link>
           <div className="flex items-center gap-4">
-            {session ? (
-              <>
-                <Link
-                  href={session.role === "admin" ? "/admin" : "/faculty-portal"}
-                  className="flex items-center gap-1 hover:text-accent transition-colors font-medium"
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                  <span>Dashboard</span>
-                </Link>
-
-                <LogoutButton />
-              </>
-            ) : (
-              <Link
-                href="/signin"
-                className="flex items-center gap-1 hover:text-accent transition-colors font-medium"
-              >
-                <Shield className="w-4 h-4" />
-                <span>Admin Login</span>
-              </Link>
-            )}
+            <TopbarAuth />
           </div>
         </div>
       </div>

@@ -10,7 +10,10 @@ export async function getActivePopups(): Promise<Popup[]> {
 
   try {
     const response = await fetch(`${API_BASE_URL}/popup/active`, {
-      cache: "no-store",
+      // Cached rather than no-store: this runs in the public layout, so
+      // no-store made every public page render dynamically on each request.
+      // Admin popup saves expire the "popup" tag (academics-cache.ts).
+      next: { revalidate: 60, tags: ["popup"] },
     });
 
     if (!response.ok) {

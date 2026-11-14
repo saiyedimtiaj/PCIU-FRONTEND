@@ -14,6 +14,8 @@ const departmentSchema = z.object({
   phone: z.string().max(255).optional().or(z.literal("")),
   email: z.email("Must be a valid email").optional().or(z.literal("")),
   image: optionalUpload,
+  // Key is all-lowercase "syllabuspdf" — exactly as the API takes it.
+  syllabuspdf: optionalUpload,
   office_location: z.string().max(255).optional().or(z.literal("")),
   graduate: z.coerce.number().int().nonnegative().optional(),
   number_of_research: z.coerce.number().int().nonnegative().optional(),
@@ -95,6 +97,13 @@ export const departmentEntity: EntitySchema<typeof departmentSchema> = {
           colSpan: 2,
         },
         { name: "image", label: "Cover Image URL", type: "image", colSpan: 2 },
+        {
+          name: "syllabuspdf",
+          label: "Syllabus PDF",
+          type: "file",
+          colSpan: 2,
+          helper: "Upload the department syllabus as a PDF.",
+        },
       ],
     },
     {

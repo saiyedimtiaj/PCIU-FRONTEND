@@ -333,6 +333,16 @@ export async function getPrograms(): Promise<PublicProgramItem[]> {
   }
 }
 
+
+function pickSchedule(data: unknown): unknown {
+  if (!data || typeof data !== "object" || "semesterName" in data) return data;
+  for (const group of Object.values(data as Record<string, unknown>)) {
+    const row = Array.isArray(group) ? group[0] : group;
+    if (row && typeof row === "object" && "semesterName" in row) return row;
+  }
+  return null;
+}
+
 export async function getActiveAdmissionSchedule(): Promise<ActiveAdmissionSchedule | null> {
   if (!API_BASE_URL) {
     console.error("NEXT_PUBLIC_BACKEND_BASE_URL is not defined");
@@ -350,7 +360,7 @@ export async function getActiveAdmissionSchedule(): Promise<ActiveAdmissionSched
     }
 
     const json: ApiResponse<unknown> = await res.json();
-    const data = json.data;
+    const data = pickSchedule(json.data);
 
     if (
       !json.success ||

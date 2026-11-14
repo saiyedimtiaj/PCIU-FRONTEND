@@ -3,6 +3,12 @@ import TeacherTemplate from "./_ui/TeacherTemplate";
 import { Metadata } from "next";
 import EmptyState from "@/components/shared/EmptyState";
 
+// No profiles are built ahead of time; each one is rendered on its first
+// visit and then served from cache (refreshed every 60s by the teacher fetch).
+export function generateStaticParams() {
+  return [];
+}
+
 type Props = {
   params: Promise<{ id: string }>;
 };

@@ -46,7 +46,11 @@ export default function JournalArchive({ content }: { content: PortCityJournalCo
         </div>
       </div>
 
-      <Accordion defaultValue={["v9"]} className="space-y-3">
+      {/* Opens the newest live volume, or the JSON archive's latest issue. */}
+      <Accordion
+        defaultValue={[content.volumes.some((v) => v.id === "v9") ? "v9" : content.volumes[0]?.id ?? ""]}
+        className="space-y-3"
+      >
         {filtered.map((volume) => (
           <AccordionItem key={volume.id} value={volume.id}>
             <AccordionTrigger>
@@ -75,9 +79,22 @@ export default function JournalArchive({ content }: { content: PortCityJournalCo
                     <ul className="divide-y divide-border border border-border rounded-lg overflow-hidden">
                       {section.articles.map((article) => (
                         <li key={article.title} className="px-4 py-2.5 text-sm">
-                          <p className="text-foreground">{article.title}</p>
+                          {article.link ? (
+                            <a
+                              href={article.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-foreground hover:text-primary hover:underline"
+                            >
+                              {article.title}
+                            </a>
+                          ) : (
+                            <p className="text-foreground">{article.title}</p>
+                          )}
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            {article.authors} &middot; p. {article.page}
+                            {[article.authors, article.page ? `p. ${article.page}` : null]
+                              .filter(Boolean)
+                              .join(" · ")}
                           </p>
                         </li>
                       ))}
@@ -89,6 +106,10 @@ export default function JournalArchive({ content }: { content: PortCityJournalCo
           </AccordionItem>
         ))}
       </Accordion>
+
+      {filtered.length === 0 && (
+        <p className="text-center text-muted-foreground py-12">No articles found.</p>
+      )}
 
       <p className="text-center text-sm text-muted-foreground italic mt-8">
         For copies of individual articles, please contact {content.contactEmail} or call{" "}

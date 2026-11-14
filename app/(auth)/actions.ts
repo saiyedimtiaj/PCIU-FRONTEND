@@ -1,7 +1,7 @@
 "use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import { setCookies, clearAuthCookie } from "@/lib/cookie";
+import { setCookies, clearAuthCookie, getCookies } from "@/lib/cookie";
 import { SessionCheckError } from "@/lib/session-check-error";
 import type { SessionUser } from "@/types/auth";
 
@@ -76,6 +76,17 @@ function isFrameworkControlFlowError(error: unknown): boolean {
     typeof (error as { digest: unknown }).digest === "string"
   );
 }
+
+/**
+ * The session for the public site's nav, called from the browser. Skips the
+ * `/auth/me` round-trip entirely when there's no session cookie — the case
+ * for nearly every visitor.
+ */
+export const getNavSession = async (): Promise<SessionUser | null> => {
+  const { betterAuthToken } = await getCookies();
+  if (!betterAuthToken) return null;
+  return getSession();
+};
 
 export const getSession = async (): Promise<SessionUser | null> => {
   try {

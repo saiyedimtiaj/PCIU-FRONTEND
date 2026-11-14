@@ -109,7 +109,7 @@ export default function ManagementTabs({ tabs }: { tabs: ManagementTab[] }) {
         </div>
 
         {viewMode === "cards" ? (
-          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-8">
             {members.map((member) => (
               <MemberCard key={member.serial} member={member} />
             ))}

@@ -56,11 +56,15 @@ import { iqacCommitteeEntity } from "./iqac-committee";
 import { iqacSectionsEntity } from "./iqac-sections";
 import { iqacDocumentsEntity } from "./iqac-documents";
 import { iqacQuickLinksEntity } from "./iqac-quick-links";
+import { iqacActivitiesEntity } from "./iqac-activities";
+import { iqacGalleryEntity } from "./iqac-gallery";
 import { managementEntity } from "./management";
+import { managementTypeEntity } from "./management-type";
 
 import { contactEntity } from "./contact";
 import { settingEntity } from "./setting";
 import { popupEntity } from "./popup";
+import { developersEntity } from "./developers";
 
 export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   department: departmentEntity,
@@ -96,6 +100,7 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   notices: noticesEntity,
   gallery: galleryEntity,
   menus: menusEntity,
+  developers: developersEntity,
 
   "research-centres": researchCentresEntity,
   "research-areas": researchAreasEntity,
@@ -119,7 +124,10 @@ export const ENTITY_REGISTRY: Record<string, EntitySchema> = {
   "iqac-sections": iqacSectionsEntity,
   "iqac-documents": iqacDocumentsEntity,
   "iqac-quick-links": iqacQuickLinksEntity,
+  "iqac-activities": iqacActivitiesEntity,
+  "iqac-gallery": iqacGalleryEntity,
   management: managementEntity,
+  "management-type": managementTypeEntity,
 
   contact: contactEntity,
   setting: settingEntity,

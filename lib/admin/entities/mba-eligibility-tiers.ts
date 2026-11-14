@@ -2,11 +2,19 @@ import { z } from "zod";
 import { Layers } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
 
+/** The API takes these as strings (`"creditsRequired": "40"`). */
+const numericText = (label: string) =>
+  z.coerce
+    .string()
+    .trim()
+    .min(1, `${label} is required`)
+    .regex(/^\d+(\.\d{1,2})?$/, `${label} must be a number`);
+
 const mbaEligibilityTiersSchema = z.object({
   academicBackground: z.string().min(2, "Background is required").max(255),
-  creditsRequired: z.coerce.number().positive("Credits must be greater than 0"),
-  perCreditFeeBDT: z.coerce.number().nonnegative("Amount can't be negative"),
-  totalFeeBDT: z.coerce.number().nonnegative("Amount can't be negative"),
+  creditsRequired: numericText("Credits"),
+  perCreditFeeBDT: numericText("Per-credit fee"),
+  totalFeeBDT: numericText("Total fee"),
 });
 
 export const mbaEligibilityTiersEntity: EntitySchema<typeof mbaEligibilityTiersSchema> = {
@@ -21,10 +29,10 @@ export const mbaEligibilityTiersEntity: EntitySchema<typeof mbaEligibilityTiersS
     {
       title: "Tier",
       fields: [
-        { name: "academicBackground", label: "Academic Background", type: "text", required: true, colSpan: 2, placeholder: "BBA" },
-        { name: "creditsRequired", label: "Credits Required", type: "decimal", required: true },
-        { name: "perCreditFeeBDT", label: "Per-Credit Fee (BDT)", type: "decimal", required: true },
-        { name: "totalFeeBDT", label: "Total Fee (BDT)", type: "decimal", required: true },
+        { name: "academicBackground", label: "Academic Background", type: "text", required: true, colSpan: 2, placeholder: "BSc in EEE" },
+        { name: "creditsRequired", label: "Credits Required", type: "decimal", required: true, placeholder: "40" },
+        { name: "perCreditFeeBDT", label: "Per-Credit Fee (BDT)", type: "decimal", required: true, placeholder: "2000" },
+        { name: "totalFeeBDT", label: "Total Fee (BDT)", type: "decimal", required: true, placeholder: "160000" },
       ],
     },
   ],

@@ -25,6 +25,13 @@ export interface EntityFormProps {
   mode?: "create" | "edit";
   initialValues?: FieldValues;
   recordId?: string;
+  /**
+   * Keep the user on this page after a successful save instead of going to
+   * `cancelHref`. For one-record forms (fee structure, admission
+   * advertisement, test result) that *are* the page — there's no list to
+   * return to, so leaving would just drop them on the dashboard.
+   */
+  stayAfterSave?: boolean;
 }
 
 export default function EntityForm({
@@ -33,6 +40,7 @@ export default function EntityForm({
   mode = "create",
   initialValues,
   recordId,
+  stayAfterSave = false,
 }: EntityFormProps) {
   const router = useRouter();
   const toast = useToastManager();
@@ -94,7 +102,10 @@ export default function EntityForm({
         description: `${label} has been saved.`,
       });
 
-      if (cancelHref) {
+      if (stayAfterSave) {
+        // Keep what was just saved on screen, with the form marked clean.
+        reset(values);
+      } else if (cancelHref) {
         // No router.refresh() here: the list page reads through TanStack
         // Query, which the mutation has already invalidated. A refresh fired
         // while this push is still in flight re-renders the old /new or /edit

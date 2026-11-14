@@ -6,7 +6,6 @@ const iqacSchema = z.object({
   director_id: z.string().min(1, "Director is required"),
   title: z.string().min(2, "Title is required").max(255),
   subtitle: z.string().max(255).optional().or(z.literal("")),
-  description: z.string().optional().or(z.literal("")),
   about: z.string().optional().or(z.literal("")),
   mission: z.string().optional().or(z.literal("")),
   vision: z.string().optional().or(z.literal("")),
@@ -29,7 +28,6 @@ export const iqacEntity: EntitySchema<typeof iqacSchema> = {
         { name: "title", label: "Title", type: "text", required: true, colSpan: 2 },
         { name: "subtitle", label: "Subtitle", type: "text", colSpan: 2 },
         { name: "director_id", label: "Director", type: "relation", required: true, relationTo: "teacher", options: [] },
-        { name: "description", label: "Description", type: "textarea", colSpan: 2 },
       ],
     },
     {

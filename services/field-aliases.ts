@@ -3,11 +3,14 @@ export const WRITE_ALIASES: Record<string, Record<string, string>> = {
   pages: { ogImageUrl: "ogImage" },
   teacher: { imageUrl: "image" },
   gallery: { imageUrl: "imageUrl" },
+  "iqac-gallery": { imageUrl: "imageUrl" },
   "pcj-volumes": { coverImage: "coverImage" },
 
   faculty: { teacherId: "deanId" },
-  management: { types: "type" },
   user: { fullName: "name" },
+  // Sent exactly as the API collection spells it — "departmentid", all
+  // lowercase — while teacherId on the same request is camelCase.
+  "research-publications": { departmentId: "departmentid" },
 };
 
 /** Keys the API ignores — dropped so they can't overwrite or bloat a payload. */
@@ -16,10 +19,6 @@ export const WRITE_DROPS: Record<string, string[]> = {
   pages: ["publishedAt"],
   contact: ["displayOrder", "status"],
   iqac: ["description"],
-  management: ["iqacOrder"],
-  "admission-advertisements": ["isActive"],
-  "admission-test-results": ["isActive"],
-  "admission-schedules": ["isActive"],
 };
 
 /** Applies an entity's renames and drops to an already-camelCased payload. */
@@ -57,8 +56,20 @@ export const READ_NESTED: Record<string, Record<string, string>> = {
   user: {
     full_name: "name",
   },
+  // Written as "syllabuspdf"; tolerate the API echoing it back camelCased.
+  department: {
+    syllabuspdf: "syllabusPdf",
+  },
+  management: {
+    // Rows carry only the joined `type` object, never a top-level `typeId`.
+    type_id: "type.id",
+  },
   notices: {
     pdf: "pdfUrl",
+  },
+  "research-publications": {
+    department_id: "departmentid",
+    teacher_id: "teacher.id",
   },
 };
 

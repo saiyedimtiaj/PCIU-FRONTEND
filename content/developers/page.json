@@ -1,0 +1,99 @@
+{
+  "team": "PCIU Web Development Team",
+  "intro": "The PCIU website, admin dashboard and faculty portal are designed, built and maintained in-house at Port City International University.",
+  "developers": [
+    {
+      "name": "Saiyed Mohammad Imtiaj",
+      "role": "Frontend Developer",
+      "studentId": null,
+      "about": "Works on the admin dashboard and its API integration.",
+      "image": null,
+      "github": "saiyedimtiaj",
+      "linkedin": null,
+      "facebook": null,
+      "portfolio": null,
+      "contributions": [
+        "Admin dashboard layout, sidebar and shell",
+        "Entity schemas and add/edit pages for every admin section",
+        "API service layer with entity management and field aliasing",
+        "Faculty portal: live profile form and section management",
+        "Bachelor and master admission application forms",
+        "Rich text editor and popup management",
+        "Role permissions matrix"
+      ]
+    },
+    {
+      "name": "Sajmul Hossain",
+      "role": "Frontend Developer",
+      "studentId": null,
+      "about": "Works on the departments, faculties and academics pages.",
+      "image": null,
+      "github": null,
+      "linkedin": null,
+      "facebook": null,
+      "portfolio": null,
+      "contributions": [
+        "Department pages: overview, programs, teachers, events and sticky navigation",
+        "Dynamic faculty detail pages with sidebar navigation",
+        "Individual teacher profile pages",
+        "Dynamic faculty and department menus in the navbar",
+        "Academic sub-pages and exam routine filtering",
+        "Sign-in with server actions and cookie handling"
+      ]
+    },
+    {
+      "name": "Shuvo Dev Nath",
+      "role": "Frontend Developer",
+      "studentId": null,
+      "about": "Works on the admission pages, homepage and news.",
+      "image": null,
+      "github": "SDNATH-Git",
+      "linkedin": null,
+      "facebook": null,
+      "portfolio": null,
+      "contributions": [
+        "Admission pages and admission advertisement",
+        "Homepage hero, stats and campus life sections",
+        "Faculties page and faculty cards",
+        "Contacts page",
+        "Notices and events from the API",
+        "Site popup, page banner and footer"
+      ]
+    },
+    {
+      "name": "Abu Bin Naser",
+      "role": "Frontend Developer",
+      "studentId": null,
+      "about": "Works on the academics, research and IQAC pages.",
+      "image": null,
+      "github": null,
+      "linkedin": null,
+      "facebook": null,
+      "portfolio": null,
+      "contributions": [
+        "Class and exam routines: admin bulk upload, public pages and faculty portal",
+        "Check Free Rooms feature",
+        "Dynamic About and Management pages with admin forms",
+        "Dynamic IQAC page with activities and gallery admin",
+        "Dynamic research pages and research/IQAC redesign",
+        "Mobile layout fixes"
+      ]
+    },
+    {
+      "name": "Md Mehedi Hasan",
+      "role": "Backend Developer",
+      "studentId": null,
+      "about": "Works on the backend API and authentication.",
+      "image": null,
+      "github": null,
+      "linkedin": null,
+      "facebook": null,
+      "portfolio": null,
+      "contributions": [
+        "Backend REST API",
+        "cPanel server configuration",
+        "Session cookie and server-side fetch helpers"
+      ]
+    }
+  ]
+}

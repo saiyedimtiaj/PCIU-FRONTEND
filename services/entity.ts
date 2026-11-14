@@ -1,4 +1,4 @@
-import { api } from "./http";
+import { api, ApiError } from "./http";
 import { toApi, fromApi, toCamel } from "./case";
 import { buildFormData, buildJsonBody } from "./form-data";
 import {
@@ -56,19 +56,50 @@ function asInputDate(value: string): string {
 const ISO_DATE_FIELDS: Partial<Record<string, string[]>> = {
   education: ["educationYear"],
   awards: ["awardDate"],
+  "admission-test-results": ["publishedAt"],
+  mous: ["date_signed"],
 };
+
+/**
+ * A date that marks the *end* of a period goes out as the last instant of
+ * that day — the API collection sends MoU expiry as "2030-08-31T23:59:59.999Z"
+ * — so a document valid "until 31 Aug" doesn't lapse at midnight that morning.
+ */
+const END_OF_DAY_DATE_FIELDS: Partial<Record<string, string[]>> = {
+  mous: ["validity_expiry_date"],
+};
+
+/** Relation ids a JSON body must send as numbers (`"departmentId": 3`). */
+const NUMERIC_ID_FIELDS: Partial<Record<string, string[]>> = {
+  "research-centres": ["departmentId"],
+};
+
+function encodeNumericIds(slug: string, payload: Dict): void {
+  for (const key of NUMERIC_ID_FIELDS[slug] ?? []) {
+    const value = payload[key];
+    if (typeof value === "string" && /^\d+$/.test(value)) payload[key] = Number(value);
+  }
+}
 
 function toIsoDateTime(value: string): string {
   const trimmed = value.trim();
   return ISO_DATE.test(trimmed) ? `${trimmed}T00:00:00.000Z` : trimmed;
 }
 
+// Field lists name the *form* field; the payload has already been
+// camelCased, so look each one up under its API key.
 function encodeIsoDates(slug: string, payload: Dict): void {
-  const fields = ISO_DATE_FIELDS[slug];
-  if (!fields) return;
-  for (const name of fields) {
-    const value = payload[name];
-    if (typeof value === "string" && value) payload[name] = toIsoDateTime(value);
+  for (const name of ISO_DATE_FIELDS[slug] ?? []) {
+    const key = toCamel(name);
+    const value = payload[key];
+    if (typeof value === "string" && value) payload[key] = toIsoDateTime(value);
+  }
+  for (const name of END_OF_DAY_DATE_FIELDS[slug] ?? []) {
+    const key = toCamel(name);
+    const value = payload[key];
+    if (typeof value === "string" && ISO_DATE.test(value.trim())) {
+      payload[key] = `${value.trim()}T23:59:59.999Z`;
+    }
   }
 }
 
@@ -83,6 +114,20 @@ const DECODE_ONLY_DATE_FIELDS: Partial<Record<string, string[]>> = {
 
 const ISO_DATETIME_FIELDS: Partial<Record<string, string[]>> = {
   events: ["start_date_time", "end_date_time"],
+  "iqac-activities": ["start_date_time", "end_date_time"],
+  "admission-schedules": [
+    "applicationStartDate",
+    "directAdmissionDeadline",
+    "writtenApplicationDeadline",
+    "writtenTestDate",
+    "testResultDate",
+    "admissionWindowStart",
+    "admissionWindowEnd",
+    "courseRegistrationStart",
+    "courseRegistrationEnd",
+    "classStartDate",
+    "orientationDate",
+  ],
 };
 
 const INPUT_DATETIME = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})/;
@@ -114,6 +159,7 @@ function decodeIsoDateTimes(slug: string, mapped: Dict): void {
 function decodeIsoDates(slug: string, mapped: Dict): void {
   const fields = [
     ...(ISO_DATE_FIELDS[slug] ?? []),
+    ...(END_OF_DAY_DATE_FIELDS[slug] ?? []),
     ...(DECODE_ONLY_DATE_FIELDS[slug] ?? []),
   ];
   for (const name of fields) {
@@ -156,6 +202,7 @@ function encode(slug: string, values: Dict, omit: string[] = []): FormData | Dic
   joinLeavePeriod(payload);
   encodeIsoDates(slug, payload);
   encodeIsoDateTimes(slug, payload);
+  encodeNumericIds(slug, payload);
 
   return cfg?.multipart ? buildFormData(payload) : buildJsonBody(payload);
 }
@@ -319,6 +366,7 @@ export async function listEntities(
 
   return (Array.isArray(rows) ? rows : [rows])
     .filter((r): r is Dict => !!r && typeof r === "object")
+    .filter((r) => !cfg?.listFilter || cfg.listFilter(r))
     .map((r) =>
       decode(slug, r, fieldNames, listFields, relationFields, timeFields, nullableStringFields),
     );
@@ -337,12 +385,27 @@ export async function getEntity(
   const path =
     cfg?.singleton || cfg?.getFromList ? collectionPath(slug) : itemPath(slug, id);
 
-  const data = await api.get<Dict | Dict[] | null>(path);
+  let data: Dict | Dict[] | null;
+  try {
+    data = await api.get<Dict | Dict[] | null>(path);
+  } catch (error) {
+    // A one-row resource 404s ("Fee structure not found") until its row is
+    // first saved — that's an empty state the form handles, not a failure.
+    if (cfg?.singleton && error instanceof ApiError && error.status === 404) return null;
+    throw error;
+  }
   if (!data) return null;
 
-  const record = Array.isArray(data)
+  let record: Dict | undefined = Array.isArray(data)
     ? data.find((r) => String((r as Dict).id) === String(id))
     : data;
+
+  // A one-row resource's page asks for a placeholder id ("1"), but its row
+  // can have any id — and if the admin GET answers with a list rather than
+  // the bare row, matching on "1" misses it and the page offers "create"
+  // again on every visit. Take the first row instead; PATCH for a singleton
+  // goes to the collection path, so the id itself is never used.
+  if (!record && cfg?.singleton && Array.isArray(data)) record = data[0];
 
   return record
     ? decode(

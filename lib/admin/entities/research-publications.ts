@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { BookMarked } from "lucide-react";
 import type { EntitySchema } from "@/components/admin/form/form-types";
+import { optionalUpload } from "./_upload";
 
 const researchPublicationsSchema = z.object({
+  teacher_id: z.string().min(1, "Teacher is required"),
   department_id: z.string().min(1, "Department is required"),
-  teacher_id: z.string().optional().or(z.literal("")),
   title: z.string().min(2, "Title is required").max(255),
   authors: z.string().min(2, "Authors are required").max(255),
   venue: z.string().max(255).optional().or(z.literal("")),
@@ -12,8 +13,8 @@ const researchPublicationsSchema = z.object({
   type: z.string().min(1, "Type is required"),
   external_link: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   abstract: z.string().optional().or(z.literal("")),
-  pdf_file: z.string().url("Must be a valid URL").optional().or(z.literal("")),
-  status: z.enum(["draft", "published"]),
+  pdf_file: optionalUpload,
+  status: z.boolean().default(true),
 });
 
 export const researchPublicationsEntity: EntitySchema<typeof researchPublicationsSchema> = {
@@ -23,24 +24,25 @@ export const researchPublicationsEntity: EntitySchema<typeof researchPublication
   icon: BookMarked,
   group: "Research",
   zodSchema: researchPublicationsSchema,
-  defaultValues: { status: "published" },
+  defaultValues: { status: true },
   sections: [
     {
       title: "Publication",
       fields: [
         { name: "title", label: "Title", type: "text", required: true, colSpan: 2 },
-        { name: "authors", label: "Authors", type: "text", required: true, colSpan: 2 },
         {
-          name: "department_id",
-          label: "Department",
-          type: "relation",
+          name: "authors",
+          label: "Authors",
+          type: "text",
           required: true,
-          relationTo: "department",
-          options: [{ label: "Computer Science and Engineering", value: "1" }],
+          colSpan: 2,
+          placeholder: "Dr Jane Doe, Dr XYZ",
+          helper: "Separate authors with commas.",
         },
-        { name: "teacher_id", label: "Lead Author (Teacher)", type: "relation", relationTo: "teacher", options: [] },
-        { name: "venue", label: "Venue", type: "text", placeholder: "IEEE ICCIT" },
-        { name: "year", label: "Year", type: "number", required: true },
+        { name: "teacher_id", label: "Teacher", type: "relation", required: true, relationTo: "teacher", options: [] },
+        { name: "department_id", label: "Department", type: "relation", required: true, relationTo: "department", options: [] },
+        { name: "venue", label: "Venue", type: "text", placeholder: "IEEE Transactions on Wireless Communications" },
+        { name: "year", label: "Year", type: "number", required: true, placeholder: "2025" },
         {
           name: "type",
           label: "Type",
@@ -58,18 +60,9 @@ export const researchPublicationsEntity: EntitySchema<typeof researchPublication
       title: "Content",
       fields: [
         { name: "abstract", label: "Abstract", type: "textarea", colSpan: 2 },
-        { name: "external_link", label: "External Link", type: "url" },
-        { name: "pdf_file", label: "PDF File URL", type: "file" },
-        {
-          name: "status",
-          label: "Status",
-          type: "enum",
-          required: true,
-          options: [
-            { label: "Draft", value: "draft" },
-            { label: "Published", value: "published" },
-          ],
-        },
+        { name: "external_link", label: "External Link", type: "url", placeholder: "https://doi.org/…" },
+        { name: "pdf_file", label: "PDF File", type: "file" },
+        { name: "status", label: "Active", type: "switch" },
       ],
     },
   ],

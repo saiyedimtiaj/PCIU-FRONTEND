@@ -21,16 +21,29 @@ export function FacultyCarousel({
 }: {
   members: DepartmentContent["facultyMembers"];
 }) {
+  // `stopOnMouseEnter` pauses while the pointer is anywhere over the carousel
+  // and — unlike a manual `stop()`/`reset()` pair — reliably restarts the
+  // timer on mouse leave (`reset()` is a no-op once autoplay has stopped).
+  // `stopOnInteraction: false` keeps touch/drag from killing autoplay for good.
   const [plugin] = React.useState(() =>
-    Autoplay({ delay: 3000, stopOnInteraction: true }),
+    Autoplay({
+      delay: 3000,
+      stopOnInteraction: false,
+      stopOnMouseEnter: true,
+    }),
   );
+
+  React.useEffect(() => {
+    // Respect the user's motion preference instead of forcing a moving carousel.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      plugin.stop();
+    }
+  }, [plugin]);
 
   return (
     <Carousel
       plugins={[plugin]}
       className="w-full max-w-full relative"
-      onMouseEnter={plugin.stop}
-      onMouseLeave={plugin.reset}
       opts={{
         align: "start",
         loop: true,

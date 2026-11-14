@@ -29,6 +29,24 @@ const ACADEMICS_SLUGS = new Set([
 const PUBLIC_PAGE_TAGS: Record<string, string> = {
   about: "about-university",
   management: "management",
+  "management-type": "management",
+  iqac: "iqac",
+  "iqac-committee": "iqac",
+  gallery: "iqac",
+  "iqac-gallery": "iqac",
+  events: "events",
+  "iqac-activities": "events",
+  popup: "popup",
+  teacher: "teacher",
+  faculty: "faculties",
+  department: "faculties",
+  "research-centres": "research",
+  "research-areas": "research",
+  "research-publications": "research",
+  partners: "research",
+  mous: "research",
+  "pcj-volumes": "research",
+  "pcj-articles": "research",
 };
 
 /** Call only from a Server Action — updateTag is Server-Action-only. */

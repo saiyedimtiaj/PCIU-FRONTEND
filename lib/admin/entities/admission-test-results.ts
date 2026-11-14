@@ -6,28 +6,28 @@ import type { EntitySchema } from "@/components/admin/form/form-types";
 const admissionTestResultsSchema = z.object({
   semesterName: z.string().min(2, "Semester is required").max(255),
   year: z.coerce.number().int().min(2000).max(2100),
-  pdfUrl: requiredUpload,
+  // A plain date in the form; services/entity.ts sends it as an ISO
+  // datetime ("2026-06-20T00:00:00.000Z"), which is what the API takes.
   publishedAt: z.string().min(1, "Publish date is required"),
-  isActive: z.boolean().default(true),
+  pdfUrl: requiredUpload,
 });
 
 export const admissionTestResultsEntity: EntitySchema<typeof admissionTestResultsSchema> = {
   slug: "admission-test-results",
   title: "Admission Test Result",
-  description: "Publish an admission test result PDF.",
+  description: "Publish the admission test result PDF.",
   icon: ClipboardList,
   group: "Admission",
   zodSchema: admissionTestResultsSchema,
-  defaultValues: { isActive: true },
+  defaultValues: {},
   sections: [
     {
       title: "Result",
       fields: [
-        { name: "semesterName", label: "Semester", type: "text", required: true, placeholder: "Spring" },
-        { name: "year", label: "Year", type: "number", required: true },
+        { name: "semesterName", label: "Semester", type: "text", required: true, placeholder: "Fall 26" },
+        { name: "year", label: "Year", type: "number", required: true, placeholder: "2026" },
         { name: "publishedAt", label: "Publish Date", type: "date", required: true },
-        { name: "pdfUrl", label: "Result PDF URL", type: "file", required: true, colSpan: 2 },
-        { name: "isActive", label: "Active", type: "switch" },
+        { name: "pdfUrl", label: "Result PDF", type: "file", required: true, colSpan: 2 },
       ],
     },
   ],
