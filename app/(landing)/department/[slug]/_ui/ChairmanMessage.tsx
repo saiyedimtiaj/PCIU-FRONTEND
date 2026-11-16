@@ -36,9 +36,9 @@ export function ChairmanMessage({ bio }: { bio: string }) {
         />
 
         {/* Soft fade so the collapsed copy doesn't end on a hard cut */}
-        {isLong && !expanded && (
+        {/* {isLong && !expanded && (
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-slate-50 via-slate-50/80 to-transparent" />
-        )}
+        )} */}
       </div>
 
       {isLong && (
