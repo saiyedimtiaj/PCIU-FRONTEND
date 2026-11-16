@@ -152,7 +152,7 @@ export default function DepartmentTemplate({
                       <div className="absolute right-4 top-4 z-20 h-16 w-16 rounded-tr-xl border-r-[3px] border-t-[3px] border-[#0ea5e9]" />
 
                       {/* Accent corner - bottom left */}
-                      <div className="absolute bottom-20 left-4 z-20 h-12 w-12 rounded-bl-xl border-b-[3px] border-l-[3px] border-[#0ea5e9]" />
+                      <div className="absolute bottom-14 left-4 z-20 h-12 w-12 rounded-bl-xl border-b-[3px] border-l-[3px] border-[#0ea5e9]" />
 
                       {/* Photo */}
                       <div className="group relative aspect-4/5 overflow-hidden rounded-[18px] bg-slate-100">
