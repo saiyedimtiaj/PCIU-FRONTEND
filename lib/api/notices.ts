@@ -57,6 +57,32 @@ function extractNoticeArray(payload: unknown): NoticeApiRecord[] {
   return [];
 }
 
+function extractNoticeRecord(payload: unknown): NoticeApiRecord | null {
+  if (!isRecord(payload)) return null;
+
+  const data = payload.data;
+  const candidate =
+    (isRecord(data) && isRecord(data.notice) ? data.notice : null) ??
+    (isRecord(data) ? data : null) ??
+    (isRecord(payload.notice) ? payload.notice : null);
+
+  if (!candidate || typeof candidate.id !== "number") {
+    return null;
+  }
+
+  return candidate as unknown as NoticeApiRecord;
+}
+
+function normalizeNotice(notice: NoticeApiRecord): NoticeApiRecord {
+  return {
+    ...notice,
+    title: normalizeString(notice.title) || "Untitled notice",
+    category: normalizeString(notice.category) || "General",
+    department: notice.department ?? null,
+    page: notice.page ?? null,
+  };
+}
+
 export async function getPublicNotices(): Promise<NoticeApiRecord[]> {
   if (!API_BASE_URL) {
     return [];
@@ -74,17 +100,48 @@ export async function getPublicNotices(): Promise<NoticeApiRecord[]> {
     const payload: unknown = await response.json();
     const notices = extractNoticeArray(payload)
       .filter((notice) => notice.isActive !== false)
-      .map((notice) => ({
-        ...notice,
-        title: normalizeString(notice.title) || "Untitled notice",
-        category: normalizeString(notice.category) || "General",
-        department: notice.department ?? null,
-        page: notice.page ?? null,
-      }));
+      .map(normalizeNotice);
 
     return notices.sort((a, b) => getSortTimestamp(b) - getSortTimestamp(a));
   } catch (error) {
     console.error("[Notices] Failed to load public notices.", error);
     return [];
+  }
+}
+
+/**
+ * A single public notice for `/notices/[id]`.
+ *
+ * Uses `GET /notices/public/:id` instead of scanning the list, so the detail
+ * page stays cheap as the notice board grows. Returns `null` for unknown or
+ * inactive notices so the route can render a 404.
+ */
+export async function getPublicNoticeById(
+  id: number,
+): Promise<NoticeApiRecord | null> {
+  if (!API_BASE_URL || !Number.isInteger(id) || id <= 0) {
+    return null;
+  }
+
+  try {
+    const response = await publicFetch.get(`/notices/public/${id}`, {
+      next: { revalidate: 300, tags: ["public-notices", `public-notice-${id}`] },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const payload: unknown = await response.json();
+    const notice = extractNoticeRecord(payload);
+
+    if (!notice || notice.isActive === false) {
+      return null;
+    }
+
+    return normalizeNotice(notice);
+  } catch (error) {
+    console.error(`[Notices] Failed to load public notice ${id}.`, error);
+    return null;
   }
 }

@@ -6,6 +6,7 @@ import type {
   DepartmentContent,
   ApiTeacher,
   ApiEvent,
+  ApiDepartmentNotice,
   ApiResearch,
   ApiCourse,
   ApiTuitionFee,
@@ -28,6 +29,7 @@ export async function getDepartmentBySlug(
         const [
           teachersRes,
           eventsRes,
+          noticesRes,
           researchRes,
           coursesRes,
           tuitionRes,
@@ -38,6 +40,9 @@ export async function getDepartmentBySlug(
           }),
           publicFetch.get(`/department/events/${deptId}`, {
             next: { tags: ["department-events", slug] },
+          }),
+          publicFetch.get(`/department/notices/${deptId}`, {
+            next: { tags: ["department-notices", slug] },
           }),
           publicFetch.get(`/department/research-centres/${deptId}`, {
             next: { tags: ["department-research", slug] },
@@ -66,6 +71,14 @@ export async function getDepartmentBySlug(
           const eData = await eventsRes.json();
           if (eData.success && Array.isArray(eData.data)) {
             events = eData.data;
+          }
+        }
+
+        let notices: ApiDepartmentNotice[] = [];
+        if (noticesRes.ok) {
+          const nData = await noticesRes.json();
+          if (nData.success && Array.isArray(nData.data)) {
+            notices = nData.data;
           }
         }
 
@@ -108,6 +121,7 @@ export async function getDepartmentBySlug(
           data.data,
           teachers,
           events,
+          notices,
           research,
           courses,
           tuitionFees,
@@ -129,6 +143,7 @@ function mapApiDepartmentToContent(
   apiData: ApiDepartmentResponse,
   teachers: ApiTeacher[],
   events: ApiEvent[],
+  notices: ApiDepartmentNotice[],
   research: ApiResearch[],
   courses: ApiCourse[],
   tuitionFees: ApiTuitionFee[],
@@ -181,11 +196,32 @@ function mapApiDepartmentToContent(
       courseCode: c.courseCode || c.code || "Course Code",
       credit: c.credit?.toString() || undefined,
     })),
-    notices: events.map((e) => ({
-      title: e.title || e.name || "Event",
-      date: e.date || e.createdAt?.split("T")[0] || "",
-      type: e.type || "Event",
-    })),
+    notices: notices
+      .filter((notice) => notice.isActive !== false)
+      .sort((a, b) => getNoticeTimestamp(b) - getNoticeTimestamp(a))
+      .map((notice) => ({
+        id: notice.id,
+        title: notice.title?.trim() || "Untitled notice",
+        date: notice.noticeDate ?? notice.createdAt ?? "",
+        category: notice.category?.trim() || "General",
+        badgeLabel: notice.badgeLabel ?? null,
+        pdfUrl: notice.pdfUrl ?? null,
+      })),
+    events: sortDepartmentEvents(events)
+      .filter((event) => event.isActive !== false)
+      .map((event) => ({
+        id: event.id,
+        slug: event.slug?.trim() || "",
+        title: event.title?.trim() || "Untitled event",
+        summary: stripHtml(event.description),
+        category: event.category ?? null,
+        badgeLabel: event.badgeLabel ?? null,
+        startDateTime: event.startDateTime ?? "",
+        endDateTime: event.endDateTime ?? null,
+        allDay: event.allDay ?? false,
+        location: event.location ?? null,
+        coverImageUrl: event.coverImageUrl ?? null,
+      })),
     contact: {
       address: apiData.officeLocation,
       phone: apiData.phone,
@@ -228,6 +264,50 @@ function mapApiDepartmentToContent(
     ],
     facultyQueryParam: apiData.slug,
   };
+}
+
+function toTimestamp(value: string | null | undefined): number {
+  if (!value) return 0;
+  const parsed = new Date(value).getTime();
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function getNoticeTimestamp(notice: ApiDepartmentNotice): number {
+  return toTimestamp(notice.noticeDate ?? notice.createdAt);
+}
+
+/**
+ * Upcoming events first (soonest at the top), then past events (most recent
+ * first). Events without a start date sink to the bottom.
+ */
+function sortDepartmentEvents(events: ApiEvent[]): ApiEvent[] {
+  const now = Date.now();
+
+  return [...events].sort((a, b) => {
+    const aTime = toTimestamp(a.startDateTime);
+    const bTime = toTimestamp(b.startDateTime);
+
+    if (!aTime) return 1;
+    if (!bTime) return -1;
+
+    const aUpcoming = aTime >= now;
+    const bUpcoming = bTime >= now;
+
+    if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
+
+    return aUpcoming ? aTime - bTime : bTime - aTime;
+  });
+}
+
+function stripHtml(value: string | null | undefined): string {
+  return (value ?? "")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export async function getDepartmentTeachers(

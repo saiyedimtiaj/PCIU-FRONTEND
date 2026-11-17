@@ -40,9 +40,26 @@ export interface DepartmentProgram {
 }
 
 export interface DepartmentNotice {
+  id: number;
   title: string;
   date: string;
-  type: string;
+  category: string;
+  badgeLabel?: string | null;
+  pdfUrl?: string | null;
+}
+
+export interface DepartmentEvent {
+  id: number;
+  slug: string;
+  title: string;
+  summary: string;
+  category?: string | null;
+  badgeLabel?: string | null;
+  startDateTime: string;
+  endDateTime?: string | null;
+  allDay?: boolean;
+  location?: string | null;
+  coverImageUrl?: string | null;
 }
 
 export interface DepartmentContact {
@@ -109,6 +126,7 @@ export interface DepartmentContent {
   tuitionFees: DepartmentTuitionFee[];
   courses: DepartmentCourse[];
   notices: DepartmentNotice[];
+  events: DepartmentEvent[];
   contact: DepartmentContact;
   quickLinks: DepartmentQuickLink[];
   facultyMembers: DepartmentFacultyMember[];
@@ -165,11 +183,40 @@ export interface ApiTeacher {
 }
 
 export interface ApiEvent {
-  name?: string;
-  title?: string;
-  date?: string;
-  createdAt?: string;
-  type?: string;
+  id: number;
+  departmentId?: number | null;
+  title?: string | null;
+  slug?: string | null;
+  description?: string | null;
+  category?: string | null;
+  badgeLabel?: string | null;
+  startDateTime?: string | null;
+  endDateTime?: string | null;
+  allDay?: boolean;
+  location?: string | null;
+  coverImageUrl?: string | null;
+  url?: string | null;
+  isActive?: boolean;
+  createdAt?: string | null;
+}
+
+export interface ApiDepartmentNotice {
+  id: number;
+  title?: string | null;
+  badgeLabel?: string | null;
+  badgeColor?: string | null;
+  category?: string | null;
+  pdfUrl?: string | null;
+  noticeDate?: string | null;
+  isActive?: boolean;
+  isHome?: boolean;
+  createdAt?: string | null;
+  department?: {
+    id?: number | null;
+    name?: string | null;
+    shortName?: string | null;
+    slug?: string | null;
+  } | null;
 }
 
 export interface ApiResearch {
